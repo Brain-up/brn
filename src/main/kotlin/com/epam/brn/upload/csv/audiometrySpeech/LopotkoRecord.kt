@@ -1,7 +1,7 @@
 package com.epam.brn.upload.csv.audiometrySpeech
 
-import com.epam.brn.enums.FrequencyZone
 import com.epam.brn.enums.BrnLocale
+import com.epam.brn.enums.FrequencyZone
 import com.fasterxml.jackson.annotation.JsonProperty
 
 data class LopotkoRecord(

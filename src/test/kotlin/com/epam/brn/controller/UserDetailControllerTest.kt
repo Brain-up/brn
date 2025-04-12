@@ -37,7 +37,6 @@ import kotlin.test.assertEquals
 
 @ExtendWith(MockKExtension::class)
 internal class UserDetailControllerTest {
-
     @InjectMockKs
     lateinit var userDetailController: UserDetailController
 
@@ -62,14 +61,15 @@ internal class UserDetailControllerTest {
 
     @BeforeEach
     fun initBeforeEachTest() {
-        userAccountDto = UserAccountDto(
-            id = userId,
-            name = "testUserFirstName",
-            email = "unittest@test.ru",
-            gender = BrnGender.MALE,
-            bornYear = 2000,
-            active = true
-        )
+        userAccountDto =
+            UserAccountDto(
+                id = userId,
+                name = "testUserFirstName",
+                email = "unittest@test.ru",
+                gender = BrnGender.MALE,
+                bornYear = 2000,
+                active = true,
+            )
     }
 
     @Nested
@@ -110,15 +110,16 @@ internal class UserDetailControllerTest {
         fun `should update avatar for current user`() {
             // GIVEN
             val avatarUrl = "xxx/www/eee"
-            val userAccountDto = UserAccountDto(
-                id = NumberUtils.LONG_ONE,
-                avatar = null,
-                name = "testName",
-                email = "email",
-                active = true,
-                gender = BrnGender.FEMALE,
-                bornYear = 2000
-            )
+            val userAccountDto =
+                UserAccountDto(
+                    id = NumberUtils.LONG_ONE,
+                    avatar = null,
+                    name = "testName",
+                    email = "email",
+                    active = true,
+                    gender = BrnGender.FEMALE,
+                    bornYear = 2000,
+                )
             every { userAccountService.updateAvatarForCurrentUser(avatarUrl) } returns userAccountDto
 
             // WHEN
@@ -133,20 +134,22 @@ internal class UserDetailControllerTest {
         @Test
         fun `should update current user`() {
             // GIVEN
-            val changeRequest = UserAccountChangeRequest(
-                name = "testNewName",
-                gender = BrnGender.FEMALE,
-                bornYear = 2000
-            )
-            val userAccountDto = UserAccountDto(
-                id = NumberUtils.LONG_ONE,
-                avatar = null,
-                name = "testName",
-                email = "email",
-                gender = BrnGender.FEMALE,
-                active = true,
-                bornYear = 2000
-            )
+            val changeRequest =
+                UserAccountChangeRequest(
+                    name = "testNewName",
+                    gender = BrnGender.FEMALE,
+                    bornYear = 2000,
+                )
+            val userAccountDto =
+                UserAccountDto(
+                    id = NumberUtils.LONG_ONE,
+                    avatar = null,
+                    name = "testName",
+                    email = "email",
+                    gender = BrnGender.FEMALE,
+                    active = true,
+                    bornYear = 2000,
+                )
             every { userAccountService.updateCurrentUser(changeRequest) } returns userAccountDto
 
             // WHEN
@@ -160,11 +163,12 @@ internal class UserDetailControllerTest {
         @Test
         fun `should save headphones to user with valid type`() {
             // GIVEN
-            val headphonesDto = HeadphonesDto(
-                name = "test",
-                active = true,
-                type = HeadphonesType.IN_EAR_BLUETOOTH
-            )
+            val headphonesDto =
+                HeadphonesDto(
+                    name = "test",
+                    active = true,
+                    type = HeadphonesType.IN_EAR_BLUETOOTH,
+                )
             every { userAccountService.addHeadphonesToUser(1L, headphonesDto) } returns headphonesDto
 
             // WHEN
@@ -178,11 +182,12 @@ internal class UserDetailControllerTest {
         @Test
         fun `should save headphones to current user`() {
             // GIVEN
-            val headphonesDto = HeadphonesDto(
-                name = "test",
-                active = true,
-                type = HeadphonesType.IN_EAR_BLUETOOTH
-            )
+            val headphonesDto =
+                HeadphonesDto(
+                    name = "test",
+                    active = true,
+                    type = HeadphonesType.IN_EAR_BLUETOOTH,
+                )
             every { userAccountService.addHeadphonesToCurrentUser(headphonesDto) } returns headphonesDto
 
             // WHEN
@@ -211,16 +216,18 @@ internal class UserDetailControllerTest {
         @Test
         fun `should return all headphones belongs to user`() {
             // GIVEN
-            val headphonesDto = HeadphonesDto(
-                name = "test",
-                active = true,
-                type = HeadphonesType.IN_EAR_BLUETOOTH
-            )
-            val headphonesDtoSecond = HeadphonesDto(
-                name = "testSecond",
-                active = true,
-                type = HeadphonesType.IN_EAR_NO_BLUETOOTH
-            )
+            val headphonesDto =
+                HeadphonesDto(
+                    name = "test",
+                    active = true,
+                    type = HeadphonesType.IN_EAR_BLUETOOTH,
+                )
+            val headphonesDtoSecond =
+                HeadphonesDto(
+                    name = "testSecond",
+                    active = true,
+                    type = HeadphonesType.IN_EAR_NO_BLUETOOTH,
+                )
             every { userAccountService.getAllHeadphonesForUser(1L) } returns setOf(headphonesDto, headphonesDtoSecond)
 
             // WHEN
@@ -255,13 +262,14 @@ internal class UserDetailControllerTest {
     internal fun `should get doctor assigned to patient`() {
         // GIVEN
         val patientId: Long = 1
-        val doctor = UserAccountDto(
-            id = patientId,
-            name = "testName",
-            email = "email",
-            gender = BrnGender.FEMALE,
-            bornYear = 2000
-        )
+        val doctor =
+            UserAccountDto(
+                id = patientId,
+                name = "testName",
+                email = "email",
+                gender = BrnGender.FEMALE,
+                bornYear = 2000,
+            )
         every { doctorService.getDoctorAssignedToPatient(patientId) } returns doctor
 
         // WHEN

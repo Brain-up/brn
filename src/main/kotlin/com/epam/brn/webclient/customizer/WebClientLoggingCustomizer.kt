@@ -15,7 +15,6 @@ import reactor.core.publisher.Mono
  * Customize WebClient to make logging request and response
  */
 class WebClientLoggingCustomizer : WebClientCustomizer {
-
     private val log = logger()
 
     override fun customize(webClientBuilder: WebClient.Builder?) {
@@ -34,21 +33,19 @@ class WebClientLoggingCustomizer : WebClientCustomizer {
      * @param request request
      * @return request
      */
-    private fun interceptRequestBody(request: ClientRequest): ClientRequest {
-        return ClientRequest.from(request)
-            .body { outputMessage, context ->
-                val newOutputMessage = object : ClientHttpRequestDecorator(outputMessage) {
-                    override fun writeWith(body: Publisher<out DataBuffer>): Mono<Void> {
-                        return super.writeWith(
-                            Flux.from(body)
-                                .doOnNext { logRequestBody(it) }
-                        )
-                    }
+    private fun interceptRequestBody(request: ClientRequest): ClientRequest = ClientRequest
+        .from(request)
+        .body { outputMessage, context ->
+            val newOutputMessage =
+                object : ClientHttpRequestDecorator(outputMessage) {
+                    override fun writeWith(body: Publisher<out DataBuffer>): Mono<Void> = super.writeWith(
+                        Flux
+                            .from(body)
+                            .doOnNext { logRequestBody(it) },
+                    )
                 }
-                request.body().insert(newOutputMessage, context)
-            }
-            .build()
-    }
+            request.body().insert(newOutputMessage, context)
+        }.build()
 
     /**
      * Catcher response body
@@ -56,11 +53,10 @@ class WebClientLoggingCustomizer : WebClientCustomizer {
      * @param response response
      * @return response
      */
-    private fun interceptResponseBody(response: ClientResponse): ClientResponse? {
-        return response.mutate()
-            .body { data -> data.doOnNext { dataBuffer: DataBuffer -> logResponseBody(dataBuffer) } }
-            .build()
-    }
+    private fun interceptResponseBody(response: ClientResponse): ClientResponse? = response
+        .mutate()
+        .body { data -> data.doOnNext { dataBuffer: DataBuffer -> logResponseBody(dataBuffer) } }
+        .build()
 
     /**
      * Log request

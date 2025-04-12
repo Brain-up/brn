@@ -8,8 +8,9 @@ import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 
 @Service
-class SeriesService(private val seriesRepository: SeriesRepository) {
-
+class SeriesService(
+    private val seriesRepository: SeriesRepository,
+) {
     private val log = logger()
 
     @Cacheable("series")
@@ -22,8 +23,10 @@ class SeriesService(private val seriesRepository: SeriesRepository) {
     @Cacheable("seriesDto")
     fun findSeriesDtoForId(seriesId: Long): SeriesDto {
         log.debug("try to find series for seriesId=$seriesId")
-        val series = seriesRepository.findById(seriesId)
-            .orElseThrow { EntityNotFoundException("no series was found for id=$seriesId") }
+        val series =
+            seriesRepository
+                .findById(seriesId)
+                .orElseThrow { EntityNotFoundException("no series was found for id=$seriesId") }
         return series.toDto()
     }
 }

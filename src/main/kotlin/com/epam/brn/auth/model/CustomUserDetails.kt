@@ -6,15 +6,17 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import java.lang.Boolean.TRUE
 
-class CustomUserDetails(userAccount: UserAccount) : UserDetails {
-
+class CustomUserDetails(
+    userAccount: UserAccount,
+) : UserDetails {
     private val userName: String? = userAccount.email
     private val active = userAccount.active
     private val authorities: List<GrantedAuthority>
 
     init {
-        authorities = userAccount.roleSet
-            .map { SimpleGrantedAuthority("ROLE_${it.name}") }
+        authorities =
+            userAccount.roleSet
+                .map { SimpleGrantedAuthority("ROLE_${it.name}") }
     }
 
     override fun getAuthorities() = this.authorities.toMutableList()

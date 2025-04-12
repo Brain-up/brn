@@ -14,7 +14,7 @@ data class SeriesWordsRecord(
     @JsonProperty("noiseLevel")
     val noiseLevel: Int,
     @JsonProperty("noiseUrl")
-    val noiseUrl: String
+    val noiseUrl: String,
 ) {
     companion object {
         const val FORMAT = "level,code,exerciseName,words,noiseLevel,noiseUrl"

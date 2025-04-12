@@ -1,13 +1,13 @@
 package com.epam.brn.integration.service
 
 import com.epam.brn.enums.AudiometryType
+import com.epam.brn.enums.BrnGender
+import com.epam.brn.enums.BrnLocale
 import com.epam.brn.enums.FrequencyZone
 import com.epam.brn.enums.HeadphonesType
-import com.epam.brn.enums.BrnLocale
 import com.epam.brn.model.Audiometry
 import com.epam.brn.model.AudiometryHistory
 import com.epam.brn.model.AudiometryTask
-import com.epam.brn.enums.BrnGender
 import com.epam.brn.model.Headphones
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.AudiometryHistoryRepository
@@ -32,7 +32,6 @@ import kotlin.test.assertTrue
 @ActiveProfiles("integration-tests")
 @Tag("integration-test")
 internal class AudiometryServiceIT {
-
     @Autowired
     lateinit var audiometryService: AudiometryService
 
@@ -80,7 +79,8 @@ internal class AudiometryServiceIT {
         assertTrue(resultTasks.containsAll(listOf(tasks[2], tasks[4], tasks[5], tasks[7])))
     }
 
-    private fun insetHeadphones() = headphonesRepository.save(Headphones(name = "first", active = true, type = HeadphonesType.OVER_EAR_BLUETOOTH))
+    private fun insetHeadphones() =
+        headphonesRepository.save(Headphones(name = "first", active = true, type = HeadphonesType.OVER_EAR_BLUETOOTH))
 
     private fun insertUser(): UserAccount = userAccountRepository.save(
         UserAccount(
@@ -88,61 +88,68 @@ internal class AudiometryServiceIT {
             gender = BrnGender.MALE.toString(),
             bornYear = 2000,
             email = "test@test.test",
-            active = true
-        )
+            active = true,
+        ),
     )
 
-    private fun insertSpeechAudiometry(): Audiometry =
-        audiometryRepository.save(
-            Audiometry(
-                locale = BrnLocale.EN.locale,
-                name = "Speech diagnostic",
-                description = "Speech diagnostic with Lopotko words sequences",
-                audiometryType = AudiometryType.SPEECH.name
-            )
-        )
+    private fun insertSpeechAudiometry(): Audiometry = audiometryRepository.save(
+        Audiometry(
+            locale = BrnLocale.EN.locale,
+            name = "Speech diagnostic",
+            description = "Speech diagnostic with Lopotko words sequences",
+            audiometryType = AudiometryType.SPEECH.name,
+        ),
+    )
 
     private fun insertSpeechAudiometryTasks(audiometry: Audiometry): List<AudiometryTask> {
-        val task1Low = AudiometryTask(
-            audiometryGroup = "А",
-            frequencyZone = FrequencyZone.LOW.name,
-            audiometry = audiometry,
-        )
-        val task2Low = AudiometryTask(
-            audiometryGroup = "Б",
-            frequencyZone = FrequencyZone.LOW.name,
-            audiometry = audiometry,
-        )
-        val task3Low = AudiometryTask(
-            audiometryGroup = "В",
-            frequencyZone = FrequencyZone.LOW.name,
-            audiometry = audiometry,
-        )
-        val task4MediumLow = AudiometryTask(
-            audiometryGroup = "А",
-            frequencyZone = FrequencyZone.MEDIUM_LOW.name,
-            audiometry = audiometry,
-        )
-        val task5MediumLow = AudiometryTask(
-            audiometryGroup = "Б",
-            frequencyZone = FrequencyZone.MEDIUM_LOW.name,
-            audiometry = audiometry,
-        )
-        val task6Medium = AudiometryTask(
-            audiometryGroup = "А",
-            frequencyZone = FrequencyZone.MEDIUM.name,
-            audiometry = audiometry,
-        )
-        val task7Medium = AudiometryTask(
-            audiometryGroup = "Б",
-            frequencyZone = FrequencyZone.MEDIUM.name,
-            audiometry = audiometry,
-        )
-        val task8MediumHigh = AudiometryTask(
-            audiometryGroup = "А",
-            frequencyZone = FrequencyZone.MEDIUM_HIGH.name,
-            audiometry = audiometry,
-        )
+        val task1Low =
+            AudiometryTask(
+                audiometryGroup = "А",
+                frequencyZone = FrequencyZone.LOW.name,
+                audiometry = audiometry,
+            )
+        val task2Low =
+            AudiometryTask(
+                audiometryGroup = "Б",
+                frequencyZone = FrequencyZone.LOW.name,
+                audiometry = audiometry,
+            )
+        val task3Low =
+            AudiometryTask(
+                audiometryGroup = "В",
+                frequencyZone = FrequencyZone.LOW.name,
+                audiometry = audiometry,
+            )
+        val task4MediumLow =
+            AudiometryTask(
+                audiometryGroup = "А",
+                frequencyZone = FrequencyZone.MEDIUM_LOW.name,
+                audiometry = audiometry,
+            )
+        val task5MediumLow =
+            AudiometryTask(
+                audiometryGroup = "Б",
+                frequencyZone = FrequencyZone.MEDIUM_LOW.name,
+                audiometry = audiometry,
+            )
+        val task6Medium =
+            AudiometryTask(
+                audiometryGroup = "А",
+                frequencyZone = FrequencyZone.MEDIUM.name,
+                audiometry = audiometry,
+            )
+        val task7Medium =
+            AudiometryTask(
+                audiometryGroup = "Б",
+                frequencyZone = FrequencyZone.MEDIUM.name,
+                audiometry = audiometry,
+            )
+        val task8MediumHigh =
+            AudiometryTask(
+                audiometryGroup = "А",
+                frequencyZone = FrequencyZone.MEDIUM_HIGH.name,
+                audiometry = audiometry,
+            )
 
         return audiometryTaskRepository.saveAll(
             listOf(
@@ -153,8 +160,8 @@ internal class AudiometryServiceIT {
                 task5MediumLow,
                 task6Medium,
                 task7Medium,
-                task8MediumHigh
-            )
+                task8MediumHigh,
+            ),
         )
     }
 
@@ -162,7 +169,7 @@ internal class AudiometryServiceIT {
         userAccount: UserAccount,
         headphones: Headphones,
         task: AudiometryTask,
-        startTime: LocalDateTime = LocalDateTime.now()
+        startTime: LocalDateTime = LocalDateTime.now(),
     ) = audiometryHistoryRepository.save(
         AudiometryHistory(
             userAccount = userAccount,
@@ -171,7 +178,7 @@ internal class AudiometryServiceIT {
             tasksCount = 10,
             rightAnswers = 5,
             executionSeconds = 50,
-            headphones = headphones
-        )
+            headphones = headphones,
+        ),
     )
 }

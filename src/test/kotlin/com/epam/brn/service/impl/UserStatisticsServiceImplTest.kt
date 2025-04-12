@@ -23,7 +23,6 @@ import kotlin.test.assertNotNull
  */
 @ExtendWith(MockKExtension::class)
 internal class UserStatisticsServiceImplTest {
-
     @InjectMockKs
     lateinit var userStatisticService: UserStatisticServiceImpl
 

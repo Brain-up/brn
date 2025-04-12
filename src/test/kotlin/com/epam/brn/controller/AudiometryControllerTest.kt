@@ -14,9 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import kotlin.test.assertEquals
 
 @ExtendWith(MockKExtension::class)
-
 internal class AudiometryControllerTest {
-
     @InjectMockKs
     lateinit var audiometryController: AudiometryController
 
@@ -25,19 +23,19 @@ internal class AudiometryControllerTest {
 
     @Test
     fun `should get audio metrics`() {
-
         // GIVEN
         val locale = "locale"
 
-        val audiometryResponse = AudiometryResponse(
-            locale = "ru-ru",
-            id = 1,
-            name = "testName",
-            description = "description",
-            audiometryTasks = "any",
-            audiometryType = AudiometryType.valueOf("SIGNALS"),
-        )
-        every { audiometryService.getAudiometrics(locale) } returns(listOf(audiometryResponse))
+        val audiometryResponse =
+            AudiometryResponse(
+                locale = "ru-ru",
+                id = 1,
+                name = "testName",
+                description = "description",
+                audiometryTasks = "any",
+                audiometryType = AudiometryType.valueOf("SIGNALS"),
+            )
+        every { audiometryService.getAudiometrics(locale) } returns (listOf(audiometryResponse))
 
         // WHEN
         val audiometrics = audiometryController.getAudiometrics(locale)
@@ -46,19 +44,21 @@ internal class AudiometryControllerTest {
         assertEquals(HttpStatus.SC_OK, audiometrics.statusCode.value())
         assertEquals(listOf(audiometryResponse), audiometrics.body!!.data)
     }
+
     @Test
     fun `should get audiometry`() {
         // GIVEN
         val audiometryId = 1L
 
-        val audiometryResponse = AudiometryResponse(
-            locale = "ru-ru",
-            id = 1,
-            name = "testName",
-            description = "description",
-            audiometryTasks = "any",
-            audiometryType = AudiometryType.valueOf("SIGNALS"),
-        )
+        val audiometryResponse =
+            AudiometryResponse(
+                locale = "ru-ru",
+                id = 1,
+                name = "testName",
+                description = "description",
+                audiometryTasks = "any",
+                audiometryType = AudiometryType.valueOf("SIGNALS"),
+            )
 
         every { audiometryService.getAudiometry(audiometryId) } returns audiometryResponse
 

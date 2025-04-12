@@ -20,7 +20,6 @@ import java.io.IOException
 @ControllerAdvice
 @PropertySource("classpath:errorMessages.properties")
 class ExceptionControllerAdvice {
-
     private val logger = logger()
 
     @ExceptionHandler(EntityNotFoundException::class)
@@ -69,14 +68,10 @@ class ExceptionControllerAdvice {
     }
 
     @ExceptionHandler(UninitializedPropertyAccessException::class)
-    fun handleUninitializedPropertyAccessException(e: Throwable): ResponseEntity<BrnResponse<Unit>> {
-        return createInternalErrorResponse(e)
-    }
+    fun handleUninitializedPropertyAccessException(e: Throwable): ResponseEntity<BrnResponse<Unit>> = createInternalErrorResponse(e)
 
     @ExceptionHandler(HttpMessageNotReadableException::class)
-    fun handleHttpMessageNotReadableException(
-        e: HttpMessageNotReadableException
-    ): ResponseEntity<BrnResponse<Unit>> {
+    fun handleHttpMessageNotReadableException(e: HttpMessageNotReadableException): ResponseEntity<BrnResponse<Unit>> {
         logger.error("Argument Validation Error: ${e.message}", e)
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
@@ -94,26 +89,20 @@ class ExceptionControllerAdvice {
     }
 
     @ExceptionHandler(org.springframework.security.access.AccessDeniedException::class)
-    fun handleAccessDeniedException(e: org.springframework.security.access.AccessDeniedException): ResponseEntity<BrnResponse<Unit>> {
-        return ResponseEntity
+    fun handleAccessDeniedException(e: org.springframework.security.access.AccessDeniedException): ResponseEntity<BrnResponse<Unit>> =
+        ResponseEntity
             .status(HttpStatus.FORBIDDEN)
             .contentType(MediaType.APPLICATION_JSON)
             .body(response(errors = listOf(e.message.toString())))
-    }
 
-    private fun processValidationErrors(fieldErrors: List<FieldError>): List<String> {
-        return fieldErrors.mapNotNull { fieldError -> fieldError.defaultMessage }.toList()
-    }
+    private fun processValidationErrors(fieldErrors: List<FieldError>): List<String> =
+        fieldErrors.mapNotNull { fieldError -> fieldError.defaultMessage }.toList()
 
     @ExceptionHandler(IOException::class)
-    fun handleIOException(e: IOException): ResponseEntity<BrnResponse<Unit>> {
-        return createInternalErrorResponse(e)
-    }
+    fun handleIOException(e: IOException): ResponseEntity<BrnResponse<Unit>> = createInternalErrorResponse(e)
 
     @ExceptionHandler(Throwable::class)
-    fun handleException(e: Throwable): ResponseEntity<BrnResponse<Unit>> {
-        return createInternalErrorResponse(e)
-    }
+    fun handleException(e: Throwable): ResponseEntity<BrnResponse<Unit>> = createInternalErrorResponse(e)
 
     fun createInternalErrorResponse(e: Throwable): ResponseEntity<BrnResponse<Unit>> {
         logger.error("Internal exception: ${e.message}", e)

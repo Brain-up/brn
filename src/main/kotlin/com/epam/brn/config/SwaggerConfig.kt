@@ -11,7 +11,6 @@ import javax.annotation.security.RolesAllowed
 
 @Configuration
 class SwaggerConfig {
-
     @Bean
     fun openApi() = OpenAPI().info(apiInfo())
 
@@ -22,36 +21,34 @@ class SwaggerConfig {
             Contact()
                 .name("Elena.Moshnikova")
                 .url("https://t.me/ElenaLovesSpb")
-                .email("brainupproject@yandex.ru")
+                .email("brainupproject@yandex.ru"),
         )
 
     @Bean
-    fun rolesAllowedCustomizer(): OperationCustomizer? {
-        return OperationCustomizer { operation, handlerMethod ->
-            var allowedRoles: Array<String>? = null
-            var rolesAllowedAnnotation = handlerMethod.getMethodAnnotation(RolesAllowed::class.java)
+    fun rolesAllowedCustomizer(): OperationCustomizer? = OperationCustomizer { operation, handlerMethod ->
+        var allowedRoles: Array<String>? = null
+        var rolesAllowedAnnotation = handlerMethod.getMethodAnnotation(RolesAllowed::class.java)
+        if (rolesAllowedAnnotation != null) {
+            allowedRoles = rolesAllowedAnnotation.value
+        } else {
+            rolesAllowedAnnotation = handlerMethod.method.declaringClass.getAnnotation(RolesAllowed::class.java)
             if (rolesAllowedAnnotation != null)
                 allowedRoles = rolesAllowedAnnotation.value
-            else {
-                rolesAllowedAnnotation = handlerMethod.method.declaringClass.getAnnotation(RolesAllowed::class.java)
-                if (rolesAllowedAnnotation != null)
-                    allowedRoles = rolesAllowedAnnotation.value
-            }
-
-            val sb = StringBuilder("Roles: ")
-            if (allowedRoles != null)
-                sb.append("**${allowedRoles.joinToString(",")}**")
-            else
-                sb.append("**PUBLIC**")
-
-            operation.description?.let {
-                sb.append("<br/>")
-                sb.append(it)
-            }
-
-            operation.description = sb.toString()
-            operation
         }
+
+        val sb = StringBuilder("Roles: ")
+        if (allowedRoles != null)
+            sb.append("**${allowedRoles.joinToString(",")}**")
+        else
+            sb.append("**PUBLIC**")
+
+        operation.description?.let {
+            sb.append("<br/>")
+            sb.append(it)
+        }
+
+        operation.description = sb.toString()
+        operation
     }
 
     @Bean

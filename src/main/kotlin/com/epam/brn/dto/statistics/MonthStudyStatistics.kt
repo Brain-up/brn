@@ -7,13 +7,12 @@ data class MonthStudyStatistics(
     val date: LocalDateTime,
     val exercisingTimeSeconds: Int,
     val exercisingDays: Int,
-    var progress: UserExercisingProgressStatus?
+    var progress: UserExercisingProgressStatus?,
 ) : Statistics(progress) {
-    fun toDto(): MonthStudyStatisticDto =
-        MonthStudyStatisticDto(
-            date = date.format(DateTimeFormatter.ofPattern("yyyy-MM")),
-            exercisingTimeSeconds = exercisingTimeSeconds,
-            exercisingDays = exercisingDays,
-            progress = progress
-        )
+    fun toDto(): MonthStudyStatisticDto = MonthStudyStatisticDto(
+        date = date.format(DateTimeFormatter.ofPattern("yyyy-MM")),
+        exercisingTimeSeconds = exercisingTimeSeconds,
+        exercisingDays = exercisingDays,
+        progress = progress,
+    )
 }

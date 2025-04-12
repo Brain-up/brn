@@ -5,8 +5,8 @@ import com.epam.brn.dto.azure.tts.AzureRates
 import com.epam.brn.dto.statistics.DayStudyStatistics
 import com.epam.brn.enums.BrnLocale
 import com.epam.brn.enums.BrnRole
-import com.epam.brn.enums.Voice
 import com.epam.brn.enums.ExerciseType
+import com.epam.brn.enums.Voice
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.UserAccount
 import com.epam.brn.model.projection.UserStatisticView
@@ -31,7 +31,6 @@ import java.time.LocalDateTime
 @ExtendWith(MockKExtension::class)
 @DisplayName("UserAnalyticsService test")
 internal class UserAnalyticsServiceTest {
-
     @InjectMockKs
     lateinit var userAnalyticsService: UserAnalyticsServiceImpl
 
@@ -76,7 +75,6 @@ internal class UserAnalyticsServiceTest {
 
     @Test
     fun `should return all users with analytics`() {
-
         val usersList = listOf(doctorAccount, doctorAccount)
         val dayStatisticList = listOf(dayStudyStatistics, dayStudyStatistics)
         every { userStatisticView.firstStudy } returns LocalDateTime.now()
@@ -96,7 +94,6 @@ internal class UserAnalyticsServiceTest {
 
     @Test
     fun `should not return user with analytics`() {
-
         val usersList = listOf(doctorAccount)
         val dayStatisticList = emptyList<DayStudyStatistics>()
         every { userStatisticView.firstStudy } returns LocalDateTime.now()

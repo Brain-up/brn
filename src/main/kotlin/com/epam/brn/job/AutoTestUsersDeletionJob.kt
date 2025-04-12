@@ -6,7 +6,9 @@ import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 
 @Component
-class AutoTestUsersDeletionJob(val userAccountService: UserAccountService) {
+class AutoTestUsersDeletionJob(
+    val userAccountService: UserAccountService,
+) {
     private val log = logger()
 
     @Scheduled(cron = "@midnight")

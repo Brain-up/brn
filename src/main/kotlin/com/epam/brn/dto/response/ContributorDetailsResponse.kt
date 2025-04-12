@@ -15,5 +15,5 @@ data class ContributorDetailsResponse(
     var pictureUrl: String?,
     var contacts: Set<ContactDto>,
     var gitHubUser: GitHubUserDto?,
-    var active: Boolean
+    var active: Boolean,
 )

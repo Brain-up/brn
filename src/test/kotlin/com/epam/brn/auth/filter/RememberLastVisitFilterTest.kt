@@ -20,7 +20,6 @@ import javax.servlet.FilterChain
 @ExtendWith(MockKExtension::class)
 @DisplayName("RememberLastVisitFilter test using MockK")
 internal class RememberLastVisitFilterTest {
-
     @InjectMockKs
     lateinit var rememberLastVisitFilter: RememberLastVisitFilter
 

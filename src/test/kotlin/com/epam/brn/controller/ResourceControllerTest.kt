@@ -1,7 +1,7 @@
 package com.epam.brn.controller
 
-import com.epam.brn.dto.response.ResourceResponse
 import com.epam.brn.dto.request.UpdateResourceDescriptionRequest
+import com.epam.brn.dto.response.ResourceResponse
 import com.epam.brn.job.ResourcePictureUrlUpdateJob
 import com.epam.brn.service.ResourceService
 import io.kotest.matchers.shouldBe
@@ -17,7 +17,6 @@ import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(MockKExtension::class)
 internal class ResourceControllerTest {
-
     @InjectMockKs
     lateinit var resourceController: ResourceController
 

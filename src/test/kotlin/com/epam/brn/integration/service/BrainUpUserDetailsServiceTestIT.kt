@@ -1,7 +1,7 @@
 package com.epam.brn.integration.service
 
-import com.epam.brn.integration.BaseIT
 import com.epam.brn.enums.BrnGender
+import com.epam.brn.integration.BaseIT
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.service.BrainUpUserDetailsService
@@ -19,7 +19,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
 internal class BrainUpUserDetailsServiceTestIT : BaseIT() {
-
     @Autowired
     private lateinit var brainUpUserDetailsService: BrainUpUserDetailsService
 
@@ -28,30 +27,33 @@ internal class BrainUpUserDetailsServiceTestIT : BaseIT() {
 
     @BeforeEach
     fun setUp() {
-        val userAccount = UserAccount(
-            id = null,
-            fullName = "testUserFirstName",
-            gender = BrnGender.MALE.toString(),
-            bornYear = 2000,
-            email = "default@gmail.com",
-            active = true
-        )
-        val userAccount1 = UserAccount(
-            id = null,
-            fullName = "testUserFirstName",
-            gender = BrnGender.MALE.toString(),
-            bornYear = 2000,
-            email = "default1@gmail.com",
-            active = true
-        )
-        val userAccount2 = UserAccount(
-            id = null,
-            fullName = "testUserFirstName",
-            gender = BrnGender.MALE.toString(),
-            bornYear = 2000,
-            email = "default2@gmail.com",
-            active = true
-        )
+        val userAccount =
+            UserAccount(
+                id = null,
+                fullName = "testUserFirstName",
+                gender = BrnGender.MALE.toString(),
+                bornYear = 2000,
+                email = "default@gmail.com",
+                active = true,
+            )
+        val userAccount1 =
+            UserAccount(
+                id = null,
+                fullName = "testUserFirstName",
+                gender = BrnGender.MALE.toString(),
+                bornYear = 2000,
+                email = "default1@gmail.com",
+                active = true,
+            )
+        val userAccount2 =
+            UserAccount(
+                id = null,
+                fullName = "testUserFirstName",
+                gender = BrnGender.MALE.toString(),
+                bornYear = 2000,
+                email = "default2@gmail.com",
+                active = true,
+            )
         userAccountRepository.saveAll(listOf(userAccount, userAccount1, userAccount2))
     }
 
@@ -62,11 +64,16 @@ internal class BrainUpUserDetailsServiceTestIT : BaseIT() {
 
     @ParameterizedTest(name = "Method with userEmail {0} should return valid UserDetails or throw expected exception {1} with message {2}")
     @MethodSource("getUserEmailsAndAccountData")
-    fun loadUserByUsername(sourceUserEmail: String, ex: Class<out Exception>?, exMessage: String?) {
+    fun loadUserByUsername(
+        sourceUserEmail: String,
+        ex: Class<out Exception>?,
+        exMessage: String?,
+    ) {
         if (nonNull(ex)) {
-            val actualException = Assertions.assertThrows(ex) {
-                brainUpUserDetailsService.loadUserByUsername(sourceUserEmail)
-            }
+            val actualException =
+                Assertions.assertThrows(ex) {
+                    brainUpUserDetailsService.loadUserByUsername(sourceUserEmail)
+                }
             assertEquals(actualException.message, exMessage)
             return
         }
@@ -84,8 +91,8 @@ internal class BrainUpUserDetailsServiceTestIT : BaseIT() {
             Arguments.of(
                 "missed@g.com",
                 UsernameNotFoundException::class.java,
-                "User with email: missed@g.com doesn't exist"
-            )
+                "User with email: missed@g.com doesn't exist",
+            ),
         )
     }
 }

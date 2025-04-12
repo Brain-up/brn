@@ -36,7 +36,6 @@ class Contributor(
     var contribution: Long = 0,
     var active: Boolean = true,
 ) {
-
     @OneToOne(cascade = [CascadeType.REMOVE])
     @JoinColumn(name = "github_id", referencedColumnName = "id")
     var gitHubUser: GitHubUser? = null
@@ -46,45 +45,48 @@ class Contributor(
     var contacts: MutableSet<Contact> = mutableSetOf()
 
     fun toContributorResponse(locale: String = "ru-ru"): ContributorResponse {
-        val dto = ContributorResponse(
-            id = id!!,
-            gitHubLogin = gitHubUser?.login ?: "",
-            repositoryName = repositoryName,
-            name = name,
-            nameEn = nameEn,
-            company = company,
-            companyEn = companyEn,
-            description = description,
-            descriptionEn = descriptionEn,
-            pictureUrl = pictureUrl,
-            contribution = contribution,
-            type = type,
-            active = active,
-            contacts = contacts.map {
-                it.toDto()
-            }.toSet()
-        )
+        val dto =
+            ContributorResponse(
+                id = id!!,
+                gitHubLogin = gitHubUser?.login ?: "",
+                repositoryName = repositoryName,
+                name = name,
+                nameEn = nameEn,
+                company = company,
+                companyEn = companyEn,
+                description = description,
+                descriptionEn = descriptionEn,
+                pictureUrl = pictureUrl,
+                contribution = contribution,
+                type = type,
+                active = active,
+                contacts =
+                    contacts
+                        .map {
+                            it.toDto()
+                        }.toSet(),
+            )
         return dto
     }
 
-    fun toContributorDetailsDto(): ContributorDetailsResponse {
-        return ContributorDetailsResponse(
-            id = id!!,
-            type = type.name,
-            name = name,
-            description = description,
-            company = company,
-            nameEn = nameEn,
-            descriptionEn = descriptionEn,
-            companyEn = companyEn,
-            pictureUrl = pictureUrl,
-            active = active,
-            gitHubUser = gitHubUser?.toDto(),
-            contacts = contacts.map {
-                it.toDto()
-            }.toSet(),
-        )
-    }
+    fun toContributorDetailsDto(): ContributorDetailsResponse = ContributorDetailsResponse(
+        id = id!!,
+        type = type.name,
+        name = name,
+        description = description,
+        company = company,
+        nameEn = nameEn,
+        descriptionEn = descriptionEn,
+        companyEn = companyEn,
+        pictureUrl = pictureUrl,
+        active = active,
+        gitHubUser = gitHubUser?.toDto(),
+        contacts =
+            contacts
+                .map {
+                    it.toDto()
+                }.toSet(),
+    )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

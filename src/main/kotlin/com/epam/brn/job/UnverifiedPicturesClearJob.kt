@@ -7,7 +7,9 @@ import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 
 @Component
-class UnverifiedPicturesClearJob(private val cloudService: CloudService) {
+class UnverifiedPicturesClearJob(
+    private val cloudService: CloudService,
+) {
     @Value("\${brn.resources.default-pictures.path}")
     lateinit var defaultPicturesPath: String
 
@@ -18,16 +20,19 @@ class UnverifiedPicturesClearJob(private val cloudService: CloudService) {
 
     @Scheduled(cron = "\${brn.resources.unverified-pictures.clean-job.cron}")
     fun clearUnusedPictures() {
-        val unverifiedFolderPictures: List<String> = cloudService
-            .getFileNames(unverifiedPicturesPath)
-            .filter { it != "/" }
-        val defaultFolderPictures: List<String> = cloudService
-            .getFileNames(defaultPicturesPath)
-            .filter { it != "/" }
+        val unverifiedFolderPictures: List<String> =
+            cloudService
+                .getFileNames(unverifiedPicturesPath)
+                .filter { it != "/" }
+        val defaultFolderPictures: List<String> =
+            cloudService
+                .getFileNames(defaultPicturesPath)
+                .filter { it != "/" }
 
-        val fileNamesToDelete = defaultFolderPictures
-            .intersect(unverifiedFolderPictures)
-            .map { unverifiedPicturesPath.plus(it) }
+        val fileNamesToDelete =
+            defaultFolderPictures
+                .intersect(unverifiedFolderPictures)
+                .map { unverifiedPicturesPath.plus(it) }
 
         cloudService.deleteFiles(fileNamesToDelete)
         log.info("Files ${fileNamesToDelete.size} are deleted from \"$unverifiedPicturesPath\"")

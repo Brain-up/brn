@@ -6,11 +6,13 @@ package com.epam.brn.dto.azure.tts
 // For example, a value of 1 results in no change in the rate.
 // A value of 0.5 results in a halving of the rate. A value of 3 results in a tripling of the rate.
 // - A constant value:
-enum class AzureRates(val code: String) {
+enum class AzureRates(
+    val code: String,
+) {
     X_SLOW(" x-slow"),
     SLOW("slow"),
     MEDIUM("medium"),
     FAST("fast"),
     X_FAST("x-fast"),
-    DEFAULT("default");
+    DEFAULT("default"),
 }

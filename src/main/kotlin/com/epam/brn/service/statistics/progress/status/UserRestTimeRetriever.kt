@@ -7,7 +7,6 @@ import java.time.LocalDate
  * Cool down - is a period when user didn't exercise at all
  */
 interface UserRestTimeRetriever {
-
     /**
      * Should return the biggest user break in training for the period in days count
      * @param from - start date of the period for which to look break for
@@ -15,5 +14,9 @@ interface UserRestTimeRetriever {
      * @param userId - id of the user for which to look break for
      * @return the biggest break in days
      */
-    fun getMaximalUserRestTime(userId: Long? = null, from: LocalDate, to: LocalDate): Int
+    fun getMaximalUserRestTime(
+        userId: Long? = null,
+        from: LocalDate,
+        to: LocalDate,
+    ): Int
 }

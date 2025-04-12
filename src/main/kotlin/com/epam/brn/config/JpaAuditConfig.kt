@@ -13,22 +13,17 @@ import java.util.Optional
 @Configuration
 @EnableJpaAuditing(
     auditorAwareRef = "userContextProvider",
-    dateTimeProviderRef = "dateTimeProvider"
+    dateTimeProviderRef = "dateTimeProvider",
 )
 class JpaAuditConfig {
-
     @Bean
-    fun dateTimeProvider(dateTimeService: TimeService): DateTimeProvider {
-        return DateTimeProvider {
-            Optional.of(dateTimeService.now())
-        }
+    fun dateTimeProvider(dateTimeService: TimeService): DateTimeProvider = DateTimeProvider {
+        Optional.of(dateTimeService.now())
     }
 
     @Bean
-    fun userContextProvider(userAccountService: UserAccountService): AuditorAware<String> {
-        return AuditorAware<String> {
-            val authentication = SecurityContextHolder.getContext().authentication
-            Optional.of(if (authentication != null) authentication.name else "InitialDataLoader")
-        }
+    fun userContextProvider(userAccountService: UserAccountService): AuditorAware<String> = AuditorAware<String> {
+        val authentication = SecurityContextHolder.getContext().authentication
+        Optional.of(if (authentication != null) authentication.name else "InitialDataLoader")
     }
 }

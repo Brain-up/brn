@@ -9,17 +9,16 @@ import org.springframework.stereotype.Component
 import java.io.InputStream
 
 @Component
-class SeriesSyllablesKorolevaRecordMappingIteratorProvider :
-    MappingIteratorProvider<SeriesSyllablesKorolevaRecord> {
-
+class SeriesSyllablesKorolevaRecordMappingIteratorProvider : MappingIteratorProvider<SeriesSyllablesKorolevaRecord> {
     override fun iterator(inputStream: InputStream): MappingIterator<SeriesSyllablesKorolevaRecord> {
         val csvMapper = CsvMapper().apply { enable(CsvParser.Feature.TRIM_SPACES) }
 
-        val csvSchema = csvMapper
-            .schemaFor(SeriesSyllablesKorolevaRecord::class.java)
-            .withColumnReordering(true)
-            .withArrayElementSeparator(StringUtils.SPACE)
-            .withHeader()
+        val csvSchema =
+            csvMapper
+                .schemaFor(SeriesSyllablesKorolevaRecord::class.java)
+                .withColumnReordering(true)
+                .withArrayElementSeparator(StringUtils.SPACE)
+                .withHeader()
 
         return csvMapper
             .readerFor(SeriesSyllablesKorolevaRecord::class.java)
@@ -27,6 +26,5 @@ class SeriesSyllablesKorolevaRecordMappingIteratorProvider :
             .readValues(inputStream)
     }
 
-    override fun isApplicable(format: String): Boolean =
-        SeriesSyllablesKorolevaRecord.FORMAT == format
+    override fun isApplicable(format: String): Boolean = SeriesSyllablesKorolevaRecord.FORMAT == format
 }

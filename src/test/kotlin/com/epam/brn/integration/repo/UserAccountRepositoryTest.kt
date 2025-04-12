@@ -19,7 +19,6 @@ import java.time.temporal.ChronoUnit
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class UserAccountRepositoryTest {
-
     @Autowired
     private lateinit var repository: UserAccountRepository
 
@@ -33,11 +32,12 @@ class UserAccountRepositoryTest {
         val today = LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS)
 
         val email = "test@email.com"
-        val user = UserAccount(
-            email = email,
-            fullName = "John Doe",
-            lastVisit = yesterday
-        )
+        val user =
+            UserAccount(
+                email = email,
+                fullName = "John Doe",
+                lastVisit = yesterday,
+            )
         val savedUser = testEntityManager.persistAndFlush(user)
 
         // WHEN

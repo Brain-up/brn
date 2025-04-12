@@ -9,5 +9,8 @@ interface RoleService {
     fun findAll(): List<Role>
     fun save(role: Role): Role
     fun isCurrentUserAdmin(): Boolean
-    fun isUserHasRole(user: UserAccountDto, role: String): Boolean
+    fun isUserHasRole(
+        user: UserAccountDto,
+        role: String,
+    ): Boolean
 }

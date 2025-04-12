@@ -6,13 +6,14 @@ import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.stereotype.Component
 
 @Component
-class GroupLocalePostprocessorImpl(private val messageSource: MessageSource) :
-    LocalePostprocessor<ExerciseGroupDto> {
-
-    private val mapOfMessages: Map<String, Pair<String, String>> = mapOf(
-        "Неречевые упражнения" to Pair("group.first.name", "group.first.description"),
-        "Речевые упражнения" to Pair("group.second.name", "group.second.description")
-    )
+class GroupLocalePostprocessorImpl(
+    private val messageSource: MessageSource,
+) : LocalePostprocessor<ExerciseGroupDto> {
+    private val mapOfMessages: Map<String, Pair<String, String>> =
+        mapOf(
+            "Неречевые упражнения" to Pair("group.first.name", "group.first.description"),
+            "Речевые упражнения" to Pair("group.second.name", "group.second.description"),
+        )
 
     override fun postprocess(dto: ExerciseGroupDto): ExerciseGroupDto {
         val sourceName = mapOfMessages[dto.name]
