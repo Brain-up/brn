@@ -32,15 +32,17 @@ class SwaggerConfig {
             allowedRoles = rolesAllowedAnnotation.value
         } else {
             rolesAllowedAnnotation = handlerMethod.method.declaringClass.getAnnotation(RolesAllowed::class.java)
-            if (rolesAllowedAnnotation != null)
+            if (rolesAllowedAnnotation != null) {
                 allowedRoles = rolesAllowedAnnotation.value
+            }
         }
 
         val sb = StringBuilder("Roles: ")
-        if (allowedRoles != null)
+        if (allowedRoles != null) {
             sb.append("**${allowedRoles.joinToString(",")}**")
-        else
+        } else {
             sb.append("**PUBLIC**")
+        }
 
         operation.description?.let {
             sb.append("<br/>")
