@@ -17,7 +17,6 @@ import com.epam.brn.repo.SubGroupRepository
 import com.epam.brn.repo.TaskRepository
 import com.epam.brn.repo.UserAccountRepository
 import com.fasterxml.jackson.databind.ObjectMapper
-import org.amshove.kluent.internal.platformClassName
 import org.junit.jupiter.api.Tag
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -66,6 +65,8 @@ abstract class BaseIT {
     private lateinit var roleRepository: RoleRepository
 
     protected val dateFormat = DateTimeFormatter.ISO_DATE_TIME
+
+    fun platformClassName(): String = this::class.simpleName ?: "Unknown"
 
     /**
      * Should delete data from repositories.

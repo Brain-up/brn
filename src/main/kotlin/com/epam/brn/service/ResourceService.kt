@@ -28,7 +28,7 @@ class ResourceService(
         .orElse(null)
 
     fun save(resource: Resource): Resource = resourceRepository.save(resource)
-
+    val resource = resourceRepository
     fun findAll(): List<Resource> = resourceRepository
         .findAll()
         .iterator()

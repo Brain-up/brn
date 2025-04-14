@@ -137,7 +137,9 @@ internal class ResourceServiceTest {
             }
 
         // THEN
-        expectedErrorMessage shouldBe exception.message
+        exception.message shouldBe expectedErrorMessage
+
+        // Verifica que el repositorio haya sido llamado una sola vez
         verify(exactly = 1) { resourceRepositoryMock.findByIdOrNull(id) }
     }
 }

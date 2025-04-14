@@ -79,7 +79,6 @@ dependencies {
 
     testImplementation("org.springframework.boot:spring-boot-starter-webflux")
     testImplementation("org.springframework.cloud:spring-cloud-contract-wiremock:$springCloudContractWiremockVersion")
-    testImplementation("org.amshove.kluent:kluent:1.68") // should be deleted after kotest move all of it
     testImplementation("org.jetbrains.kotlin:kotlin-test:1.3.72") // should be deleted after kotest move all of it
     testImplementation("io.kotest:kotest-assertions-core:$kotestAssertionsVersion")
 
