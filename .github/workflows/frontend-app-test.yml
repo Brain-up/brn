@@ -8,6 +8,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetch all history to ensure all commits are accessible
       - uses: rwjblue/setup-volta@v1
       - uses: H1D/actions-ember-testing@8ca8da615c2db5889b7fbd3834e4093706754435
       - name: Install dependencies
@@ -37,7 +39,10 @@ jobs:
       - uses: H1D/actions-ember-testing@8ca8da615c2db5889b7fbd3834e4093706754435
       - name: Install dependencies
         working-directory: ./frontend
-        run: yarn install
+        run: |
+          for i in {1..3}; do
+            yarn install && break || sleep 5;
+          done
       - uses: mydea/ember-cli-code-coverage-action@e4130abc6c57d272d9d123870c26b8c284128adc
         with:
           working-directory: ./frontend
