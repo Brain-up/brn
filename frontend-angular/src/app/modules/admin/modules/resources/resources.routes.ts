@@ -6,7 +6,7 @@ export const RESOURCES_ROUTES: Routes = [
     loadComponent: () => import('./resources.component').then(m => m.ResourcesComponent),
   },
   {
-    path: "resource/:resourcesId",
+    path: "resource/:resourceId",
     loadComponent: () =>
       import("./module/resources/resources.component").then(
         (m) => m.ResourcesComponent
