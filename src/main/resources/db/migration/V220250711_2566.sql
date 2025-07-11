@@ -2,7 +2,7 @@ drop index if exists audio_file_idx;
 
 drop index if exists word_audio_file_idx;
 
-create index word_word_type_idx on resource (word, word_type);
+create index if not exists word_word_type_idx on resource (word, word_type);
 
 alter table resource drop constraint resource_constrain;
 
