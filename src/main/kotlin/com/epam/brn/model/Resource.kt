@@ -15,9 +15,9 @@ import javax.persistence.UniqueConstraint
 
 @Entity
 @Table(
-    uniqueConstraints = [UniqueConstraint(columnNames = ["word", "wordType"])],
+    uniqueConstraints = [UniqueConstraint(columnNames = ["word", "word_type"])],
     indexes = [
-        Index(name = "word_wordtype_idx", columnList = "word, wordType"),
+        Index(name = "word_word_type_idx", columnList = "word, word_type"),
     ],
 )
 class Resource(
