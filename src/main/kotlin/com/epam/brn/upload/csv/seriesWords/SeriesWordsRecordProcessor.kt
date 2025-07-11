@@ -73,19 +73,10 @@ class SeriesWordsRecordProcessor(
         word: String,
         locale: BrnLocale,
     ): Resource {
-        val audioPath =
-            wordsService.getSubFilePathForWord(
-                AudioFileMetaData(
-                    word,
-                    locale.locale,
-                    wordsService.getDefaultManVoiceForLocale(locale.locale),
-                ),
-            )
         val resource =
             resourceRepository
                 .findFirstByWordAndLocaleAndWordType(word, locale.locale, WordType.OBJECT.toString())
                 .orElse(Resource(word = word, locale = locale.locale))
-        resource.audioFileUrl = audioPath
         resource.wordType = WordType.OBJECT.toString()
         return resource
     }

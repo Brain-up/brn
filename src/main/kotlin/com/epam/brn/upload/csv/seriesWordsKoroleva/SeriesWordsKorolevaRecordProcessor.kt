@@ -63,14 +63,6 @@ class SeriesWordsKorolevaRecordProcessor(
         word: String,
         locale: BrnLocale,
     ): Resource {
-        val audioPath =
-            wordsService.getSubFilePathForWord(
-                AudioFileMetaData(
-                    word,
-                    locale.locale,
-                    wordsService.getDefaultWomanVoiceForLocale(locale.locale),
-                ),
-            )
         val resource =
             resourceRepository
                 .findFirstByWordAndLocaleAndWordType(word, locale.locale, WordType.OBJECT.toString())
@@ -80,7 +72,6 @@ class SeriesWordsKorolevaRecordProcessor(
                         locale = locale.locale,
                     ),
                 )
-        resource.audioFileUrl = audioPath
         resource.wordType = WordType.OBJECT.toString()
         return resource
     }
