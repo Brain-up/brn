@@ -17,7 +17,7 @@ import javax.persistence.UniqueConstraint
 @Table(
     uniqueConstraints = [UniqueConstraint(columnNames = ["word", "wordType"])],
     indexes = [
-        Index(name = "word_audio_file_idx", columnList = "word, wordType"),
+        Index(name = "word_wordtype_idx", columnList = "word, wordType"),
     ],
 )
 class Resource(
