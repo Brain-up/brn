@@ -1,6 +1,5 @@
 package com.epam.brn.upload.csv.audiometrySpeech
 
-import com.epam.brn.dto.AudioFileMetaData
 import com.epam.brn.enums.AudiometryType
 import com.epam.brn.enums.BrnLocale
 import com.epam.brn.enums.WordType

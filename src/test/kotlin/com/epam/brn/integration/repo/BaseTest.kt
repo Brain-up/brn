@@ -10,8 +10,10 @@ import com.epam.brn.repo.ExerciseGroupRepository
 import com.epam.brn.repo.ResourceRepository
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 abstract class BaseTest {
     @Autowired
     lateinit var exerciseGroupRepository: ExerciseGroupRepository

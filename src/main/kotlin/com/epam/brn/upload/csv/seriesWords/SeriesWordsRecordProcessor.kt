@@ -1,6 +1,5 @@
 package com.epam.brn.upload.csv.seriesWords
 
-import com.epam.brn.dto.AudioFileMetaData
 import com.epam.brn.enums.BrnLocale
 import com.epam.brn.enums.WordType
 import com.epam.brn.exception.EntityNotFoundException
