@@ -41,7 +41,7 @@ jobs:
           working-directory: ./frontend
           test-command: "yarn test:coverage"
           coverage-file: "./frontend/coverage/coverage-summary.json"
-          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          repo-token: "${{ secrets.API_GITHUB_TOKEN }}"
           message: "Frontend test coverage: {testCoverage}%"
 
 #  build:
@@ -56,4 +56,4 @@ jobs:
 #      - uses: simplabs/ember-asset-size-action@v1
 #        with:
 #          working-directory: ./frontend
-#          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+#          repo-token: "${{ secrets.API_GITHUB_TOKEN }}"
