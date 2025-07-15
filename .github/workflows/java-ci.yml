@@ -18,6 +18,7 @@ jobs:
       - name: Build, Unit and Integration Tests
         run: ./gradlew build test integrationTest jacocoTestReport sonarqube
         env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v1
