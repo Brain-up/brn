@@ -60,6 +60,6 @@ jobs:
       - name: Publish coverage results
         uses: AthleticNet/comment-test-coverage@1.1
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.API_GITHUB_TOKEN }}
           path: ./frontend-angular/coverage/frontend-angular/coverage-summary.json
           title: Frontend admin coverage
