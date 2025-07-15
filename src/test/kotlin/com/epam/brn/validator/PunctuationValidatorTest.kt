@@ -5,7 +5,6 @@ import io.kotest.matchers.booleans.shouldBeTrue
 import org.junit.jupiter.api.Test
 
 internal class PunctuationValidatorTest {
-
     private val punctuationValidator = PunctuationValidator()
 
     @Test

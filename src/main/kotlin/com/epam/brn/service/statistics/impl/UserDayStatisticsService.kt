@@ -14,24 +14,31 @@ import java.time.LocalDateTime
 class UserDayStatisticsService(
     private val studyHistoryRepository: StudyHistoryRepository,
     private val userAccountService: UserAccountService,
-    private val progressManager: ProgressStatusManager<List<StudyHistory>>
+    private val progressManager: ProgressStatusManager<List<StudyHistory>>,
 ) : UserPeriodStatisticsService<DayStudyStatistics> {
-    override fun getStatisticsForPeriod(from: LocalDateTime, to: LocalDateTime, userId: Long?): List<DayStudyStatistics> {
+    override fun getStatisticsForPeriod(
+        from: LocalDateTime,
+        to: LocalDateTime,
+        userId: Long?,
+    ): List<DayStudyStatistics> {
         val tempUserId = userId ?: userAccountService.getCurrentUserDto().id
-        val studyHistories = studyHistoryRepository.getHistories(
-            userId = tempUserId!!,
-            from = from,
-            to = to
-        )
-        return studyHistories.map {
-            val filteredStudyHistories = studyHistories.filter { studyHistoryFilter ->
-                studyHistoryFilter.startTime.toLocalDate() == it.startTime.toLocalDate()
-            }
-            DayStudyStatistics(
-                exercisingTimeSeconds = filteredStudyHistories.sumOf { dayStudyHistory -> dayStudyHistory.executionSeconds },
-                date = it.startTime,
-                progress = progressManager.getStatus(UserExercisingPeriod.DAY, filteredStudyHistories)
+        val studyHistories =
+            studyHistoryRepository.getHistories(
+                userId = tempUserId!!,
+                from = from,
+                to = to,
             )
-        }.distinctBy { it.date.toLocalDate() }
+        return studyHistories
+            .map {
+                val filteredStudyHistories =
+                    studyHistories.filter { studyHistoryFilter ->
+                        studyHistoryFilter.startTime.toLocalDate() == it.startTime.toLocalDate()
+                    }
+                DayStudyStatistics(
+                    exercisingTimeSeconds = filteredStudyHistories.sumOf { dayStudyHistory -> dayStudyHistory.executionSeconds },
+                    date = it.startTime,
+                    progress = progressManager.getStatus(UserExercisingPeriod.DAY, filteredStudyHistories),
+                )
+            }.distinctBy { it.date.toLocalDate() }
     }
 }

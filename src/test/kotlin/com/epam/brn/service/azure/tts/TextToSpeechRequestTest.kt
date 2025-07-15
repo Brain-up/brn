@@ -16,29 +16,33 @@ import org.springframework.boot.test.autoconfigure.json.JsonTest
 
 @JsonTest
 class TextToSpeechRequestTest {
-
     @Test
     @Throws(JsonProcessingException::class)
     fun whenSerializedToXmlStr_thenCorrect() {
-        val xmlMapper = XmlMapper(JacksonXmlModule().apply { setDefaultUseWrapper(false) })
-            .apply { enable(SerializationFeature.INDENT_OUTPUT) }
-        val textToSpeechRequest = AzureTextToSpeechRequest(
-            voice = Voice(
-                name = "en-US-ChristopherNeural",
-                gender = "Male",
+        val xmlMapper =
+            XmlMapper(JacksonXmlModule().apply { setDefaultUseWrapper(false) })
+                .apply { enable(SerializationFeature.INDENT_OUTPUT) }
+        val textToSpeechRequest =
+            AzureTextToSpeechRequest(
+                voice =
+                    Voice(
+                        name = "en-US-ChristopherNeural",
+                        gender = "Male",
+                        lang = "en-US",
+                        prosody =
+                            Prosody(
+                                pitch = AzurePitches.DEFAULT.code,
+                                rate = AzureRates.DEFAULT.code,
+                                expressAs =
+                                    ExpressAs(
+                                        style = "newscast-casual",
+                                        styledegree = "1",
+                                        text = "Microsoft Speech Service Text-to-Speech API",
+                                    ),
+                            ),
+                    ),
                 lang = "en-US",
-                prosody = Prosody(
-                    pitch = AzurePitches.DEFAULT.code,
-                    rate = AzureRates.DEFAULT.code,
-                    expressAs = ExpressAs(
-                        style = "newscast-casual",
-                        styledegree = "1",
-                        text = "Microsoft Speech Service Text-to-Speech API"
-                    )
-                ),
-            ),
-            lang = "en-US",
-        )
+            )
         val xml = xmlMapper.writeValueAsString(textToSpeechRequest)
         assertNotNull(xml)
     }

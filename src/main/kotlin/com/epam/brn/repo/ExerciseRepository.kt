@@ -8,18 +8,23 @@ import java.util.Optional
 
 @Repository
 interface ExerciseRepository : JpaRepository<Exercise, Long> {
-
     fun findExercisesBySubGroupId(subGroupId: Long): List<Exercise>
 
-    fun findByNameAndLevel(name: String, level: Int): Exercise?
+    fun findByNameAndLevel(
+        name: String,
+        level: Int,
+    ): Exercise?
 
-    fun findExerciseByNameAndLevel(name: String, level: Int): Optional<Exercise>
+    fun findExerciseByNameAndLevel(
+        name: String,
+        level: Int,
+    ): Optional<Exercise>
 
     @Query(
         "SELECT e FROM Exercise e " +
             "JOIN e.tasks t " +
             "JOIN t.answerOptions ao " +
-            "WHERE UPPER(ao.word) like UPPER(concat('%',:word,'%'))"
+            "WHERE UPPER(ao.word) like UPPER(concat('%',:word,'%'))",
     )
     fun findExercisesByWord(word: String): List<Exercise>
 

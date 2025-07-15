@@ -1,13 +1,13 @@
 package com.epam.brn.integration
 
-import com.epam.brn.repo.ExerciseGroupRepository
-import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.dto.SeriesDto
 import com.epam.brn.dto.response.BrnResponse
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.enums.ExerciseType
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.Series
+import com.epam.brn.repo.ExerciseGroupRepository
+import com.epam.brn.repo.SeriesRepository
 import com.fasterxml.jackson.core.type.TypeReference
 import com.google.gson.Gson
 import org.junit.jupiter.api.AfterEach
@@ -23,7 +23,6 @@ import java.nio.charset.StandardCharsets
 
 @WithMockUser(username = "test@test.test", roles = [BrnRole.USER])
 class SeriesControllerIT : BaseIT() {
-
     @Autowired
     lateinit var exerciseGroupRepository: ExerciseGroupRepository
 
@@ -54,12 +53,13 @@ class SeriesControllerIT : BaseIT() {
         val series1 = insertSeries(group, series1Name)
         val series2 = insertSeries(group, series2Name)
         // WHEN
-        val resultAction = mockMvc.perform(
-            MockMvcRequestBuilders
-                .get(baseUrl)
-                .param("groupId", group.id.toString())
-                .contentType(MediaType.APPLICATION_JSON)
-        )
+        val resultAction =
+            mockMvc.perform(
+                MockMvcRequestBuilders
+                    .get(baseUrl)
+                    .param("groupId", group.id.toString())
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
         // THEN
         resultAction
             .andExpect(status().isOk)
@@ -80,11 +80,12 @@ class SeriesControllerIT : BaseIT() {
         val group = insertGroup()
         val series = insertSeries(group, "series")
         // WHEN
-        val resultAction = mockMvc.perform(
-            MockMvcRequestBuilders
-                .get("/series/${series.id}")
-                .contentType(MediaType.APPLICATION_JSON)
-        )
+        val resultAction =
+            mockMvc.perform(
+                MockMvcRequestBuilders
+                    .get("/series/${series.id}")
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
         // THEN
         resultAction
             .andExpect(status().isOk)
@@ -100,11 +101,12 @@ class SeriesControllerIT : BaseIT() {
         val group = insertGroup()
         val series = insertSeries(group, "SINGLE_SIMPLE_WORDS")
         // WHEN
-        val resultAction = mockMvc.perform(
-            MockMvcRequestBuilders
-                .get("/series/fileFormat/${series.id}")
-                .contentType(MediaType.APPLICATION_JSON)
-        )
+        val resultAction =
+            mockMvc.perform(
+                MockMvcRequestBuilders
+                    .get("/series/fileFormat/${series.id}")
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
         // THEN
         resultAction
             .andExpect(status().isOk)
@@ -116,14 +118,18 @@ class SeriesControllerIT : BaseIT() {
         Assertions.assertEquals(expectedResponse, response)
     }
 
-    fun insertSeries(group: ExerciseGroup, name: String): Series {
-        val series = Series(
-            name = name,
-            description = "description",
-            exerciseGroup = group,
-            level = 1,
-            type = ExerciseType.SINGLE_SIMPLE_WORDS.name
-        )
+    fun insertSeries(
+        group: ExerciseGroup,
+        name: String,
+    ): Series {
+        val series =
+            Series(
+                name = name,
+                description = "description",
+                exerciseGroup = group,
+                level = 1,
+                type = ExerciseType.SINGLE_SIMPLE_WORDS.name,
+            )
         return seriesRepository.save(series)
     }
 }

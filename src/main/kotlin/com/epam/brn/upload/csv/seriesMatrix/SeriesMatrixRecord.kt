@@ -12,7 +12,7 @@ data class SeriesMatrixRecord(
     @JsonProperty("orderNumber")
     val orderNumber: Int,
     @JsonProperty("words")
-    val words: List<String>
+    val words: List<String>,
 ) {
     companion object {
         const val FORMAT = "level,code,exerciseName,orderNumber,words"

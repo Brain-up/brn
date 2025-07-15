@@ -37,7 +37,6 @@ import kotlin.test.assertSame
 @ExtendWith(MockKExtension::class)
 @DisplayName("TaskService test using MockK")
 internal class TaskServiceTest {
-
     @InjectMockKs
     lateinit var taskService: TaskService
 
@@ -94,10 +93,11 @@ internal class TaskServiceTest {
             // GIVEN
             val expectedTaskSize = 2
             val resource = Resource(word = "word", locale = BrnLocale.RU.locale, pictureFileUrl = "fileUrl")
-            every { taskRepositoryMock.findTasksByExerciseIdWithJoinedAnswers(ofType(Long::class)) } returns listOf(
-                task1Mock,
-                task2Mock
-            )
+            every { taskRepositoryMock.findTasksByExerciseIdWithJoinedAnswers(ofType(Long::class)) } returns
+                listOf(
+                    task1Mock,
+                    task2Mock,
+                )
             every { exerciseRepositoryMock.findById(ofType(Long::class)) } returns Optional.of(exerciseMock)
 
             every { task1Mock.answerOptions } returns mutableSetOf(resource)
@@ -125,10 +125,11 @@ internal class TaskServiceTest {
             val expectedTaskSize = 2
             val template = ""
             val resource = Resource(word = "word", locale = BrnLocale.RU.locale)
-            every { taskRepositoryMock.findTasksByExerciseIdWithJoinedAnswers(ofType(Long::class)) } returns listOf(
-                task1Mock,
-                task2Mock
-            )
+            every { taskRepositoryMock.findTasksByExerciseIdWithJoinedAnswers(ofType(Long::class)) } returns
+                listOf(
+                    task1Mock,
+                    task2Mock,
+                )
             every { exerciseRepositoryMock.findById(ofType(Long::class)) } returns Optional.of(exerciseMock)
 
             every { task1Mock.answerOptions } returns mutableSetOf(resource)
@@ -139,13 +140,13 @@ internal class TaskServiceTest {
             every {
                 task1Mock.toWordsGroupSeriesTaskDto(
                     ExerciseType.WORDS_SEQUENCES,
-                    template
+                    template,
                 )
             } returns taskWordsGroupResponse1Mock
             every {
                 task2Mock.toWordsGroupSeriesTaskDto(
                     ExerciseType.WORDS_SEQUENCES,
-                    template
+                    template,
                 )
             } returns taskWordsGroupResponse2Mock
 
@@ -206,10 +207,11 @@ internal class TaskServiceTest {
             val template = ""
             val resource = Resource(word = "word", locale = BrnLocale.RU.locale)
             val expectedTaskSize = 2
-            every { taskRepositoryMock.findTasksByExerciseIdWithJoinedAnswers(ofType(Long::class)) } returns listOf(
-                task1Mock,
-                task2Mock
-            )
+            every { taskRepositoryMock.findTasksByExerciseIdWithJoinedAnswers(ofType(Long::class)) } returns
+                listOf(
+                    task1Mock,
+                    task2Mock,
+                )
             every { exerciseRepositoryMock.findById(ofType(Long::class)) } returns Optional.of(exerciseMock)
 
             every { task1Mock.answerOptions } returns mutableSetOf(resource)
@@ -221,13 +223,13 @@ internal class TaskServiceTest {
             every {
                 task1Mock.toWordsGroupSeriesTaskDto(
                     ExerciseType.WORDS_SEQUENCES,
-                    template
+                    template,
                 )
             } returns taskWordsGroupResponse1Mock
             every {
                 task2Mock.toWordsGroupSeriesTaskDto(
                     ExerciseType.WORDS_SEQUENCES,
-                    template
+                    template,
                 )
             } returns taskWordsGroupResponse2Mock
 
@@ -251,10 +253,11 @@ internal class TaskServiceTest {
             val expectedTaskSize = 2
             val template = ""
             val resource = Resource(word = "word", locale = BrnLocale.RU.locale)
-            every { taskRepositoryMock.findTasksByExerciseIdWithJoinedAnswers(ofType(Long::class)) } returns listOf(
-                task1Mock,
-                task2Mock
-            )
+            every { taskRepositoryMock.findTasksByExerciseIdWithJoinedAnswers(ofType(Long::class)) } returns
+                listOf(
+                    task1Mock,
+                    task2Mock,
+                )
             every { exerciseRepositoryMock.findById(ofType(Long::class)) } returns Optional.of(exerciseMock)
 
             every { task1Mock.answerOptions } returns mutableSetOf(resource)
@@ -265,13 +268,13 @@ internal class TaskServiceTest {
             every {
                 task1Mock.toWordsGroupSeriesTaskDto(
                     ExerciseType.SENTENCE,
-                    template
+                    template,
                 )
             } returns taskWordsGroupResponse1Mock
             every {
                 task2Mock.toWordsGroupSeriesTaskDto(
                     ExerciseType.SENTENCE,
-                    template
+                    template,
                 )
             } returns taskWordsGroupResponse2Mock
 
@@ -294,10 +297,11 @@ internal class TaskServiceTest {
             // GIVEN
             val expectedTaskSize = 2
             val resource = Resource(word = "word", locale = BrnLocale.RU.locale)
-            every { taskRepositoryMock.findTasksByExerciseIdWithJoinedAnswers(ofType(Long::class)) } returns listOf(
-                task1Mock,
-                task2Mock
-            )
+            every { taskRepositoryMock.findTasksByExerciseIdWithJoinedAnswers(ofType(Long::class)) } returns
+                listOf(
+                    task1Mock,
+                    task2Mock,
+                )
             every { exerciseRepositoryMock.findById(ofType(Long::class)) } returns Optional.of(exerciseMock)
 
             every { task1Mock.toTaskResponse(ExerciseType.SINGLE_SIMPLE_WORDS) } returns taskDto1Mock
@@ -333,10 +337,11 @@ internal class TaskServiceTest {
         fun `should throw an exception when there is no task for this signal exercise type`() {
             // GIVEN
             val resource = Resource(word = "word", locale = BrnLocale.RU.locale)
-            every { taskRepositoryMock.findTasksByExerciseIdWithJoinedAnswers(ofType(Long::class)) } returns listOf(
-                task1Mock,
-                task2Mock
-            )
+            every { taskRepositoryMock.findTasksByExerciseIdWithJoinedAnswers(ofType(Long::class)) } returns
+                listOf(
+                    task1Mock,
+                    task2Mock,
+                )
             every { exerciseRepositoryMock.findById(ofType(Long::class)) } returns Optional.of(exerciseMock)
 
             every { task1Mock.answerOptions } returns mutableSetOf(resource)
@@ -394,7 +399,7 @@ internal class TaskServiceTest {
             every {
                 task1Mock.toWordsGroupSeriesTaskDto(
                     ExerciseType.WORDS_SEQUENCES,
-                    template
+                    template,
                 )
             } returns taskDto
 
@@ -423,7 +428,7 @@ internal class TaskServiceTest {
             every {
                 task1Mock.toWordsGroupSeriesTaskDto(
                     ExerciseType.SENTENCE,
-                    template
+                    template,
                 )
             } returns taskDto
 

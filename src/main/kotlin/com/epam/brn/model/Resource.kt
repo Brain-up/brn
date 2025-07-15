@@ -18,10 +18,10 @@ import javax.persistence.UniqueConstraint
     uniqueConstraints = [UniqueConstraint(columnNames = ["word", "audioFileUrl", "wordType"])],
     indexes = [
         Index(name = "word_audio_file_idx", columnList = "word, audioFileUrl, wordType"),
-        Index(name = "audio_file_idx", columnList = "audioFileUrl")
-    ]
+        Index(name = "audio_file_idx", columnList = "audioFileUrl"),
+    ],
 )
-data class Resource(
+class Resource(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
@@ -35,7 +35,7 @@ data class Resource(
     var soundsCount: Int? = 0,
     @ManyToMany(mappedBy = "answerOptions", cascade = [CascadeType.MERGE])
     var tasks: MutableSet<Task> = HashSet(),
-    var description: String? = ""
+    var description: String? = "",
 ) {
     fun toResponse() = ResourceResponse(
         id = id,
@@ -45,12 +45,8 @@ data class Resource(
         pictureFileUrl = pictureFileUrl,
         soundsCount = soundsCount,
         wordType = WordType.valueOf(wordType),
-        description = description
+        description = description,
     )
-
-    override fun toString() = "Resource(id=$id, audioFileUrl='$audioFileUrl', word='$word'," +
-        " pictureFileUrl='$pictureFileUrl', soundsCount=$soundsCount), description='$description'"
-
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

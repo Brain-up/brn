@@ -18,7 +18,6 @@ import kotlin.test.assertEquals
 @ExtendWith(MockKExtension::class)
 @DisplayName("CloudControllerTest test using MockK")
 internal class CloudControllerTest {
-
     @InjectMockKs
     private lateinit var cloudController: CloudController
 
@@ -30,7 +29,6 @@ internal class CloudControllerTest {
 
     @Test
     fun `should upload signature for client direct`() {
-
         // GIVEN
         val filePath = "link"
         val baseSingleObjectResponseDto = mapOf("1" to 1)
@@ -77,7 +75,6 @@ internal class CloudControllerTest {
 
     @Test
     fun `should get folders in bucket`() {
-
         // GIVEN
         val listBucket = listOf("folderName")
         every { cloudService.getStorageFolders() } returns listBucket
@@ -93,10 +90,9 @@ internal class CloudControllerTest {
 
     @Test
     fun `loadUnverifiedPicture should call cloud service upload file and return status OK`() {
-
         // GIVEN
         val data = "SOMEDATA".toByteArray().inputStream()
-        val multipartFile = mockk <MultipartFile>()
+        val multipartFile = mockk<MultipartFile>()
         val fileName = "filename.png"
         every { multipartFile.originalFilename } returns fileName
         every { multipartFile.inputStream } returns data
@@ -112,10 +108,9 @@ internal class CloudControllerTest {
 
     @Test
     fun `uploadContributorPicture should call cloud service upload file and return status OK`() {
-
         // GIVEN
         val data = "SOMEDATA".toByteArray().inputStream()
-        val multipartFile = mockk <MultipartFile>()
+        val multipartFile = mockk<MultipartFile>()
         val fileNameWithExtension = "filename.png"
         val fileName = "file"
         every { multipartFile.originalFilename } returns fileNameWithExtension

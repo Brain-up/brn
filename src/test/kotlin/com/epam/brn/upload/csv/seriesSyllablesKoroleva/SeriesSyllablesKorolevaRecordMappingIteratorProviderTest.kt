@@ -13,17 +13,19 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 internal class SeriesSyllablesKorolevaRecordMappingIteratorProviderTest {
-
     private lateinit var inputStream: InputStream
     private val seriesSyllablesKorolevaProvider: SeriesSyllablesKorolevaRecordMappingIteratorProvider =
         SeriesSyllablesKorolevaRecordMappingIteratorProvider()
 
     @BeforeEach
     internal fun setUp() {
-        val taskFile = MockMultipartFile(
-            "series_syllables_en.csv",
-            FileInputStream("src${File.separator}test${File.separator}resources${File.separator}inputData${File.separator}koroleva-record${File.separator}right_syllables_example.csv")
-        )
+        val taskFile =
+            MockMultipartFile(
+                "series_syllables_en.csv",
+                FileInputStream(
+                    "src${File.separator}test${File.separator}resources${File.separator}inputData${File.separator}koroleva-record${File.separator}right_syllables_example.csv",
+                ),
+            )
         inputStream = taskFile.inputStream
     }
 

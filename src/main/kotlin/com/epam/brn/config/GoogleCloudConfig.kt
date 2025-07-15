@@ -16,11 +16,11 @@ class GoogleCloudConfig(
     @Value("\${google.credentialsPath}") credentialsPath: String,
     @Value("\${google.projectId}") projectId: String,
     @Value("\${google.credentialScope}") credentialScope: String,
-    @Value("\${cloud.expireAfterDuration}") expireAfterDuration: String
+    @Value("\${cloud.expireAfterDuration}") expireAfterDuration: String,
 ) {
-
     @Value("\${google.bucketName}")
     val bucketName: String = ""
+
     @Value("\${google.bucketLink}")
     val bucketLink: String = ""
 
@@ -28,11 +28,13 @@ class GoogleCloudConfig(
     final var storage: Storage?
 
     init {
-        val credentials = GoogleCredentials
-            .fromStream(FileInputStream(credentialsPath))
-            .createScoped(Lists.newArrayList(credentialScope))
+        val credentials =
+            GoogleCredentials
+                .fromStream(FileInputStream(credentialsPath))
+                .createScoped(Lists.newArrayList(credentialScope))
         storage =
-            StorageOptions.newBuilder()
+            StorageOptions
+                .newBuilder()
                 .setCredentials(credentials)
                 .setProjectId(projectId)
                 .build()

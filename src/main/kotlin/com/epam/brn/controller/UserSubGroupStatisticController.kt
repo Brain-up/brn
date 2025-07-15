@@ -23,7 +23,7 @@ class UserSubGroupStatisticController(
     @GetMapping("/subgroups")
     @Operation(summary = "Get user's subgroup statistics")
     fun getUserSubGroupStatistic(
-        @RequestParam(value = "ids", required = true) ids: List<Long>
+        @RequestParam(value = "ids", required = true) ids: List<Long>,
     ): ResponseEntity<BrnResponse<List<SubGroupStatisticsResponse>>> {
         val userStatistic = userStatisticService.getSubGroupStatistic(ids)
         return ResponseEntity.ok().body(BrnResponse(data = userStatistic))

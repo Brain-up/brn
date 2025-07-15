@@ -24,14 +24,12 @@ class AudiometryHistory(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     var userAccount: UserAccount,
     @Column(nullable = false)
     var startTime: LocalDateTime,
     var endTime: LocalDateTime? = null,
-
     // for speech audiometry
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "audiometry_task_id")
@@ -47,14 +45,10 @@ class AudiometryHistory(
     @OneToOne
     @JoinColumn(name = "headphones", nullable = false)
     var headphones: Headphones? = null,
-
     // for signal audiometry
     @OneToMany(mappedBy = "audiometryHistory", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     val sinAudiometryResults: MutableList<SinAudiometryResult>? = LinkedList(),
 ) {
-    override fun toString() =
-        "AudiometryHistory(id=$id, userAccount=$userAccount, audiometryTask=$audiometryTask, startTime=$startTime, endTime=$endTime, tasksCount=$tasksCount, rightAnswers=$rightAnswers), headphones=$headphones"
-
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

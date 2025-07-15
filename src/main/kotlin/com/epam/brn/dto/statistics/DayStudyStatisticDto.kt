@@ -9,5 +9,5 @@ package com.epam.brn.dto.statistics
 data class DayStudyStatisticDto(
     val date: String,
     val exercisingTimeSeconds: Int,
-    var progress: UserExercisingProgressStatus?
+    var progress: UserExercisingProgressStatus?,
 )

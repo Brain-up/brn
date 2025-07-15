@@ -8,18 +8,18 @@ import org.springframework.stereotype.Component
 import java.io.InputStream
 
 @Component
-class SeriesMatrixRecordMappingIteratorProvider :
-    MappingIteratorProvider<SeriesMatrixRecord> {
-
+class SeriesMatrixRecordMappingIteratorProvider : MappingIteratorProvider<SeriesMatrixRecord> {
     override fun iterator(inputStream: InputStream): MappingIterator<SeriesMatrixRecord> {
-        val csvMapper = CsvMapper().apply {
-            enable(CsvParser.Feature.TRIM_SPACES)
-        }
+        val csvMapper =
+            CsvMapper().apply {
+                enable(CsvParser.Feature.TRIM_SPACES)
+            }
 
-        val csvSchema = csvMapper
-            .schemaFor(SeriesMatrixRecord::class.java)
-            .withColumnReordering(true)
-            .withHeader()
+        val csvSchema =
+            csvMapper
+                .schemaFor(SeriesMatrixRecord::class.java)
+                .withColumnReordering(true)
+                .withHeader()
 
         return csvMapper
             .readerFor(SeriesMatrixRecord::class.java)
@@ -27,7 +27,5 @@ class SeriesMatrixRecordMappingIteratorProvider :
             .readValues(inputStream)
     }
 
-    override fun isApplicable(format: String): Boolean {
-        return SeriesMatrixRecord.FORMAT == format
-    }
+    override fun isApplicable(format: String): Boolean = SeriesMatrixRecord.FORMAT == format
 }

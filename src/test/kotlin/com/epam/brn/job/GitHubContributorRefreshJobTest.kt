@@ -17,11 +17,8 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.test.util.ReflectionTestUtils
 import java.util.Optional
 
-private const val s = "repository1"
-
 @ExtendWith(MockKExtension::class)
 internal class GitHubContributorRefreshJobTest {
-
     @InjectMockKs
     private lateinit var service: GitHubContributorRefreshJob
 
@@ -48,26 +45,28 @@ internal class GitHubContributorRefreshJobTest {
         ReflectionTestUtils.setField(service, "botLogins", setOf("bot"))
         ReflectionTestUtils.setField(service, "pageSize", pageSize)
 
-        val gitHubContributorDtos1 = listOf(
-            GitHubContributorDto(
-                id = 1,
-                login = "login",
-                contributions = 10
-            ),
-            GitHubContributorDto(
-                id = 2,
-                login = "login2",
-                contributions = 20
-            ),
-        )
-
-        val gitHubContributorDtos2 = listOf(
-            GitHubContributorDto(
-                id = 3,
-                login = "login3",
-                contributions = 30
+        val gitHubContributorDtos1 =
+            listOf(
+                GitHubContributorDto(
+                    id = 1,
+                    login = "login",
+                    contributions = 10,
+                ),
+                GitHubContributorDto(
+                    id = 2,
+                    login = "login2",
+                    contributions = 20,
+                ),
             )
-        )
+
+        val gitHubContributorDtos2 =
+            listOf(
+                GitHubContributorDto(
+                    id = 3,
+                    login = "login3",
+                    contributions = 30,
+                ),
+            )
 
         every {
             gitHubApiClient.getGitHubContributors(organizationName, repositoryName1, pageSize)
@@ -84,14 +83,14 @@ internal class GitHubContributorRefreshJobTest {
                 GitHubUserDto(
                     id = gitHubContributor.id,
                     login = gitHubContributor.login,
-                )
+                ),
             )
             contributors.add(
                 Contributor(
                     id = i.toLong(),
                     name = gitHubContributor.login,
-                    contribution = gitHubContributor.contributions
-                )
+                    contribution = gitHubContributor.contributions,
+                ),
             )
         }
         val savedGithubUser = mutableListOf<com.epam.brn.model.GitHubUser>()
@@ -105,8 +104,8 @@ internal class GitHubContributorRefreshJobTest {
                     email = null,
                     avatarUrl = null,
                     bio = null,
-                    company = null
-                )
+                    company = null,
+                ),
             )
         }
         val contributorMockK = mockk<Contributor>()
@@ -140,13 +139,14 @@ internal class GitHubContributorRefreshJobTest {
         ReflectionTestUtils.setField(service, "gitHubRepositoryNames", setOf(repositoryName))
         ReflectionTestUtils.setField(service, "botLogins", setOf("bot"))
         ReflectionTestUtils.setField(service, "pageSize", pageSize)
-        val gitHubContributorDtos = listOf(
-            GitHubContributorDto(
-                id = 1,
-                login = "login",
-                contributions = 10
+        val gitHubContributorDtos =
+            listOf(
+                GitHubContributorDto(
+                    id = 1,
+                    login = "login",
+                    contributions = 10,
+                ),
             )
-        )
         every {
             gitHubApiClient.getGitHubContributors(organizationName, repositoryName, pageSize)
         } returns gitHubContributorDtos
@@ -158,14 +158,14 @@ internal class GitHubContributorRefreshJobTest {
                 GitHubUserDto(
                     id = gitHubContributor.id,
                     login = gitHubContributor.login,
-                )
+                ),
             )
             contributors.add(
                 Contributor(
                     id = i.toLong(),
                     name = gitHubContributor.login,
-                    contribution = 50
-                )
+                    contribution = 50,
+                ),
             )
         }
         val savedGithubUser = mutableListOf<com.epam.brn.model.GitHubUser>()
@@ -179,8 +179,8 @@ internal class GitHubContributorRefreshJobTest {
                     email = null,
                     avatarUrl = null,
                     bio = null,
-                    company = null
-                )
+                    company = null,
+                ),
             )
         }
         val contributorMockK = mockk<Contributor>()
@@ -217,13 +217,14 @@ internal class GitHubContributorRefreshJobTest {
         ReflectionTestUtils.setField(service, "gitHubRepositoryNames", setOf(repositoryName))
         ReflectionTestUtils.setField(service, "botLogins", setOf("bot"))
         ReflectionTestUtils.setField(service, "pageSize", pageSize)
-        val gitHubContributorDtos = listOf(
-            GitHubContributorDto(
-                id = 1,
-                login = "login",
-                contributions = 10
+        val gitHubContributorDtos =
+            listOf(
+                GitHubContributorDto(
+                    id = 1,
+                    login = "login",
+                    contributions = 10,
+                ),
             )
-        )
         every {
             gitHubApiClient.getGitHubContributors(organizationName, repositoryName, pageSize)
         } returns gitHubContributorDtos
@@ -235,14 +236,14 @@ internal class GitHubContributorRefreshJobTest {
                 GitHubUserDto(
                     id = gitHubContributor.id,
                     login = gitHubContributor.login,
-                )
+                ),
             )
             contributors.add(
                 Contributor(
                     id = i.toLong(),
                     name = gitHubContributor.login,
-                    contribution = gitHubContributor.contributions
-                )
+                    contribution = gitHubContributor.contributions,
+                ),
             )
         }
         val savedGithubUser = mutableListOf<com.epam.brn.model.GitHubUser>()
@@ -256,8 +257,8 @@ internal class GitHubContributorRefreshJobTest {
                     email = null,
                     avatarUrl = null,
                     bio = null,
-                    company = null
-                )
+                    company = null,
+                ),
             )
         }
         val contributorMockK = mockk<Contributor>()
@@ -295,13 +296,14 @@ internal class GitHubContributorRefreshJobTest {
         ReflectionTestUtils.setField(service, "gitHubRepositoryNames", setOf(repositoryName))
         ReflectionTestUtils.setField(service, "botLogins", setOf(botLogin))
         ReflectionTestUtils.setField(service, "pageSize", pageSize)
-        val gitHubContributorDtos = listOf(
-            GitHubContributorDto(
-                id = 1,
-                login = botLogin,
-                contributions = 10
+        val gitHubContributorDtos =
+            listOf(
+                GitHubContributorDto(
+                    id = 1,
+                    login = botLogin,
+                    contributions = 10,
+                ),
             )
-        )
         every {
             gitHubApiClient.getGitHubContributors(organizationName, repositoryName, pageSize)
         } returns gitHubContributorDtos
@@ -323,6 +325,7 @@ internal class GitHubContributorRefreshJobTest {
             contributorService.createOrUpdateByGitHubUser(any(), any())
         }
     }
+
     @Test
     fun `should call needed method when repository list is empty`() {
         // GIVEN

@@ -22,7 +22,6 @@ import kotlin.test.assertFailsWith
 @ExtendWith(MockKExtension::class)
 @DisplayName("RoleServiceImplTest test using MockK")
 internal class RoleServiceImplTest {
-
     @InjectMockKs
     private lateinit var roleServiceImpl: RoleServiceImpl
 
@@ -33,10 +32,11 @@ internal class RoleServiceImplTest {
     fun `findById should get role with roleId`() {
         // GIVEN
         val roleIdLong = 1L
-        val role = Role(
-            id = 1L,
-            name = "FirstName"
-        )
+        val role =
+            Role(
+                id = 1L,
+                name = "FirstName",
+            )
         every { roleRepository.findById(roleIdLong) } returns (Optional.of(role))
 
         // WHEN
@@ -51,10 +51,11 @@ internal class RoleServiceImplTest {
     fun `findByName should return role`() {
         // GIVEN
         val roleName = "Name"
-        val role = Role(
-            id = 1L,
-            name = "FirstName"
-        )
+        val role =
+            Role(
+                id = 1L,
+                name = "FirstName",
+            )
         every { roleRepository.findByName(roleName) } returns (role)
 
         // WHEN
@@ -92,10 +93,11 @@ internal class RoleServiceImplTest {
     @Test
     fun `should save role`() {
         // GIVEN
-        val role = Role(
-            id = 1L,
-            name = "FirstName"
-        )
+        val role =
+            Role(
+                id = 1L,
+                name = "FirstName",
+            )
         every { roleRepository.save(role) } returns (role)
         // WHEN
         val resultSaving = roleServiceImpl.save(role)
@@ -107,10 +109,11 @@ internal class RoleServiceImplTest {
     @Test
     fun `should find all roles`() {
         // GIVEN
-        val roleOne = Role(
-            id = 1L,
-            name = "FirstName"
-        )
+        val roleOne =
+            Role(
+                id = 1L,
+                name = "FirstName",
+            )
         val roleList = listOf(roleOne)
         every { roleRepository.findAll() } returns (roleList)
         // WHEN

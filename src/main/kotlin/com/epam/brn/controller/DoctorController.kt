@@ -1,8 +1,8 @@
 package com.epam.brn.controller
 
+import com.epam.brn.dto.UserAccountDto
 import com.epam.brn.dto.request.AddPatientToDoctorRequest
 import com.epam.brn.dto.response.BrnResponse
-import com.epam.brn.dto.UserAccountDto
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.service.DoctorService
 import io.swagger.v3.oas.annotations.Operation
@@ -24,24 +24,29 @@ import javax.annotation.security.RolesAllowed
 @RequestMapping("/doctors")
 @Tag(name = "Doctors", description = "Contains actions for doctor")
 @RolesAllowed(BrnRole.SPECIALIST)
-class DoctorController(private val doctorService: DoctorService) {
-
+class DoctorController(
+    private val doctorService: DoctorService,
+) {
     @PostMapping("/{doctorId}/patients")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Add patient to doctor")
     fun addPatientToDoctor(
         @PathVariable doctorId: Long,
-        @Validated @RequestBody addPatientToDoctorRequest: AddPatientToDoctorRequest
+        @Validated @RequestBody addPatientToDoctorRequest: AddPatientToDoctorRequest,
     ) = doctorService.addPatientToDoctorAsDoctor(doctorId, addPatientToDoctorRequest.id)
 
     @GetMapping("/{doctorId}/patients")
     @Operation(summary = "Get all patients for doctor")
-    fun getAllPatientForDoctor(@PathVariable doctorId: Long): ResponseEntity<BrnResponse<List<UserAccountDto>>> =
+    fun getAllPatientForDoctor(
+        @PathVariable doctorId: Long,
+    ): ResponseEntity<BrnResponse<List<UserAccountDto>>> =
         ResponseEntity.ok(BrnResponse(data = doctorService.getPatientsForDoctor(doctorId)))
 
     @DeleteMapping("/{doctorId}/patients/{patientId}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Delete patient from doctor")
-    fun deletePatientFromDoctor(@PathVariable doctorId: Long, @PathVariable patientId: Long) =
-        doctorService.deleteDoctorFromPatientAsDoctor(doctorId, patientId)
+    fun deletePatientFromDoctor(
+        @PathVariable doctorId: Long,
+        @PathVariable patientId: Long,
+    ) = doctorService.deleteDoctorFromPatientAsDoctor(doctorId, patientId)
 }

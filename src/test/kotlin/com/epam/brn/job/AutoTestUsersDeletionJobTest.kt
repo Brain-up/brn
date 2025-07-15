@@ -15,7 +15,6 @@ import org.springframework.test.util.ReflectionTestUtils
 @DisplayName("AutoTestUsersDeletionJob test using MockK")
 @ExtendWith(MockKExtension::class)
 class AutoTestUsersDeletionJobTest {
-
     @InjectMockKs
     lateinit var autoTestUsersDeletionJob: AutoTestUsersDeletionJob
 
@@ -24,6 +23,7 @@ class AutoTestUsersDeletionJobTest {
 
     @MockK
     lateinit var userAccountRepository: UserAccountRepository
+
     @Test
     fun deleteAutoTestUsers() {
         // GIVEN

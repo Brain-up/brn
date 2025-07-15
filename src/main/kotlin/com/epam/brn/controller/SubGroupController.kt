@@ -27,25 +27,32 @@ import javax.validation.Valid
 @RequestMapping("/subgroups")
 @Tag(name = "Sub Groups", description = "Contains actions over subgroup")
 @RolesAllowed(BrnRole.USER)
-class SubGroupController(private val subGroupsService: SubGroupService) {
-
+class SubGroupController(
+    private val subGroupsService: SubGroupService,
+) {
     @GetMapping
     @Operation(summary = "Get subgroups for series")
-    fun getAllGroups(@RequestParam(value = "seriesId", required = true) seriesId: Long): ResponseEntity<BrnResponse<List<SubGroupResponse>>> {
+    fun getAllGroups(
+        @RequestParam(value = "seriesId", required = true) seriesId: Long,
+    ): ResponseEntity<BrnResponse<List<SubGroupResponse>>> {
         val data = subGroupsService.findSubGroupsForSeries(seriesId)
         return ResponseEntity.ok().body(BrnResponse(data = data))
     }
 
     @GetMapping("{subGroupId}")
     @Operation(summary = "Get subgroup for id")
-    fun getSeriesForId(@PathVariable(value = "subGroupId") subGroupId: Long): ResponseEntity<BrnResponse<SubGroupResponse>> {
+    fun getSeriesForId(
+        @PathVariable(value = "subGroupId") subGroupId: Long,
+    ): ResponseEntity<BrnResponse<SubGroupResponse>> {
         val subGroupDto = subGroupsService.findById(subGroupId)
         return ResponseEntity.ok(BrnResponse(data = subGroupDto))
     }
 
     @DeleteMapping("{subGroupId}")
     @Operation(summary = "Delete subgroup by id without exercises")
-    fun deleteSubGroupById(@PathVariable(value = "subGroupId") subGroupId: Long): ResponseEntity<BrnResponse<Unit>> {
+    fun deleteSubGroupById(
+        @PathVariable(value = "subGroupId") subGroupId: Long,
+    ): ResponseEntity<BrnResponse<Unit>> {
         subGroupsService.deleteSubGroupById(subGroupId)
         return ResponseEntity.ok(BrnResponse(data = Unit))
     }
@@ -56,17 +63,17 @@ class SubGroupController(private val subGroupsService: SubGroupService) {
     fun addSubGroupToSeries(
         @Parameter(name = "seriesId", description = "ID of existed series", example = "1")
         @RequestParam(value = "seriesId") seriesId: Long,
-        @Valid @RequestBody subGroupRequest: SubGroupRequest
-    ): ResponseEntity<BrnResponse<SubGroupResponse>> =
-        ResponseEntity.status(HttpStatus.CREATED)
-            .body(BrnResponse(data = subGroupsService.addSubGroupToSeries(subGroupRequest, seriesId)))
+        @Valid @RequestBody subGroupRequest: SubGroupRequest,
+    ): ResponseEntity<BrnResponse<SubGroupResponse>> = ResponseEntity
+        .status(HttpStatus.CREATED)
+        .body(BrnResponse(data = subGroupsService.addSubGroupToSeries(subGroupRequest, seriesId)))
 
     @PatchMapping("/{subGroupId}")
     @Operation(summary = "Update subgroup by id")
     @RolesAllowed(BrnRole.ADMIN)
     fun updateSubGroupById(
         @PathVariable(value = "subGroupId") subGroupId: Long,
-        @RequestBody subGroup: SubGroupChangeRequest
+        @RequestBody subGroup: SubGroupChangeRequest,
     ): ResponseEntity<BrnResponse<SubGroupResponse>> =
         ResponseEntity.ok(BrnResponse(data = subGroupsService.updateSubGroupById(subGroupId, subGroup)))
 }

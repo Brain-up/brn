@@ -16,7 +16,7 @@ import javax.persistence.Table
 // The discrepancy in naming with "Groups" endpoint and "ExerciseGroup" entity is due to group being a reserved word in db.
 @Entity
 @Table(name = "exercise_group")
-data class ExerciseGroup(
+class ExerciseGroup(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
@@ -29,13 +29,13 @@ data class ExerciseGroup(
     @Column
     val description: String? = "",
     @OneToMany(mappedBy = "exerciseGroup", fetch = FetchType.LAZY, cascade = [(CascadeType.ALL)])
-    val series: MutableList<Series> = ArrayList()
+    val series: MutableList<Series> = ArrayList(),
 ) {
     constructor(record: GroupRecord) : this(
         code = record.code,
         locale = record.locale,
         name = record.name,
-        description = record.description
+        description = record.description,
     )
 
     fun toDto() = ExerciseGroupDto(
@@ -43,14 +43,14 @@ data class ExerciseGroup(
         locale = locale,
         name = name,
         description = description,
-        series = series.map { series -> series.id }.toMutableList()
+        series = series.map { series -> series.id }.toMutableList(),
     )
 
     fun toDtoWithoutSeries() = ExerciseGroupDto(
         id = id,
         locale = locale,
         name = name,
-        description = description
+        description = description,
     )
 
     override fun equals(other: Any?): Boolean {
@@ -71,6 +71,4 @@ data class ExerciseGroup(
         result = 31 * result + (description?.hashCode() ?: 0)
         return result
     }
-
-    override fun toString() = "ExerciseGroup(id=$id, name='$name', locale = $locale, description=$description)"
 }

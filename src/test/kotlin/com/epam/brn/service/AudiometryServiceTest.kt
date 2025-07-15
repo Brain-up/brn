@@ -22,7 +22,6 @@ import kotlin.test.assertTrue
 
 @ExtendWith(MockKExtension::class)
 internal class AudiometryServiceTest {
-
     @InjectMockKs
     lateinit var audiometryService: AudiometryService
 

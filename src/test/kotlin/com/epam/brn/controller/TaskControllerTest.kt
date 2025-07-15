@@ -19,7 +19,6 @@ import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(MockKExtension::class)
 class TaskControllerTest {
-
     @InjectMockKs
     lateinit var taskController: TaskController
 
@@ -29,16 +28,16 @@ class TaskControllerTest {
     @Nested
     @DisplayName("Tests for getting tasks operations in TaskController")
     inner class GetTasks {
-
         @Test
         fun `should get task by id`() {
             // GIVEN
             val taskId = LONG_ONE
-            val task = TaskResponse(
-                id = LONG_ONE,
-                serialNumber = INTEGER_ONE,
-                exerciseType = ExerciseType.SINGLE_SIMPLE_WORDS
-            )
+            val task =
+                TaskResponse(
+                    id = LONG_ONE,
+                    serialNumber = INTEGER_ONE,
+                    exerciseType = ExerciseType.SINGLE_SIMPLE_WORDS,
+                )
             every { taskService.getTaskById(taskId) } returns task
 
             // WHEN
@@ -53,16 +52,18 @@ class TaskControllerTest {
         fun `should get tasks by exerciseId`() {
             // GIVEN
             val exerciseId = LONG_ONE
-            val taskFirst = TaskResponse(
-                id = LONG_ONE,
-                serialNumber = INTEGER_ONE,
-                exerciseType = ExerciseType.SINGLE_SIMPLE_WORDS
-            )
-            val taskSecond = TaskResponse(
-                id = 2L,
-                serialNumber = INTEGER_TWO,
-                exerciseType = ExerciseType.SINGLE_SIMPLE_WORDS
-            )
+            val taskFirst =
+                TaskResponse(
+                    id = LONG_ONE,
+                    serialNumber = INTEGER_ONE,
+                    exerciseType = ExerciseType.SINGLE_SIMPLE_WORDS,
+                )
+            val taskSecond =
+                TaskResponse(
+                    id = 2L,
+                    serialNumber = INTEGER_TWO,
+                    exerciseType = ExerciseType.SINGLE_SIMPLE_WORDS,
+                )
             every { taskService.getTasksByExerciseId(exerciseId) } returns listOf(taskFirst, taskSecond)
 
             // WHEN

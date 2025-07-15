@@ -26,7 +26,7 @@ import javax.persistence.UniqueConstraint
 @Entity
 @Table(uniqueConstraints = [UniqueConstraint(columnNames = ["name", "level"])])
 @EntityListeners(AuditingEntityListener::class)
-data class Exercise(
+class Exercise(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
@@ -38,14 +38,13 @@ data class Exercise(
     var active: Boolean = true,
     var playWordsCount: Int = 1,
     var wordsColumns: Int = 3,
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sub_group_id")
     var subGroup: SubGroup? = null,
     @OneToMany(mappedBy = "exercise", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     val tasks: MutableSet<Task> = LinkedHashSet(),
     @OneToMany(mappedBy = "exercise", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
-    val signals: MutableSet<Signal> = LinkedHashSet()
+    val signals: MutableSet<Signal> = LinkedHashSet(),
 ) {
     @LastModifiedBy
     @Column(name = "changed_by")
@@ -81,12 +80,8 @@ data class Exercise(
         wordsColumns = wordsColumns,
         words = tasks.flatMap { it.answerOptions }.associate { it.id!! to it.word },
         subGroupName = subGroup?.name,
-        seriesName = subGroup?.series?.name
+        seriesName = subGroup?.series?.name,
     )
-
-    override fun toString() =
-        "Exercise(id=$id, name='$name', level=$level, noiseLevel=$noiseLevel, noiseUrl=$noiseUrl, " +
-            "template=$template, active=$active, playWordsCount=$playWordsCount, wordsColumns=$wordsColumns)"
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

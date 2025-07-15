@@ -20,7 +20,7 @@ data class StudyHistoryDto(
     @field:NotNull
     var replaysCount: Int?, // -- count of replays.  --
     @field:NotNull
-    var wrongAnswers: Int? // -- wrong answers count --
+    var wrongAnswers: Int?, // -- wrong answers count --
 ) {
     override fun toString(): String = "StudyHistoryDto(" +
         "exerciseId=$exerciseId, " +
@@ -30,7 +30,10 @@ data class StudyHistoryDto(
         "tasksCount=$tasksCount, " +
         "wrongAnswers=$wrongAnswers)"
 
-    fun toEntity(userAccount: UserAccount, exercise: Exercise): StudyHistory = StudyHistory(
+    fun toEntity(
+        userAccount: UserAccount,
+        exercise: Exercise,
+    ): StudyHistory = StudyHistory(
         userAccount = userAccount,
         exercise = exercise,
         startTime = this.startTime,

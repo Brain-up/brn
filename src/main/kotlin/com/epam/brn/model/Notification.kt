@@ -13,7 +13,7 @@ import javax.persistence.Table
 
 @Entity
 @Table
-data class Notification(
+class Notification(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
@@ -22,13 +22,13 @@ data class Notification(
     var userAccount: UserAccount? = null,
     var text: String,
     var scheduledDate: LocalDateTime,
-    var checked: Boolean = false
+    var checked: Boolean = false,
 ) {
     fun toDto() = NotificationDto(
         id = id,
         userAccount = userAccount!!.id,
         text = text,
         date = scheduledDate,
-        checked = checked
+        checked = checked,
     )
 }

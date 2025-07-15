@@ -3,7 +3,6 @@ package com.epam.brn.service.cloud
 import java.io.InputStream
 
 interface CloudService {
-
     /**
      * Returns json representation of post request form to be sent to cloud,
      * one of the keys in json is "action" which represents form action,
@@ -15,7 +14,11 @@ interface CloudService {
     /**
      * Upload multipart file to cloud storage
      */
-    fun uploadFile(path: String, fileName: String, inputStream: InputStream)
+    fun uploadFile(
+        path: String,
+        fileName: String,
+        inputStream: InputStream,
+    )
 
     /**
      * Create folder in cloud storage
@@ -43,6 +46,11 @@ interface CloudService {
     fun getFileNames(folderPath: String): List<String>
 
     /**
+     * Get list of pictures in main folder
+     */
+    fun getPicturesNamesFromMainFolder(): List<String>
+
+    /**
      * Get map of file paths with file name as key.
      */
     fun getFilePathMap(folderPath: String): Map<String, String>
@@ -55,10 +63,16 @@ interface CloudService {
     /**
      * Check that file is exist in cloud storage
      */
-    fun isFileExist(filePath: String, fileName: String): Boolean
+    fun isFileExist(
+        filePath: String,
+        fileName: String,
+    ): Boolean
 
     /**
      * Create full name of file
      */
-    fun createFullFileName(path: String, filename: String): String
+    fun createFullFileName(
+        path: String,
+        filename: String,
+    ): String
 }

@@ -12,7 +12,6 @@ import kotlin.test.assertEquals
 
 @ExtendWith(MockKExtension::class)
 internal class StudyHistoryTimeComparatorTest {
-
     @InjectMockKs
     private lateinit var comparator: StudyHistoryTimeComparator
 

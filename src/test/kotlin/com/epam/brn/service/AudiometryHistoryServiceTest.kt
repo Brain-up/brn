@@ -2,11 +2,11 @@ package com.epam.brn.service
 
 import com.epam.brn.dto.HeadphonesDto
 import com.epam.brn.dto.request.AudiometryHistoryRequest
+import com.epam.brn.enums.BrnGender
 import com.epam.brn.enums.HeadphonesType
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.AudiometryHistory
 import com.epam.brn.model.AudiometryTask
-import com.epam.brn.enums.BrnGender
 import com.epam.brn.model.SinAudiometryResult
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.AudiometryHistoryRepository
@@ -49,14 +49,15 @@ internal class AudiometryHistoryServiceTest {
     @MockK
     lateinit var audiometryTask: AudiometryTask
 
-    val userAccount = UserAccount(
-        id = 1L,
-        fullName = "testUserFirstName",
-        gender = BrnGender.MALE.toString(),
-        bornYear = 2000,
-        email = "test@gmail.com",
-        active = true,
-    )
+    val userAccount =
+        UserAccount(
+            id = 1L,
+            fullName = "testUserFirstName",
+            gender = BrnGender.MALE.toString(),
+            bornYear = 2000,
+            email = "test@gmail.com",
+            active = true,
+        )
 
     @Test
     fun `should create audiometryHistory without sinAudiometryResults`() {
@@ -65,25 +66,26 @@ internal class AudiometryHistoryServiceTest {
         val headphonesEntity = headphonesDto.toEntity()
         userAccount.headphones = mutableSetOf(headphonesEntity)
         every { userAccountService.getCurrentUser() } returns userAccount
-        val audiometryHistory = spyk(
-            AudiometryHistory(
-                id = 2L,
-                userAccount = userAccount,
-                audiometryTask = audiometryTask,
-                startTime = now(),
-                tasksCount = 4,
-                rightAnswers = 1,
-                executionSeconds = 1,
-                headphones = headphonesEntity
+        val audiometryHistory =
+            spyk(
+                AudiometryHistory(
+                    id = 2L,
+                    userAccount = userAccount,
+                    audiometryTask = audiometryTask,
+                    startTime = now(),
+                    tasksCount = 4,
+                    rightAnswers = 1,
+                    executionSeconds = 1,
+                    headphones = headphonesEntity,
+                ),
             )
-        )
         every { audiometryHistoryRequest.audiometryTaskId } returns 1L
         every { audiometryTaskRepository.findById(1L) } returns Optional.of(audiometryTask)
         every {
             audiometryHistoryRequest.toEntity(
                 userAccount,
                 audiometryTask,
-                headphonesEntity
+                headphonesEntity,
             )
         } returns audiometryHistory
         every { audiometryHistoryRepository.save(audiometryHistory) } returns audiometryHistory
@@ -107,18 +109,19 @@ internal class AudiometryHistoryServiceTest {
         val headphonesEntity = headphonesDto.toEntity()
         userAccount.headphones = mutableSetOf(headphonesEntity)
         every { userAccountService.getCurrentUser() } returns userAccount
-        val audiometryHistory = spyk(
-            AudiometryHistory(
-                id = 2L,
-                userAccount = userAccount,
-                audiometryTask = audiometryTask,
-                startTime = now(),
-                tasksCount = 4,
-                rightAnswers = 1,
-                executionSeconds = 1,
-                headphones = headphonesEntity,
+        val audiometryHistory =
+            spyk(
+                AudiometryHistory(
+                    id = 2L,
+                    userAccount = userAccount,
+                    audiometryTask = audiometryTask,
+                    startTime = now(),
+                    tasksCount = 4,
+                    rightAnswers = 1,
+                    executionSeconds = 1,
+                    headphones = headphonesEntity,
+                ),
             )
-        )
         every { audiometryHistoryRequest.audiometryTaskId } returns 1L
         every { audiometryHistoryRequest.sinAudiometryResults } returns mapOf(125 to 20, 1000 to 40)
         every { audiometryTaskRepository.findById(1L) } returns Optional.of(audiometryTask)
@@ -126,7 +129,7 @@ internal class AudiometryHistoryServiceTest {
             audiometryHistoryRequest.toEntity(
                 userAccount,
                 audiometryTask,
-                headphonesEntity
+                headphonesEntity,
             )
         } returns audiometryHistory
         every { audiometryHistoryRepository.save(audiometryHistory) } returns audiometryHistory

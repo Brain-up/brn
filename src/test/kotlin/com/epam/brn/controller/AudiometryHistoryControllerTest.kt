@@ -13,9 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import kotlin.test.assertEquals
 
 @ExtendWith(MockKExtension::class)
-
 internal class AudiometryHistoryControllerTest {
-
     @InjectMockKs
     lateinit var audiometryHistoryController: AudiometryHistoryController
 
@@ -27,7 +25,6 @@ internal class AudiometryHistoryControllerTest {
 
     @Test
     fun `should save speech audiometry history`() {
-
         // GIVEN
         val baseSingleObjectResponseDto = 1L
         every { audiometryHistoryService.save(audiometryHistory) } returns baseSingleObjectResponseDto

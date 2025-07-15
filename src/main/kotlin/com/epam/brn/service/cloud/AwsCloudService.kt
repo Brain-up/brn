@@ -10,6 +10,7 @@ import org.apache.commons.io.IOUtils
 import org.apache.commons.lang3.StringUtils
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.stereotype.Service
 import software.amazon.awssdk.core.sync.RequestBody
@@ -18,6 +19,7 @@ import software.amazon.awssdk.services.s3.model.Delete
 import software.amazon.awssdk.services.s3.model.DeleteObjectsRequest
 import software.amazon.awssdk.services.s3.model.HeadObjectRequest
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Request
+import software.amazon.awssdk.services.s3.model.NoSuchKeyException
 import software.amazon.awssdk.services.s3.model.ObjectIdentifier
 import software.amazon.awssdk.services.s3.model.PutObjectRequest
 import software.amazon.awssdk.utils.BinaryUtils
@@ -29,8 +31,12 @@ import javax.crypto.spec.SecretKeySpec
 
 @ConditionalOnProperty(name = ["cloud.provider"], havingValue = "aws")
 @Service
-class AwsCloudService(@Autowired private val awsConfig: AwsConfig, @Autowired private val s3Client: S3Client) :
-    CloudService {
+class AwsCloudService(
+    @Autowired private val awsConfig: AwsConfig,
+    @Autowired private val s3Client: S3Client,
+) : CloudService {
+    @Value("\${brn.resources.default-pictures.path}")
+    lateinit var defaultPicturesPath: String
 
     companion object {
         private const val FOLDER_DELIMITER = "/"
@@ -52,64 +58,78 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig, @Autowired pr
 
     override fun baseFileUrl(): String = awsConfig.baseFileUrl
 
-    override fun uploadForm(filePath: String): Map<String, Any> =
-        signature(awsConfig.buildConditions(filePath))
+    override fun uploadForm(filePath: String): Map<String, Any> = signature(awsConfig.buildConditions(filePath))
 
-    override fun uploadFile(path: String, fileName: String, inputStream: InputStream) {
+    override fun uploadFile(
+        path: String,
+        fileName: String,
+        inputStream: InputStream,
+    ) {
         val fullFileName = createFullFileName(path, fileName)
         uploadFile(fullFileName, inputStream)
     }
 
-    override fun getStorageFolders(): List<String> {
-        return getFolders("")
-    }
+    override fun getStorageFolders(): List<String> = getFolders("")
 
     override fun getFileNames(folderPath: String): List<String> {
-        val request = ListObjectsV2Request.builder()
-            .bucket(awsConfig.bucketName)
-            .prefix(folderPath)
-            .build()
+        val request =
+            ListObjectsV2Request
+                .builder()
+                .bucket(awsConfig.bucketName)
+                .prefix(folderPath)
+                .build()
         return s3Client.listObjectsV2(request).contents().map {
             it.key().substring(it.key().lastIndexOf(FOLDER_DELIMITER))
         }
     }
 
+    override fun getPicturesNamesFromMainFolder(): List<String> = getFileNames(defaultPicturesPath)
+
     override fun getFilePathMap(folderPath: String): Map<String, String> {
-        val request = ListObjectsV2Request.builder()
-            .bucket(awsConfig.bucketName)
-            .prefix(folderPath)
-            .build()
-        return s3Client.listObjectsV2(request)
+        val request =
+            ListObjectsV2Request
+                .builder()
+                .bucket(awsConfig.bucketName)
+                .prefix(folderPath)
+                .build()
+        return s3Client
+            .listObjectsV2(request)
             .contents()
             .filter { !it.key().endsWith(FOLDER_DELIMITER) }
             .associate { (File(it.key()).nameWithoutExtension to it.key()) }
     }
 
     override fun deleteFiles(fileNames: List<String>) {
-        val objectIdentifiersToDelete = fileNames.map {
-            ObjectIdentifier.builder().key(it).build()
-        }
+        val objectIdentifiersToDelete =
+            fileNames.map {
+                ObjectIdentifier.builder().key(it).build()
+            }
 
-        val request = DeleteObjectsRequest.builder()
-            .bucket(awsConfig.bucketName)
-            .delete(Delete.builder().objects(objectIdentifiersToDelete).build())
-            .build()
+        val request =
+            DeleteObjectsRequest
+                .builder()
+                .bucket(awsConfig.bucketName)
+                .delete(Delete.builder().objects(objectIdentifiersToDelete).build())
+                .build()
         val response = s3Client.deleteObjects(request)
 
         if (response.hasErrors()) {
             val errorMessage = response.errors().map { it.message() }
             log.error("Deletion of $fileNames failed. Error message: $errorMessage}")
-        } else
+        } else {
             log.info("Files $fileNames are deleted")
+        }
     }
 
     override fun createFolder(folderPath: String) {
         val fullFolderName = appendDelimiter(folderPath)
-        val objectRequest = PutObjectRequest.builder()
-            .bucket(awsConfig.bucketName)
-            .key(fullFolderName)
-            .contentLength(0)
-            .build()
+        val objectRequest =
+            PutObjectRequest
+                .builder()
+                .bucket(awsConfig.bucketName)
+                .key(fullFolderName)
+                .contentLength(0)
+                .build()
 
         s3Client.putObject(objectRequest, RequestBody.empty())
 
@@ -117,20 +137,29 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig, @Autowired pr
         log.info("Folder $fullFolderName is ready")
     }
 
-    override fun isFileExist(filePath: String, fileName: String): Boolean {
+    override fun isFileExist(
+        filePath: String,
+        fileName: String,
+    ): Boolean {
         val fullFileName = createFullFileName(filePath, fileName)
-
-        val request = ListObjectsV2Request.builder()
-            .bucket(awsConfig.bucketName)
-            .prefix(fullFileName)
-            .build()
-        val result = s3Client.listObjectsV2(request)
-        return result.hasContents()
+        // Recommended way to check file existence according to AWS documentation https://docs.aws.amazon.com/AmazonS3/latest/userguide/example_s3_HeadObject_section.html
+        return try {
+            val request =
+                HeadObjectRequest
+                    .builder()
+                    .bucket(awsConfig.bucketName)
+                    .key(fullFileName)
+                    .build()
+            s3Client.headObject(request)
+            true
+        } catch (e: NoSuchKeyException) {
+            false
+        }
     }
 
     override fun createFullFileName(
         path: String,
-        filename: String
+        filename: String,
     ): String {
         var fullFileName = path
         if (!StringUtils.endsWith(fullFileName, FOLDER_DELIMITER)) {
@@ -140,11 +169,16 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig, @Autowired pr
         return fullFileName
     }
 
-    private fun uploadFile(filePath: String, inputStream: InputStream) {
-        val objectRequest = PutObjectRequest.builder()
-            .bucket(awsConfig.bucketName)
-            .key(filePath)
-            .build()
+    private fun uploadFile(
+        filePath: String,
+        inputStream: InputStream,
+    ) {
+        val objectRequest =
+            PutObjectRequest
+                .builder()
+                .bucket(awsConfig.bucketName)
+                .key(filePath)
+                .build()
 
         val byteArray = IOUtils.toByteArray(inputStream)
 
@@ -156,10 +190,12 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig, @Autowired pr
 
     private fun waitRequestDone(key: String) {
         val waiter = s3Client.waiter()
-        val requestWait = HeadObjectRequest.builder()
-            .bucket(awsConfig.bucketName)
-            .key(key)
-            .build()
+        val requestWait =
+            HeadObjectRequest
+                .builder()
+                .bucket(awsConfig.bucketName)
+                .key(key)
+                .build()
         val waiterResponse = waiter.waitUntilObjectExists(requestWait)
         waiterResponse.matched().response().ifPresent(log::debug)
     }
@@ -173,11 +209,13 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig, @Autowired pr
     }
 
     private fun getFolders(prefix: String): ArrayList<String> {
-        val listObjectsV2Request = ListObjectsV2Request.builder()
-            .delimiter(FOLDER_DELIMITER)
-            .prefix(prefix)
-            .bucket(awsConfig.bucketName)
-            .build()
+        val listObjectsV2Request =
+            ListObjectsV2Request
+                .builder()
+                .delimiter(FOLDER_DELIMITER)
+                .prefix(prefix)
+                .bucket(awsConfig.bucketName)
+                .build()
         val result = s3Client.listObjectsV2(listObjectsV2Request)
         val matchingKeys = result.commonPrefixes()
         val folders: ArrayList<String> = ArrayList()
@@ -194,18 +232,19 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig, @Autowired pr
         val signature = sign(conditions.date, policy)
 
         val inputs = arrayListOf(mapOf("policy" to policy), mapOf("x-amz-signature" to signature))
-        val conditions = listOf(
-            conditions.uploadKey,
-            conditions.acl,
-            conditions.uuid,
-            conditions.serverSideEncryption,
-            conditions.credential,
-            conditions.algorithm,
-            conditions.dateTime,
-            conditions.successActionRedirect,
-            conditions.contentTypeStartsWith,
-            conditions.metaTagStartsWith
-        )
+        val conditions =
+            listOf(
+                conditions.uploadKey,
+                conditions.acl,
+                conditions.uuid,
+                conditions.serverSideEncryption,
+                conditions.credential,
+                conditions.algorithm,
+                conditions.dateTime,
+                conditions.successActionRedirect,
+                conditions.contentTypeStartsWith,
+                conditions.metaTagStartsWith,
+            )
         for (condition in conditions) {
             if (condition.second.isNotEmpty())
                 inputs.add(mapOf(condition))
@@ -215,19 +254,20 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig, @Autowired pr
 
     private fun policy(awsConditions: AwsConfig.Conditions): String {
         val includedFields: ArrayList<Any> = ArrayList()
-        val policyConditions = listOf(
-            awsConditions.bucket,
-            awsConditions.acl,
-            awsConditions.uploadKey,
-            awsConditions.uuid,
-            awsConditions.serverSideEncryption,
-            awsConditions.credential,
-            awsConditions.algorithm,
-            awsConditions.dateTime,
-            awsConditions.successActionRedirect,
-            awsConditions.contentTypeStartsWith,
-            awsConditions.metaTagStartsWith,
-        )
+        val policyConditions =
+            listOf(
+                awsConditions.bucket,
+                awsConditions.acl,
+                awsConditions.uploadKey,
+                awsConditions.uuid,
+                awsConditions.serverSideEncryption,
+                awsConditions.credential,
+                awsConditions.algorithm,
+                awsConditions.dateTime,
+                awsConditions.successActionRedirect,
+                awsConditions.contentTypeStartsWith,
+                awsConditions.metaTagStartsWith,
+            )
         for (condition in policyConditions) {
             if (condition.second.isNotEmpty()) {
                 with(awsConditions) {
@@ -238,22 +278,31 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig, @Autowired pr
                 }
             }
         }
-        val policy = hashMapOf(
-            awsConditions.expiration,
-            "conditions" to includedFields
-        )
+        val policy =
+            hashMapOf(
+                awsConditions.expiration,
+                "conditions" to includedFields,
+            )
         return toJsonBase64(policy)
     }
 
     fun toJsonBase64(rawObject: Any): String = BinaryUtils.toBase64(mapperIndented.writeValueAsBytes(rawObject))
 
-    private fun sign(date: String, policy: String): String {
+    private fun sign(
+        date: String,
+        policy: String,
+    ): String {
         val signature = getSignatureKey(awsConfig.secretAccessKey, date, awsConfig.region, awsConfig.serviceName)
         val hmacSHA256 = hmacSHA256(policy, signature)
         return toHex(hmacSHA256)
     }
 
-    private fun getSignatureKey(key: String, dateStamp: String, regionName: String, serviceName: String): ByteArray {
+    private fun getSignatureKey(
+        key: String,
+        dateStamp: String,
+        regionName: String,
+        serviceName: String,
+    ): ByteArray {
         val kSecret = ("AWS4$key").toByteArray()
         val kDate = hmacSHA256(dateStamp, kSecret)
         val kRegion = hmacSHA256(regionName, kDate)
@@ -261,7 +310,10 @@ class AwsCloudService(@Autowired private val awsConfig: AwsConfig, @Autowired pr
         return hmacSHA256("aws4_request", kService)
     }
 
-    private fun hmacSHA256(data: String, key: ByteArray): ByteArray {
+    private fun hmacSHA256(
+        data: String,
+        key: ByteArray,
+    ): ByteArray {
         val mac = Mac.getInstance("HmacSHA256")
         mac.init(SecretKeySpec(key, "HmacSHA256"))
         return mac.doFinal(data.toByteArray())

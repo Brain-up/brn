@@ -15,7 +15,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.springframework.beans.factory.annotation.Autowired
 
 class AuthorizationAuthenticationIT : BaseIT() {
-
     @Autowired
     lateinit var userAccountRepository: UserAccountRepository
 
@@ -53,12 +52,14 @@ class AuthorizationAuthenticationIT : BaseIT() {
         uuidFirebaseUserRole = saveFirebaseUser(userRoleFullName, userRoleEmail, userRolePassword)!!.uid
 
         val roleUserName = BrnRole.USER
-        val userRole = roleRepository.findByName(roleUserName)
-            ?: roleRepository.save(Role(name = roleUserName))
+        val userRole =
+            roleRepository.findByName(roleUserName)
+                ?: roleRepository.save(Role(name = roleUserName))
 
         val roleName = BrnRole.ADMIN
-        val adminRole = roleRepository.findByName(roleName)
-            ?: roleRepository.save(Role(name = roleName))
+        val adminRole =
+            roleRepository.findByName(roleName)
+                ?: roleRepository.save(Role(name = roleName))
         createUserInLocalDatabase(fullName, email, uuidFirebaseAdmin, adminRole)
         createUserInLocalDatabase(userRoleFullName, userRoleEmail, uuidFirebaseUserRole, userRole)
     }
@@ -132,14 +133,19 @@ class AuthorizationAuthenticationIT : BaseIT() {
 //        resultAction.andExpect(status().isForbidden)
 //    }
 
-    private fun saveFirebaseUser(fullName: String, email: String, password: String): UserRecord? {
-        val firebaseUser = UserAccountCreateRequest(
-            name = fullName,
-            email = email,
-            password = password,
-            gender = BrnGender.MALE,
-            bornYear = 2000
-        )
+    private fun saveFirebaseUser(
+        fullName: String,
+        email: String,
+        password: String,
+    ): UserRecord? {
+        val firebaseUser =
+            UserAccountCreateRequest(
+                name = fullName,
+                email = email,
+                password = password,
+                gender = BrnGender.MALE,
+                bornYear = 2000,
+            )
         try {
             val userByEmail = firebaseAuth.getUserByEmail(firebaseUser.email)
             if (userByEmail?.uid != null) {
@@ -150,7 +156,12 @@ class AuthorizationAuthenticationIT : BaseIT() {
         return addFirebaseUser(firebaseUser)
     }
 
-    private fun createUserInLocalDatabase(fullName: String, email: String, uuid: String, role: Role) {
+    private fun createUserInLocalDatabase(
+        fullName: String,
+        email: String,
+        uuid: String,
+        role: Role,
+    ) {
         val userAccount =
             UserAccount(
                 fullName = fullName,
@@ -158,18 +169,20 @@ class AuthorizationAuthenticationIT : BaseIT() {
                 gender = BrnGender.MALE.toString(),
                 bornYear = 2000,
                 active = true,
-                userId = uuid
+                userId = uuid,
             )
         userAccount.roleSet.add(role)
         userAccountRepository.save(userAccount)
     }
 
     fun addFirebaseUser(userAccountCreateRequest: UserAccountCreateRequest): UserRecord? {
-        val firebaseUser = UserRecord.CreateRequest()
-            .setEmail(userAccountCreateRequest.email)
-            .setDisplayName(userAccountCreateRequest.name)
-            .setPassword(userAccountCreateRequest.password)
-            .setEmailVerified(false)
+        val firebaseUser =
+            UserRecord
+                .CreateRequest()
+                .setEmail(userAccountCreateRequest.email)
+                .setDisplayName(userAccountCreateRequest.name)
+                .setPassword(userAccountCreateRequest.password)
+                .setEmailVerified(false)
         if (userAccountCreateRequest.avatar != null) {
             firebaseUser
                 .setPhotoUrl(userAccountCreateRequest.avatar)

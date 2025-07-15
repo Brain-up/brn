@@ -46,7 +46,6 @@ import kotlin.test.assertNull
 @ExtendWith(MockKExtension::class)
 @DisplayName("UserAccountService test using MockK")
 internal class UserAccountServiceTest {
-
     @InjectMockKs
     lateinit var userAccountService: UserAccountServiceImpl
 
@@ -171,10 +170,11 @@ internal class UserAccountServiceTest {
             val userName = "Tested"
             val uid = "UID"
             val email = "test@gmail.com"
-            every { roleService.findByName(ofType(String::class)) } returns Role(
-                id = 1L,
-                name = BrnRole.USER
-            )
+            every { roleService.findByName(ofType(String::class)) } returns
+                Role(
+                    id = 1L,
+                    name = BrnRole.USER,
+                )
             every { firebaseUserRecord.uid } returns uid
             every { firebaseUserRecord.email } returns email
             every { firebaseUserRecord.displayName } returns userName
@@ -188,7 +188,7 @@ internal class UserAccountServiceTest {
             assertThat(userAccountDtoReturned.userId).isEqualTo(uid)
             assertThat(userAccountDtoReturned.email).isEqualTo(email)
             assertNotNull(userAccountDtoReturned.roles)
-            assertThat(userAccountDtoReturned.roles!!.size).isEqualTo(1)
+            assertThat(userAccountDtoReturned.roles.size).isEqualTo(1)
 
             verify(exactly = 1) { userAccountRepository.findUserAccountByEmail(email) }
             verify(exactly = 1) { userAccountRepository.save(captureMyObject.captured) }
@@ -203,9 +203,10 @@ internal class UserAccountServiceTest {
             every { firebaseUserRecord.uid } returns uid
             every { firebaseUserRecord.email } returns email
             every { firebaseUserRecord.displayName } returns userName
-            every { userAccountRepository.findUserAccountByEmail(ofType(String::class)) } returns Optional.of(
-                userAccount
-            )
+            every { userAccountRepository.findUserAccountByEmail(ofType(String::class)) } returns
+                Optional.of(
+                    userAccount,
+                )
             // THEN
             assertFailsWith<IllegalArgumentException> {
                 userAccountService.createUser(firebaseUserRecord)
@@ -218,30 +219,29 @@ internal class UserAccountServiceTest {
     @Nested
     @DisplayName("Test for update current user")
     inner class UpdateUserAccount {
-
         @Test
         fun `should update avatar current session user`() {
             // GIVEN
             val avatarUrl = "test/avatar"
             val email = "test@test.ru"
-            val userAccount = UserAccount(
-                id = 1L,
-                fullName = "testUserFirstName",
-                email = email,
-                gender = BrnGender.MALE.toString(),
-                bornYear = 2000,
-                changed = LocalDateTime.now().minusMinutes(5),
-                avatar = null
-            )
-            val userAccountUpdated = userAccount.copy()
-            userAccountUpdated.avatar = avatarUrl
+            val userAccount =
+                UserAccount(
+                    id = 1L,
+                    fullName = "testUserFirstName",
+                    email = email,
+                    gender = BrnGender.MALE.toString(),
+                    bornYear = 2000,
+                    changed = LocalDateTime.now().minusMinutes(5),
+                    avatar = null,
+                )
+            userAccount.avatar = avatarUrl
             val userArgumentCaptor = slot<UserAccount>()
 
             SecurityContextHolder.setContext(securityContext)
             every { securityContext.authentication } returns authentication
             every { authentication.name } returns email
             every { userAccountRepository.findUserAccountByEmail(email) } returns Optional.of(userAccount)
-            every { userAccountRepository.save(ofType(UserAccount::class)) } returns userAccountUpdated
+            every { userAccountRepository.save(ofType(UserAccount::class)) } returns userAccount
             every { userAccountRepository.save(capture(userArgumentCaptor)) } returns userAccount
             // WHEN
             userAccountService.updateAvatarForCurrentUser(avatarUrl)
@@ -261,35 +261,36 @@ internal class UserAccountServiceTest {
             val photoUrl = "test/picture"
             val description = "Some description about the user"
             val email = "test@test.ru"
-            val userAccount = UserAccount(
-                id = 1L,
-                fullName = "testUserFirstName",
-                email = email,
-                gender = BrnGender.MALE.toString(),
-                bornYear = 2000,
-                changed = LocalDateTime.now().minusMinutes(5),
-                avatar = null,
-                photo = null,
-                description = null
-            )
-            val userAccountChangeRequest = UserAccountChangeRequest(
-                avatar = avatarUrl,
-                photo = photoUrl,
-                description = description,
-                name = "newName"
-            )
-            val userAccountUpdated = userAccount.copy()
-            userAccountUpdated.avatar = avatarUrl
-            userAccountUpdated.photo = photoUrl
-            userAccountUpdated.description = description
-            userAccountUpdated.fullName = "newName"
+            val userAccount =
+                UserAccount(
+                    id = 1L,
+                    fullName = "testUserFirstName",
+                    email = email,
+                    gender = BrnGender.MALE.toString(),
+                    bornYear = 2000,
+                    changed = LocalDateTime.now().minusMinutes(5),
+                    avatar = null,
+                    photo = null,
+                    description = null,
+                )
+            val userAccountChangeRequest =
+                UserAccountChangeRequest(
+                    avatar = avatarUrl,
+                    photo = photoUrl,
+                    description = description,
+                    name = "newName",
+                )
+            userAccount.avatar = avatarUrl
+            userAccount.photo = photoUrl
+            userAccount.description = description
+            userAccount.fullName = "newName"
             val userArgumentCaptor = slot<UserAccount>()
 
             SecurityContextHolder.setContext(securityContext)
             every { securityContext.authentication } returns authentication
             every { authentication.name } returns email
             every { userAccountRepository.findUserAccountByEmail(email) } returns Optional.of(userAccount)
-            every { userAccountRepository.save(ofType(UserAccount::class)) } returns userAccountUpdated
+            every { userAccountRepository.save(ofType(UserAccount::class)) } returns userAccount
             every { userAccountRepository.save(capture(userArgumentCaptor)) } returns userAccount
             // WHEN
             userAccountService.updateCurrentUser(userAccountChangeRequest)
@@ -330,10 +331,11 @@ internal class UserAccountServiceTest {
         @Test
         fun `should return all headphones for user`() {
             // GIVEN
-            val listOfHeadphones = setOf(
-                HeadphonesDto(name = "first", active = true, type = HeadphonesType.IN_EAR_NO_BLUETOOTH),
-                HeadphonesDto(name = "second", active = true, type = HeadphonesType.ON_EAR_BLUETOOTH)
-            )
+            val listOfHeadphones =
+                setOf(
+                    HeadphonesDto(name = "first", active = true, type = HeadphonesType.IN_EAR_NO_BLUETOOTH),
+                    HeadphonesDto(name = "second", active = true, type = HeadphonesType.ON_EAR_BLUETOOTH),
+                )
             every { headphonesService.getAllHeadphonesForUser(1L) } returns listOfHeadphones
             // WHEN
             val returnedListOfHeadphones = userAccountService.getAllHeadphonesForUser(1L)
@@ -358,14 +360,15 @@ internal class UserAccountServiceTest {
         fun `should add new headphones to the current user`() {
             val headphonesToAdd =
                 HeadphonesDto(name = "first", active = true, type = HeadphonesType.IN_EAR_NO_BLUETOOTH)
-            val userAccount = UserAccount(
-                id = 1L,
-                fullName = "testUserFirstName",
-                gender = BrnGender.MALE.toString(),
-                bornYear = 2000,
-                email = "test@gmail.com",
-                active = true
-            )
+            val userAccount =
+                UserAccount(
+                    id = 1L,
+                    fullName = "testUserFirstName",
+                    gender = BrnGender.MALE.toString(),
+                    bornYear = 2000,
+                    email = "test@gmail.com",
+                    active = true,
+                )
             SecurityContextHolder.setContext(securityContext)
             // WHEN
             val email = "test@test.com"
@@ -396,15 +399,16 @@ internal class UserAccountServiceTest {
         fun `should return all headphones for current the user`() {
             val headphones = Headphones(name = "first", active = true, type = HeadphonesType.IN_EAR_NO_BLUETOOTH)
             val headphonesToAdd = mutableSetOf(headphones)
-            val userAccount = UserAccount(
-                id = 1L,
-                fullName = "testUserFirstName",
-                gender = BrnGender.MALE.toString(),
-                bornYear = 2000,
-                email = "test@gmail.com",
-                active = true,
-                headphones = headphonesToAdd
-            )
+            val userAccount =
+                UserAccount(
+                    id = 1L,
+                    fullName = "testUserFirstName",
+                    gender = BrnGender.MALE.toString(),
+                    bornYear = 2000,
+                    email = "test@gmail.com",
+                    active = true,
+                    headphones = headphonesToAdd,
+                )
             SecurityContextHolder.setContext(securityContext)
             // WHEN
             val email = "test@test.com"
@@ -425,23 +429,25 @@ internal class UserAccountServiceTest {
         fun `should delete headphones to current user`() {
             // GIVEN
             val headphonesId = 1L
-            val headphones = Headphones(
-                id = headphonesId,
-                name = "test",
-                active = true,
-                type = HeadphonesType.IN_EAR_BLUETOOTH
-            )
+            val headphones =
+                Headphones(
+                    id = headphonesId,
+                    name = "test",
+                    active = true,
+                    type = HeadphonesType.IN_EAR_BLUETOOTH,
+                )
 
             val headphonesToAdd = mutableSetOf(headphones)
-            val userAccount = UserAccount(
-                id = 1L,
-                fullName = "testUserFirstName",
-                gender = BrnGender.MALE.toString(),
-                bornYear = 2000,
-                email = "test@gmail.com",
-                active = true,
-                headphones = headphonesToAdd
-            )
+            val userAccount =
+                UserAccount(
+                    id = 1L,
+                    fullName = "testUserFirstName",
+                    gender = BrnGender.MALE.toString(),
+                    bornYear = 2000,
+                    email = "test@gmail.com",
+                    active = true,
+                    headphones = headphonesToAdd,
+                )
             SecurityContextHolder.setContext(securityContext)
             val email = "test@test.com"
             val headphonesDto = mockkClass(HeadphonesDto::class)
@@ -460,23 +466,25 @@ internal class UserAccountServiceTest {
         fun `should trow exception when headphones for current user is not found`() {
             // GIVEN
             val headphonesId = 1L
-            val headphones = Headphones(
-                id = 2L,
-                name = "test",
-                active = true,
-                type = HeadphonesType.IN_EAR_BLUETOOTH
-            )
+            val headphones =
+                Headphones(
+                    id = 2L,
+                    name = "test",
+                    active = true,
+                    type = HeadphonesType.IN_EAR_BLUETOOTH,
+                )
 
             val headphonesToAdd = mutableSetOf(headphones)
-            val userAccount = UserAccount(
-                id = 1L,
-                fullName = "testUserFirstName",
-                gender = BrnGender.MALE.toString(),
-                bornYear = 2000,
-                email = "test@gmail.com",
-                active = true,
-                headphones = headphonesToAdd
-            )
+            val userAccount =
+                UserAccount(
+                    id = 1L,
+                    fullName = "testUserFirstName",
+                    gender = BrnGender.MALE.toString(),
+                    bornYear = 2000,
+                    email = "test@gmail.com",
+                    active = true,
+                    headphones = headphonesToAdd,
+                )
             SecurityContextHolder.setContext(securityContext)
             val email = "test@test.com"
             every { authentication.name } returns email
@@ -508,7 +516,7 @@ internal class UserAccountServiceTest {
         every { userAccountService.deleteAutoTestUsers() } returns usersCount
 
         // WHEN
-         userAccountService.deleteAutoTestUsers()
+        userAccountService.deleteAutoTestUsers()
 
         // THEN
         verify { userAccountRepository.deleteUserAccountsByEmailStartsWith(prefix) }
@@ -546,7 +554,6 @@ internal class UserAccountServiceTest {
     @Nested
     @DisplayName("Doctor related tests")
     inner class DoctorFunctionality {
-
         @Test
         fun `should update doctor for patient`() {
             // GIVEN

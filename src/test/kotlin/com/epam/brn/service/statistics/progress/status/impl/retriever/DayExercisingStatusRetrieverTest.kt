@@ -19,7 +19,6 @@ import kotlin.test.assertEquals
 
 @ExtendWith(MockKExtension::class)
 internal class DayExercisingStatusRetrieverTest {
-
     @InjectMockKs
     private lateinit var retriever: DayExercisingStatusRetriever
 
@@ -35,23 +34,24 @@ internal class DayExercisingStatusRetrieverTest {
     @MockK
     private lateinit var requirementsManager: StatusRequirementsManager
 
-    private val requirementsStatuses = listOf(
-        StatusRequirements(
-            status = UserExercisingProgressStatus.BAD,
-            minimalRequirements = 0,
-            maximalRequirements = 15
-        ),
-        StatusRequirements(
-            status = UserExercisingProgressStatus.GOOD,
-            minimalRequirements = 15,
-            maximalRequirements = 20
-        ),
-        StatusRequirements(
-            status = UserExercisingProgressStatus.GREAT,
-            minimalRequirements = 20,
-            maximalRequirements = 24 * 60
+    private val requirementsStatuses =
+        listOf(
+            StatusRequirements(
+                status = UserExercisingProgressStatus.BAD,
+                minimalRequirements = 0,
+                maximalRequirements = 15,
+            ),
+            StatusRequirements(
+                status = UserExercisingProgressStatus.GOOD,
+                minimalRequirements = 15,
+                maximalRequirements = 20,
+            ),
+            StatusRequirements(
+                status = UserExercisingProgressStatus.GREAT,
+                minimalRequirements = 20,
+                maximalRequirements = 24 * 60,
+            ),
         )
-    )
 
     @Test
     fun `getStatus should return GREAT status when user progress in the range of the status`() {

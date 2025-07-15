@@ -15,5 +15,5 @@ class AzureSpeechStyle(
     @Column(name = "name", nullable = false, unique = true)
     val name: String,
     @ManyToMany(mappedBy = "styleList")
-    val voices: MutableList<AzureVoiceInfo>? = null
+    val voices: MutableList<AzureVoiceInfo>? = null,
 )

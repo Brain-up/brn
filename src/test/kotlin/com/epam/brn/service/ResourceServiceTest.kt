@@ -18,7 +18,6 @@ import java.util.Optional
 
 @ExtendWith(MockKExtension::class)
 internal class ResourceServiceTest {
-
     @InjectMockKs
     lateinit var resourceService: ResourceService
 
@@ -62,9 +61,10 @@ internal class ResourceServiceTest {
         // GIVEN
         val word = "word"
         val audioFileName = "audioFileName"
-        every { resourceRepositoryMock.findFirstByWordAndAudioFileUrlLike(word, audioFileName) } returns Optional.of(
-            resourceMock
-        )
+        every { resourceRepositoryMock.findFirstByWordAndAudioFileUrlLike(word, audioFileName) } returns
+            Optional.of(
+                resourceMock,
+            )
 
         // WHEN
         val foundResource = resourceService.findFirstByWordAndAudioFileUrlLike(word, audioFileName)
@@ -102,11 +102,12 @@ internal class ResourceServiceTest {
     @Test
     fun `should update description successfully`() {
         // GIVEN
-        val resource = Resource(
-            id = id,
-            wordType = "OBJECT",
-            word = "вил+ок"
-        )
+        val resource =
+            Resource(
+                id = id,
+                wordType = "OBJECT",
+                word = "вил+ок",
+            )
         every { resourceRepositoryMock.findByIdOrNull(id) } returns resource
         every { resourceRepositoryMock.save(resource) } returns resource
 
@@ -130,9 +131,10 @@ internal class ResourceServiceTest {
         every { resourceRepositoryMock.findByIdOrNull(id) } returns null
 
         // WHEN
-        val exception = assertThrows<EntityNotFoundException> {
-            resourceService.updateDescription(id, description)
-        }
+        val exception =
+            assertThrows<EntityNotFoundException> {
+                resourceService.updateDescription(id, description)
+            }
 
         // THEN
         expectedErrorMessage shouldBe exception.message

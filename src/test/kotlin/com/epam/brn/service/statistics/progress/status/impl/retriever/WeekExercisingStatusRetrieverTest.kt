@@ -18,7 +18,6 @@ import kotlin.test.assertEquals
 
 @ExtendWith(MockKExtension::class)
 internal class WeekExercisingStatusRetrieverTest {
-
     @InjectMockKs
     private lateinit var retriever: WeekExercisingStatusRetriever
 
@@ -34,23 +33,24 @@ internal class WeekExercisingStatusRetrieverTest {
     @MockK
     private lateinit var userAccount: UserAccount
 
-    private val requirementsStatuses = listOf(
-        StatusRequirements(
-            status = UserExercisingProgressStatus.BAD,
-            minimalRequirements = 0,
-            maximalRequirements = 5
-        ),
-        StatusRequirements(
-            status = UserExercisingProgressStatus.GOOD,
-            minimalRequirements = 5,
-            maximalRequirements = 6
-        ),
-        StatusRequirements(
-            status = UserExercisingProgressStatus.GREAT,
-            minimalRequirements = 6,
-            maximalRequirements = 8
+    private val requirementsStatuses =
+        listOf(
+            StatusRequirements(
+                status = UserExercisingProgressStatus.BAD,
+                minimalRequirements = 0,
+                maximalRequirements = 5,
+            ),
+            StatusRequirements(
+                status = UserExercisingProgressStatus.GOOD,
+                minimalRequirements = 5,
+                maximalRequirements = 6,
+            ),
+            StatusRequirements(
+                status = UserExercisingProgressStatus.GREAT,
+                minimalRequirements = 6,
+                maximalRequirements = 8,
+            ),
         )
-    )
 
     @Test
     fun `getStatus should return GREAT status when user progress in the range of the status`() {
@@ -65,7 +65,7 @@ internal class WeekExercisingStatusRetrieverTest {
             coolDownRetriever.getMaximalUserRestTime(
                 userAccountId,
                 time.toLocalDate(),
-                time.toLocalDate()
+                time.toLocalDate(),
             )
         } returns 1
         every { requirementsManager.getPeriodRequirements(UserExercisingPeriod.WEEK) } returns requirementsStatuses
@@ -90,7 +90,7 @@ internal class WeekExercisingStatusRetrieverTest {
             coolDownRetriever.getMaximalUserRestTime(
                 userAccountId,
                 time.toLocalDate(),
-                time.toLocalDate()
+                time.toLocalDate(),
             )
         } returns 2
         every { requirementsManager.getPeriodRequirements(UserExercisingPeriod.WEEK) } returns requirementsStatuses
@@ -115,7 +115,7 @@ internal class WeekExercisingStatusRetrieverTest {
             coolDownRetriever.getMaximalUserRestTime(
                 userAccountId,
                 time.toLocalDate(),
-                time.toLocalDate()
+                time.toLocalDate(),
             )
         } returns 5
         every { requirementsManager.getPeriodRequirements(UserExercisingPeriod.WEEK) } returns requirementsStatuses
