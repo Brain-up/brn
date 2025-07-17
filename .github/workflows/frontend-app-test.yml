@@ -36,7 +36,7 @@ jobs:
       - name: Install dependencies
         working-directory: ./frontend
         run: yarn install
-      - uses: umedvedev/ember-cli-code-coverage-action@bf102e36fc2075b06aa8f48451e973ff080cea5d
+      - uses: umedvedev/ember-cli-code-coverage-action@2801b5673d74ffabe710ba57743b5bce5812a5c4
         with:
           working-directory: ./frontend
           test-command: "yarn test:coverage"
