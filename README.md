@@ -27,10 +27,6 @@ Closed for public:
 Only for Epamers:
 - https://info.epam.com/content/infoepam/topics/locations/russia/articles/2020/may/pro-bono-volunteers_ru.html 
 - https://info.epam.com/topics/global/industries/articles/2020/jul/brain-up_en.html 
- 
-## WHY JOIN OUR PROJECT AS A DEVELOPER?
-We use the latest technologies and best practices, so developers will get to know new tools and their usage, obtaining a useful experience. We will review your code, give you advice to improve it and listen to your suggestions. 
-Most importantly being an open source project you can show your work in it to any person interested, proving your development expertise with actual examples of your work flow and code samples in a live application. 
 
 ## WE ARE LOOKING FOR
 1. Front-end developers: Ember, Angular. 
@@ -47,20 +43,20 @@ Most importantly being an open source project you can show your work in it to an
     
 Join us! Learn something new, try your skills, prove yourself, get experience and get ahead!
 
-## TOOLS WE USE
-- Back-end: KOTLIN + Spring boot. Rest api as integration layer.
-- Front-end : TBD - Ember, Angular.
-- DB: Postgres13.
-- TestContainers for running integration tests.
-
 ## HOW TO JOIN?
 Project on Epam Plus (for Epamers only): https://plus.epam.com/projects/21598/overview
 You can write directly in Telegram to Elena Moshnikova (project founder and tech lead) [https://t.me/ElenaBrainUp](https://t.me/ElenaBrainUp)
 or to project email [brainupspbproject@gmail.com](mailto:brainupspbproject@gmail.com) describing your interests or any questions you may have.  
 Also we have project chats:
 dev team Telegram chat: https://t.me/+R-6ThlxgP5QyZmMy  
-QA team Telegram chat: https://t.me/+EJs2EH5mTKs4YWE6
-Autotest Python team chat: https://t.me/+Kv0uYVqMwQNkNzRi
+QA team Telegram chat: ask Elena
+Autotest Python team chat: ask Elena
+
+## TOOLS WE USE
+- Back-end: KOTLIN + Spring boot. Rest api as integration layer.
+- Front-end : TBD - Ember, Angular.
+- DB: Postgres13.
+- TestContainers for running integration tests.
 
 # GETTING STARTED!
 ## Resources:

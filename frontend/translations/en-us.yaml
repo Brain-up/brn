@@ -44,13 +44,13 @@ registration_form:
   email_placeholder: Name@name.com
   invalid_date: Invalid date
   empty_gender: Empty gender
-  empty_lastname: Empty LastName
+  empty_lastname: Empty Last Name
   agree_terms: You must agree to the terms before registering
   gender: Gender
   gender_female: Female
   gender_male: Male
-  name: LastName and FirstName
-  name_placeholder: Ivan Ivanov
+  name: Last Name and First Name
+  name_placeholder: John Smith
   password: Password
   repeat_password: Repeat password
   passwords_should_match: Passwords should match
@@ -63,7 +63,7 @@ registration_form:
   surname: Surname
   warning_enter_credentials: Please enter your login and password
   warning_input_restriction: Maximum number of characters
-  password_length: Password should be from 4 to 20 characters
+  password_length: Password must be between 4 and 20 characters long
   email_exists: User with this Email already registered
 
 breadcrumbs:
@@ -77,7 +77,7 @@ exercise:
   progress: completed
 
 exercise_messages:
-  successfully: Congratulations! Exercise successful!
+  successfully: Congratulations! Exercise completed!
   unsuccessfully: Wrong. Try again!
   answer_successfully: Correct answer
 
@@ -107,6 +107,26 @@ footer:
 
 about_us:
   advantages: Advantages
+  train30: Train for just 30 minutes a day to develop and achieve results
+  adv1:
+    title: BRAINUP
+    content: The first free online program for adults and children with cognitive
+      speech perception problems. All our lessons are designed for children
+      aged 7 and older. Currently, the program includes more than 20 different
+      topics that you can start working on right away. And there will be even
+      more — we plan to constantly expand our list of topics.
+  adv2:
+    title: ONLINE LESSONS
+    content: We wanted the learning format to be as convenient as possible for each
+      of our users. That is why our lessons are available at any time.
+      You can choose when to study and create your own lesson schedule.
+  adv3:
+    title: SELF-DEVELOPMENT
+    content: By following our program, you will be able to develop your hearing in various
+      acoustic situations; train your auditory memory by listening to exercises
+      as many times as you need. Additionally, you can expand your vocabulary
+      in an engaging, game-like format and later use new words in conversations
+      with friends and acquaintances.
 
 index:
   app_info: BrainUP - online classes for children and adults
@@ -176,7 +196,7 @@ description:
         of apps thanks to public scientific developments in this area. The project is not commercial. Volunteers take part in the development of this
         project. We are open to any help and cooperation.
       3:
-        In the history of this draft more than 40 people have taken part in the development of apps from different countries (Russia, Ukraine,
+        In the history of this draft more than 60 people have taken part in the development of apps from different countries (Russia, Ukraine,
         Belarus, Poland, Netherlands, Mexico) since 2019.
       4: The working version of the BrainUp program is already ready, where one can register and practice right now."
   exercises:
@@ -267,7 +287,7 @@ description:
     thanks_words: We would like to thank everyone who participates and supports our project!
   join_us:
     header: 'Join ''<span class="text-indigo-600">''BrainUp''</span>''!'
-    description: We will be glad to everyone who wants to join and contribute to our project.
+    description: We will be glad to see everyone who wants to join and contribute to our project.
     contact:
       start: "If you want to join our team, you can write to our lead Elena Moshnikova: "
       end: Elena will be happy to answer all your questions and to cooperate.
@@ -278,19 +298,19 @@ profile:
     title: Statistics
     about: What is it about?
     month_time_track:
-      title_months: Total excersize time by months
-      title_weeks: Total excersize time by weeks
+      title_months: Total exercise time by months
+      title_weeks: Total exercise time by weeks
       days_period: For {days} days
       empty_data: No data for year {year}
     week_time_track:
-      title_weeks: Weekly exersize time
+      title_weeks: Weekly exercise time
       empty_data: No data for period {period}
     daily_time_table:
       series_name: Series name
       all_done_exercises: All done exercises
       unique_done_exercises: Unique done exercises
       repeated_exercises: Repeated exercises
-      done_exercises_successfully_from_first_time: Success exercises from first time
+      done_exercises_successfully_from_first_time: Success exercises from the first time
       listen_words_count: Listen words count
     info_dialog:
       title: What is it about?
@@ -313,6 +333,6 @@ contributors:
     DEVELOPER: 'Developers'
     SPECIALIST: 'Specialists'
     QA: 'Quality Assurance'
-    AUTOTESTER: 'Developers in test'
+    AUTOTESTER: 'Autotesters'
     DESIGNER: 'Designers'
     OTHER: 'Other'
