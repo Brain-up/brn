@@ -1,0 +1,46 @@
+name: Makes DB backup every week
+
+on:
+  schedule:
+    - cron: "0 4 * * 6"
+  workflow_dispatch:
+
+jobs:
+  db_backup:
+    runs-on: selectel
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Prep docker-compose.yml
+        run: mv docker-compose-run.yml docker-compose.yml
+
+      - name: Make backup
+        id: backup
+        env:
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+        run: |
+          TIMESTAMP=$(date +%Y%m%d)
+          FILENAME="backup_${TIMESTAMP}.sql.gz"
+          echo "filename=$FILENAME" >> "$GITHUB_OUTPUT"
+          docker compose run --rm \
+            -e PGPASSWORD="$POSTGRES_PASSWORD" \
+            db_brn sh -c \
+              "pg_dump -U \$POSTGRES_USER \
+                       -h db_brn \
+                       \$POSTGRES_DB" \
+                       | gzip > $FILENAME
+
+      - name: Send to S3
+        id: send
+        env:
+          S3_KEY: ${{ secrets.S3_KEY }}
+          S3_BACKUPS_URL: ${{ vars.S3_BACKUPS_URL }}
+          FILENAME: ${{ steps.backup.outputs.filename }}
+        run: |
+          echo "$S3_KEY"|base64 -d > aws-key.properties
+          docker compose run --rm \
+            -v $(pwd):/backups \
+            --entrypoint "/usr/bin/bash -c" \
+            aws-cli "set -a \
+              && . /run/secrets/aws-key \
+              && aws s3 cp /backups/$FILENAME $S3_BACKUPS_URL/$FILENAME"
