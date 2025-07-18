@@ -36,12 +36,12 @@ jobs:
       - name: Install dependencies
         working-directory: ./frontend
         run: yarn install
-      - uses: mydea/ember-cli-code-coverage-action@e4130abc6c57d272d9d123870c26b8c284128adc
+      - uses: umedvedev/ember-cli-code-coverage-action@2b49e784fb8ed85b30572fca2a9cb5c00f6a1446
         with:
           working-directory: ./frontend
           test-command: "yarn test:coverage"
           coverage-file: "./frontend/coverage/coverage-summary.json"
-          repo-token: "${{ secrets.API_GITHUB_TOKEN }}"
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
           message: "Frontend test coverage: {testCoverage}%"
 
 #  build:
@@ -56,4 +56,4 @@ jobs:
 #      - uses: simplabs/ember-asset-size-action@v1
 #        with:
 #          working-directory: ./frontend
-#          repo-token: "${{ secrets.API_GITHUB_TOKEN }}"
+#          repo-token: "${{ secrets.GITHUB_TOKEN }}"
