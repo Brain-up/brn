@@ -6,7 +6,7 @@ create index if not exists word_word_type_idx on resource (word, word_type);
 
 drop index if exists ukt37wptru4xcs8es5ae1huynph;
 
-alter table resource drop if exists constraint resource_constrain;
+alter table resource drop constraint if exists resource_constrain;
 
 DELETE FROM resource
 WHERE id NOT IN (
