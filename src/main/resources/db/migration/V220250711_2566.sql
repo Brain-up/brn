@@ -4,7 +4,9 @@ drop index if exists word_audio_file_idx;
 
 create index if not exists word_word_type_idx on resource (word, word_type);
 
-alter table resource drop constraint resource_constrain;
+drop index if exists ukt37wptru4xcs8es5ae1huynph;
+
+alter table resource drop if exists constraint resource_constrain;
 
 DELETE FROM resource
 WHERE id NOT IN (
