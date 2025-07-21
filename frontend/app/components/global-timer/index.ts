@@ -36,7 +36,9 @@ export default class GlobalTimerComponent extends Component<IGlobalTimerArgs> {
   get minutes() {
     const sec = this.seconds % 60;
     const min = Math.floor(this.seconds / 60);
-    return `${(min || '00') + ' : ' + (sec || '00')}`;
+    const secNormalized = sec < 10 ? '0' + sec : sec || '00';
+    const minNormalized = min < 10 ? '0' + min : min || '00';
+    return `${minNormalized + ' : ' + secNormalized}`;
   }
   get getColor() {
     if (this.seconds > 1200) {
