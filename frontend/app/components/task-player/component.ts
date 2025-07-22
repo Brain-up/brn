@@ -105,7 +105,7 @@ export default class TaskPlayerComponent extends Component {
     const { answerOptions, selectedItemsOrder, normalizedAnswerOptions } =
       this.task;
     // for ordered tasks we need to align audio stream with object order;
-    
+
 
     if (this.task.exerciseMechanism === ExerciseMechanism.SIGNALS) {
       return answerOptions;
@@ -145,6 +145,7 @@ export default class TaskPlayerComponent extends Component {
             option.audioFileUrl && this.task.usePreGeneratedAudio;
           yield this.audio.setAudioElements([
             useGeneratedUrl
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
               ? option.audioFileUrl!
               : this.audio.audioUrlForText(option.wordPronounce ?? option.word),
           ]);
@@ -208,7 +209,7 @@ export default class TaskPlayerComponent extends Component {
                   : this.audio.audioUrlForText(option.wordPronounce),
               ]);
             }
-            
+
             yield this.audio.playAudio();
           }
         }

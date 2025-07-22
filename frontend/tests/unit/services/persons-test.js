@@ -2,9 +2,11 @@ import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import { isArray } from '@ember/array';
 import Service from '@ember/service';
+import { setupIntl } from 'ember-intl/test-support';
 
 module('Unit | Service | persons', function (hooks) {
   setupTest(hooks);
+  setupIntl(hooks, 'en-us');
 
   test('it exists', function (assert) {
     let service = this.owner.lookup('service:persons');

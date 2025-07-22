@@ -1,11 +1,11 @@
 import { module, test } from 'qunit';
-import { setupRenderingTest } from 'ember-qunit';
+import { setupIntl } from 'ember-intl/test-support';import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import { run } from '@ember/runloop';
 import hbs from 'htmlbars-inline-precompile';
 
 module('Integration | Component | group-navigation', function (hooks) {
-  setupRenderingTest(hooks);
+  setupRenderingTest(hooks);setupIntl(hooks, 'en-us');
 
   test('it renders', async function (assert) {
     const store = this.owner.lookup('service:store');
@@ -18,13 +18,11 @@ module('Integration | Component | group-navigation', function (hooks) {
       return group;
     });
     this.setProperties({ group });
-
     await render(hbs`<GroupNavigation @group={{this.group}}/>`);
-
     assert.equal(
-      this.element.querySelectorAll('button').length,
+      this.element.querySelectorAll('a').length,
       3,
-      '3 buttons',
+      '3 links',
     );
   });
 });

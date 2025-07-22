@@ -1,5 +1,5 @@
 import { module, skip, test } from 'qunit';
-import { setupRenderingTest } from 'ember-qunit';
+import { setupIntl } from 'ember-intl/test-support';import { setupRenderingTest } from 'ember-qunit';
 import { render, fillIn, click } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import Service from '@ember/service';
@@ -10,7 +10,7 @@ function getDate(num) {
 }
 
 module('Integration | Component | registration-form', function (hooks) {
-  setupRenderingTest(hooks);
+  setupRenderingTest(hooks);setupIntl(hooks, 'en-us');
 
   test('it renders', async function (assert) {
     // Set any properties with this.set('myProperty', 'value');

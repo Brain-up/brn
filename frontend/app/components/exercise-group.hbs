@@ -1,8 +1,9 @@
-<a
+<LinkTo
   class="sm:m-2 m-1 overflow-hidden border-2 border-gray-200 rounded-lg shadow-lg"
   {{on "mouseenter" this.mouseEnter}}
   {{on "mouseleave" this.mouseLeave}}
-  href={{href-to "group.series.subgroup" @group.id}}
+  @route="group.series.subgroup"
+  @model={{@group.id}}
   title={{@group.description}}
 >
   {{! template-lint-disable no-inline-styles style-concatenation }}
@@ -25,4 +26,4 @@
       {{@group.name}}
     </div>
   </div>
-</a>
+</LinkTo>

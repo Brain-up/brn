@@ -1,4 +1,4 @@
-FROM node:12 AS build-frontend
+FROM node:22 AS build-frontend
 ARG FIREBASE_PROJECT_ID
 ENV FIREBASE_PROJECT_ID ${FIREBASE_PROJECT_ID:-}
 ARG FIREBASE_AUTH_DOMAIN
@@ -13,7 +13,8 @@ RUN node node_modules/ember-cli/bin/ember deploy production
 FROM node:20 AS build-frontend-angular
 COPY frontend-angular/ /src/
 WORKDIR /src
-RUN npm ci
+ENV NODE_OPTIONS=--openssl-legacy-provider
+RUN npm ci --legacy-peer-deps
 RUN npm run build
 
 FROM nginx:alpine

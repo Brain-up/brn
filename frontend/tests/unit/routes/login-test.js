@@ -6,7 +6,7 @@ import {
   authenticateSession,
   invalidateSession,
 } from 'ember-simple-auth/test-support';
-import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
+import { setupMirage } from "ember-cli-mirage/test-support";
 
 module('Acceptance | app test', function (hooks) {
   setupApplicationTest(hooks);
