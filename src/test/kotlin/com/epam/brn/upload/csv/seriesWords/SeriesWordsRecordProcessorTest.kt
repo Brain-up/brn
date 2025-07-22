@@ -287,36 +287,30 @@ internal class SeriesWordsRecordProcessorTest {
     private fun resource_бал(): Resource = Resource(
         word = "бал",
         wordType = WordType.OBJECT.toString(),
-        audioFileUrl = "/test/бал.ogg",
     )
 
     private fun resource_бум(): Resource = Resource(
         word = "бум",
         wordType = WordType.OBJECT.toString(),
-        audioFileUrl = "/test/бум.ogg",
     )
 
     private fun resource_быль(): Resource = Resource(
         word = "быль",
         wordType = WordType.OBJECT.toString(),
-        audioFileUrl = "/test/быль.ogg",
     )
 
     private fun resource_вить(): Resource = Resource(
         word = "вить",
         wordType = WordType.OBJECT.toString(),
-        audioFileUrl = "/test/вить.ogg",
     )
 
     private fun resource_гад(): Resource = Resource(
         word = "гад",
         wordType = WordType.OBJECT.toString(),
-        audioFileUrl = "/test/гад.ogg",
     )
 
     private fun resource_дуб(): Resource = Resource(
         word = "дуб",
         wordType = WordType.OBJECT.toString(),
-        audioFileUrl = "/test/дуб.ogg",
     )
 }
