@@ -20,6 +20,13 @@ class ResourceService(
         return if (resources.isNotEmpty()) resources.first() else null
     }
 
+    fun findFirstByWordAndAudioFileUrlLike(
+        word: String,
+        audioFileName: String,
+    ): Resource? = resourceRepository
+        .findFirstByWordAndAudioFileUrlLike(word, audioFileName)
+        .orElse(null)
+
     fun save(resource: Resource): Resource = resourceRepository.save(resource)
 
     fun findAll(): List<Resource> = resourceRepository

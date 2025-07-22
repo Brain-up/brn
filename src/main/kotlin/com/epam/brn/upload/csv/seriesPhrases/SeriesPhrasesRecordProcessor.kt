@@ -1,5 +1,6 @@
 package com.epam.brn.upload.csv.seriesPhrases
 
+import com.epam.brn.dto.AudioFileMetaData
 import com.epam.brn.enums.BrnLocale
 import com.epam.brn.enums.WordType
 import com.epam.brn.exception.EntityNotFoundException
@@ -10,6 +11,7 @@ import com.epam.brn.model.Task
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.SubGroupRepository
+import com.epam.brn.service.WordsService
 import com.epam.brn.upload.csv.RecordProcessor
 import com.epam.brn.upload.toStringWithoutBraces
 import org.springframework.beans.factory.annotation.Value
@@ -21,6 +23,7 @@ class SeriesPhrasesRecordProcessor(
     private val subGroupRepository: SubGroupRepository,
     private val resourceRepository: ResourceRepository,
     private val exerciseRepository: ExerciseRepository,
+    private val wordsService: WordsService,
 ) : RecordProcessor<SeriesPhrasesRecord, Exercise> {
     @Value(value = "\${fonAudioPath}")
     private lateinit var fonAudioPath: String
@@ -64,12 +67,12 @@ class SeriesPhrasesRecordProcessor(
                 .map { it.toStringWithoutBraces() }
                 .toMutableList()
         val lastWordOnFirstPhrase = words.find { w -> w.contains(".") }
-        val phraseFirst =
+        var phraseFirst =
             words
                 .subList(0, words.indexOf(lastWordOnFirstPhrase) + 1)
                 .joinToString(" ")
                 .replace(".", "")
-        val phraseSecond =
+        var phraseSecond =
             words
                 .subList(words.indexOf(lastWordOnFirstPhrase) + 1, words.size)
                 .joinToString(" ")
@@ -81,6 +84,14 @@ class SeriesPhrasesRecordProcessor(
         phrase: String,
         locale: BrnLocale,
     ): Resource {
+        val audioPath =
+            wordsService.getSubFilePathForWord(
+                AudioFileMetaData(
+                    phrase,
+                    locale.locale,
+                    wordsService.getDefaultManVoiceForLocale(locale.locale),
+                ),
+            )
         val wordType = WordType.PHRASE.toString()
         val resource =
             resourceRepository
@@ -91,6 +102,7 @@ class SeriesPhrasesRecordProcessor(
                         locale = locale.locale,
                     ),
                 )
+        resource.audioFileUrl = audioPath
         resource.wordType = wordType
         return resource
     }
