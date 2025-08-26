@@ -10,6 +10,17 @@
     />
   </ModalDialog>
 {{/if}}
+{{#if this.showHeadphonesModal}}
+  <ModalDialog
+    @overlayClass="p-8 z-50 min-h-full w-full fixed flex"
+    @containerClass="max-w-4xl flex bg-white rounded-lg text-2xl m-auto"
+  >
+    <Ui::Headphones
+      @onCancel={{this.onCloseHeadphonesModal}}
+      @onSubmit={{this.onSelectHeadphones}}
+    />
+  </ModalDialog>
+{{/if}}
 <section class="border-4 border-gray-100 rounded-md">
   <div
     class="bg-gradient-to-r from-blue-100 to-purple-100 profile lg:flex justify-between p-4"
@@ -92,7 +103,6 @@
         {{t "registration_form.gender_male"}}
       </label>
     </div>
-
     <div class="mb-4">
       <LoginForm::Input
         disabled
@@ -100,6 +110,22 @@
         @name="email"
         @label={{t "registration_form.email"}}
       />
+    </div>
+    <div class="mb-4">
+      <p class="mb-2 text-sm font-bold text-gray-700">
+        {{t "headphones.form_field_title"}}
+      </p>
+      <p class="text-sm">
+        {{#if this.selectedHeadphones}}
+          {{this.selectedHeadphones.name}}
+        {{else}}
+          {{t "headphones.form_field_no_headphones"}}
+        {{/if}}
+      </p>
+      <button type="button" class="hover:text-indigo-600 text-sm text-indigo-500 transition duration-150 ease-in-out" {{on "click" this.onShowEarphones}}>
+        <FaIcon @icon="headphones-alt" />
+        {{t "headphones.form_field_select_headphones"}}
+      </button>
     </div>
     <div class="mb-4">
       <LinkTo
