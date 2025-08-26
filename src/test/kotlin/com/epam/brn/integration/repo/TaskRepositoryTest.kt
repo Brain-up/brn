@@ -17,10 +17,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 @DataJpaTest
 @Tag("integration-test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@DisplayName("TaskRepository tests")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class TaskRepositoryTest : BaseTest() {
-
     @Autowired
     lateinit var taskRepository: TaskRepository
 
@@ -29,7 +27,6 @@ class TaskRepositoryTest : BaseTest() {
     inner class GetTasks {
         @Test
         fun `should return list with one task includes answers for certain exercise`() {
-
             // WHEN
             val findAllTasksWithAnswers =
                 exerciseId?.let { taskRepository.findTasksByExerciseIdWithJoinedAnswers(it) }
@@ -57,7 +54,6 @@ class TaskRepositoryTest : BaseTest() {
 
         @Test
         fun `should return all tasks`() {
-
             // WHEN
             val findAllTasksWithAnswers = taskRepository.findAllTasksWithJoinedAnswers()
 
@@ -68,14 +64,14 @@ class TaskRepositoryTest : BaseTest() {
 
         @Test
         fun `should return all tasks include answers`() {
-
             // WHEN
             val findAllTasksWithAnswers = taskRepository.findAllTasksWithJoinedAnswers()
-            val actualListOfWords = findAllTasksWithAnswers
-                .filter { task -> task.name.equals(nameOfTaskWithAnswers) }
-                .map { task -> task.answerOptions }
-                .flatten()
-                .map { resource -> resource.word }
+            val actualListOfWords =
+                findAllTasksWithAnswers
+                    .filter { task -> task.name.equals(nameOfTaskWithAnswers) }
+                    .map { task -> task.answerOptions }
+                    .flatten()
+                    .map { resource -> resource.word }
 
             // THEN
             assertThat(actualListOfWords)

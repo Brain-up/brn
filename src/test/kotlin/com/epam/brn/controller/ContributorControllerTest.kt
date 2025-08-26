@@ -17,7 +17,6 @@ import kotlin.test.assertEquals
 
 @ExtendWith(MockKExtension::class)
 internal class ContributorControllerTest {
-
     @InjectMockKs
     lateinit var contributorController: ContributorController
 
@@ -54,10 +53,12 @@ internal class ContributorControllerTest {
         // WHEN
         @Suppress("UNCHECKED_CAST")
         val actualResultData: List<ContributorResponse> =
-            contributorController.getContributors(
-                locale,
-                ContributorType.SPECIALIST
-            ).body?.data as List<ContributorResponse>
+            contributorController
+                .getContributors(
+                    locale,
+                    ContributorType.SPECIALIST,
+                ).body
+                ?.data as List<ContributorResponse>
 
         // THEN
         verify(exactly = 1) { contributorService.getContributors(locale, ContributorType.SPECIALIST) }

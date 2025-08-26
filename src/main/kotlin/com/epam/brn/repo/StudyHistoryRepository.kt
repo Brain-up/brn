@@ -11,18 +11,22 @@ import java.time.LocalDateTime
 
 @Repository
 interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
-
     @Query(
         "SELECT DISTINCT s.exercise FROM StudyHistory s " +
-            " WHERE s.exercise.subGroup.id = :subGroupId and s.userAccount.id = :userId"
+            " WHERE s.exercise.subGroup.id = :subGroupId and s.userAccount.id = :userId",
     )
-    fun getDoneExercises(@Param("subGroupId") subGroupId: Long, @Param("userId") userId: Long): List<Exercise>
+    fun getDoneExercises(
+        @Param("subGroupId") subGroupId: Long,
+        @Param("userId") userId: Long,
+    ): List<Exercise>
 
     @Query(
         "SELECT DISTINCT s.exercise.id FROM StudyHistory s " +
-            " WHERE s.userAccount.id = :userId"
+            " WHERE s.userAccount.id = :userId",
     )
-    fun getDoneExercisesIdList(@Param("userId") userId: Long): List<Long>
+    fun getDoneExercisesIdList(
+        @Param("userId") userId: Long,
+    ): List<Long>
 
     @Query(
         "SELECT s FROM StudyHistory s " +
@@ -30,7 +34,7 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
             " IN (SELECT userAccount.id, max(startTime) " +
             "       FROM StudyHistory " +
             "       GROUP BY exercise.id, userAccount.id " +
-            "       HAVING userAccount.id = :userId)"
+            "       HAVING userAccount.id = :userId)",
     )
     fun findLastByUserAccountId(userId: Long): List<StudyHistory>
 
@@ -41,9 +45,12 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
             "       FROM StudyHistory " +
             "       WHERE exercise.subGroup.id = :subGroupId  " +
             "       GROUP BY exercise.id, userAccount.id " +
-            "       HAVING userAccount.id = :userId)"
+            "       HAVING userAccount.id = :userId)",
     )
-    fun findLastBySubGroupAndUserAccount(subGroupId: Long, userId: Long): List<StudyHistory>
+    fun findLastBySubGroupAndUserAccount(
+        subGroupId: Long,
+        userId: Long,
+    ): List<StudyHistory>
 
     @Query(
         "SELECT s FROM StudyHistory s " +
@@ -51,9 +58,12 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
             " IN (SELECT userAccount.id, exercise.id, max(startTime) " +
             "       FROM StudyHistory " +
             "       GROUP BY exercise.id, userAccount.id " +
-            "       HAVING userAccount.id = :userId and exercise.id in (:exerciseIds))"
+            "       HAVING userAccount.id = :userId and exercise.id in (:exerciseIds))",
     )
-    fun findLastByUserAccountIdAndExercises(userId: Long, exerciseIds: List<Long>): List<StudyHistory>
+    fun findLastByUserAccountIdAndExercises(
+        userId: Long,
+        exerciseIds: List<Long>,
+    ): List<StudyHistory>
 
     @Query(
         "SELECT s FROM StudyHistory s " +
@@ -61,21 +71,27 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
             " IN (SELECT userAccount.id, exercise.id, max(startTime) " +
             "       FROM StudyHistory " +
             "       GROUP BY exercise.id, userAccount.id " +
-            "       HAVING userAccount.id = :userId and exercise.id = :exerciseId)"
+            "       HAVING userAccount.id = :userId and exercise.id = :exerciseId)",
     )
-    fun findLastByUserAccountIdAndExerciseId(userId: Long, exerciseId: Long): StudyHistory?
+    fun findLastByUserAccountIdAndExerciseId(
+        userId: Long,
+        exerciseId: Long,
+    ): StudyHistory?
 
     @Query(
         "SELECT COALESCE(sum(s.executionSeconds), 0) FROM StudyHistory s " +
             " WHERE date_trunc('day', s.startTime) = :day" +
-            " AND s.userAccount.id = :userId"
+            " AND s.userAccount.id = :userId",
     )
-    fun getDayTimer(userId: Long, day: java.util.Date): Int
+    fun getDayTimer(
+        userId: Long,
+        day: java.util.Date,
+    ): Int
 
     @Query(
         "SELECT COALESCE(sum(COALESCE(s.executionSeconds, 0)), 0) FROM StudyHistory s " +
             " WHERE date_trunc('day', now()) = date_trunc('day', s.startTime)" +
-            " AND s.userAccount.id = :userId"
+            " AND s.userAccount.id = :userId",
     )
     fun getTodayDayTimer(userId: Long): Int
 
@@ -84,38 +100,42 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
             " WHERE s.startTime >= :from " +
             " AND s.startTime <= :to " +
             " AND s.userAccount.id = :userId " +
-            "ORDER BY s.startTime"
+            "ORDER BY s.startTime",
     )
     fun getHistories(
         userId: Long,
         from: LocalDateTime,
-        to: LocalDateTime
+        to: LocalDateTime,
     ): List<StudyHistory>
 
     @Query(
         "SELECT MIN(s.startTime) AS firstStudy, MAX(s.startTime) AS lastStudy," +
             " COALESCE(SUM(s.spentTimeInSeconds), 0) AS spentTime, COUNT (DISTINCT s.exercise.id) as doneExercises" +
-            " FROM StudyHistory s WHERE user_id = :userId"
+            " FROM StudyHistory s WHERE user_id = :userId",
     )
-    fun getStatisticByUserAccountId(userId: Long?): UserStatisticView
+    fun getStatisticsByUserAccountId(userId: Long?): UserStatisticView
 
     @Query(
         "SELECT s FROM StudyHistory s " +
             " WHERE EXTRACT(MONTH FROM s.startTime) = :month " +
             " AND EXTRACT(YEAR FROM s.startTime) = :year " +
-            " AND s.userAccount.id = :userId"
+            " AND s.userAccount.id = :userId",
     )
-    fun getMonthHistories(userId: Long, month: Int, year: Int): List<StudyHistory>
+    fun getMonthHistories(
+        userId: Long,
+        month: Int,
+        year: Int,
+    ): List<StudyHistory>
 
     @Query(
         "SELECT s FROM StudyHistory s " +
             " WHERE date_trunc('day', now()) = date_trunc('day', s.startTime) " +
-            " AND s.userAccount.id = :userId"
+            " AND s.userAccount.id = :userId",
     )
     fun getTodayHistories(userId: Long): List<StudyHistory>
 
     @Query(
-        "select count (s) > 0 from StudyHistory s where s.userAccount.id = :userId"
+        "select count (s) > 0 from StudyHistory s where s.userAccount.id = :userId",
     )
     fun isUserHasStatistics(userId: Long): Boolean
 }

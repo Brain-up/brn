@@ -19,7 +19,7 @@ import javax.persistence.Table
 @Entity
 @Table
 @DynamicUpdate
-data class Contributor(
+class Contributor(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
@@ -36,7 +36,6 @@ data class Contributor(
     var contribution: Long = 0,
     var active: Boolean = true,
 ) {
-
     @OneToOne(cascade = [CascadeType.REMOVE])
     @JoinColumn(name = "github_id", referencedColumnName = "id")
     var gitHubUser: GitHubUser? = null
@@ -46,50 +45,48 @@ data class Contributor(
     var contacts: MutableSet<Contact> = mutableSetOf()
 
     fun toContributorResponse(locale: String = "ru-ru"): ContributorResponse {
-        val dto = ContributorResponse(
-            id = id!!,
-            gitHubLogin = gitHubUser?.login ?: "",
-            repositoryName = repositoryName,
-            name = name,
-            nameEn = nameEn,
-            company = company,
-            companyEn = companyEn,
-            description = description,
-            descriptionEn = descriptionEn,
-            pictureUrl = pictureUrl,
-            contribution = contribution,
-            type = type,
-            active = active,
-            contacts = contacts.map {
-                it.toDto()
-            }.toSet()
-        )
+        val dto =
+            ContributorResponse(
+                id = id!!,
+                gitHubLogin = gitHubUser?.login ?: "",
+                repositoryName = repositoryName,
+                name = name,
+                nameEn = nameEn,
+                company = company,
+                companyEn = companyEn,
+                description = description,
+                descriptionEn = descriptionEn,
+                pictureUrl = pictureUrl,
+                contribution = contribution,
+                type = type,
+                active = active,
+                contacts =
+                    contacts
+                        .map {
+                            it.toDto()
+                        }.toSet(),
+            )
         return dto
     }
 
-    fun toContributorDetailsDto(): ContributorDetailsResponse {
-        return ContributorDetailsResponse(
-            id = id!!,
-            type = type.name,
-            name = name,
-            description = description,
-            company = company,
-            nameEn = nameEn,
-            descriptionEn = descriptionEn,
-            companyEn = companyEn,
-            pictureUrl = pictureUrl,
-            active = active,
-            gitHubUser = gitHubUser?.toDto(),
-            contacts = contacts.map {
-                it.toDto()
-            }.toSet(),
-        )
-    }
-
-    override fun toString() =
-        "Contributor(id=$id, name=$name, repositoryName=$repositoryName, description=$description, " +
-                "company=$company, nameEn=$nameEn, descriptionEn=$descriptionEn, companyEn=$companyEn, " +
-                "type=$type, pictureUrl=$pictureUrl, contribution=$contribution, gitHubUser=$gitHubUser)"
+    fun toContributorDetailsDto(): ContributorDetailsResponse = ContributorDetailsResponse(
+        id = id!!,
+        type = type.name,
+        name = name,
+        description = description,
+        company = company,
+        nameEn = nameEn,
+        descriptionEn = descriptionEn,
+        companyEn = companyEn,
+        pictureUrl = pictureUrl,
+        active = active,
+        gitHubUser = gitHubUser?.toDto(),
+        contacts =
+            contacts
+                .map {
+                    it.toDto()
+                }.toSet(),
+    )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -112,7 +109,7 @@ data class Contributor(
 
     override fun hashCode(): Int {
         var result = id?.hashCode() ?: 0
-        result = 31 * result + (name?.hashCode() ?: 0)
+        result = 31 * result + (name.hashCode())
         result = 31 * result + (repositoryName?.hashCode() ?: 0)
         result = 31 * result + (description?.hashCode() ?: 0)
         result = 31 * result + (company?.hashCode() ?: 0)

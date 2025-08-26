@@ -13,8 +13,6 @@ val kotlinxCoroutinesCoreVersion: String by properties
 val springCloudContractWiremockVersion: String by properties
 val springDocOpenApiVersion: String by properties
 
-val ktlint by configurations.creating
-
 plugins {
     id("org.springframework.boot")
     id("io.spring.dependency-management")
@@ -23,7 +21,7 @@ plugins {
     kotlin("plugin.jpa")
     id("org.jetbrains.kotlin.plugin.allopen")
     jacoco
-    id("org.sonarqube") version "3.0"
+    id("org.sonarqube") version "6.2.0.5505"
 }
 
 allOpen {
@@ -52,8 +50,10 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-batch")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation("org.springframework.boot:spring-boot-starter-cache")
     implementation("org.springframework.security:spring-security-test")
     implementation("org.springframework.boot:spring-boot-devtools")
+
     implementation("org.postgresql:postgresql")
     implementation("org.flywaydb:flyway-core:$flywayVersion")
 
@@ -75,13 +75,12 @@ dependencies {
     implementation("com.google.cloud:google-cloud-storage:1.110.0")
 
     implementation("org.json:json:$jsonVersion")
-    implementation("net.bramp.ffmpeg:ffmpeg:0.7.0")
+    implementation("commons-io:commons-io:2.17.0")
 
     testImplementation("org.springframework.boot:spring-boot-starter-webflux")
     testImplementation("org.springframework.cloud:spring-cloud-contract-wiremock:$springCloudContractWiremockVersion")
-    testImplementation("org.amshove.kluent:kluent:1.68") //should be deleted after kotest move all of it
-    testImplementation("org.jetbrains.kotlin:kotlin-test:1.3.72") //should be deleted after kotest move all of it
-    testImplementation("io.kotest:kotest-assertions:$kotestAssertionsVersion")
+    testImplementation("org.amshove.kluent:kluent:1.68") // should be deleted after kotest move all of it
+    testImplementation("org.jetbrains.kotlin:kotlin-test:1.3.72") // should be deleted after kotest move all of it
     testImplementation("io.kotest:kotest-assertions-core:$kotestAssertionsVersion")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
@@ -92,6 +91,7 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
     testImplementation("org.junit.jupiter:junit-jupiter-params:$junitVersion")
     testImplementation("org.mockito.kotlin:mockito-kotlin:4.0.0")
+    testImplementation("org.powermock:powermock-mockito-release-full:1.5.4")
 
     testImplementation("org.testcontainers:testcontainers")
     testImplementation("com.natpryce:hamkrest:1.8.0.1")
@@ -111,31 +111,50 @@ tasks.withType<KotlinCompile> {
 }
 
 // --- ktlint - kotlin code style plugin ---
+val ktlint by configurations.creating
+
 configurations {
     ktlint
 }
 
 dependencies {
-    ktlint("com.pinterest:ktlint:0.38.0")
+    ktlint("com.pinterest.ktlint:ktlint-cli:1.5.0") {
+        attributes {
+            attribute(Bundling.BUNDLING_ATTRIBUTE, objects.named(Bundling.EXTERNAL))
+        }
+    }
+    // ktlint(project(":custom-ktlint-ruleset")) // in case of custom ruleset
 }
 
-tasks.register("ktlintFormat", JavaExec::class.java) {
-    description = "Fix Kotlin code style deviations."
-    group = "formatting"
+val ktlintCheck by tasks.registering(JavaExec::class) {
+    group = LifecycleBasePlugin.VERIFICATION_GROUP
+    description = "Check Kotlin code style"
     classpath = ktlint
-    main = "com.pinterest.ktlint.Main"
-    args = listOf("-F", "src/**/*.kt")
+    mainClass.set("com.pinterest.ktlint.Main")
+    // see https://pinterest.github.io/ktlint/install/cli/#command-line-usage for more information
+    args(
+        "**/src/**/*.kt",
+        "**.kts",
+        "!**/build/**",
+    )
 }
 
-tasks.register("ktlint", JavaExec::class.java) {
-    group = "verification"
-    description = "Runs ktlint."
-    main = "com.pinterest.ktlint.Main"
+tasks.check {
+    dependsOn(ktlintCheck)
+}
+
+tasks.register<JavaExec>("ktlintFormat") {
+    group = LifecycleBasePlugin.VERIFICATION_GROUP
+    description = "Check Kotlin code style and format"
     classpath = ktlint
-    args = listOf(
-        "--reporter=plain",
-        "--reporter=checkstyle,output=${project.buildDir}/reports/ktlint/ktlint-checkstyle-report.xml",
-        "src/**/*.kt"
+    mainClass.set("com.pinterest.ktlint.Main")
+    jvmArgs("--add-opens=java.base/java.lang=ALL-UNNAMED")
+    // see https://pinterest.github.io/ktlint/install/cli/#command-line-usage for more information
+    args(
+        "-F",
+        "**/src/**/*.kt",
+        "**.kts",
+        "!**/build/**",
     )
 }
 
@@ -143,7 +162,7 @@ project.exec {
     commandLine = "git config core.hooksPath .githooks".split(" ")
 }
 
-tasks.named("compileKotlin") { dependsOn("ktlint") }
+tasks.named("compileKotlin") { dependsOn("ktlintCheck") }
 
 tasks.withType<Test> {
     useJUnitPlatform {
@@ -161,25 +180,29 @@ tasks.withType<JacocoReport> {
     reports {
         xml.required.set(true)
         html.required.set(true)
-        xml.outputLocation.set(file("${buildDir}/jacoco/coverage.xml"))
+        xml.outputLocation.set(file("$buildDir/jacoco/coverage.xml"))
         csv.required.set(false)
-        html.outputLocation.set(file("${buildDir}/jacoco/html"))
+        html.outputLocation.set(file("$buildDir/jacoco/html"))
     }
     afterEvaluate {
-        classDirectories.setFrom(files(classDirectories.files.map {
-            fileTree(it).apply {
-                exclude(
-                    "com/epam/brn/dto/**",
-                    "com/epam/brn/model/**",
-                    "com/epam/brn/config/**",
-                    "com/epam/brn/exception/**",
-                    "com/epam/brn/Application*",
-                    "com/epam/brn/service/azure/tts/config/**",
-                    "com/epam/brn/webclient/customizer/**",
-                    "com/epam/brn/webclient/model/**"
-                )
-            }
-        }))
+        classDirectories.setFrom(
+            files(
+                classDirectories.files.map {
+                    fileTree(it).apply {
+                        exclude(
+                            "com/epam/brn/dto/**",
+                            "com/epam/brn/model/**",
+                            "com/epam/brn/config/**",
+                            "com/epam/brn/exception/**",
+                            "com/epam/brn/Application*",
+                            "com/epam/brn/service/azure/tts/config/**",
+                            "com/epam/brn/webclient/customizer/**",
+                            "com/epam/brn/webclient/model/**",
+                        )
+                    }
+                },
+            ),
+        )
     }
     executionData.setFrom("$buildDir/jacoco/test.exec")
 }
@@ -203,17 +226,18 @@ sonarqube {
         property("sonar.java.coveragePlugin", "jacoco")
         property("sonar.working.directory", "./build/sonar")
         property(
-            "sonar.coverage.exclusions", "**/com/epam/brn/dto/**," +
-                    "**/com/epam/brn/model/**," +
-                    "**/com/epam/brn/config/**," +
-                    "**/com/epam/brn/exception/**," +
-                    "**/com/epam/brn/Application*," +
-                    "**/com/epam/brn/service/load/InitialDataLoader*," +
-                    "**/com/epam/brn/service/load/FirebaseUserDataLoader*," +
-                    "**/com/epam/brn/service/azure/tts/AzureVoiceLoader*," +
-                    "**/com/epam/brn/service/azure/tts/config/**," +
-                    "**/com/epam/brn/webclient/customizer/**," +
-                    "**/com/epam/brn/webclient/model/**"
+            "sonar.coverage.exclusions",
+            "**/com/epam/brn/dto/**," +
+                "**/com/epam/brn/model/**," +
+                "**/com/epam/brn/config/**," +
+                "**/com/epam/brn/exception/**," +
+                "**/com/epam/brn/Application*," +
+                "**/com/epam/brn/service/load/InitialDataLoader*," +
+                "**/com/epam/brn/service/load/FirebaseUserDataLoader*," +
+                "**/com/epam/brn/service/azure/tts/AzureVoiceLoader*," +
+                "**/com/epam/brn/service/azure/tts/config/**," +
+                "**/com/epam/brn/webclient/customizer/**," +
+                "**/com/epam/brn/webclient/model/**",
         )
     }
 }

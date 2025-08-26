@@ -1,8 +1,12 @@
 <div class="content">
-  <mat-progress-bar *ngIf="isLoadingWeekTimeTrackData" mode="indeterminate"></mat-progress-bar>
-  <div class="table-content" *ngIf="!isLoadingWeekTimeTrackData">
-    <ng-container *ngTemplateOutlet="dataTemplate"></ng-container>
-  </div>
+  @if (isLoadingWeekTimeTrackData) {
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  }
+  @if (!isLoadingWeekTimeTrackData) {
+    <div class="table-content">
+      <ng-container *ngTemplateOutlet="dataTemplate"></ng-container>
+    </div>
+  }
 </div>
 
 <!-- #region Templates -->
@@ -12,7 +16,7 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         {{
         'Admin.Modules.Users.Modules.Statistics.Components.DailyTimeTable.ColumnsName.SeriesName'
-          | translate
+        | translate
         }}
       </th>
       <td class="name-column" mat-cell *matCellDef="let statistic">
@@ -24,7 +28,7 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         {{
         'Admin.Modules.Users.Modules.Statistics.Components.DailyTimeTable.ColumnsName.AllDoneExercises'
-          | translate
+        | translate
         }}
       </th>
       <td class="name-column" mat-cell *matCellDef="let statistic">
@@ -36,7 +40,7 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         {{
         'Admin.Modules.Users.Modules.Statistics.Components.DailyTimeTable.ColumnsName.UniqueDoneExercises'
-          | translate
+        | translate
         }}
       </th>
       <td class="name-column" mat-cell *matCellDef="let statistic">
@@ -48,7 +52,7 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         {{
         'Admin.Modules.Users.Modules.Statistics.Components.DailyTimeTable.ColumnsName.RepeatedExercises'
-          | translate
+        | translate
         }}
       </th>
       <td class="name-column" mat-cell *matCellDef="let statistic">
@@ -60,7 +64,7 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         {{
         'Admin.Modules.Users.Modules.Statistics.Components.DailyTimeTable.ColumnsName.DoneExercisesSuccessfullyFromFirstTime'
-          | translate
+        | translate
         }}
       </th>
       <td class="name-column" mat-cell *matCellDef="let statistic">
@@ -72,7 +76,7 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         {{
         'Admin.Modules.Users.Modules.Statistics.Components.DailyTimeTable.ColumnsName.ListenWordsCount'
-          | translate
+        | translate
         }}
       </th>
       <td class="name-column" mat-cell *matCellDef="let statistic">

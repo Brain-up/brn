@@ -8,23 +8,27 @@ import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 
 @Component
-class GroupRecordProcessor(private val groupRepository: ExerciseGroupRepository) :
-    RecordProcessor<GroupRecord, ExerciseGroup> {
-
-    override fun isApplicable(record: Any): Boolean {
-        return record is GroupRecord
-    }
+class GroupRecordProcessor(
+    private val groupRepository: ExerciseGroupRepository,
+) : RecordProcessor<GroupRecord, ExerciseGroup> {
+    override fun isApplicable(record: Any): Boolean = record is GroupRecord
 
     @Transactional
-    override fun process(records: List<GroupRecord>, locale: BrnLocale): List<ExerciseGroup> {
-        val groups = records
-            .map {
-                ExerciseGroup(it)
-            }
+    override fun process(
+        records: List<GroupRecord>,
+        locale: BrnLocale,
+    ): List<ExerciseGroup> {
+        val groups =
+            records
+                .map {
+                    ExerciseGroup(it)
+                }
         groups.forEach { group ->
             run {
-                val existGroup = groupRepository.findByCode(group.code)
-                    .orElse(null)
+                val existGroup =
+                    groupRepository
+                        .findByCode(group.code)
+                        .orElse(null)
                 if (existGroup == null)
                     groupRepository.save(group)
             }

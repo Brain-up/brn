@@ -9,19 +9,19 @@ import org.springframework.stereotype.Component
 import java.io.InputStream
 
 @Component
-class SeriesPhrasesRecordMappingIteratorProvider :
-    MappingIteratorProvider<SeriesPhrasesRecord> {
-
+class SeriesPhrasesRecordMappingIteratorProvider : MappingIteratorProvider<SeriesPhrasesRecord> {
     override fun iterator(inputStream: InputStream): MappingIterator<SeriesPhrasesRecord> {
-        val csvMapper = CsvMapper().apply {
-            enable(CsvParser.Feature.TRIM_SPACES)
-        }
+        val csvMapper =
+            CsvMapper().apply {
+                enable(CsvParser.Feature.TRIM_SPACES)
+            }
 
-        val csvSchema = csvMapper
-            .schemaFor(SeriesPhrasesRecord::class.java)
-            .withColumnReordering(true)
-            .withArrayElementSeparator(StringUtils.SPACE)
-            .withHeader()
+        val csvSchema =
+            csvMapper
+                .schemaFor(SeriesPhrasesRecord::class.java)
+                .withColumnReordering(true)
+                .withArrayElementSeparator(StringUtils.SPACE)
+                .withHeader()
 
         return csvMapper
             .readerFor(SeriesPhrasesRecord::class.java)
@@ -29,7 +29,5 @@ class SeriesPhrasesRecordMappingIteratorProvider :
             .readValues(inputStream)
     }
 
-    override fun isApplicable(format: String): Boolean {
-        return SeriesPhrasesRecord.FORMAT == format
-    }
+    override fun isApplicable(format: String): Boolean = SeriesPhrasesRecord.FORMAT == format
 }

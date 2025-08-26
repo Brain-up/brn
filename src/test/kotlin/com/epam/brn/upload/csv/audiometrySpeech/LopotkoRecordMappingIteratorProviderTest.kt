@@ -14,17 +14,19 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 internal class LopotkoRecordMappingIteratorProviderTest {
-
     private lateinit var inputStream: InputStream
     private val lopotkoRecordMappingIteratorProvider: LopotkoRecordMappingIteratorProvider =
         LopotkoRecordMappingIteratorProvider()
 
     @BeforeEach
     fun setUp() {
-        val taskFile = MockMultipartFile(
-            "series_words_en.csv",
-            FileInputStream("src${File.separator}test${File.separator}resources${File.separator}inputData${File.separator}lopotko-record${File.separator}right_example.csv")
-        )
+        val taskFile =
+            MockMultipartFile(
+                "series_words_en.csv",
+                FileInputStream(
+                    "src${File.separator}test${File.separator}resources${File.separator}inputData${File.separator}lopotko-record${File.separator}right_example.csv",
+                ),
+            )
         inputStream = taskFile.inputStream
     }
 

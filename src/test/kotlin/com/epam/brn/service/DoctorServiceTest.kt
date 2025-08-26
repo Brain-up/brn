@@ -1,8 +1,8 @@
 package com.epam.brn.service
 
 import com.epam.brn.dto.UserAccountDto
-import com.epam.brn.enums.BrnRole
 import com.epam.brn.enums.BrnGender
+import com.epam.brn.enums.BrnRole
 import com.epam.brn.model.UserAccount
 import io.kotest.matchers.shouldBe
 import io.mockk.every
@@ -18,7 +18,6 @@ import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(MockKExtension::class)
 internal class DoctorServiceTest {
-
     @InjectMockKs
     private lateinit var doctorService: DoctorService
 
@@ -336,12 +335,13 @@ internal class DoctorServiceTest {
 
     @Test
     fun `checkUserIsNotAdmin should throw exception if user used admin ID`() {
-        every { userAccountService.getCurrentUser() } returns UserAccount(
-            fullName = "testUserFirstName",
-            gender = BrnGender.MALE.toString(),
-            bornYear = 2000,
-            email = "test@test.test"
-        )
+        every { userAccountService.getCurrentUser() } returns
+            UserAccount(
+                fullName = "testUserFirstName",
+                gender = BrnGender.MALE.toString(),
+                bornYear = 2000,
+                email = "test@test.test",
+            )
 
         assertThrows<IllegalArgumentException> {
             doctorService.checkUserIsNotAdmin(admin, DoctorService.USING_ADMIN_ID_FOR_PATIENT_WARN)
@@ -351,16 +351,14 @@ internal class DoctorServiceTest {
     private fun prepareUser(
         id: Long?,
         email: String?,
-        doctorId: Long? = null
-    ): UserAccountDto {
-        return UserAccountDto(
-            id = id,
-            name = email,
-            email = email,
-            gender = BrnGender.MALE,
-            bornYear = 2000,
-            active = true,
-            doctorId = doctorId
-        )
-    }
+        doctorId: Long? = null,
+    ): UserAccountDto = UserAccountDto(
+        id = id,
+        name = email,
+        email = email,
+        gender = BrnGender.MALE,
+        bornYear = 2000,
+        active = true,
+        doctorId = doctorId,
+    )
 }

@@ -1,6 +1,5 @@
 package com.epam.brn.controller
 
-import com.epam.brn.service.RoleService
 import com.epam.brn.dto.ExerciseDto
 import com.epam.brn.dto.NoiseDto
 import com.epam.brn.dto.request.exercise.ExercisePhrasesCreateDto
@@ -11,6 +10,7 @@ import com.epam.brn.dto.request.exercise.SetOfWords
 import com.epam.brn.dto.response.ExerciseWithWordsResponse
 import com.epam.brn.enums.BrnLocale
 import com.epam.brn.service.ExerciseService
+import com.epam.brn.service.RoleService
 import com.epam.brn.upload.CsvUploadService
 import io.kotest.matchers.shouldBe
 import io.mockk.Runs
@@ -30,7 +30,6 @@ import org.springframework.web.multipart.MultipartFile
 
 @ExtendWith(MockKExtension::class)
 internal class ExerciseControllerTest {
-
     @InjectMockKs
     lateinit var exerciseController: ExerciseController
 
@@ -95,14 +94,15 @@ internal class ExerciseControllerTest {
     @Test
     fun `createExerciseWords should return http status 204`() {
         // GIVEN
-        val exerciseWordsCreateDto = ExerciseWordsCreateDto(
-            locale = BrnLocale.RU,
-            subGroup = "subGroup",
-            level = 1,
-            exerciseName = "exerciseName",
-            words = listOf("word1", "word2"),
-            noiseLevel = 0
-        )
+        val exerciseWordsCreateDto =
+            ExerciseWordsCreateDto(
+                locale = BrnLocale.RU,
+                subGroup = "subGroup",
+                level = 1,
+                exerciseName = "exerciseName",
+                words = listOf("word1", "word2"),
+                noiseLevel = 0,
+            )
         val exerciseDto = mockk<ExerciseDto>()
         every { exerciseService.createExercise(exerciseWordsCreateDto) } returns exerciseDto
 
@@ -117,14 +117,15 @@ internal class ExerciseControllerTest {
     @Test
     fun `createExercisePhrases should return http status 204`() {
         // GIVEN
-        val exercisePhrasesCreateDto = ExercisePhrasesCreateDto(
-            locale = BrnLocale.RU,
-            subGroup = "subGroup",
-            level = 1,
-            exerciseName = "exerciseName",
-            phrases = Phrases(shortPhrase = "shortPhrase", longPhrase = "longPhrase"),
-            noiseLevel = 0
-        )
+        val exercisePhrasesCreateDto =
+            ExercisePhrasesCreateDto(
+                locale = BrnLocale.RU,
+                subGroup = "subGroup",
+                level = 1,
+                exerciseName = "exerciseName",
+                phrases = Phrases(shortPhrase = "shortPhrase", longPhrase = "longPhrase"),
+                noiseLevel = 0,
+            )
         val exerciseDto = mockk<ExerciseDto>()
         every { exerciseService.createExercise(exercisePhrasesCreateDto) } returns exerciseDto
 
@@ -139,14 +140,15 @@ internal class ExerciseControllerTest {
     @Test
     fun `createExerciseSentences should return http status 204`() {
         // GIVEN
-        val exerciseSentencesCreateDto = ExerciseSentencesCreateDto(
-            locale = BrnLocale.RU,
-            subGroup = "subGroup",
-            level = 1,
-            exerciseName = "exerciseName",
-            orderNumber = 1,
-            words = SetOfWords()
-        )
+        val exerciseSentencesCreateDto =
+            ExerciseSentencesCreateDto(
+                locale = BrnLocale.RU,
+                subGroup = "subGroup",
+                level = 1,
+                exerciseName = "exerciseName",
+                orderNumber = 1,
+                words = SetOfWords(),
+            )
         val exerciseDto = mockk<ExerciseDto>()
         every { exerciseService.createExercise(exerciseSentencesCreateDto) } returns exerciseDto
 
@@ -176,7 +178,7 @@ internal class ExerciseControllerTest {
     }
 
     @Test
-    fun`getExercisesByWord should return data with http status 200`() {
+    fun `getExercisesByWord should return data with http status 200`() {
         // GIVEN
         val word = "word"
         val exerciseResponse = mockk<ExerciseWithWordsResponse>()

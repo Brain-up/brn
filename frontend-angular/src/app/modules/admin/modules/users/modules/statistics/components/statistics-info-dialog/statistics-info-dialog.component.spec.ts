@@ -1,17 +1,16 @@
-import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
-import { StatisticsInfoDialogComponent } from './statistics-info-dialog.component';
+import { NO_ERRORS_SCHEMA } from "@angular/core";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { TranslateModule } from "@ngx-translate/core";
+import { StatisticsInfoDialogComponent } from "./statistics-info-dialog.component";
 
-describe('StatisticsInfoDialogComponent', () => {
+describe("StatisticsInfoDialogComponent", () => {
   let fixture: ComponentFixture<StatisticsInfoDialogComponent>;
   let component: StatisticsInfoDialogComponent;
   let hostElement: HTMLElement;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [StatisticsInfoDialogComponent],
-      imports: [TranslateModule.forRoot()],
+      imports: [TranslateModule.forRoot(), StatisticsInfoDialogComponent],
       schemas: [NO_ERRORS_SCHEMA],
     });
 
@@ -20,8 +19,14 @@ describe('StatisticsInfoDialogComponent', () => {
     hostElement = fixture.nativeElement;
   });
 
-  it('should image source of dialog content section is valid', async () => {
-    const imgElem = hostElement.querySelector<HTMLImageElement>('img.statistics-info-dialog');
+  it("should create", () => {
+    expect(component).toBeTruthy();
+  });
+
+  it("should image source of dialog content section is valid", async () => {
+    const imgElem = hostElement.querySelector<HTMLImageElement>(
+      "img.statistics-info-dialog"
+    );
 
     const fakeImgElem = new Image();
     const loadingImg = new Promise<{ type: string }>((resolve, reject) => {
@@ -32,9 +37,9 @@ describe('StatisticsInfoDialogComponent', () => {
 
     try {
       const result = await loadingImg;
-      expect(result.type).toBe('load');
+      expect(result.type).toBe("load");
     } catch (result) {
-      expect(result.type).not.toBe('error');
+      expect(result.type).not.toBe("error");
     }
   });
 });

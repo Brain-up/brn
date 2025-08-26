@@ -17,7 +17,7 @@ import javax.persistence.ManyToOne
 import javax.persistence.OneToOne
 
 @Entity
-data class Task(
+class Task(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
@@ -33,16 +33,16 @@ data class Task(
     @JoinTable(
         name = "task_resources",
         joinColumns = [JoinColumn(name = "task_id", referencedColumnName = "id")],
-        inverseJoinColumns = [JoinColumn(name = "resource_id", referencedColumnName = "id")]
+        inverseJoinColumns = [JoinColumn(name = "resource_id", referencedColumnName = "id")],
     )
     var answerOptions: MutableSet<Resource> = hashSetOf(),
     @ManyToMany(cascade = [(CascadeType.MERGE)])
     @JoinTable(
         name = "answer_parts_resources",
         joinColumns = [JoinColumn(name = "task_id", referencedColumnName = "id")],
-        inverseJoinColumns = [JoinColumn(name = "resource_id", referencedColumnName = "id")]
+        inverseJoinColumns = [JoinColumn(name = "resource_id", referencedColumnName = "id")],
     )
-    var answerParts: MutableMap<Int, Resource> = mutableMapOf()
+    var answerParts: MutableMap<Int, Resource> = mutableMapOf(),
 ) {
     fun toTaskResponse(exerciseType: ExerciseType) = TaskResponse(
         id = id!!,
@@ -53,7 +53,10 @@ data class Task(
         shouldBeWithPictures = exerciseType.shouldBeWithPictures(),
     )
 
-    fun toWordsGroupSeriesTaskDto(exerciseType: ExerciseType, template: String? = "") = TaskWordsGroupResponse(
+    fun toWordsGroupSeriesTaskDto(
+        exerciseType: ExerciseType,
+        template: String? = "",
+    ) = TaskWordsGroupResponse(
         id = id!!,
         exerciseType = exerciseType,
         name = name,
@@ -62,8 +65,6 @@ data class Task(
         template = template,
         shouldBeWithPictures = exerciseType.shouldBeWithPictures(),
     )
-
-    override fun toString() = "Task(id=$id, name=$name, serialNumber=$serialNumber)"
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

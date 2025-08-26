@@ -1,19 +1,20 @@
 package com.epam.brn.integration
 
-import com.epam.brn.model.Role
+import com.epam.brn.enums.BrnGender
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
-import com.epam.brn.enums.BrnGender
+import com.epam.brn.model.Role
 import com.epam.brn.model.Series
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.SubGroup
 import com.epam.brn.model.UserAccount
-import com.epam.brn.repo.RoleRepository
 import com.epam.brn.repo.ExerciseGroupRepository
 import com.epam.brn.repo.ExerciseRepository
+import com.epam.brn.repo.RoleRepository
 import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.repo.SubGroupRepository
+import com.epam.brn.repo.TaskRepository
 import com.epam.brn.repo.UserAccountRepository
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.amshove.kluent.internal.platformClassName
@@ -34,7 +35,6 @@ import java.time.temporal.ChronoUnit
 @Tag("integration-test")
 @Testcontainers
 abstract class BaseIT {
-
     @Autowired
     lateinit var mockMvc: MockMvc
 
@@ -48,16 +48,19 @@ abstract class BaseIT {
     private lateinit var studyHistoryRepository: StudyHistoryRepository
 
     @Autowired
-    private lateinit var exerciseRepository: ExerciseRepository
+    private lateinit var exerciseGroupRepository: ExerciseGroupRepository
+
+    @Autowired
+    private lateinit var seriesRepository: SeriesRepository
 
     @Autowired
     private lateinit var subGroupRepository: SubGroupRepository
 
     @Autowired
-    private lateinit var exerciseGroupRepository: ExerciseGroupRepository
+    private lateinit var exerciseRepository: ExerciseRepository
 
     @Autowired
-    private lateinit var seriesRepository: SeriesRepository
+    private lateinit var taskRepository: TaskRepository
 
     @Autowired
     private lateinit var roleRepository: RoleRepository
@@ -99,54 +102,56 @@ abstract class BaseIT {
                 exercise = exercise,
                 tasksCount = taskCount,
                 wrongAnswers = wrongAnswers,
-                replaysCount = replaysCount
-            )
+                replaysCount = replaysCount,
+            ),
         )
     }
 
-    fun insertDefaultExerciseWithSubGroup(subGroup: SubGroup): Exercise =
-        exerciseRepository.save(
-            Exercise(
-                name = "Test exercise ${subGroup.id}",
-                subGroup = subGroup
-            )
-        )
+    fun insertDefaultExerciseWithSubGroup(subGroup: SubGroup): Exercise = exerciseRepository.save(
+        Exercise(
+            name = "Test exercise ${subGroup.id}",
+            subGroup = subGroup,
+        ),
+    )
 
-    fun insertDefaultExercise(subGroup: SubGroup? = null, name: String = "Test exercise"): Exercise =
-        exerciseRepository.save(
-            Exercise(
-                name = name,
-                subGroup = subGroup
-            )
-        )
+    fun insertDefaultExercise(
+        subGroup: SubGroup? = null,
+        name: String = "Test exercise",
+    ): Exercise = exerciseRepository.save(
+        Exercise(
+            name = name,
+            subGroup = subGroup,
+        ),
+    )
 
-    fun insertDefaultSubGroup(series: Series, level: Int): SubGroup =
-        subGroupRepository.save(
-            SubGroup(
-                series = series,
-                level = level,
-                code = "code",
-                name = "${series.name}subGroupName$level"
-            )
-        )
+    fun insertDefaultSubGroup(
+        series: Series,
+        level: Int,
+    ): SubGroup = subGroupRepository.save(
+        SubGroup(
+            series = series,
+            level = level,
+            code = "code",
+            name = "${series.name}subGroupName$level",
+        ),
+    )
 
-    fun insertDefaultSeries(seriesName: String = "Series for ${platformClassName()}"): Series =
-        seriesRepository.save(
-            Series(
-                name = seriesName,
-                exerciseGroup = insertDefaultExerciseGroup("${seriesName}ExerciseGroup"),
-                type = "Type",
-                level = 1
-            )
-        )
+    fun insertDefaultSeries(seriesName: String = "Series for ${platformClassName()}"): Series = seriesRepository.save(
+        Series(
+            name = seriesName,
+            exerciseGroup = insertDefaultExerciseGroup("${seriesName}ExerciseGroup"),
+            type = "Type",
+            level = 1,
+        ),
+    )
 
     fun insertDefaultExerciseGroup(name: String = "Test exercise group for ${platformClassName()}"): ExerciseGroup =
         exerciseGroupRepository.save(
             ExerciseGroup(
                 code = "CODE",
                 description = "Description",
-                name = name
-            )
+                name = name,
+            ),
         )
 
     fun createUser(
@@ -155,20 +160,17 @@ abstract class BaseIT {
         active: Boolean = true,
         bornYear: Int = 2000,
         gender: String = BrnGender.FEMALE.toString(),
-        roles: MutableSet<Role> = mutableSetOf()
-    ): UserAccount {
-        return userAccountRepository.save(
-            UserAccount(
-                fullName = fullName ?: email,
-                email = email,
-                active = active,
-                bornYear = bornYear,
-                gender = gender
-            ).apply { roles.isNotEmpty().let { roleSet.addAll(roles) } }
-        )
-    }
+        roles: MutableSet<Role> = mutableSetOf(),
+    ): UserAccount = userAccountRepository.save(
+        UserAccount(
+            fullName = fullName ?: email,
+            email = email,
+            active = active,
+            bornYear = bornYear,
+            gender = gender,
+        ).apply { roles.isNotEmpty().let { roleSet.addAll(roles) } },
+    )
 
-    fun createRole(roleName: String): Role =
-        roleRepository.findByName(roleName)
-            ?: roleRepository.save(Role(name = roleName))
+    fun createRole(roleName: String): Role = roleRepository.findByName(roleName)
+        ?: roleRepository.save(Role(name = roleName))
 }

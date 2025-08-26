@@ -17,7 +17,7 @@ import javax.validation.constraints.NotNull
 
 @Entity
 @Table(uniqueConstraints = [UniqueConstraint(columnNames = ["name", "userId"])])
-data class Headphones(
+class Headphones(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
@@ -30,7 +30,7 @@ data class Headphones(
     var description: String = "",
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
-    var userAccount: UserAccount? = null
+    var userAccount: UserAccount? = null,
 ) {
     fun toDto() = HeadphonesDto(
         id,
@@ -38,7 +38,7 @@ data class Headphones(
         active = active,
         description = description,
         type = type,
-        userAccount = userAccount?.id
+        userAccount = userAccount?.id,
     )
 
     override fun equals(other: Any?): Boolean {
@@ -59,9 +59,5 @@ data class Headphones(
         result = 31 * result + name.hashCode()
         result = 31 * result + type.hashCode()
         return result
-    }
-
-    override fun toString(): String {
-        return "Headphones(id=$id, name='$name', type=$type, description='$description')"
     }
 }

@@ -9,16 +9,15 @@ import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
 
 @Entity
-data class SinAudiometryResult(
+class SinAudiometryResult(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
     val frequency: Int,
     val soundLevel: Int,
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "audiometry_history_id")
-    var audiometryHistory: AudiometryHistory? = null
+    var audiometryHistory: AudiometryHistory? = null,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -36,6 +35,4 @@ data class SinAudiometryResult(
         result = 31 * result + soundLevel.hashCode()
         return result
     }
-
-    override fun toString() = "SinAudiometryResult(id=$id, frequency=$frequency, soundLevel=$soundLevel, audiometryHistoryId=${audiometryHistory?.id})"
 }

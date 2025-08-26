@@ -27,7 +27,6 @@ import java.util.Optional
 
 @ExtendWith(MockKExtension::class)
 internal class SeriesPhrasesRecordProcessorTest {
-
     @InjectMockKs
     private lateinit var seriesPhrasesRecordProcessor: SeriesPhrasesRecordProcessor
 
@@ -46,14 +45,15 @@ internal class SeriesPhrasesRecordProcessorTest {
     @Test
     fun `should create correct exercise`() {
         // GIVEN
-        val seriesPhrasesRecord = SeriesPhrasesRecord(
-            level = 1,
-            code = "subgroup code",
-            exerciseName = "exercise name",
-            phrases = listOf("some text.", "next text"),
-            noiseLevel = 0,
-            noiseUrl = ""
-        )
+        val seriesPhrasesRecord =
+            SeriesPhrasesRecord(
+                level = 1,
+                code = "subgroup code",
+                exerciseName = "exercise name",
+                phrases = listOf("some text.", "next text"),
+                noiseLevel = 0,
+                noiseUrl = "",
+            )
         val subGroup = mockk<SubGroup>()
         val exercise = mockk<Exercise>()
         every { exerciseRepository.findExerciseByNameAndLevel(any(), any()) } returns Optional.empty()
@@ -61,7 +61,6 @@ internal class SeriesPhrasesRecordProcessorTest {
         every { wordsService.getDefaultManVoiceForLocale(any()) } returns Voice.FILIPP.name
         every { wordsService.getSubFilePathForWord(any()) } returns ""
         every { resourceRepository.findFirstByWordAndLocaleAndWordType(any(), any(), any()) } returns Optional.empty()
-        every { wordsService.addWordsToDictionary(any(), any()) } returns Unit
         every { resourceRepository.saveAll(any<List<Resource>>()) } returns emptyList()
         every { exerciseRepository.save(any()) } returns exercise
 
@@ -74,7 +73,6 @@ internal class SeriesPhrasesRecordProcessorTest {
         verify(exactly = 2) { wordsService.getDefaultManVoiceForLocale(any()) }
         verify(exactly = 2) { wordsService.getSubFilePathForWord(any()) }
         verify(exactly = 2) { resourceRepository.findFirstByWordAndLocaleAndWordType(any(), any(), any()) }
-        verify(exactly = 1) { wordsService.addWordsToDictionary(any(), any()) }
         verify(exactly = 1) { resourceRepository.saveAll(any<List<Resource>>()) }
         verify(exactly = 1) { exerciseRepository.save(any()) }
         exercises shouldHaveSize 1
@@ -87,14 +85,15 @@ internal class SeriesPhrasesRecordProcessorTest {
     @Test
     fun `should not create exercise because exercise exist`() {
         // GIVEN
-        val seriesPhrasesRecord = SeriesPhrasesRecord(
-            level = 1,
-            code = "subgroup code",
-            exerciseName = "exercise name",
-            phrases = listOf("some text.", "next text"),
-            noiseLevel = 0,
-            noiseUrl = ""
-        )
+        val seriesPhrasesRecord =
+            SeriesPhrasesRecord(
+                level = 1,
+                code = "subgroup code",
+                exerciseName = "exercise name",
+                phrases = listOf("some text.", "next text"),
+                noiseLevel = 0,
+                noiseUrl = "",
+            )
         val subGroupMock = mockk<SubGroup>()
         val exerciseMock = mockk<Exercise>()
         every { subGroupRepository.findByCodeAndLocale(any(), any()) } returns subGroupMock
@@ -112,21 +111,23 @@ internal class SeriesPhrasesRecordProcessorTest {
     @Test
     fun `should throw EntityNotFoundException`() {
         // GIVEN
-        val seriesPhrasesRecord = SeriesPhrasesRecord(
-            level = 1,
-            code = "subgroup code",
-            exerciseName = "exercise name",
-            phrases = listOf("some text.", "next text"),
-            noiseLevel = 0,
-            noiseUrl = ""
-        )
+        val seriesPhrasesRecord =
+            SeriesPhrasesRecord(
+                level = 1,
+                code = "subgroup code",
+                exerciseName = "exercise name",
+                phrases = listOf("some text.", "next text"),
+                noiseLevel = 0,
+                noiseUrl = "",
+            )
         val locale = BrnLocale.RU
         every { subGroupRepository.findByCodeAndLocale(any(), any()) } returns null
 
         // WHEN
-        val exception = shouldThrow<EntityNotFoundException> {
-            seriesPhrasesRecordProcessor.process(listOf(seriesPhrasesRecord), locale)
-        }
+        val exception =
+            shouldThrow<EntityNotFoundException> {
+                seriesPhrasesRecordProcessor.process(listOf(seriesPhrasesRecord), locale)
+            }
 
         // THEN
         verify(exactly = 1) { subGroupRepository.findByCodeAndLocale(any(), any()) }

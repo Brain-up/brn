@@ -21,7 +21,6 @@ class GitHubContributorRefreshJob(
     val gitHubUserRepository: GitHubUserRepository,
     val contributorService: ContributorService,
 ) {
-
     private val log = logger()
 
     @Value("\${github.contributors.sync.organization-name}")
@@ -66,39 +65,42 @@ class GitHubContributorRefreshJob(
                     log.debug("Gotten user from repository: $repositoryName GitHubApi $gitHubUserDto")
                     val existGitHubUser: Optional<GitHubUser> = gitHubUserRepository.findById(gitHubUserDto.id)
                     log.debug("User in database $existGitHubUser")
-                    val savedGitHubUser: GitHubUser = if (existGitHubUser.isPresent) {
-                        updatedContributorsCount++
-                        updateGitHubUser(gitHubUserDto, existGitHubUser.get(), gitHubContributor)
-                    } else {
-                        createdContributorsCount++
-                        createGitHubUser(gitHubUserDto, gitHubContributor)
-                    }
+                    val savedGitHubUser: GitHubUser =
+                        if (existGitHubUser.isPresent) {
+                            updatedContributorsCount++
+                            updateGitHubUser(gitHubUserDto, existGitHubUser.get(), gitHubContributor)
+                        } else {
+                            createdContributorsCount++
+                            createGitHubUser(gitHubUserDto, gitHubContributor)
+                        }
                     val contributor = contributorService.createOrUpdateByGitHubUser(savedGitHubUser, repositoryName)
                     log.debug("Created\\Updated contributor in database $contributor")
                 }
             log.info(
                 "GitHubUsers synchronization job for repository [$repositoryName] end: " +
-                        "gitHubContributorsCount=$gitHubContributorsCount, " +
-                        "createdContributorsCount=$createdContributorsCount, " +
-                        "updatedContributorsCount=$updatedContributorsCount."
+                    "gitHubContributorsCount=$gitHubContributorsCount, " +
+                    "createdContributorsCount=$createdContributorsCount, " +
+                    "updatedContributorsCount=$updatedContributorsCount.",
             )
         }
 
         log.info(
             "GitHubUsers synchronization job for repositories [$gitHubRepositoryNames] end: " +
-                    "gitHubContributorsCount=$gitHubContributorsCount, " +
-                    "createdContributorsCount=$createdContributorsCount, " +
-                    "updatedContributorsCount=$updatedContributorsCount."
+                "gitHubContributorsCount=$gitHubContributorsCount, " +
+                "createdContributorsCount=$createdContributorsCount, " +
+                "updatedContributorsCount=$updatedContributorsCount.",
         )
     }
 
-    private fun createGitHubUser(gitHubUserDto: GitHubUserDto, gitHubContributorDto: GitHubContributorDto): GitHubUser =
-        gitHubUserRepository.save(gitHubUserDto.toEntity(gitHubContributorDto.contributions))
+    private fun createGitHubUser(
+        gitHubUserDto: GitHubUserDto,
+        gitHubContributorDto: GitHubContributorDto,
+    ): GitHubUser = gitHubUserRepository.save(gitHubUserDto.toEntity(gitHubContributorDto.contributions))
 
     private fun updateGitHubUser(
         gitHubUserDto: GitHubUserDto,
         gitHubUser: GitHubUser,
-        gitHubContributorDto: GitHubContributorDto
+        gitHubContributorDto: GitHubContributorDto,
     ): GitHubUser {
         gitHubUser.let { usr ->
             if (usr.name != gitHubUserDto.name)

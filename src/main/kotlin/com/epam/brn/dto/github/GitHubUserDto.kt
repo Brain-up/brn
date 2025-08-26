@@ -24,6 +24,6 @@ data class GitHubUserDto(
         avatarUrl = avatarUrl,
         bio = bio,
         company = company,
-        contributions = contributionsLevel
+        contributions = contributionsLevel,
     )
 }

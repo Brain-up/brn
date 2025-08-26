@@ -18,6 +18,7 @@ jobs:
       - name: Build, Unit and Integration Tests
         run: ./gradlew build test integrationTest jacocoTestReport sonarqube
         env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v1
@@ -26,13 +27,13 @@ jobs:
           check_name: Gradle Unit and Integration Test Results
           files: build/test-results/**/*.xml
       - name: Upload Unit Test Results
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: Unit Test Results
           path: build/reports/tests/test/
       - name: Upload Integration Test Results
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: Integration Test Results

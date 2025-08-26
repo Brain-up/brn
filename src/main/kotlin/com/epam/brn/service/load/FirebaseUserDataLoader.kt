@@ -11,6 +11,7 @@ import com.google.firebase.auth.hash.Bcrypt
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.context.event.ApplicationReadyEvent
+import org.springframework.context.annotation.Profile
 import org.springframework.context.event.EventListener
 import org.springframework.data.domain.PageRequest
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -19,13 +20,13 @@ import org.springframework.util.StringUtils
 import java.util.UUID
 import java.util.stream.Collectors
 
+@Profile("!integration-tests")
 @Service
 class FirebaseUserDataLoader(
     val firebaseAuth: FirebaseAuth,
     val userAccountRepository: UserAccountRepository,
-    val passwordEncoder: PasswordEncoder
+    val passwordEncoder: PasswordEncoder,
 ) {
-
     private val log = logger()
 
     @Value("\${firebase.import.batch-count}")
@@ -48,10 +49,12 @@ class FirebaseUserDataLoader(
 
             val foundedUsersContent = foundedUsers.content
             val foundedUsersContentMap = foundedUsersContent.associateBy { it.id }
-            val userEmails = foundedUsersContent.stream()
-                .map { createEmailIdentified(it) }
-                .filter { it != null }
-                .collect(Collectors.toList())
+            val userEmails =
+                foundedUsersContent
+                    .stream()
+                    .map { createEmailIdentified(it) }
+                    .filter { it != null }
+                    .collect(Collectors.toList())
 
             val foundedFirebaseUsers = firebaseAuth.getUsers(userEmails as Collection<UserIdentifier>?)
             val map = foundedFirebaseUsers.users.associateBy { it.email }
@@ -59,23 +62,26 @@ class FirebaseUserDataLoader(
             foundedUsersContent
                 .filter {
                     !map.containsKey(it.email)
-                }
-                .forEach {
+                }.forEach {
                     it.userId = UUID.randomUUID().toString()
 
-                    val pwd = if (StringUtils.hasText(it.password)) it.password?.encodeToByteArray()
-                    else passwordEncoder.encode(UUID.randomUUID().toString()).encodeToByteArray()
+                    val pwd =
+                        if (StringUtils.hasText(it.password))
+                            it.password?.encodeToByteArray()
+                        else
+                            passwordEncoder.encode(UUID.randomUUID().toString()).encodeToByteArray()
 
                     try {
                         users.add(
-                            ImportUserRecord.builder()
+                            ImportUserRecord
+                                .builder()
                                 .setEmail(it.email)
                                 .setDisplayName(it.fullName)
                                 .setEmailVerified(true)
                                 .setPhotoUrl(it.photo)
                                 .setUid(it.userId)
                                 .setPasswordHash(pwd)
-                                .build()
+                                .build(),
                         )
                         idUsers.add(it.id)
                     } catch (e: Exception) {
@@ -99,8 +105,7 @@ class FirebaseUserDataLoader(
             foundedUsersContent
                 .filter {
                     map[it.email] != null
-                }
-                .forEach {
+                }.forEach {
                     val uid = map[it.email]?.uid
                     log.debug("Set uuid \"$uid\" from firebase to local user: ${it.id}")
                     it.userId = uid
@@ -109,11 +114,9 @@ class FirebaseUserDataLoader(
         }
     }
 
-    private fun createEmailIdentified(it: UserAccount): EmailIdentifier? {
-        return try {
-            EmailIdentifier(it.email)
-        } catch (e: Exception) {
-            null
-        }
+    private fun createEmailIdentified(it: UserAccount): EmailIdentifier? = try {
+        EmailIdentifier(it.email)
+    } catch (e: Exception) {
+        null
     }
 }

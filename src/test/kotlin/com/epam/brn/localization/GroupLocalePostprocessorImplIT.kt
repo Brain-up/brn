@@ -19,7 +19,6 @@ import kotlin.test.assertEquals
 @ActiveProfiles("integration-tests")
 @Tag("integration-test")
 internal class GroupLocalePostprocessorImplIT {
-
     @Autowired
     lateinit var groupLocalePostprocessor: GroupLocalePostprocessorImpl
 
@@ -44,9 +43,9 @@ internal class GroupLocalePostprocessorImplIT {
                     locale = "en",
                     name = "Неречевые упражнения",
                     description = null,
-                    series = mutableListOf()
+                    series = mutableListOf(),
                 ),
-                "non-speech exercises"
+                "non-speech exercises",
             ),
             Arguments.of(
                 ExerciseGroupDto(
@@ -54,9 +53,9 @@ internal class GroupLocalePostprocessorImplIT {
                     locale = "en",
                     name = "Речевые упражнения",
                     description = null,
-                    series = mutableListOf()
+                    series = mutableListOf(),
                 ),
-                "speech exercises"
+                "speech exercises",
             ),
             Arguments.of(
                 ExerciseGroupDto(
@@ -64,9 +63,9 @@ internal class GroupLocalePostprocessorImplIT {
                     locale = "ru",
                     name = "Неречевые упражнения",
                     description = null,
-                    series = mutableListOf()
+                    series = mutableListOf(),
                 ),
-                "Неречевые упражнения"
+                "Неречевые упражнения",
             ),
             Arguments.of(
                 ExerciseGroupDto(
@@ -74,10 +73,10 @@ internal class GroupLocalePostprocessorImplIT {
                     locale = "ru",
                     name = "Речевые упражнения",
                     description = null,
-                    series = mutableListOf()
+                    series = mutableListOf(),
                 ),
-                "Речевые упражнения"
-            )
+                "Речевые упражнения",
+            ),
         )
     }
 }

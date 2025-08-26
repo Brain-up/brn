@@ -17,7 +17,7 @@ import javax.persistence.UniqueConstraint
 
 @Entity
 @Table(uniqueConstraints = [UniqueConstraint(columnNames = ["name", "level"])])
-data class SubGroup(
+class SubGroup(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
@@ -31,15 +31,14 @@ data class SubGroup(
     @JoinColumn(name = "exercise_series_id")
     var series: Series,
     @OneToMany(mappedBy = "subGroup", cascade = [(CascadeType.ALL)], fetch = FetchType.LAZY)
-    val exercises: MutableList<Exercise> = ArrayList()
+    val exercises: MutableList<Exercise> = ArrayList(),
 ) {
-
     constructor(record: SubgroupGenericRecord, series: Series) : this(
         series = series,
         level = record.level,
         code = record.code,
         name = record.name,
-        description = record.description
+        description = record.description,
     )
 
     fun toResponse(pictureUrl: String) = SubGroupResponse(
@@ -50,13 +49,8 @@ data class SubGroup(
         description = description,
         level = level,
         withPictures = withPictures,
-        exercises = exercises.map { exercise -> exercise.id }.toMutableList()
+        exercises = exercises.map { exercise -> exercise.id }.toMutableList(),
     )
-
-    override fun toString() =
-        "SubGroup(id=$id, name='$name', code='$code', description=$description, level=$level, " +
-            "withPictures=$withPictures)"
-
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

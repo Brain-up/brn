@@ -1,22 +1,22 @@
-import firebase from 'firebase/app';
-import { AngularFireAuth } from '@angular/fire/auth';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Router } from '@angular/router';
 import { TokenService } from '@root/services/token.service';
 import {
   AUTH_PAGE_URL,
   HOME_PAGE_URL,
 } from '@shared/constants/common-constants';
+import { GoogleAuthProvider } from 'firebase/auth';
 
 @Injectable()
 export class AuthenticationApiService {
+  private readonly angularFireAuth = inject(AngularFireAuth);
+  private readonly router = inject(Router);
+  private readonly tokenService = inject(TokenService);
+
   private authState: any = null;
 
-  constructor(
-    private readonly angularFireAuth: AngularFireAuth,
-    private readonly router: Router,
-    private readonly tokenService: TokenService,
-  ) {
+  constructor() {
     this.initAuth();
   }
 
@@ -43,7 +43,7 @@ export class AuthenticationApiService {
     return this.authState.email;
   }
 
-  public get currentUser(): unknown {
+  public get currentUser(): any {
     return this.authState !== null ? this.authState : null;
   }
 
@@ -56,7 +56,7 @@ export class AuthenticationApiService {
   }
 
   public googleLogin(): unknown {
-    const provider = new firebase.auth.GoogleAuthProvider();
+    const provider = new GoogleAuthProvider();
     return this.oAuthLogin(provider)
       .then(() => {
         this.tokenService.setToken(this.authState);

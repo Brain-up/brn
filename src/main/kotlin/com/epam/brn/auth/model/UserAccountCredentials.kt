@@ -4,5 +4,5 @@ import com.google.firebase.auth.FirebaseToken
 
 data class UserAccountCredentials(
     private val decodedToken: FirebaseToken?,
-    private val idToken: String?
+    private val idToken: String?,
 )

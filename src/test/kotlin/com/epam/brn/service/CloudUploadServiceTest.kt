@@ -22,7 +22,6 @@ import org.springframework.web.multipart.MultipartFile
 @ExtendWith(MockKExtension::class)
 @DisplayName("CloudUploadServiceTest test using MockK")
 internal class CloudUploadServiceTest {
-
     @InjectMockKs
     private lateinit var cloudUploadService: CloudUploadService
 
@@ -57,9 +56,10 @@ internal class CloudUploadServiceTest {
         every { mockMultipartFile.originalFilename } returns "filename.not-allowed-ext"
 
         // WHEN
-        val exception = shouldThrowExactly<IllegalArgumentException> {
-            cloudUploadService.uploadUnverifiedPictureFile(mockMultipartFile)
-        }
+        val exception =
+            shouldThrowExactly<IllegalArgumentException> {
+                cloudUploadService.uploadUnverifiedPictureFile(mockMultipartFile)
+            }
 
         // THEN
         exception.message shouldBe "File extension should be one of $allowedExtensions"
@@ -75,9 +75,10 @@ internal class CloudUploadServiceTest {
         every { mockMultipartFile.originalFilename } returns "filename.not-allowed-ext"
 
         // WHEN
-        val exception = shouldThrowExactly<IllegalArgumentException> {
-            cloudUploadService.uploadContributorPicture(mockMultipartFile, fileName)
-        }
+        val exception =
+            shouldThrowExactly<IllegalArgumentException> {
+                cloudUploadService.uploadContributorPicture(mockMultipartFile, fileName)
+            }
 
         // THEN
         exception.message shouldBe "File extension should be one of $allowedExtensions"
@@ -93,9 +94,10 @@ internal class CloudUploadServiceTest {
         every { mockMultipartFile.originalFilename } returns "fileName.png"
 
         // WHEN
-        val exception = shouldThrowExactly<IllegalArgumentException> {
-            cloudUploadService.uploadUnverifiedPictureFile(mockMultipartFile)
-        }
+        val exception =
+            shouldThrowExactly<IllegalArgumentException> {
+                cloudUploadService.uploadUnverifiedPictureFile(mockMultipartFile)
+            }
 
         // THEN
         exception.message shouldBe "File size [$fileSize] should be less than max file size " +
@@ -113,9 +115,10 @@ internal class CloudUploadServiceTest {
         every { mockMultipartFile.originalFilename } returns "fileName.png"
 
         // WHEN
-        val exception = shouldThrowExactly<IllegalArgumentException> {
-            cloudUploadService.uploadContributorPicture(mockMultipartFile, fileName)
-        }
+        val exception =
+            shouldThrowExactly<IllegalArgumentException> {
+                cloudUploadService.uploadContributorPicture(mockMultipartFile, fileName)
+            }
 
         // THEN
         exception.message shouldBe "File size [$fileSize] should be less than max file size " +
@@ -135,9 +138,10 @@ internal class CloudUploadServiceTest {
         every { resourceService.findFirstResourceByWord(word) } returns null
 
         // WHEN
-        val exception = shouldThrowExactly<IllegalArgumentException> {
-            cloudUploadService.uploadUnverifiedPictureFile(mockMultipartFile)
-        }
+        val exception =
+            shouldThrowExactly<IllegalArgumentException> {
+                cloudUploadService.uploadUnverifiedPictureFile(mockMultipartFile)
+            }
 
         // THEN
         exception.message shouldBe "The world \"$word\" is not found in database"
@@ -157,9 +161,10 @@ internal class CloudUploadServiceTest {
         every { cloudService.isFileExist(defaultPicturesPath, word) } returns true
 
         // WHEN
-        val exception = shouldThrowExactly<IllegalArgumentException> {
-            cloudUploadService.uploadUnverifiedPictureFile(mockMultipartFile)
-        }
+        val exception =
+            shouldThrowExactly<IllegalArgumentException> {
+                cloudUploadService.uploadUnverifiedPictureFile(mockMultipartFile)
+            }
 
         // THEN
         exception.message shouldBe "File \"$fullFileName\" is exist in cloud default path"
@@ -181,9 +186,10 @@ internal class CloudUploadServiceTest {
         every { cloudService.isFileExist(unverifiedPicturesPath, word) } returns true
 
         // WHEN
-        val exception = shouldThrowExactly<IllegalArgumentException> {
-            cloudUploadService.uploadUnverifiedPictureFile(mockMultipartFile)
-        }
+        val exception =
+            shouldThrowExactly<IllegalArgumentException> {
+                cloudUploadService.uploadUnverifiedPictureFile(mockMultipartFile)
+            }
 
         // THEN
         exception.message shouldBe "File \"$fullFileName\" is exist in cloud path \"$unverifiedPicturesPath\""

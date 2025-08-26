@@ -9,5 +9,5 @@ data class ExerciseGroupDto(
     @field:NotBlank
     var name: String,
     var description: String?,
-    val series: MutableList<Long?> = mutableListOf()
+    val series: MutableList<Long?> = mutableListOf(),
 )

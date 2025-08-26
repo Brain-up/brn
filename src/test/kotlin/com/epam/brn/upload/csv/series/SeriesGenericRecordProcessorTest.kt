@@ -16,7 +16,6 @@ import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(MockKExtension::class)
 internal class SeriesGenericRecordProcessorTest {
-
     @InjectMockKs
     private lateinit var seriesGenericRecordProcessor: SeriesGenericRecordProcessor
 
@@ -26,20 +25,21 @@ internal class SeriesGenericRecordProcessorTest {
     @MockK
     private lateinit var seriesRepository: SeriesRepository
 
-    private val exerciseGroups = listOf(
-        ExerciseGroup(
-            code = "CODE1",
-            name = "name1",
-            locale = "ru-ru1",
-            description = "desc1"
-        ),
-        ExerciseGroup(
-            code = "CODE2",
-            name = "name2",
-            locale = "ru-ru2",
-            description = "desc2"
+    private val exerciseGroups =
+        listOf(
+            ExerciseGroup(
+                code = "CODE1",
+                name = "name1",
+                locale = "ru-ru1",
+                description = "desc1",
+            ),
+            ExerciseGroup(
+                code = "CODE2",
+                name = "name2",
+                locale = "ru-ru2",
+                description = "desc2",
+            ),
         )
-    )
 
     @Test
     fun `should create correct series`() {
@@ -63,7 +63,7 @@ internal class SeriesGenericRecordProcessorTest {
         verify(exactly = records.size) {
             seriesRepository.findByTypeAndName(
                 ofType(String::class),
-                ofType(String::class)
+                ofType(String::class),
             )
         }
         verify(exactly = records.size) { seriesRepository.save(ofType(Series::class)) }
@@ -91,7 +91,7 @@ internal class SeriesGenericRecordProcessorTest {
         verify(exactly = records.size) {
             seriesRepository.findByTypeAndName(
                 ofType(String::class),
-                ofType(String::class)
+                ofType(String::class),
             )
         }
         verify(inverse = true) { seriesRepository.save(ofType(Series::class)) }
@@ -103,22 +103,22 @@ internal class SeriesGenericRecordProcessorTest {
             name = "name",
             level = 0,
             description = "desc",
-            exerciseGroup = exerciseGroups[0]
+            exerciseGroup = exerciseGroups[0],
         ),
         Series(
             type = "SENTENCE",
             name = "name1",
             level = 1,
             description = "desc1",
-            exerciseGroup = exerciseGroups[0]
+            exerciseGroup = exerciseGroups[0],
         ),
         Series(
             type = "SINGLE_SIMPLE_WORDS",
             name = "name2",
             level = 2,
             description = "desc2",
-            exerciseGroup = exerciseGroups[1]
-        )
+            exerciseGroup = exerciseGroups[1],
+        ),
     )
 
     private fun createInputSeriesGenericRecordList() = mutableListOf(
@@ -127,21 +127,21 @@ internal class SeriesGenericRecordProcessorTest {
             level = 0,
             type = "WORDS_SEQUENCES",
             name = "name",
-            description = "desc"
+            description = "desc",
         ),
         SeriesGenericRecord(
             groupCode = "CODE1",
             level = 1,
             type = "SENTENCE",
             name = "name1",
-            description = "desc1"
+            description = "desc1",
         ),
         SeriesGenericRecord(
             groupCode = "CODE2",
             level = 2,
             type = "SINGLE_SIMPLE_WORDS",
             name = "name2",
-            description = "desc2"
-        )
+            description = "desc2",
+        ),
     )
 }

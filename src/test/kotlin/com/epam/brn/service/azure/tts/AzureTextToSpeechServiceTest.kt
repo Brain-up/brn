@@ -19,7 +19,6 @@ import java.io.ByteArrayInputStream
 
 @ExtendWith(MockKExtension::class)
 class AzureTextToSpeechServiceTest {
-
     @SpyK
     @InjectMockKs
     lateinit var ttsService: AzureTextToSpeechService
@@ -39,12 +38,13 @@ class AzureTextToSpeechServiceTest {
     @MockK
     lateinit var azureTtsProperties: AzureTtsProperties
 
-    private val params = AudioFileMetaData(
-        voice = "en-US-ChristopherNeural",
-        gender = "Male",
-        locale = "en-US",
-        text = "text",
-    )
+    private val params =
+        AudioFileMetaData(
+            voice = "en-US-ChristopherNeural",
+            gender = "Male",
+            locale = "en-US",
+            text = "text",
+        )
 
     @Test
     fun `should find voice by voice name`() {
@@ -114,9 +114,10 @@ class AzureTextToSpeechServiceTest {
         // WHEN
         val textToSpeechRequest = ttsService.getTextToSpeechRequest(params)
 
-        textToSpeechRequest shouldBe """
+        textToSpeechRequest shouldBe
+            """
             <speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="https://www.w3.org/2001/mstts" xml:lang="en-US"><voice name="en-US-ChristopherNeural" xml:lang="en-US" xml:gender="Male"><prosody pitch="default" rate="default"><mstts:express-as styledegree="1">text</mstts:express-as></prosody></voice></speak>
-        """.trimIndent()
+            """.trimIndent()
 
         // THEN
         verify { azureVoiceRepo.findByShortName(params.voice) }
@@ -133,22 +134,23 @@ class AzureTextToSpeechServiceTest {
         val pitch = "pitch"
         val style = "style"
 
-        val audioFileMetaData = AudioFileMetaData(
-            text = text,
-            locale = locale,
-            voice = voice,
-            gender = gender,
-            speedFloat = speed,
-            pitch = pitch,
-            style = style
-        )
+        val audioFileMetaData =
+            AudioFileMetaData(
+                text = text,
+                locale = locale,
+                voice = voice,
+                gender = gender,
+                speedFloat = speed,
+                pitch = pitch,
+                style = style,
+            )
 
         val audioBytes = "audio-input-stream".toByteArray()
         val mockInputStream = ByteArrayInputStream(audioBytes)
         every { ttsService.textToSpeech(audioFileMetaData) } returns mockInputStream
 
         // WHEN
-        val file = ttsService.generateAudioOggFileWithValidation(audioFileMetaData)
+        val file = ttsService.generateAudioOggStreamWithValidation(audioFileMetaData)
 
         // THEN
         file.readBytes() shouldBe audioBytes

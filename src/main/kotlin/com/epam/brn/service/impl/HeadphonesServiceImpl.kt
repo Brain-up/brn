@@ -7,12 +7,14 @@ import com.epam.brn.service.HeadphonesService
 import org.springframework.stereotype.Service
 
 @Service
-class HeadphonesServiceImpl(private var headphonesRepository: HeadphonesRepository) : HeadphonesService {
-    override fun save(headphones: Headphones): HeadphonesDto {
-        return headphonesRepository.save(headphones).toDto()
-    }
+class HeadphonesServiceImpl(
+    private var headphonesRepository: HeadphonesRepository,
+) : HeadphonesService {
+    override fun save(headphones: Headphones): HeadphonesDto = headphonesRepository.save(headphones).toDto()
 
-    override fun getAllHeadphonesForUser(userId: Long): Set<HeadphonesDto> {
-        return headphonesRepository.getHeadphonesForUser(userId).map { it.toDto() }.toSet()
-    }
+    override fun getAllHeadphonesForUser(userId: Long): Set<HeadphonesDto> = headphonesRepository
+        .getHeadphonesForUser(userId)
+        .map {
+            it.toDto()
+        }.toSet()
 }

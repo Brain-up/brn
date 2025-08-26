@@ -8,11 +8,14 @@ import org.springframework.stereotype.Service
 @Service
 class DoctorService(
     private val userAccountService: UserAccountService,
-    private val roleService: RoleService
+    private val roleService: RoleService,
 ) {
     private val log = logger()
 
-    fun addPatientToDoctorAsDoctor(doctorId: Long, patientId: Long) {
+    fun addPatientToDoctorAsDoctor(
+        doctorId: Long,
+        patientId: Long,
+    ) {
         val currentUser = userAccountService.getCurrentUser().toDto()
         val patient = userAccountService.findUserDtoById(patientId)
         val doctor = userAccountService.findUserDtoById(doctorId)
@@ -34,15 +37,19 @@ class DoctorService(
                 throw IllegalArgumentException(
                     """The patient already has a doctor. You cannot replace another doctor by yourself. 
                     |Please contact the patient (or admin, or another doctor) 
-                    |to delete the current doctor of the patient."""
-                        .trimMargin().replace("\n", "")
+                    |to delete the current doctor of the patient.
+                    """.trimMargin()
+                        .replace("\n", ""),
                 )
             }
         }
         userAccountService.updateDoctorForPatient(patientId, doctorId)
     }
 
-    fun deleteDoctorFromPatientAsDoctor(doctorId: Long, patientId: Long) {
+    fun deleteDoctorFromPatientAsDoctor(
+        doctorId: Long,
+        patientId: Long,
+    ) {
         val currentUser = userAccountService.getCurrentUser().toDto()
         val patient = userAccountService.findUserDtoById(patientId)
 
@@ -91,7 +98,10 @@ class DoctorService(
         }
     }
 
-    fun checkUserIsNotAdmin(user: UserAccountDto, message: String) {
+    fun checkUserIsNotAdmin(
+        user: UserAccountDto,
+        message: String,
+    ) {
         if (roleService.isUserHasRole(user, BrnRole.ADMIN)) {
             val currentUser = userAccountService.getCurrentUser()
             log.error("Current user '${currentUser.id}' is trying to use admin id '${user.id}'. $message")

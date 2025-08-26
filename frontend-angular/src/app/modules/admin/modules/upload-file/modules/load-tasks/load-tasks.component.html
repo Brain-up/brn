@@ -3,28 +3,36 @@
     <mat-label>{{ 'Admin.Modules.UploadFile.Modules.LoadTasks.Labels.Group' | translate }}</mat-label>
 
     <mat-select formControlName="group">
-      <mat-option *ngFor="let group of groups$ | async" [value]="group">
-        {{ group.name }}
-      </mat-option>
+      @for (group of groups$ | async; track group) {
+        <mat-option [value]="group">
+          {{ group.name }}
+        </mat-option>
+      }
     </mat-select>
 
-    <mat-error *ngIf="tasksGroup.controls.group.hasError('required')">
-      {{ 'Admin.Modules.UploadFile.Modules.LoadTasks.Errors.FieldMustNotBeEmpty' | translate }}
-    </mat-error>
+    @if (tasksGroup.controls.group.hasError('required')) {
+      <mat-error>
+        {{ 'Admin.Modules.UploadFile.Modules.LoadTasks.Errors.FieldMustNotBeEmpty' | translate }}
+      </mat-error>
+    }
   </mat-form-field>
 
   <mat-form-field>
     <mat-label>{{ 'Admin.Modules.UploadFile.Modules.LoadTasks.Labels.Series' | translate }}</mat-label>
 
     <mat-select formControlName="series">
-      <mat-option *ngFor="let series of series$ | async" [value]="series">
-        {{ series.name }}
-      </mat-option>
+      @for (series of series$ | async; track series) {
+        <mat-option [value]="series">
+          {{ series.name }}
+        </mat-option>
+      }
     </mat-select>
 
-    <mat-error *ngIf="tasksGroup.controls.series.hasError('required')">
-      {{ 'Admin.Modules.UploadFile.Modules.LoadTasks.Errors.FieldMustNotBeEmpty' | translate }}
-    </mat-error>
+    @if (tasksGroup.controls.series.hasError('required')) {
+      <mat-error>
+        {{ 'Admin.Modules.UploadFile.Modules.LoadTasks.Errors.FieldMustNotBeEmpty' | translate }}
+      </mat-error>
+    }
   </mat-form-field>
 
   <app-upload-file-input formControlName="file"></app-upload-file-input>
@@ -34,8 +42,9 @@
   </button>
 </form>
 
-<div *ngIf="fileFormat$ | async as format" class="upload-tasks-content__format">
-  <strong>{{ 'Admin.Modules.UploadFile.Modules.LoadTasks.AcceptedFormat' | translate }}</strong>
-
-  <pre class="upload-tasks-content__format-container">{{ format }}</pre>
-</div>
+@if (fileFormat$ | async; as format) {
+  <div class="upload-tasks-content__format">
+    <strong>{{ 'Admin.Modules.UploadFile.Modules.LoadTasks.AcceptedFormat' | translate }}</strong>
+    <pre class="upload-tasks-content__format-container">{{ format }}</pre>
+  </div>
+}

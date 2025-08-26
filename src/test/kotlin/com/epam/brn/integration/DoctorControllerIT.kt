@@ -1,7 +1,7 @@
 package com.epam.brn.integration
 
-import com.epam.brn.dto.request.AddPatientToDoctorRequest
 import com.epam.brn.dto.UserAccountDto
+import com.epam.brn.dto.request.AddPatientToDoctorRequest
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.RoleRepository
@@ -22,7 +22,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @WithMockUser(username = "currentDoctor@default.ru", roles = [BrnRole.SPECIALIST])
 class DoctorControllerIT : BaseIT() {
-
     @Autowired
     lateinit var roleRepository: RoleRepository
 
@@ -59,17 +58,22 @@ class DoctorControllerIT : BaseIT() {
         val requestJson = objectMapper.writeValueAsString(AddPatientToDoctorRequest(user1.id!!, "user"))
 
         // WHEN
-        val resultAction = mockMvc
-            .perform(
-                post("/doctors/${currentSpecialist.id}/patients")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(requestJson)
-            )
+        val resultAction =
+            mockMvc
+                .perform(
+                    post("/doctors/${currentSpecialist.id}/patients")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson),
+                )
 
         // THEN
         resultAction.andExpect(status().isOk)
 
-        userAccountRepository.findUserAccountById(user1.id!!).get().doctor?.id shouldBe currentSpecialist.id
+        userAccountRepository
+            .findUserAccountById(user1.id!!)
+            .get()
+            .doctor
+            ?.id shouldBe currentSpecialist.id
     }
 
     @Test
@@ -78,12 +82,13 @@ class DoctorControllerIT : BaseIT() {
         val requestJson = objectMapper.writeValueAsString(AddPatientToDoctorRequest(anotherSpecialist.id!!, "user"))
 
         // WHEN
-        val resultAction = mockMvc
-            .perform(
-                post("/doctors/${currentSpecialist.id}/patients")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(requestJson)
-            )
+        val resultAction =
+            mockMvc
+                .perform(
+                    post("/doctors/${currentSpecialist.id}/patients")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson),
+                )
 
         // THEN
         resultAction.andExpect(status().isBadRequest)
@@ -98,12 +103,13 @@ class DoctorControllerIT : BaseIT() {
         val requestJson = objectMapper.writeValueAsString(AddPatientToDoctorRequest(user2.id!!, "user"))
 
         // WHEN
-        val resultAction = mockMvc
-            .perform(
-                post("/doctors/${user1.id}/patients")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(requestJson)
-            )
+        val resultAction =
+            mockMvc
+                .perform(
+                    post("/doctors/${user1.id}/patients")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson),
+                )
 
         // THEN
         resultAction
@@ -126,10 +132,14 @@ class DoctorControllerIT : BaseIT() {
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
 
-        val collectionType = TypeFactory.defaultInstance()
-            .constructCollectionType(MutableList::class.java, UserAccountDto::class.java)
-        val users: List<UserAccountDto> = objectMapper.readerFor(collectionType)
-            .readValue(objectMapper.readTree(resultAction.andReturn().response.contentAsString).path("data"))
+        val collectionType =
+            TypeFactory
+                .defaultInstance()
+                .constructCollectionType(MutableList::class.java, UserAccountDto::class.java)
+        val users: List<UserAccountDto> =
+            objectMapper
+                .readerFor(collectionType)
+                .readValue(objectMapper.readTree(resultAction.andReturn().response.contentAsString).path("data"))
 
         users.size shouldBe 2
         users.map { it.email }.contains(user1.email) shouldBe true

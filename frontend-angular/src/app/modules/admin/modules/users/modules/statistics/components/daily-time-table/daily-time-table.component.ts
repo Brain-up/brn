@@ -1,34 +1,29 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  SimpleChanges
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnChanges, OnDestroy, OnInit, SimpleChanges, inject, input } from '@angular/core';
 import { AdminApiService } from '@admin/services/api/admin-api.service';
 import { Dayjs } from 'dayjs';
 import { UserDailyDetailStatistics } from '@admin/models/user-daily-detail-statistics';
 import { finalize, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
-  selector: 'app-daily-time-table',
-  templateUrl: './daily-time-table.component.html',
-  styleUrls: ['./daily-time-table.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-daily-time-table',
+    templateUrl: './daily-time-table.component.html',
+    styleUrls: ['./daily-time-table.component.scss'],
+    imports: [MatProgressBarModule, MatTableModule, TranslateModule],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DailyTimeTableComponent implements OnInit, OnDestroy, OnChanges {
+  private readonly adminApiService = inject(AdminApiService);
+  private readonly cdr = inject(ChangeDetectorRef);
+
   private readonly destroyer$ = new Subject<void>();
 
-  @Input()
-  public userId: number;
+  public readonly userId = input<number>(undefined);
 
-  @Input()
-  public day: Dayjs;
+  public readonly day = input<Dayjs>(undefined);
 
   public isLoadingWeekTimeTrackData = true;
 
@@ -45,17 +40,11 @@ export class DailyTimeTableComponent implements OnInit, OnDestroy, OnChanges {
     'listenWordsCount'
   ];
 
-  constructor(
-    private readonly adminApiService: AdminApiService,
-    private readonly cdr: ChangeDetectorRef,
-  ) {
-  }
-
   ngOnInit(): void {
     this.loadData();
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(_changes: SimpleChanges) {
     this.loadData();
   }
 
@@ -67,8 +56,8 @@ export class DailyTimeTableComponent implements OnInit, OnDestroy, OnChanges {
   private loadData() {
     this.isLoadingWeekTimeTrackData = true;
     this.adminApiService.getUserDailyDetailStatistics(
-      this.userId,
-      this.day
+      this.userId(),
+      this.day()
     ).pipe(
       finalize(() => {
         this.isLoadingWeekTimeTrackData = false;

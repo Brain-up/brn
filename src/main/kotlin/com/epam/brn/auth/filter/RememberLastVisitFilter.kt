@@ -13,13 +13,12 @@ import javax.servlet.http.HttpServletResponse
 class RememberLastVisitFilter(
     private val userAccountService: UserAccountService,
 ) : OncePerRequestFilter() {
-
     private val log = logger()
 
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
-        filterChain: FilterChain
+        filterChain: FilterChain,
     ) {
         markVisit()
         filterChain.doFilter(request, response)

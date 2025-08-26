@@ -20,40 +20,32 @@ import javax.persistence.UniqueConstraint
 
 @Entity
 @Table(uniqueConstraints = [UniqueConstraint(columnNames = ["audiometryGroup", "frequencyZone"])])
-data class AudiometryTask(
+class AudiometryTask(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
-
     // == for Lopotko diagnostic
     var level: Int? = 0,
     val audiometryGroup: String? = null, // А, Б, В, Г
     val frequencyZone: String? = null,
     val minFrequency: Int? = null,
     val maxFrequency: Int? = null,
-
     var count: Int? = 10,
     var showSize: Int? = null,
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "audiometry_id")
     var audiometry: Audiometry? = null,
-
     @ManyToMany(cascade = [CascadeType.MERGE, CascadeType.REFRESH])
     @JoinTable(
         name = "audiometry_task_resources",
         joinColumns = [JoinColumn(name = "audiometry_task_id", referencedColumnName = "id")],
-        inverseJoinColumns = [JoinColumn(name = "resource_id", referencedColumnName = "id")]
+        inverseJoinColumns = [JoinColumn(name = "resource_id", referencedColumnName = "id")],
     )
     var answerOptions: MutableSet<Resource> = hashSetOf(),
-
     // == for frequency diagnostic
     val frequencies: String? = null,
     var ear: String = EAR.BOTH.name,
 ) {
-    override fun toString() =
-        "AudiometryTask(id=$id, order=$level, group=$audiometryGroup, frequencyZone=$frequencyZone, minFrequency=$minFrequency, maxFrequency=$maxFrequency, count=$count, ear =$ear, answerOptions=$answerOptions)"
-
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
@@ -74,14 +66,16 @@ data class AudiometryTask(
         return result
     }
 
-    fun toDto(): Any {
-        return when (audiometry!!.audiometryType) {
-            AudiometryType.SIGNALS.name -> AudiometrySignalsTaskResponse(
+    fun toDto(): Any = when (audiometry!!.audiometryType) {
+        AudiometryType.SIGNALS.name ->
+            AudiometrySignalsTaskResponse(
                 id,
                 EAR.valueOf(ear),
-                frequencies!!.removeSurrounding("[", "]").split(", ").map { it.toInt() }
+                frequencies!!.removeSurrounding("[", "]").split(", ").map { it.toInt() },
             )
-            AudiometryType.SPEECH.name -> AudiometryLopotkoTaskResponse(
+
+        AudiometryType.SPEECH.name ->
+            AudiometryLopotkoTaskResponse(
                 id,
                 level!!,
                 audiometryGroup!!,
@@ -90,14 +84,16 @@ data class AudiometryTask(
                 maxFrequency!!,
                 count!!,
                 showSize!!,
-                answerOptions
+                answerOptions,
             )
-            AudiometryType.SPEECH.name -> AudiometryMatrixTaskResponse(
+
+        AudiometryType.SPEECH.name ->
+            AudiometryMatrixTaskResponse(
                 id,
                 count!!,
-                answerOptions
+                answerOptions,
             )
-            else -> throw IllegalArgumentException("${audiometry!!.audiometryType} does not supported!")
-        }
+
+        else -> throw IllegalArgumentException("${audiometry!!.audiometryType} does not supported!")
     }
 }

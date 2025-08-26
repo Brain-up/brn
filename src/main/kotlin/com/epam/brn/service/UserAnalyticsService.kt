@@ -6,7 +6,16 @@ import org.springframework.data.domain.Pageable
 import java.io.InputStream
 
 interface UserAnalyticsService {
-    fun getUsersWithAnalytics(pageable: Pageable, role: String): List<UserWithAnalyticsResponse>
-    fun prepareAudioFileForUser(exerciseId: Long, audioFileMetaData: AudioFileMetaData): InputStream
-    fun prepareAudioFileMetaData(exerciseId: Long, audioFileMetaData: AudioFileMetaData): AudioFileMetaData
+    fun getUsersWithAnalytics(
+        pageable: Pageable,
+        role: String,
+    ): List<UserWithAnalyticsResponse>
+    fun prepareAudioStreamForUser(
+        exerciseId: Long,
+        audioFileMetaData: AudioFileMetaData,
+    ): InputStream
+    fun prepareAudioFileMetaData(
+        exerciseId: Long,
+        audioFileMetaData: AudioFileMetaData,
+    ): AudioFileMetaData
 }

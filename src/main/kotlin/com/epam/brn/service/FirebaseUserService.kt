@@ -6,10 +6,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class FirebaseUserService(
-    private val firebaseAuth: FirebaseAuth
+    private val firebaseAuth: FirebaseAuth,
 ) {
-
-    fun getUserByUuid(uuid: String): UserRecord? {
-        return firebaseAuth.getUser(uuid)
-    }
+    fun getUserByUuid(uuid: String): UserRecord? = firebaseAuth.getUser(uuid)
 }

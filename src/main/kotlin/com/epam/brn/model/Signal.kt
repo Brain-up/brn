@@ -10,7 +10,7 @@ import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
 
 @Entity
-data class Signal(
+class Signal(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
@@ -20,18 +20,15 @@ data class Signal(
     val length: Int? = null,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exercise_id")
-    var exercise: Exercise? = null
+    var exercise: Exercise? = null,
 ) {
     fun toSignalDto() = SignalTaskDto(
         id = id,
         name = name,
         url = url,
         frequency = frequency,
-        length = length
+        length = length,
     )
-
-    override fun toString() = "Signal(id=$id, name=$name, url=$url, frequency=$frequency, length=$length)"
-
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

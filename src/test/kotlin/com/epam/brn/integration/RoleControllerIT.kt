@@ -18,7 +18,6 @@ import java.nio.charset.StandardCharsets
 
 @WithMockUser(username = "test@test.test", roles = [BrnRole.ADMIN])
 class RoleControllerIT : BaseIT() {
-
     private val baseUrl = "/roles"
 
     @Autowired
@@ -40,10 +39,11 @@ class RoleControllerIT : BaseIT() {
         insertRole(BrnRole.USER)
         insertRole(BrnRole.SPECIALIST)
         // WHEN
-        val resultAction = mockMvc.perform(
-            MockMvcRequestBuilders
-                .get("$baseUrl")
-        )
+        val resultAction =
+            mockMvc.perform(
+                MockMvcRequestBuilders
+                    .get("$baseUrl"),
+            )
 
         // THEN
         resultAction
@@ -52,18 +52,17 @@ class RoleControllerIT : BaseIT() {
 
         val responseJson = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
         val baseResponse = objectMapper.readValue(responseJson, BrnResponse::class.java)
-        val roles = objectMapper.readValue(
-            gson.toJson(baseResponse.data),
-            object : TypeReference<List<Role>>() {}
-        )
+        val roles =
+            objectMapper.readValue(
+                gson.toJson(baseResponse.data),
+                object : TypeReference<List<Role>>() {},
+            )
         roles.size shouldBe 3
     }
 
-    private fun insertRole(roleName: String): Role {
-        return roleRepository.save(
-            Role(
-                name = roleName
-            )
-        )
-    }
+    private fun insertRole(roleName: String): Role = roleRepository.save(
+        Role(
+            name = roleName,
+        ),
+    )
 }

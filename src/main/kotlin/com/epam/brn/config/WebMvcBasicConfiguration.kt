@@ -14,7 +14,6 @@ import java.util.Locale
 
 @Configuration
 class WebMvcBasicConfiguration : WebMvcConfigurer {
-
     @Bean
     fun localeResolver(): LocaleResolver {
         val slr = SessionLocaleResolver()
@@ -38,7 +37,7 @@ class WebMvcBasicConfiguration : WebMvcConfigurer {
         val messageSource = ReloadableResourceBundleMessageSource()
         messageSource.setBasenames(
             "classpath:/messages",
-            "classpath:errorMessages"
+            "classpath:errorMessages",
         )
         messageSource.setDefaultEncoding(StandardCharsets.UTF_8.name())
         return messageSource

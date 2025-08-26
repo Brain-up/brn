@@ -25,7 +25,7 @@ import javax.persistence.OneToMany
 
 @Entity
 @EntityListeners(AuditingEntityListener::class)
-data class UserAccount(
+class UserAccount(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
@@ -53,7 +53,7 @@ data class UserAccount(
     @ManyToOne(fetch = FetchType.LAZY)
     var doctor: UserAccount? = null,
     @OneToMany(mappedBy = "userAccount", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    var headphones: MutableSet<Headphones> = hashSetOf()
+    var headphones: MutableSet<Headphones> = hashSetOf(),
 ) {
     var password: String? = null
 
@@ -64,14 +64,9 @@ data class UserAccount(
     @JoinTable(
         name = "user_roles",
         joinColumns = [JoinColumn(name = "user_id", referencedColumnName = "id")],
-        inverseJoinColumns = [JoinColumn(name = "role_id", referencedColumnName = "id")]
+        inverseJoinColumns = [JoinColumn(name = "role_id", referencedColumnName = "id")],
     )
     var roleSet: MutableSet<Role> = hashSetOf()
-
-    override fun toString(): String {
-        return "UserAccount(id=$id, userId=$userId, fullName='$fullName', email='$email'," +
-            " bornYear=$bornYear, gender=$gender, description=$description, doctor=$doctor)"
-    }
 
     fun toDto() = UserAccountDto(
         id = id,
@@ -86,14 +81,16 @@ data class UserAccount(
         avatar = avatar,
         photo = photo,
         description = description,
-        headphones = headphones
-            .map(Headphones::toDto)
-            .toHashSet(),
-        doctorId = doctor?.id
+        headphones =
+            headphones
+                .map(Headphones::toDto)
+                .toHashSet(),
+        doctorId = doctor?.id,
     ).also {
-        it.roles = this.roleSet
-            .map(Role::name)
-            .toMutableSet()
+        it.roles =
+            this.roleSet
+                .map(Role::name)
+                .toMutableSet()
     }
 
     fun toAnalyticsDto() = UserWithAnalyticsResponse(

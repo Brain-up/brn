@@ -16,7 +16,6 @@ import org.springframework.test.context.TestPropertySource
 
 @TestPropertySource(properties = ["default.tts.provider=azure"])
 class AzureVoiceLoaderIT : BaseWireMockIT() {
-
     @Autowired
     private lateinit var azureTtsService: AzureTextToSpeechService
 
@@ -66,13 +65,15 @@ class AzureVoiceLoaderIT : BaseWireMockIT() {
 
     private fun stubForAllVoicesEndpoint() {
         WireMock.stubFor(
-            WireMock.get(WireMock.urlPathMatching(".*"))
+            WireMock
+                .get(WireMock.urlPathMatching(".*"))
                 .willReturn(
-                    WireMock.aResponse()
+                    WireMock
+                        .aResponse()
                         .withStatus(HttpStatus.OK.value())
                         .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                        .withBodyFile("azure/tts/allVoices.json")
-                )
+                        .withBodyFile("azure/tts/allVoices.json"),
+                ),
         )
     }
 }

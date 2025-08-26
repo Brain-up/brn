@@ -1,20 +1,20 @@
 package com.epam.brn.integration
 
-import com.epam.brn.service.RoleService
 import com.epam.brn.repo.AudiometryRepository
 import com.epam.brn.repo.AudiometryTaskRepository
-import com.epam.brn.repo.RoleRepository
 import com.epam.brn.repo.ExerciseGroupRepository
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.ResourceRepository
+import com.epam.brn.repo.RoleRepository
 import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.repo.SubGroupRepository
 import com.epam.brn.repo.TaskRepository
 import com.epam.brn.repo.UserAccountRepository
+import com.epam.brn.service.RoleService
 import com.epam.brn.service.load.AudiometryLoader
 import com.epam.brn.service.load.InitialDataLoader
 import com.epam.brn.upload.CsvUploadService
-import org.amshove.kluent.shouldHaveSize
+import io.kotest.matchers.collections.shouldHaveSize
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -24,7 +24,6 @@ import org.springframework.core.io.ResourceLoader
 import org.springframework.security.crypto.password.PasswordEncoder
 
 class CsvLoadingTestIT : BaseIT() {
-
     @TestConfiguration
     class Config {
         @Bean

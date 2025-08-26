@@ -3,9 +3,9 @@ package com.epam.brn.upload.csv.audiometrySpeech
 import com.epam.brn.dto.AudioFileMetaData
 import com.epam.brn.enums.AudiometryType
 import com.epam.brn.enums.BrnLocale
+import com.epam.brn.enums.WordType
 import com.epam.brn.model.AudiometryTask
 import com.epam.brn.model.Resource
-import com.epam.brn.enums.WordType
 import com.epam.brn.repo.AudiometryRepository
 import com.epam.brn.repo.AudiometryTaskRepository
 import com.epam.brn.repo.ResourceRepository
@@ -21,15 +21,17 @@ class LopotkoRecordProcessor(
     private val audiometryRepository: AudiometryRepository,
     private val audiometryTaskRepository: AudiometryTaskRepository,
     private val resourceRepository: ResourceRepository,
-    private val wordsService: WordsService
+    private val wordsService: WordsService,
 ) : RecordProcessor<LopotkoRecord, AudiometryTask> {
-
     val mapHashWord = mutableMapOf<String, String>()
 
     override fun isApplicable(record: Any): Boolean = record is LopotkoRecord
 
     @Transactional
-    override fun process(records: List<LopotkoRecord>, locale: BrnLocale): List<AudiometryTask> {
+    override fun process(
+        records: List<LopotkoRecord>,
+        locale: BrnLocale,
+    ): List<AudiometryTask> {
         val audiometryTasks = mutableSetOf<AudiometryTask>()
 
         records.forEach { record ->
@@ -37,19 +39,22 @@ class LopotkoRecordProcessor(
             resourceRepository.saveAll(answerOptions)
 
             val audiometryTask = extractAudiometryTask(record, answerOptions)
-            val existAudiometryTask = audiometryTaskRepository.findByAudiometryAndFrequencyZoneAndAudiometryGroup(
-                audiometryTask.audiometry!!,
-                audiometryTask.frequencyZone!!,
-                audiometryTask.audiometryGroup!!
-            )
+            val existAudiometryTask =
+                audiometryTaskRepository.findByAudiometryAndFrequencyZoneAndAudiometryGroup(
+                    audiometryTask.audiometry!!,
+                    audiometryTask.frequencyZone!!,
+                    audiometryTask.audiometryGroup!!,
+                )
             if (existAudiometryTask == null)
                 audiometryTasks.add(audiometryTaskRepository.save(audiometryTask))
         }
-        wordsService.createTxtFilesWithDiagnosticWords(mapHashWord)
         return audiometryTasks.toMutableList()
     }
 
-    private fun extractAnswerOptions(record: LopotkoRecord, locale: BrnLocale): MutableSet<Resource> {
+    private fun extractAnswerOptions(
+        record: LopotkoRecord,
+        locale: BrnLocale,
+    ): MutableSet<Resource> {
 //      todo: think about voice gender! if (record.exerciseName.startsWith("М")) audioPath = audioPathAlena
         return record.words
             .asSequence()
@@ -58,7 +63,10 @@ class LopotkoRecordProcessor(
             .toMutableSet()
     }
 
-    private fun toResource(word: String, locale: BrnLocale): Resource {
+    private fun toResource(
+        word: String,
+        locale: BrnLocale,
+    ): Resource {
         val hashWord = DigestUtils.md5Hex(word)
         mapHashWord[word] = hashWord
         val wordType = WordType.AUDIOMETRY_WORD.toString()
@@ -67,26 +75,32 @@ class LopotkoRecordProcessor(
                 AudioFileMetaData(
                     word,
                     locale.locale,
-                    wordsService.getDefaultManVoiceForLocale(locale.locale)
-                )
+                    wordsService.getDefaultManVoiceForLocale(locale.locale),
+                ),
             )
-        val resource = resourceRepository.findFirstByWordAndWordTypeAndAudioFileUrlLike(word, wordType, audioFileUrl)
-            .orElse(
-                Resource(
-                    word = word,
-                    audioFileUrl = audioFileUrl,
-                    locale = locale.locale,
+        val resource =
+            resourceRepository
+                .findFirstByWordAndWordTypeAndAudioFileUrlLike(word, wordType, audioFileUrl)
+                .orElse(
+                    Resource(
+                        word = word,
+                        audioFileUrl = audioFileUrl,
+                        locale = locale.locale,
+                    ),
                 )
-            )
         resource.wordType = wordType
         return resource
     }
 
-    private fun extractAudiometryTask(record: LopotkoRecord, answerOptions: MutableSet<Resource>): AudiometryTask {
-        val audiometry = audiometryRepository.findByAudiometryTypeAndLocale(
-            AudiometryType.valueOf(record.type).name,
-            record.locale.locale
-        )!!
+    private fun extractAudiometryTask(
+        record: LopotkoRecord,
+        answerOptions: MutableSet<Resource>,
+    ): AudiometryTask {
+        val audiometry =
+            audiometryRepository.findByAudiometryTypeAndLocale(
+                AudiometryType.valueOf(record.type).name,
+                record.locale.locale,
+            )!!
         return AudiometryTask(
             level = record.order,
             audiometryGroup = record.group,

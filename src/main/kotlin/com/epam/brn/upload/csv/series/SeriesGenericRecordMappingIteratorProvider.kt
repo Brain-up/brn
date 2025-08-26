@@ -9,20 +9,20 @@ import org.springframework.stereotype.Component
 import java.io.InputStream
 
 @Component
-class SeriesGenericRecordMappingIteratorProvider :
-    MappingIteratorProvider<SeriesGenericRecord> {
-
+class SeriesGenericRecordMappingIteratorProvider : MappingIteratorProvider<SeriesGenericRecord> {
     override fun iterator(inputStream: InputStream): MappingIterator<SeriesGenericRecord> {
-        val csvMapper = CsvMapper().apply {
-            enable(CsvParser.Feature.TRIM_SPACES)
-        }
+        val csvMapper =
+            CsvMapper().apply {
+                enable(CsvParser.Feature.TRIM_SPACES)
+            }
 
-        val csvSchema = csvMapper
-            .schemaFor(SeriesGenericRecord::class.java)
-            .withColumnSeparator(',')
-            .withLineSeparator(StringUtils.SPACE)
-            .withColumnReordering(true)
-            .withHeader()
+        val csvSchema =
+            csvMapper
+                .schemaFor(SeriesGenericRecord::class.java)
+                .withColumnSeparator(',')
+                .withLineSeparator(StringUtils.SPACE)
+                .withColumnReordering(true)
+                .withHeader()
 
         return csvMapper
             .readerWithTypedSchemaFor(SeriesGenericRecord::class.java)
@@ -30,7 +30,5 @@ class SeriesGenericRecordMappingIteratorProvider :
             .readValues(inputStream)
     }
 
-    override fun isApplicable(format: String): Boolean {
-        return SeriesGenericRecord.FORMAT == format
-    }
+    override fun isApplicable(format: String): Boolean = SeriesGenericRecord.FORMAT == format
 }

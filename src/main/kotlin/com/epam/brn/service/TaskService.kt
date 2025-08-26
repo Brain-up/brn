@@ -21,6 +21,8 @@ import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.TaskRepository
 import com.epam.brn.service.cloud.CloudService
 import org.apache.logging.log4j.kotlin.logger
+import org.springframework.cache.annotation.CacheEvict
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -33,36 +35,55 @@ class TaskService(
 ) {
     private val log = logger()
 
+    private val tempPictureStorageUrl = "https://brnup.s3.eu-north-1.amazonaws.com/pictures/"
+
+    @Cacheable("tasksByExerciseId")
     fun getTasksByExerciseId(exerciseId: Long): List<Any> {
-        val exercise: Exercise = exerciseRepository.findById(exerciseId)
-            .orElseThrow { EntityNotFoundException("No exercise found for id=$exerciseId") }
+        val exercise: Exercise =
+            exerciseRepository
+                .findById(exerciseId)
+                .orElseThrow { EntityNotFoundException("No exercise found for id=$exerciseId") }
         val tasks = taskRepository.findTasksByExerciseIdWithJoinedAnswers(exerciseId)
         tasks.forEach { task -> processAnswerOptions(task) }
         return when (val type = valueOf(exercise.subGroup!!.series.type)) {
             SINGLE_SIMPLE_WORDS, FREQUENCY_WORDS, SYLLABLES_KOROLEVA, PHRASES ->
                 tasks.map { task -> task.toTaskResponse(type) }
+
             SINGLE_WORDS_KOROLEVA ->
                 tasks.map { task -> task.toDetailWordsTaskDto(type) }
+
             WORDS_SEQUENCES, SENTENCE ->
                 tasks.map { task ->
                     task.toWordsGroupSeriesTaskDto(type, task.exercise?.template)
                 }
+
             else -> throw EntityNotFoundException("No tasks for this `$type` exercise type")
         }
     }
 
+    @Cacheable("tasksById")
     fun getTaskById(taskId: Long): Any {
         log.debug("Searching task with id=$taskId")
         val task =
             taskRepository.findById(taskId).orElseThrow { EntityNotFoundException("No task found for id=$taskId") }
         processAnswerOptions(task)
-        return when (val type = valueOf(task.exercise!!.subGroup!!.series.type)) {
+        return when (
+            val type =
+                valueOf(
+                    task.exercise!!
+                        .subGroup!!
+                        .series.type,
+                )
+        ) {
             SINGLE_SIMPLE_WORDS, FREQUENCY_WORDS, SYLLABLES_KOROLEVA, PHRASES ->
                 task.toTaskResponse(type)
+
             SINGLE_WORDS_KOROLEVA ->
                 task.toDetailWordsTaskDto(type)
+
             WORDS_SEQUENCES, SENTENCE ->
                 task.toWordsGroupSeriesTaskDto(type, task.exercise?.template)
+
             else -> throw EntityNotFoundException("No tasks for this `$type` exercise type")
         }
     }
@@ -75,6 +96,7 @@ class TaskService(
             }
     }
 
+    @CacheEvict("tasksByExerciseId", "tasksById")
     @Transactional
     fun save(task: Task): Task {
         val resources = mutableSetOf<Resource>()
@@ -85,13 +107,9 @@ class TaskService(
     }
 }
 
-val vowels = "а,е,ё,и,о,у,э,ы,ю,я".toCharArray()
+private val vowelSet = setOf('а', 'е', 'ё', 'и', 'о', 'у', 'э', 'ы', 'ю', 'я')
 
-fun String.findSyllableCount(): Int {
-    var syllableCount = 0
-    this.toCharArray().forEach { if (vowels.contains(it)) syllableCount++ }
-    return syllableCount
-}
+fun String.findSyllableCount(): Int = count { it in vowelSet }
 
 fun Task.toDetailWordsTaskDto(exerciseType: ExerciseType) = TaskResponse(
     id = id!!,
@@ -99,7 +117,7 @@ fun Task.toDetailWordsTaskDto(exerciseType: ExerciseType) = TaskResponse(
     exerciseMechanism = exerciseType.toMechanism(),
     name = name,
     serialNumber = serialNumber,
-    answerOptions = answerOptions.toResourceDtoSet()
+    answerOptions = answerOptions.toResourceDtoSet(),
 )
 
 fun MutableSet<Resource>.toResourceDtoSet(): HashSet<ResourceResponse> {

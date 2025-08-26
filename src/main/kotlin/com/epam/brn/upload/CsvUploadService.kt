@@ -20,44 +20,48 @@ import java.io.LineNumberReader
 class CsvUploadService(
     private val csvParser: CsvParser,
     private val recordProcessors: List<RecordProcessor<out Any, out Any>>,
-    private val seriesRepository: SeriesRepository
+    private val seriesRepository: SeriesRepository,
 ) {
-
     val localeSuffixMap = mapOf("ru" to BrnLocale.RU, "en" to BrnLocale.EN, "tr" to BrnLocale.TR)
 
     companion object {
-        private val csvContentTypes = listOf(
-            "text/csv",
-            "application/vnd.ms-excel",
-            "text/plain",
-            "text/tsv",
-            "application/octet-stream"
-        )
+        private val csvContentTypes =
+            listOf(
+                "text/csv",
+                "application/vnd.ms-excel",
+                "text/plain",
+                "text/tsv",
+                "application/octet-stream",
+            )
 
-        fun isCsvContentType(contentType: String?): Boolean =
-            contentType != null && csvContentTypes.contains(contentType)
+        fun isCsvContentType(contentType: String?): Boolean = contentType != null && csvContentTypes.contains(contentType)
 
-        fun isNotCsvContentType(contentType: String?): Boolean =
-            !isCsvContentType(contentType)
+        fun isNotCsvContentType(contentType: String?): Boolean = !isCsvContentType(contentType)
     }
 
     @Value("\${brn.dataFormatNumLines}")
     val dataFormatLinesCount = 5
 
     @Suppress("UNCHECKED_CAST")
-    fun load(inputStream: InputStream, locale: BrnLocale) {
+    fun load(
+        inputStream: InputStream,
+        locale: BrnLocale,
+    ) {
         val records = csvParser.parse(inputStream)
-        recordProcessors.stream()
-            .filter { it.isApplicable(records.first()) }.findFirst()
+        recordProcessors
+            .stream()
+            .filter { it.isApplicable(records.first()) }
+            .findFirst()
             .orElseThrow {
                 RuntimeException("There is no applicable processor for type '${records.first().javaClass}'")
-            }
-            .process(records as List<Nothing>, locale)
+            }.process(records as List<Nothing>, locale)
     }
 
     @Throws(FileFormatException::class)
-    fun loadExercises(seriesId: Long, file: MultipartFile) {
-
+    fun loadExercises(
+        seriesId: Long,
+        file: MultipartFile,
+    ) {
         if (isNotCsvContentType(file.contentType))
             throw FileFormatException()
 
@@ -77,23 +81,28 @@ class CsvUploadService(
         val suffix = if (fileName.endsWith("_")) "" else fileName.substring(fileName.length - 2)
         return when {
             suffix.isEmpty() -> BrnLocale.RU
-            localeSuffixMap[suffix] == null -> throw IllegalArgumentException("There no supported locale for $suffix file. Ask to tech support.")
+            localeSuffixMap[suffix] == null -> throw IllegalArgumentException(
+                "There no supported locale for $suffix file. Ask to tech support.",
+            )
             else -> localeSuffixMap[suffix]!!
         }
     }
 
     fun getSampleStringForSeriesExerciseFile(seriesId: Long): String {
-        val type = seriesRepository.findById(seriesId)
-            .orElseThrow { EntityNotFoundException("There no any series with id = $seriesId") }
-            .type
+        val type =
+            seriesRepository
+                .findById(seriesId)
+                .orElseThrow { EntityNotFoundException("There no any series with id = $seriesId") }
+                .type
         return readFormatSampleLines(InitialDataLoader.getInputStreamFromSeriesInitFile(type))
     }
 
-    private fun readFormatSampleLines(inputStream: InputStream): String {
-        return getLinesFrom(inputStream, dataFormatLinesCount).joinToString("\n")
-    }
+    private fun readFormatSampleLines(inputStream: InputStream): String = getLinesFrom(inputStream, dataFormatLinesCount).joinToString("\n")
 
-    private fun getLinesFrom(inputStream: InputStream, linesCount: Int): MutableList<String> {
+    private fun getLinesFrom(
+        inputStream: InputStream,
+        linesCount: Int,
+    ): MutableList<String> {
         inputStream.use {
             val strings = mutableListOf<String>()
 

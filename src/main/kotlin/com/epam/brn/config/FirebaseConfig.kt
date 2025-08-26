@@ -12,7 +12,6 @@ import java.io.FileInputStream
 
 @Configuration
 class FirebaseConfig {
-
     @Value("\${firebase.credentials.path}")
     val firebaseCredentialsPath: String = ""
 
@@ -20,23 +19,19 @@ class FirebaseConfig {
     fun firebaseApp(): FirebaseApp {
         if (FirebaseApp.getApps().isEmpty()) {
             val refreshToken = FileInputStream(firebaseCredentialsPath)
-
-            val options = FirebaseOptions.builder()
-                .setCredentials(GoogleCredentials.fromStream(refreshToken))
-                .build()
-
+            val options =
+                FirebaseOptions
+                    .builder()
+                    .setCredentials(GoogleCredentials.fromStream(refreshToken))
+                    .build()
             FirebaseApp.initializeApp(options)
         }
         return FirebaseApp.getInstance()
     }
 
     @Bean
-    fun firebaseAuth(): FirebaseAuth {
-        return FirebaseAuth.getInstance(firebaseApp())
-    }
+    fun firebaseAuth(): FirebaseAuth = FirebaseAuth.getInstance(firebaseApp())
 
     @Bean
-    fun firebaseMessaging(): FirebaseMessaging {
-        return FirebaseMessaging.getInstance(firebaseApp())
-    }
+    fun firebaseMessaging(): FirebaseMessaging = FirebaseMessaging.getInstance(firebaseApp())
 }

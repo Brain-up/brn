@@ -11,17 +11,18 @@ import org.springframework.transaction.annotation.Transactional
 @Component
 class SeriesGenericRecordProcessor(
     private val seriesRepository: SeriesRepository,
-    private val exerciseGroupsService: ExerciseGroupsService
+    private val exerciseGroupsService: ExerciseGroupsService,
 ) : RecordProcessor<SeriesGenericRecord, Series> {
-
-    override fun isApplicable(record: Any): Boolean {
-        return record is SeriesGenericRecord
-    }
+    override fun isApplicable(record: Any): Boolean = record is SeriesGenericRecord
 
     @Transactional
-    override fun process(records: List<SeriesGenericRecord>, locale: BrnLocale): List<Series> {
-        val series = records
-            .map { Series(it, exerciseGroupsService.findGroupByCode(it.groupCode)) }
+    override fun process(
+        records: List<SeriesGenericRecord>,
+        locale: BrnLocale,
+    ): List<Series> {
+        val series =
+            records
+                .map { Series(it, exerciseGroupsService.findGroupByCode(it.groupCode)) }
         series.forEach { series ->
             run {
                 val existSeries = seriesRepository.findByTypeAndName(series.type, series.name)

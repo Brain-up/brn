@@ -27,13 +27,14 @@ internal class OptimizationTest {
         val words = listOf("one", "two", "three", "four")
 
         // WHEN
-        val time = measureTimeMillis {
-            runBlocking {
-                words
-                    .map { word -> async { checkPicture(word) } }
-                    .map { it.await() }
+        val time =
+            measureTimeMillis {
+                runBlocking {
+                    words
+                        .map { word -> async { checkPicture(word) } }
+                        .map { it.await() }
+                }
             }
-        }
 
         // THEN
         println("Completed in time=$time ms")
@@ -46,10 +47,12 @@ internal class OptimizationTest {
         val words = listOf("one", "two", "three", "four")
 
         // WHEN
-        val time = measureTimeMillis {
-            words.parallelStream()
-                .forEach { word -> checkPictureSleep(word) }
-        }
+        val time =
+            measureTimeMillis {
+                words
+                    .parallelStream()
+                    .forEach { word -> checkPictureSleep(word) }
+            }
 
         // THEN
         println("Completed in time=$time ms")
@@ -59,11 +62,12 @@ internal class OptimizationTest {
     @Test
     fun `should use async in foreach correctly in doc example`() {
         runBlocking {
-            val time = measureTimeMillis {
-                val one = GlobalScope.async { doSomethingUsefulOne() }
-                val two = GlobalScope.async { doSomethingUsefulTwo() }
-                println("The answer is ${one.await() + two.await()}")
-            }
+            val time =
+                measureTimeMillis {
+                    val one = GlobalScope.async { doSomethingUsefulOne() }
+                    val two = GlobalScope.async { doSomethingUsefulTwo() }
+                    println("The answer is ${one.await() + two.await()}")
+                }
             println("Completed in $time ms")
         }
     }
@@ -74,14 +78,15 @@ internal class OptimizationTest {
         val words = listOf("one", "two", "three", "four")
 
         // WHEN
-        val time = measureTimeMillis {
-            runBlocking {
-                words
-                    .asFlow()
-                    .map { word -> checkPicture(word) }
-                    .collect()
+        val time =
+            measureTimeMillis {
+                runBlocking {
+                    words
+                        .asFlow()
+                        .map { word -> checkPicture(word) }
+                        .collect()
+                }
             }
-        }
         // THEN
         println("Completed in time=$time ms")
         time shouldBeGreaterThan 3000L
@@ -93,18 +98,19 @@ internal class OptimizationTest {
         val words = listOf("one", "two", "three", "four")
 
         // WHEN
-        val time = measureTimeMillis {
-            runBlocking {
-                // Launch a concurrent coroutine to check if the main thread is blocked
-                launch {
-                    words.forEach {
-                        println("I'm not blocked $it")
+        val time =
+            measureTimeMillis {
+                runBlocking {
+                    // Launch a concurrent coroutine to check if the main thread is blocked
+                    launch {
+                        words.forEach {
+                            println("I'm not blocked $it")
+                        }
                     }
+                    // Collect the flow
+                    simple().collect { value -> println(value) }
                 }
-                // Collect the flow
-                simple().collect { value -> println(value) }
             }
-        }
         // THEN
         println("Completed in time=$time ms")
         time shouldBeGreaterThan 3000L
@@ -113,13 +119,15 @@ internal class OptimizationTest {
     @Test
     fun `test flow example 2`() {
         // WHEN
-        val time = measureTimeMillis {
-            runBlocking {
-                (1..3).asFlow() // a flow of requests
-                    .map { request -> performRequest(request) }
-                    .collect { response -> println(response) }
+        val time =
+            measureTimeMillis {
+                runBlocking {
+                    (1..3)
+                        .asFlow() // a flow of requests
+                        .map { request -> performRequest(request) }
+                        .collect { response -> println(response) }
+                }
             }
-        }
         // THEN
         println("Completed in time=$time ms")
         time shouldBeGreaterThan 3000L
@@ -148,7 +156,8 @@ suspend fun doSomethingUsefulTwo(): Int {
     return 29
 }
 
-fun simple(): Flow<Int> = flow { // flow builder
+fun simple(): Flow<Int> = flow {
+    // flow builder
     for (i in 1..3) {
         delay(1000) // pretend we are doing something useful here
         emit(i) // emit next value

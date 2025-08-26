@@ -2,9 +2,11 @@ package com.epam.brn.service.impl
 
 import com.epam.brn.dto.AudioFileMetaData
 import com.epam.brn.dto.response.UserWithAnalyticsResponse
-import com.epam.brn.dto.statistic.DayStudyStatistic
+import com.epam.brn.dto.statistics.DayStudyStatistics
 import com.epam.brn.enums.ExerciseType
+import com.epam.brn.enums.Voice
 import com.epam.brn.model.StudyHistory
+import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.repo.UserAccountRepository
@@ -13,10 +15,12 @@ import com.epam.brn.service.TextToSpeechService
 import com.epam.brn.service.TimeService
 import com.epam.brn.service.UserAccountService
 import com.epam.brn.service.UserAnalyticsService
-import com.epam.brn.service.statistic.UserPeriodStatisticService
+import com.epam.brn.service.WordsService
+import com.epam.brn.service.statistics.UserPeriodStatisticsService
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import java.io.InputStream
+import java.time.LocalDate
 import java.time.LocalTime
 import java.time.temporal.WeekFields
 import java.util.Locale
@@ -28,16 +32,19 @@ class UserAnalyticsServiceImpl(
     private val userAccountRepository: UserAccountRepository,
     private val studyHistoryRepository: StudyHistoryRepository,
     private val exerciseRepository: ExerciseRepository,
-    private val userDayStatisticService: UserPeriodStatisticService<DayStudyStatistic>,
+    private val userDayStatisticsService: UserPeriodStatisticsService<DayStudyStatistics>,
     private val timeService: TimeService,
     private val textToSpeechService: TextToSpeechService,
     private val userAccountService: UserAccountService,
     private val exerciseService: ExerciseService,
+    private val wordsService: WordsService,
 ) : UserAnalyticsService {
-
     private val listTextExercises = listOf(ExerciseType.SENTENCE, ExerciseType.PHRASES)
 
-    override fun getUsersWithAnalytics(pageable: Pageable, role: String): List<UserWithAnalyticsResponse> {
+    override fun getUsersWithAnalytics(
+        pageable: Pageable,
+        role: String,
+    ): List<UserWithAnalyticsResponse> {
         val users = userAccountRepository.findUsersAccountsByRole(role).map { it.toAnalyticsDto() }
 
         val now = timeService.now()
@@ -48,12 +55,13 @@ class UserAnalyticsServiceImpl(
         val startOfCurrentMonth = now.withDayOfMonth(1).with(LocalTime.MIN)
 
         users.onEach { user ->
-            user.lastWeek = userDayStatisticService.getStatisticForPeriod(from, to, user.id)
-            user.studyDaysInCurrentMonth = countWorkDaysForMonth(
-                userDayStatisticService.getStatisticForPeriod(startOfCurrentMonth, now, user.id)
-            )
+            user.lastWeek = userDayStatisticsService.getStatisticsForPeriod(from, to, user.id)
+            user.studyDaysInCurrentMonth =
+                countWorkDaysForMonth(
+                    userDayStatisticsService.getStatisticsForPeriod(startOfCurrentMonth, now, user.id),
+                )
 
-            val userStatistic = studyHistoryRepository.getStatisticByUserAccountId(user.id)
+            val userStatistic = studyHistoryRepository.getStatisticsByUserAccountId(user.id)
             user.apply {
                 this.firstDone = userStatistic.firstStudy
                 this.lastDone = userStatistic.lastStudy
@@ -61,43 +69,66 @@ class UserAnalyticsServiceImpl(
                 this.doneExercises = userStatistic.doneExercises
             }
         }
-
         return users
     }
 
-    override fun prepareAudioFileForUser(exerciseId: Long, audioFileMetaData: AudioFileMetaData): InputStream =
-        textToSpeechService.generateAudioOggFileWithValidation(prepareAudioFileMetaData(exerciseId, audioFileMetaData))
+    override fun prepareAudioStreamForUser(
+        exerciseId: Long,
+        audioFileMetaData: AudioFileMetaData,
+    ): InputStream = textToSpeechService.generateAudioOggStreamWithValidation(
+        prepareAudioFileMetaData(exerciseId, audioFileMetaData),
+    )
 
-    override fun prepareAudioFileMetaData(exerciseId: Long, audioFileMetaData: AudioFileMetaData): AudioFileMetaData {
-        val currentUserId = userAccountService.getCurrentUserId()
-        val lastExerciseHistory = studyHistoryRepository
-            .findLastByUserAccountIdAndExerciseId(currentUserId, exerciseId)
+    override fun prepareAudioFileMetaData(
+        exerciseId: Long,
+        audioFileMetaData: AudioFileMetaData,
+    ): AudioFileMetaData {
         val seriesType = ExerciseType.valueOf(exerciseRepository.findTypeByExerciseId(exerciseId))
-
         val text = audioFileMetaData.text
         if (!listTextExercises.contains(seriesType))
             audioFileMetaData.text = text.replace(" ", ", ")
-
-        if (text.contains(" ")) {
-            if (isDoneBad(lastExerciseHistory))
-                audioFileMetaData.setSpeedSlowest()
-            else
-                audioFileMetaData.setSpeedSlow()
-        } else if (isDoneBad(lastExerciseHistory)) {
-            audioFileMetaData.setSpeedSlow()
-        }
+        val currentUser = userAccountService.getCurrentUser()
+        // todo use choseVoiceForUser(currentUser) after moving to yandex speechKit v3
+        audioFileMetaData.voice = wordsService.getDefaultWomanVoiceForLocale(audioFileMetaData.locale)
+        setSpeedForUser(currentUser, exerciseId, audioFileMetaData)
         return audioFileMetaData
     }
 
-    fun isDoneBad(lastHistory: StudyHistory?): Boolean =
-        lastHistory != null && !exerciseService.isDoneWell(lastHistory)
+    fun setSpeedForUser(
+        user: UserAccount,
+        exerciseId: Long,
+        audioFileMetaData: AudioFileMetaData,
+    ) {
+        val lastExerciseHistory =
+            studyHistoryRepository
+                .findLastByUserAccountIdAndExerciseId(user.id!!, exerciseId)
+        if (lastExerciseHistory == null)
+            audioFileMetaData.setSpeedNormal()
+        else if (isDoneBad(lastExerciseHistory))
+            audioFileMetaData.setSpeedSlow()
+        else if (isDoneWell(lastExerciseHistory))
+            audioFileMetaData.setSpeedFaster()
+    }
+
+    fun choseVoiceForUser(user: UserAccount): String {
+        if (user.bornYear == null)
+            return Voice.MARINA.name
+        val ages = LocalDate.now().year - user.bornYear!!
+        return if (ages < 19)
+            Voice.MARINA.name
+        else
+            Voice.LERA.name
+    }
+
+    fun isDoneBad(lastHistory: StudyHistory?): Boolean = lastHistory != null && !exerciseService.isDoneWell(lastHistory)
+
+    fun isDoneWell(lastHistory: StudyHistory?): Boolean = lastHistory != null && exerciseService.isDoneWell(lastHistory)
 
     fun isMultiWords(seriesType: ExerciseType): Boolean =
         seriesType == ExerciseType.PHRASES || seriesType == ExerciseType.SENTENCE || seriesType == ExerciseType.WORDS_SEQUENCES
 
-    fun countWorkDaysForMonth(dayStudyStatistics: List<DayStudyStatistic>): Int =
-        dayStudyStatistics
-            .map { it.date }
-            .groupBy { it.dayOfMonth }
-            .keys.size
+    fun countWorkDaysForMonth(dayStudyStatistics: List<DayStudyStatistics>): Int = dayStudyStatistics
+        .map { it.date }
+        .groupBy { it.dayOfMonth }
+        .keys.size
 }

@@ -26,15 +26,14 @@ class FirebaseTokenAuthenticationFilter(
     private val firebaseUserService: FirebaseUserService,
     private val userAccountService: UserAccountService,
     private val firebaseAuth: FirebaseAuth,
-    private val tokenHelperUtils: TokenHelperUtils
+    private val tokenHelperUtils: TokenHelperUtils,
 ) : OncePerRequestFilter() {
-
     private val log = logger()
 
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
-        filterChain: FilterChain
+        filterChain: FilterChain,
     ) {
         verifyToken(request)
         filterChain.doFilter(request, response)
@@ -46,11 +45,12 @@ class FirebaseTokenAuthenticationFilter(
             val decodedToken: FirebaseToken = firebaseAuth.verifyIdToken(token, true)
             try {
                 val user: UserDetails = brainUpUserDetailsService.loadUserByUsername(decodedToken.email)
-                val authentication = UsernamePasswordAuthenticationToken(
-                    user,
-                    UserAccountCredentials(decodedToken, token),
-                    user.authorities
-                )
+                val authentication =
+                    UsernamePasswordAuthenticationToken(
+                        user,
+                        UserAccountCredentials(decodedToken, token),
+                        user.authorities,
+                    )
                 authentication.details = WebAuthenticationDetailsSource().buildDetails(request)
                 SecurityContextHolder.getContext().authentication = authentication
             } catch (e: UsernameNotFoundException) {
@@ -59,11 +59,12 @@ class FirebaseTokenAuthenticationFilter(
                 if (firebaseUserRecord != null) {
                     val createUser = userAccountService.createUser(firebaseUserRecord)
                     val user: UserDetails = brainUpUserDetailsService.loadUserByUsername(createUser.email)
-                    val authentication = UsernamePasswordAuthenticationToken(
-                        user,
-                        UserAccountCredentials(decodedToken, token),
-                        user.authorities
-                    )
+                    val authentication =
+                        UsernamePasswordAuthenticationToken(
+                            user,
+                            UserAccountCredentials(decodedToken, token),
+                            user.authorities,
+                        )
                     authentication.details = WebAuthenticationDetailsSource().buildDetails(request)
                     SecurityContextHolder.getContext().authentication = authentication
                 }
