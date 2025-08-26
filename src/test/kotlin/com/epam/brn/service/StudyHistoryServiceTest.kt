@@ -29,7 +29,6 @@ import kotlin.time.toDuration
 
 @ExtendWith(MockKExtension::class)
 internal class StudyHistoryServiceTest {
-
     @SpyK
     @InjectMockKs
     lateinit var studyHistoryService: StudyHistoryService
@@ -78,34 +77,37 @@ internal class StudyHistoryServiceTest {
         // GIVEN
         val now = LocalDateTime.now()
 
-        val userAccount = UserAccount(
-            id = 1L,
-            fullName = "testUserFirstName",
-            gender = BrnGender.MALE.toString(),
-            bornYear = 2000,
-            email = "test@gmail.com",
-            active = true
-        )
+        val userAccount =
+            UserAccount(
+                id = 1L,
+                fullName = "testUserFirstName",
+                gender = BrnGender.MALE.toString(),
+                bornYear = 2000,
+                email = "test@gmail.com",
+                active = true,
+            )
         val exercise = Exercise(id = 1L)
-        val studyHistoryNew = StudyHistory(
-            userAccount = userAccount,
-            exercise = exercise,
-            startTime = now,
-            executionSeconds = 122,
-            tasksCount = 12,
-            wrongAnswers = 3,
-            replaysCount = 3
-        )
-        val studyHistorySaved = StudyHistory(
-            id = 1L,
-            userAccount = userAccount,
-            exercise = exercise,
-            startTime = now,
-            executionSeconds = 122,
-            tasksCount = 12,
-            wrongAnswers = 3,
-            replaysCount = 3
-        )
+        val studyHistoryNew =
+            StudyHistory(
+                userAccount = userAccount,
+                exercise = exercise,
+                startTime = now,
+                executionSeconds = 122,
+                tasksCount = 12,
+                wrongAnswers = 3,
+                replaysCount = 3,
+            )
+        val studyHistorySaved =
+            StudyHistory(
+                id = 1L,
+                userAccount = userAccount,
+                exercise = exercise,
+                startTime = now,
+                executionSeconds = 122,
+                tasksCount = 12,
+                wrongAnswers = 3,
+                replaysCount = 3,
+            )
         every { userAccountServiceMock.getCurrentUser() } returns userAccount
         every { studyHistoryDtoMock.toEntity(userAccount, exercise) } returns studyHistoryNew
         every { studyHistoryDtoMock.exerciseId } returns 2L
@@ -205,8 +207,14 @@ internal class StudyHistoryServiceTest {
         val listenWordsCount = 15
 
         val studyHistoryMockK = mockk<StudyHistory>()
-        every { studyHistoryMockK.exercise.subGroup!!.series.name } returns seriesName
-        every { studyHistoryMockK.exercise.subGroup!!.series.id } returns seriesId
+        every {
+            studyHistoryMockK.exercise.subGroup!!
+                .series.name
+        } returns seriesName
+        every {
+            studyHistoryMockK.exercise.subGroup!!
+                .series.id
+        } returns seriesId
         every { studyHistoryMockK.exercise.id } returns exerciseId
         every { studyHistoryMockK.tasksCount } returns listenWordsCount.toShort()
         every { studyHistoryMockK.spentTimeInSeconds } returns 3600L
@@ -216,15 +224,16 @@ internal class StudyHistoryServiceTest {
             studyHistoryRepositoryMock.getHistories(userId, any(), any())
         } returns userDailyDetailStatistics
 
-        val expectedStatistic = UserDailyDetailStatisticsDto(
-            seriesName = seriesName,
-            allDoneExercises = 1,
-            uniqueDoneExercises = 1,
-            repeatedExercises = 0,
-            doneExercisesSuccessfullyFromFirstTime = 1,
-            listenWordsCount = listenWordsCount,
-            duration = 60.toDuration(DurationUnit.MINUTES)
-        )
+        val expectedStatistic =
+            UserDailyDetailStatisticsDto(
+                seriesName = seriesName,
+                allDoneExercises = 1,
+                uniqueDoneExercises = 1,
+                repeatedExercises = 0,
+                doneExercisesSuccessfullyFromFirstTime = 1,
+                listenWordsCount = listenWordsCount,
+                duration = 60.toDuration(DurationUnit.MINUTES),
+            )
 
         // WHEN
         val statisticsForPeriod = studyHistoryService.getUserDailyStatistics(exerciseDate, userId)
@@ -246,8 +255,14 @@ internal class StudyHistoryServiceTest {
         val listenWordsCount = 15
 
         val studyHistoryMockK = mockk<StudyHistory>()
-        every { studyHistoryMockK.exercise.subGroup!!.series.name } returns seriesName
-        every { studyHistoryMockK.exercise.subGroup!!.series.id } returns seriesId
+        every {
+            studyHistoryMockK.exercise.subGroup!!
+                .series.name
+        } returns seriesName
+        every {
+            studyHistoryMockK.exercise.subGroup!!
+                .series.id
+        } returns seriesId
         every { studyHistoryMockK.exercise.id } returns exerciseId
         every { studyHistoryMockK.tasksCount } returns listenWordsCount.toShort()
         every { userAccountServiceMock.getCurrentUserDto().id } returns userId
@@ -258,15 +273,16 @@ internal class StudyHistoryServiceTest {
             studyHistoryRepositoryMock.getHistories(userId, any(), any())
         } returns userDailyDetailStatistics
 
-        val expectedStatistic = UserDailyDetailStatisticsDto(
-            seriesName = seriesName,
-            allDoneExercises = 1,
-            uniqueDoneExercises = 1,
-            repeatedExercises = repeatedExercises,
-            doneExercisesSuccessfullyFromFirstTime = 1,
-            listenWordsCount = listenWordsCount,
-            duration = 60.toDuration(DurationUnit.MINUTES)
-        )
+        val expectedStatistic =
+            UserDailyDetailStatisticsDto(
+                seriesName = seriesName,
+                allDoneExercises = 1,
+                uniqueDoneExercises = 1,
+                repeatedExercises = repeatedExercises,
+                doneExercisesSuccessfullyFromFirstTime = 1,
+                listenWordsCount = listenWordsCount,
+                duration = 60.toDuration(DurationUnit.MINUTES),
+            )
 
         // WHEN
         val statisticsForPeriod = studyHistoryService.getUserDailyStatistics(exerciseDate)
@@ -287,8 +303,14 @@ internal class StudyHistoryServiceTest {
         val listenWordsCount = 15
 
         val studyHistoryMockK = mockk<StudyHistory>()
-        every { studyHistoryMockK.exercise.subGroup!!.series.name } returns seriesName
-        every { studyHistoryMockK.exercise.subGroup!!.series.id } returns seriesId
+        every {
+            studyHistoryMockK.exercise.subGroup!!
+                .series.name
+        } returns seriesName
+        every {
+            studyHistoryMockK.exercise.subGroup!!
+                .series.id
+        } returns seriesId
         every { studyHistoryMockK.exercise.id } returns exerciseId
         every { studyHistoryMockK.tasksCount } returns listenWordsCount.toShort()
         every { studyHistoryMockK.spentTimeInSeconds } returns 3600L
@@ -297,15 +319,16 @@ internal class StudyHistoryServiceTest {
             studyHistoryRepositoryMock.getHistories(userId, any(), any())
         } returns userDailyDetailStatistics
 
-        val expectedStatistic = UserDailyDetailStatisticsDto(
-            seriesName = seriesName,
-            allDoneExercises = userDailyDetailStatistics.size,
-            uniqueDoneExercises = 1,
-            repeatedExercises = userDailyDetailStatistics.size,
-            doneExercisesSuccessfullyFromFirstTime = 0,
-            listenWordsCount = userDailyDetailStatistics.size * listenWordsCount,
-            duration = 120.toDuration(DurationUnit.MINUTES)
-        )
+        val expectedStatistic =
+            UserDailyDetailStatisticsDto(
+                seriesName = seriesName,
+                allDoneExercises = userDailyDetailStatistics.size,
+                uniqueDoneExercises = 1,
+                repeatedExercises = userDailyDetailStatistics.size,
+                doneExercisesSuccessfullyFromFirstTime = 0,
+                listenWordsCount = userDailyDetailStatistics.size * listenWordsCount,
+                duration = 120.toDuration(DurationUnit.MINUTES),
+            )
 
         // WHEN
         val statisticsForPeriod = studyHistoryService.getUserDailyStatistics(exerciseDate, userId)
@@ -338,60 +361,69 @@ internal class StudyHistoryServiceTest {
         val spentTimeInSeconds3 = 3600L
 
         val studyHistoryMockK = mockk<StudyHistory>()
-        every { studyHistoryMockK.exercise.subGroup!!.series.name }.returnsMany(
+        every {
+            studyHistoryMockK.exercise.subGroup!!
+                .series.name
+        }.returnsMany(
             seriesName,
             seriesName2,
             seriesName2,
-            seriesName2
+            seriesName2,
         )
-        every { studyHistoryMockK.exercise.subGroup!!.series.id }.returnsMany(
+        every {
+            studyHistoryMockK.exercise.subGroup!!
+                .series.id
+        }.returnsMany(
             seriesId,
             seriesId2,
             seriesId2,
-            seriesId2
+            seriesId2,
         )
         every { studyHistoryMockK.exercise.id }.returnsMany(exerciseId, exerciseId2, exerciseId3, exerciseId2)
         every { studyHistoryMockK.tasksCount }.returnsMany(
             listenWordsCount.toShort(),
             listenWordsCount2.toShort(),
             listenWordsCount3.toShort(),
-            listenWordsCount2.toShort()
+            listenWordsCount2.toShort(),
         )
         every { studyHistoryMockK.spentTimeInSeconds }.returnsMany(
             spentTimeInSeconds1,
             spentTimeInSeconds2,
-            spentTimeInSeconds3
+            spentTimeInSeconds3,
         )
 
-        val userDailyDetailStatistics = listOf(
-            studyHistoryMockK,
-            studyHistoryMockK,
-            studyHistoryMockK,
-            studyHistoryMockK
-        )
+        val userDailyDetailStatistics =
+            listOf(
+                studyHistoryMockK,
+                studyHistoryMockK,
+                studyHistoryMockK,
+                studyHistoryMockK,
+            )
         every {
             studyHistoryRepositoryMock.getHistories(userId, any(), any())
         } returns userDailyDetailStatistics
 
-        val expectedStatistic1 = UserDailyDetailStatisticsDto(
-            seriesName = seriesName,
-            allDoneExercises = 1,
-            uniqueDoneExercises = 1,
-            repeatedExercises = 0,
-            doneExercisesSuccessfullyFromFirstTime = 1,
-            listenWordsCount = listenWordsCount,
-            duration = Duration.parse("75m 15s")
-        )
+        val expectedStatistic1 =
+            UserDailyDetailStatisticsDto(
+                seriesName = seriesName,
+                allDoneExercises = 1,
+                uniqueDoneExercises = 1,
+                repeatedExercises = 0,
+                doneExercisesSuccessfullyFromFirstTime = 1,
+                listenWordsCount = listenWordsCount,
+                duration = Duration.parse("75m 15s"),
+            )
 
-        val expectedStatistic2 = UserDailyDetailStatisticsDto(
-            seriesName = seriesName2,
-            allDoneExercises = 3,
-            uniqueDoneExercises = 2,
-            repeatedExercises = 2,
-            doneExercisesSuccessfullyFromFirstTime = 1,
-            listenWordsCount = 2 * listenWordsCount2 + listenWordsCount3,
-            duration = Duration.parse("152m 11s")
-        )
+        val expectedStatistic2 =
+            UserDailyDetailStatisticsDto(
+                seriesName = seriesName2,
+                allDoneExercises = 3,
+                uniqueDoneExercises = 2,
+                repeatedExercises = 2,
+                doneExercisesSuccessfullyFromFirstTime = 1,
+                listenWordsCount = 2 * listenWordsCount2 + listenWordsCount3,
+                duration = Duration.parse("152m 11s"),
+            )
         // WHEN
         val statisticsForPeriod = studyHistoryService.getUserDailyStatistics(exerciseDate, userId)
 
@@ -411,7 +443,7 @@ internal class StudyHistoryServiceTest {
             studyHistoryRepositoryMock.getHistories(
                 userId,
                 any(),
-                any()
+                any(),
             )
         } returns emptyList()
 

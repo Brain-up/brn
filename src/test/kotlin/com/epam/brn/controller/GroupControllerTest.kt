@@ -14,7 +14,6 @@ import kotlin.test.assertEquals
 
 @ExtendWith(MockKExtension::class)
 internal class GroupControllerTest {
-
     @InjectMockKs
     lateinit var groupController: GroupController
 

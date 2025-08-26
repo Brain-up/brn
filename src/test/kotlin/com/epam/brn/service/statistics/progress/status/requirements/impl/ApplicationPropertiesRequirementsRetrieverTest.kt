@@ -20,7 +20,6 @@ import kotlin.test.assertEquals
 
 @ExtendWith(MockKExtension::class)
 internal class ApplicationPropertiesRequirementsRetrieverTest {
-
     @InjectMockKs
     private lateinit var retrieverApplicationProperties: ApplicationPropertiesRequirementsRetriever
 
@@ -39,11 +38,12 @@ internal class ApplicationPropertiesRequirementsRetrieverTest {
         val statusName = status.name.lowercase()
         every { env.getProperty("$basePath.$periodName.status.$statusName.maximal") } returns maximalRequirements.toString()
         every { env.getProperty("$basePath.$periodName.status.$statusName.minimal") } returns minimalRequirements.toString()
-        val expectedRequirements = StatusRequirements(
-            status = status,
-            minimalRequirements = minimalRequirements,
-            maximalRequirements = maximalRequirements
-        )
+        val expectedRequirements =
+            StatusRequirements(
+                status = status,
+                minimalRequirements = minimalRequirements,
+                maximalRequirements = maximalRequirements,
+            )
 
         // WHEN
         val requirementsForStatus = retrieverApplicationProperties.getRequirementsForStatus(status, period)

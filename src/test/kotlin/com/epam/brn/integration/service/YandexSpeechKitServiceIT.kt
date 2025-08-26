@@ -24,7 +24,6 @@ import kotlin.test.assertTrue
 @Tag("integration-test")
 @Disabled("as it is write only for testing locally")
 internal class YandexSpeechKitServiceIT {
-
     @Autowired
     lateinit var yandexSpeechKitService: YandexSpeechKitService
 

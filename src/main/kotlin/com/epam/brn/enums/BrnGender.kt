@@ -1,6 +1,6 @@
 package com.epam.brn.enums
 
-enum class BrnGender() {
+enum class BrnGender {
     MALE,
-    FEMALE;
+    FEMALE,
 }

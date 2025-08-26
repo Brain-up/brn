@@ -34,23 +34,22 @@ data class ContributorRequest(
     val type: ContributorType?,
     @field:NotNull
     val active: Boolean,
-
-    val contacts: Set<@Valid ContactRequest> = mutableSetOf()
+    val contacts: Set<@Valid ContactRequest> = mutableSetOf(),
 ) {
-
     fun toEntity(): Contributor {
-        val contributor = Contributor(
-            name = this.name,
-            description = this.description,
-            company = this.company,
-            nameEn = this.nameEn,
-            descriptionEn = this.descriptionEn,
-            companyEn = this.companyEn,
-            pictureUrl = this.pictureUrl,
-            contribution = this.contribution!!,
-            type = type!!,
-            active = active,
-        )
+        val contributor =
+            Contributor(
+                name = this.name,
+                description = this.description,
+                company = this.company,
+                nameEn = this.nameEn,
+                descriptionEn = this.descriptionEn,
+                companyEn = this.companyEn,
+                pictureUrl = this.pictureUrl,
+                contribution = this.contribution!!,
+                type = type!!,
+                active = active,
+            )
         contributor.contacts = contacts.map { it.toEntity() }.toMutableSet()
         return contributor
     }

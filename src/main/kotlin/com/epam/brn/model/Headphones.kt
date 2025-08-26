@@ -30,7 +30,7 @@ class Headphones(
     var description: String = "",
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
-    var userAccount: UserAccount? = null
+    var userAccount: UserAccount? = null,
 ) {
     fun toDto() = HeadphonesDto(
         id,
@@ -38,7 +38,7 @@ class Headphones(
         active = active,
         description = description,
         type = type,
-        userAccount = userAccount?.id
+        userAccount = userAccount?.id,
     )
 
     override fun equals(other: Any?): Boolean {

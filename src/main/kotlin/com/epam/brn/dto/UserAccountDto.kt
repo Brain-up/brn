@@ -20,7 +20,7 @@ data class UserAccountDto(
     val photo: String? = null,
     val description: String? = null,
     var headphones: Set<HeadphonesDto>? = null,
-    var doctorId: Long? = null
+    var doctorId: Long? = null,
 ) {
     var roles: MutableSet<String> = mutableSetOf()
 }

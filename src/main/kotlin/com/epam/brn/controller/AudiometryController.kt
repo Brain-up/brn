@@ -17,19 +17,22 @@ import javax.annotation.security.RolesAllowed
 @RequestMapping("/audiometrics")
 @Tag(name = "Audio Metrics", description = "Contains actions for audiometry")
 @RolesAllowed(BrnRole.USER)
-class AudiometryController(private val audiometryService: AudiometryService) {
-
+class AudiometryController(
+    private val audiometryService: AudiometryService,
+) {
     @GetMapping
     @Operation(summary = "Get audiometrics without tasks")
-    fun getAudiometrics(@RequestParam(value = "locale", required = false, defaultValue = "ru-ru") locale: String) =
-        ResponseEntity
-            .ok()
-            .body(BrnResponse(data = audiometryService.getAudiometrics(locale)))
+    fun getAudiometrics(
+        @RequestParam(value = "locale", required = false, defaultValue = "ru-ru") locale: String,
+    ) = ResponseEntity
+        .ok()
+        .body(BrnResponse(data = audiometryService.getAudiometrics(locale)))
 
     @GetMapping(value = ["/{audiometryId}"])
     @Operation(summary = "Get audiometry for id with tasks")
-    fun getAudiometry(@PathVariable("audiometryId") audiometryId: Long) =
-        ResponseEntity
-            .ok()
-            .body(BrnResponse(data = audiometryService.getAudiometry(audiometryId)))
+    fun getAudiometry(
+        @PathVariable("audiometryId") audiometryId: Long,
+    ) = ResponseEntity
+        .ok()
+        .body(BrnResponse(data = audiometryService.getAudiometry(audiometryId)))
 }

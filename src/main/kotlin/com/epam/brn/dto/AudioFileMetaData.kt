@@ -11,7 +11,7 @@ data class AudioFileMetaData(
     val gender: String? = null,
     val pitch: String? = null,
     val style: String? = null,
-    val styleDegree: String = "1"
+    val styleDegree: String = "1",
 ) {
     fun setSpeedSlow() {
         this.speedCode = AzureRates.SLOW

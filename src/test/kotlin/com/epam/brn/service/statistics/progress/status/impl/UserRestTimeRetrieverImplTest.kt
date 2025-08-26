@@ -18,7 +18,6 @@ import kotlin.test.assertEquals
 
 @ExtendWith(MockKExtension::class)
 internal class UserRestTimeRetrieverImplTest {
-
     @InjectMockKs
     private lateinit var userCoolDownRetrieverImpl: UserRestTimeRetrieverImpl
 
@@ -63,7 +62,7 @@ internal class UserRestTimeRetrieverImplTest {
             studyHistoryRepository.getHistories(
                 userId,
                 sqlDate.toLocalDate().atStartOfDay(),
-                sqlDate.toLocalDate().atStartOfDay()
+                sqlDate.toLocalDate().atStartOfDay(),
             )
         } returns progress
         every { studyHistory1.startTime } returns time
@@ -87,7 +86,7 @@ internal class UserRestTimeRetrieverImplTest {
             studyHistoryRepository.getHistories(
                 userId,
                 sqlDate.toLocalDate().atStartOfDay(),
-                sqlDate.toLocalDate().atStartOfDay()
+                sqlDate.toLocalDate().atStartOfDay(),
             )
         } returns progress
         every { studyHistory1.startTime } returns time

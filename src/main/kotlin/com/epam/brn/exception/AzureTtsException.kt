@@ -1,3 +1,5 @@
 package com.epam.brn.exception
 
-class AzureTtsException(message: String) : RuntimeException(message)
+class AzureTtsException(
+    message: String,
+) : RuntimeException(message)

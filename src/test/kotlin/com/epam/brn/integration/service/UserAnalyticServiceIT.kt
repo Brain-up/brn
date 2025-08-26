@@ -1,10 +1,10 @@
 package com.epam.brn.integration.service
 
+import com.epam.brn.enums.BrnGender
+import com.epam.brn.enums.ExerciseType
 import com.epam.brn.integration.BaseIT
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
-import com.epam.brn.enums.ExerciseType
-import com.epam.brn.enums.BrnGender
 import com.epam.brn.model.Series
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.SubGroup
@@ -23,7 +23,6 @@ import java.time.LocalDateTime
 import kotlin.random.Random
 
 class UserAnalyticServiceIT : BaseIT() {
-
     @Autowired
     lateinit var userAccountRepository: UserAccountRepository
 
@@ -73,8 +72,8 @@ class UserAnalyticServiceIT : BaseIT() {
                     historyFirstExerciseOne,
                     historyFirstExerciseTwo,
                     historySecondExerciseOne,
-                    historySecondExerciseTwo
-                )
+                    historySecondExerciseTwo,
+                ),
             )
         // WHEN
         val lastStudyHistoryFirstExercise = studyHistoryRepository.findLastByUserAccountIdAndExerciseId(user.id!!, exerciseFirst.id!!)
@@ -87,64 +86,62 @@ class UserAnalyticServiceIT : BaseIT() {
     private fun insertStudyHistory(
         existingUser: UserAccount,
         existingExercise: Exercise,
-        startTime: LocalDateTime
-    ): StudyHistory {
-        return studyHistoryRepository.save(
-            StudyHistory(
-                userAccount = existingUser,
-                exercise = existingExercise,
-                endTime = startTime.plusMinutes(Random.nextLong(1, 5)),
-                startTime = startTime,
-                executionSeconds = 122,
-                tasksCount = 12,
-                wrongAnswers = 2,
-                replaysCount = 4
-            )
-        )
-    }
+        startTime: LocalDateTime,
+    ): StudyHistory = studyHistoryRepository.save(
+        StudyHistory(
+            userAccount = existingUser,
+            exercise = existingExercise,
+            endTime = startTime.plusMinutes(Random.nextLong(1, 5)),
+            startTime = startTime,
+            executionSeconds = 122,
+            tasksCount = 12,
+            wrongAnswers = 2,
+            replaysCount = 4,
+        ),
+    )
 
-    private fun insertUser(): UserAccount {
-        return userAccountRepository.save(
-            UserAccount(
-                fullName = "testUserFirstName",
-                gender = BrnGender.MALE.toString(),
-                bornYear = 2000,
-                email = "test@test.test",
-                active = true
-            )
-        )
-    }
+    private fun insertUser(): UserAccount = userAccountRepository.save(
+        UserAccount(
+            fullName = "testUserFirstName",
+            gender = BrnGender.MALE.toString(),
+            bornYear = 2000,
+            email = "test@test.test",
+            active = true,
+        ),
+    )
 
     private fun insertSeries(): Series {
-        val exerciseGroup = exerciseGroupRepository.save(
-            ExerciseGroup(
-                code = "CODE",
-                description = "desc",
-                name = "group"
+        val exerciseGroup =
+            exerciseGroupRepository.save(
+                ExerciseGroup(
+                    code = "CODE",
+                    description = "desc",
+                    name = "group",
+                ),
             )
-        )
         return seriesRepository.save(
             Series(
                 description = "desc",
                 name = "series",
                 exerciseGroup = exerciseGroup,
                 level = 1,
-                type = ExerciseType.SINGLE_SIMPLE_WORDS.name
-            )
+                type = ExerciseType.SINGLE_SIMPLE_WORDS.name,
+            ),
         )
     }
 
     private fun insertSubGroup(series: Series): SubGroup = subGroupRepository.save(
-        SubGroup(series = series, level = 1, code = "code", name = "subGroup name")
+        SubGroup(series = series, level = 1, code = "code", name = "subGroup name"),
     )
 
-    fun insertExercise(exerciseName: String, subGroup: SubGroup): Exercise {
-        return exerciseRepository.save(
-            Exercise(
-                subGroup = subGroup,
-                level = 0,
-                name = exerciseName
-            )
-        )
-    }
+    fun insertExercise(
+        exerciseName: String,
+        subGroup: SubGroup,
+    ): Exercise = exerciseRepository.save(
+        Exercise(
+            subGroup = subGroup,
+            level = 0,
+            name = exerciseName,
+        ),
+    )
 }

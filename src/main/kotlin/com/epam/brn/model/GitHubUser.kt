@@ -18,7 +18,7 @@ class GitHubUser(
     var avatarUrl: String?,
     var bio: String?,
     var company: String?,
-    var contributions: Long
+    var contributions: Long,
 ) {
     fun toDto(): GitHubUserDto = GitHubUserDto(
         id = id,

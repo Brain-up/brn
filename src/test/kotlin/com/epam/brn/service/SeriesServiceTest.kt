@@ -2,8 +2,8 @@ package com.epam.brn.service
 
 import com.epam.brn.dto.SeriesDto
 import com.epam.brn.exception.EntityNotFoundException
-import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.model.Series
+import com.epam.brn.repo.SeriesRepository
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -18,7 +18,6 @@ import java.util.Optional
 
 @ExtendWith(MockKExtension::class)
 internal class SeriesServiceTest {
-
     @InjectMockKs
     lateinit var seriesService: SeriesService
 

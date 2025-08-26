@@ -18,14 +18,15 @@ import javax.annotation.security.RolesAllowed
 @RequestMapping("/tasks")
 @Tag(name = "Tasks", description = "Contains actions over tasks")
 @RolesAllowed(BrnRole.USER)
-class TaskController(private val taskService: TaskService) {
-
+class TaskController(
+    private val taskService: TaskService,
+) {
     private val log = logger()
 
     @GetMapping
     @Operation(summary = "Get all tasks by exercise id")
     fun getTasksByExerciseId(
-        @RequestParam(value = "exerciseId") exerciseId: Long
+        @RequestParam(value = "exerciseId") exerciseId: Long,
     ): ResponseEntity<BrnResponse<List<Any>>> {
         log.debug("Getting tasks for exercisedId $exerciseId")
         return ResponseEntity
@@ -35,8 +36,9 @@ class TaskController(private val taskService: TaskService) {
 
     @GetMapping(value = ["/{taskId}"])
     @Operation(summary = "Get task by id")
-    fun getTaskById(@PathVariable("taskId") taskId: Long): ResponseEntity<BrnResponse<Any>> {
-        return ResponseEntity.ok()
-            .body(BrnResponse(data = taskService.getTaskById(taskId)))
-    }
+    fun getTaskById(
+        @PathVariable("taskId") taskId: Long,
+    ): ResponseEntity<BrnResponse<Any>> = ResponseEntity
+        .ok()
+        .body(BrnResponse(data = taskService.getTaskById(taskId)))
 }

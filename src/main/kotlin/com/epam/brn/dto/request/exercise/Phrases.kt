@@ -13,7 +13,7 @@ data class Phrases(
     @Schema(description = "Long phrases", required = true, example = "Мамочка быстро идёт в магазин")
     @field:NotEmpty
     @field:WithoutPunctuation
-    val longPhrase: String
+    val longPhrase: String,
 ) {
     fun toList(): List<String> = listOf(shortPhrase, longPhrase)
     fun toListWithDot(): List<String> = listOf(shortPhrase.plus("."), longPhrase)

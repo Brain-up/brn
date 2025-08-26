@@ -23,18 +23,18 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 @Tag("integration-test")
 @TestPropertySource(properties = ["cloud.provider=google"])
 class CloudControllerGoogleIT {
-
     @Autowired
     lateinit var mockMvc: MockMvc
 
     @Test
     fun `should get correct URL for upload`() {
-        val resultAction = mockMvc.perform(
-            MockMvcRequestBuilders
-                .get("/cloud/upload")
-                .queryParam("filePath", "fileNameOne")
-                .contentType(MediaType.APPLICATION_JSON)
-        )
+        val resultAction =
+            mockMvc.perform(
+                MockMvcRequestBuilders
+                    .get("/cloud/upload")
+                    .queryParam("filePath", "fileNameOne")
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
         resultAction
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(
@@ -53,10 +53,10 @@ class CloudControllerGoogleIT {
                                     actualString.contains("X-Goog-Expires") &&
                                     actualString.contains("X-Goog-SignedHeaders") &&
                                     actualString.contains("X-Goog-Signature")
-                                )
+                            )
                         }
-                    }
-                )
+                    },
+                ),
             )
     }
 }

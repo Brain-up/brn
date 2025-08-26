@@ -16,9 +16,8 @@ import kotlin.time.toDuration
 class StudyHistoryService(
     private val studyHistoryRepository: StudyHistoryRepository,
     private val exerciseRepository: ExerciseRepository,
-    private val userAccountService: UserAccountService
+    private val userAccountService: UserAccountService,
 ) {
-
     fun getTodayTimer(): Int {
         val currentUser = userAccountService.getCurrentUserDto()
         return studyHistoryRepository.getTodayDayTimer(currentUser.id!!)
@@ -26,30 +25,41 @@ class StudyHistoryService(
 
     fun save(studyHistoryDto: StudyHistoryDto): StudyHistoryDto {
         val currentUser = userAccountService.getCurrentUser()
-        val exercise = exerciseRepository
-            .findById(studyHistoryDto.exerciseId!!)
-            .orElseThrow { EntityNotFoundException("Exercise with exerciseId '${studyHistoryDto.exerciseId}' doesn't exist.") }
+        val exercise =
+            exerciseRepository
+                .findById(studyHistoryDto.exerciseId!!)
+                .orElseThrow { EntityNotFoundException("Exercise with exerciseId '${studyHistoryDto.exerciseId}' doesn't exist.") }
         val newStudyHistory = studyHistoryDto.toEntity(currentUser, exercise)
         val savedStudyHistory = studyHistoryRepository.save(newStudyHistory)
 
         return savedStudyHistory.toDto()
     }
 
-    fun calculateDiffInSeconds(start: LocalDateTime, end: LocalDateTime): Int {
-        return ChronoUnit.SECONDS.between(start, end).toInt()
-    }
+    fun calculateDiffInSeconds(
+        start: LocalDateTime,
+        end: LocalDateTime,
+    ): Int = ChronoUnit.SECONDS.between(start, end).toInt()
 
-    fun getHistoriesForCurrentUser(from: LocalDateTime, to: LocalDateTime): List<StudyHistoryDto> {
+    fun getHistoriesForCurrentUser(
+        from: LocalDateTime,
+        to: LocalDateTime,
+    ): List<StudyHistoryDto> {
         val currentUser = userAccountService.getCurrentUserDto()
         return getHistories(currentUser.id!!, from, to)
     }
 
-    fun getHistories(userId: Long, from: LocalDateTime, to: LocalDateTime): List<StudyHistoryDto> {
-        return studyHistoryRepository.getHistories(userId, from, to)
-            .map { it.toDto() }
-    }
+    fun getHistories(
+        userId: Long,
+        from: LocalDateTime,
+        to: LocalDateTime,
+    ): List<StudyHistoryDto> = studyHistoryRepository
+        .getHistories(userId, from, to)
+        .map { it.toDto() }
 
-    fun getUserDailyStatistics(day: LocalDateTime, userId: Long? = null): List<UserDailyDetailStatisticsDto> {
+    fun getUserDailyStatistics(
+        day: LocalDateTime,
+        userId: Long? = null,
+    ): List<UserDailyDetailStatisticsDto> {
         val tempUserId = userId ?: userAccountService.getCurrentUserDto().id
         val startDay = day.truncatedTo(ChronoUnit.DAYS)
         val endDay = startDay.plusDays(1).minusNanos(1)
@@ -57,52 +67,61 @@ class StudyHistoryService(
             studyHistoryRepository.getHistories(
                 tempUserId!!,
                 startDay,
-                endDay
+                endDay,
             )
 
         return calculateUserDailyDetailStatistics(statistics)
     }
 
-    fun getMonthHistoriesForCurrentUser(month: Int, year: Int): List<StudyHistoryDto> {
+    fun getMonthHistoriesForCurrentUser(
+        month: Int,
+        year: Int,
+    ): List<StudyHistoryDto> {
         val currentUser = userAccountService.getCurrentUserDto()
         return getMonthHistories(currentUser.id!!, month, year)
     }
 
-    fun getMonthHistories(userId: Long, month: Int, year: Int): List<StudyHistoryDto> {
-        return studyHistoryRepository.getMonthHistories(userId, month, year)
-            .map { it.toDto() }
-    }
+    fun getMonthHistories(
+        userId: Long,
+        month: Int,
+        year: Int,
+    ): List<StudyHistoryDto> = studyHistoryRepository
+        .getMonthHistories(userId, month, year)
+        .map { it.toDto() }
 
-    fun isUserHasStatistics(userId: Long): Boolean {
-        return studyHistoryRepository.isUserHasStatistics(userId)
-    }
+    fun isUserHasStatistics(userId: Long): Boolean = studyHistoryRepository.isUserHasStatistics(userId)
 
-    private fun calculateUserDailyDetailStatistics(studyHistories: List<StudyHistory>):
-        MutableList<UserDailyDetailStatisticsDto> {
-            val result = mutableListOf<UserDailyDetailStatisticsDto>()
-            studyHistories
-                .groupBy { it.exercise.subGroup!!.series.name }
-                .forEach { (seriesName, histories) ->
-                    val allDoneExercisesCount = histories.size
-                    val studyHistoryByExercise = histories
+    private fun calculateUserDailyDetailStatistics(studyHistories: List<StudyHistory>): MutableList<UserDailyDetailStatisticsDto> {
+        val result = mutableListOf<UserDailyDetailStatisticsDto>()
+        studyHistories
+            .groupBy {
+                it.exercise.subGroup!!
+                    .series.name
+            }.forEach { (seriesName, histories) ->
+                val allDoneExercisesCount = histories.size
+                val studyHistoryByExercise =
+                    histories
                         .groupBy { it.exercise.id }
-                    val uniqueDoneExercisesCount = studyHistoryByExercise
+                val uniqueDoneExercisesCount =
+                    studyHistoryByExercise
                         .count()
-                    val doneExercisesSuccessfullyFromFirstTime = studyHistoryByExercise
+                val doneExercisesSuccessfullyFromFirstTime =
+                    studyHistoryByExercise
                         .count { it.value.size == 1 }
-                    val listenWordsCount = histories.sumOf { it.tasksCount.toInt() }
-                    val seconds = histories.sumOf { it.spentTimeInSeconds ?: 0L }
-                    val userDailyDetailStatisticsDto = UserDailyDetailStatisticsDto(
+                val listenWordsCount = histories.sumOf { it.tasksCount.toInt() }
+                val seconds = histories.sumOf { it.spentTimeInSeconds ?: 0L }
+                val userDailyDetailStatisticsDto =
+                    UserDailyDetailStatisticsDto(
                         seriesName = seriesName,
                         allDoneExercises = allDoneExercisesCount,
                         uniqueDoneExercises = uniqueDoneExercisesCount,
                         doneExercisesSuccessfullyFromFirstTime = doneExercisesSuccessfullyFromFirstTime,
                         repeatedExercises = allDoneExercisesCount - doneExercisesSuccessfullyFromFirstTime,
                         listenWordsCount = listenWordsCount,
-                        duration = (seconds.toDouble() / 60).toDuration(DurationUnit.MINUTES)
+                        duration = (seconds.toDouble() / 60).toDuration(DurationUnit.MINUTES),
                     )
-                    result.add(userDailyDetailStatisticsDto)
-                }
-            return result
-        }
+                result.add(userDailyDetailStatisticsDto)
+            }
+        return result
+    }
 }

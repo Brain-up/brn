@@ -13,7 +13,7 @@ class Role(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
     @Column(unique = true, nullable = false)
-    val name: String
+    val name: String,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

@@ -11,7 +11,6 @@ import org.springframework.web.reactive.function.client.WebClient
 @ActiveProfiles("integration-tests")
 @TestPropertySource(properties = ["default.tts.provider=azure"])
 class WiremockTestConfiguration {
-
     @Value("\${azure.tts.base-url}")
     private lateinit var baseUrl: String
 

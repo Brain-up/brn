@@ -23,8 +23,5 @@ data class UserWithAnalyticsResponse(
     var diagnosticProgress: Map<AudiometryType, Boolean> = mapOf(AudiometryType.SIGNALS to true), // todo fill by user
     var doneExercises: Int = 0, // for all time
     var spentTime: Duration = Duration.ZERO, // spent time by doing exercises for all time
-    /**
-     * Last visit to our site
-     */
-    val lastVisit: LocalDateTime? = null,
+    val lastVisit: LocalDateTime? = null, // Last visit to our site
 )

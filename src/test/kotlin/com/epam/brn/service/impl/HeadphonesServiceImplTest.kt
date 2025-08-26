@@ -16,7 +16,6 @@ import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(MockKExtension::class)
 internal class HeadphonesServiceImplTest {
-
     @InjectMockKs
     lateinit var headphonesServiceImpl: HeadphonesServiceImpl
 

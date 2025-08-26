@@ -10,12 +10,16 @@ import org.springframework.transaction.annotation.Transactional
 interface AudiometryTaskRepository : JpaRepository<AudiometryTask, Long> {
     fun findByAudiometry(audiometry: Audiometry): List<AudiometryTask>
     fun countByAudiometry(audiometry: Audiometry): Long
+
     @Transactional
     fun removeAllByAudiometry(audiometry: Audiometry): List<AudiometryTask>
-    fun findByAudiometryAndFrequencies(audiometry: Audiometry, frequencies: String): AudiometryTask?
+    fun findByAudiometryAndFrequencies(
+        audiometry: Audiometry,
+        frequencies: String,
+    ): AudiometryTask?
     fun findByAudiometryAndFrequencyZoneAndAudiometryGroup(
         audiometry: Audiometry,
         frequencyZone: String,
-        audiometryGroup: String
+        audiometryGroup: String,
     ): AudiometryTask?
 }
