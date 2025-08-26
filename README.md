@@ -181,6 +181,12 @@ Use format '#GitHub_TaskNumber-# issue description' or 'Merge description'. Issu
  2.2 command line: `gradle jacocoTestReport`
 3. Pay attention that main local metric would be a little bit different from the one in Sonar cloud.
 
+### Container Management Platform:
+We use [portainer-ce](https://hub.docker.com/r/portainer/portainer-ce) as container management platform. For now, we only support read-only mode since the main purpose of using portainer it is to fetch the logs with the ability to log in with basic auth.
+Since portainer-ce does not have the ability to assign read-only permissions to user, we have deployed a proxy docker container called **docker_socket_proxy** and the actual docker portainer called **portainer_readonly**. For more info please go to [docker-compose.yml](./docker-compose-run.yml) file.
+The container will be deployed on port **9001** and you can access it on http://brainup.site:9001/. 
+Credentials to access portainer in read mode. user: **dev**, password: **mystrongpassword**
+
 ### Thanks companies for support
 - EPAM for Jira/Confluence, test instance and Jenkins, for contribution support program.
 - JetBrains for IDEA licenses
