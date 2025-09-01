@@ -32,4 +32,5 @@ Router.map(function () {
   this.route('used-resources');
   this.route('specialists');
   this.route('contributors');
+  this.route('resources');
 });

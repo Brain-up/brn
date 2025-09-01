@@ -67,6 +67,17 @@ export const ADMIN_ROUTES: Routes = [
             (m) => m.SwaggerComponent
           ),
       },
+      {
+        path: "resources",
+        loadComponent: () =>
+          import("./modules/resources/resources.component").then(
+            (m) => m.ResourcesComponent
+          ),
+        loadChildren: () =>
+          import("./modules/resources/resources.routes").then(
+            (m) => m.RESOURCES_ROUTES
+          ),
+      },
     ],
   },
 ];
