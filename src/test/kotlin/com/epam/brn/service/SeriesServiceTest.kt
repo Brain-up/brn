@@ -32,6 +32,7 @@ internal class SeriesServiceTest {
         val seriesDto = mockk<SeriesDto>()
         val listSeries = listOf(series)
         val expectedResult = listOf(seriesDto)
+        every { series.active } returns true
         every { seriesRepository.findByExerciseGroupLike(groupId) } returns listSeries
         every { series.toDto() } returns seriesDto
 
@@ -44,16 +45,49 @@ internal class SeriesServiceTest {
     }
 
     @Test
+    fun `should not get inactive series for group`() {
+        // GIVEN
+        val groupId: Long = 1
+        val series = mockk<Series>(relaxed = true)
+        val listSeries = listOf(series)
+        every { series.active } returns false
+        every { seriesRepository.findByExerciseGroupLike(groupId) } returns listSeries
+
+        // WHEN
+        val actualResult = seriesService.findSeriesForGroup(groupId)
+
+        // THEN
+        verify(exactly = 1) { seriesRepository.findByExerciseGroupLike(groupId) }
+        assertEquals(emptyList<SeriesDto>(), actualResult)
+    }
+
+    @Test
     fun `should get series for id`() {
         // GIVEN
         val seriesId: Long = 1
         val series = mockk<Series>()
         val seriesDto = mockk<SeriesDto>()
+        every { series.active } returns true
         every { seriesRepository.findById(seriesId) } returns Optional.of(series)
         every { series.toDto() } returns seriesDto
 
         // WHEN
         seriesService.findSeriesDtoForId(seriesId)
+
+        // THEN
+        verify(exactly = 1) { seriesRepository.findById(seriesId) }
+    }
+
+    @Test
+    fun `should not get inactive series for id`() {
+        // GIVEN
+        val seriesId: Long = 1
+        val series = mockk<Series>(relaxed = true)
+        every { series.active } returns false
+        every { seriesRepository.findById(seriesId) } returns Optional.of(series)
+
+        // WHEN
+        assertThrows(EntityNotFoundException::class.java) { seriesService.findSeriesDtoForId(seriesId) }
 
         // THEN
         verify(exactly = 1) { seriesRepository.findById(seriesId) }

@@ -19,6 +19,7 @@ import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import java.lang.Boolean.FALSE
 import java.nio.charset.StandardCharsets
 
 @WithMockUser(username = "test@test.test", roles = [BrnRole.USER])
@@ -75,6 +76,33 @@ class SeriesControllerIT : BaseIT() {
     }
 
     @Test
+    fun `test get inactive series for group`() {
+        // GIVEN
+        val group = insertGroup()
+        insertInactiveSeries(group, series1Name)
+        val series2 = insertSeries(group, series2Name)
+        // WHEN
+        val resultAction =
+            mockMvc.perform(
+                MockMvcRequestBuilders
+                    .get(baseUrl)
+                    .param("groupId", group.id.toString())
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+        // THEN
+        resultAction
+            .andExpect(status().isOk)
+            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        val responseJson = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
+        val baseResponseDto = objectMapper.readValue(responseJson, BrnResponse::class.java)
+        val seriesJson = gson.toJson(baseResponseDto.data)
+        val resultSeries: List<SeriesDto> =
+            objectMapper.readValue(seriesJson, object : TypeReference<List<SeriesDto>>() {})
+        Assertions.assertEquals(1, resultSeries.size)
+        Assertions.assertEquals(series2.toDto(), resultSeries[0])
+    }
+
+    @Test
     fun `test get series for seriesId`() {
         // GIVEN
         val group = insertGroup()
@@ -94,6 +122,24 @@ class SeriesControllerIT : BaseIT() {
         val baseResponseDto = objectMapper.readValue(responseJson, BrnResponse::class.java)
         val resultSeries: SeriesDto = objectMapper.readValue(gson.toJson(baseResponseDto.data), SeriesDto::class.java)
         Assertions.assertEquals(series.toDto(), resultSeries)
+    }
+
+    @Test
+    fun `test get inactive series for seriesId`() {
+        // GIVEN
+        val group = insertGroup()
+        val series = insertInactiveSeries(group, "series")
+        // WHEN
+        val resultAction =
+            mockMvc.perform(
+                MockMvcRequestBuilders
+                    .get("/series/${series.id}")
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+        // THEN
+        resultAction
+            .andExpect(status().isOk)
+            .andExpect(MockMvcResultMatchers.content().json(""))
     }
 
     @Test
@@ -127,6 +173,22 @@ class SeriesControllerIT : BaseIT() {
                 name = name,
                 description = "description",
                 exerciseGroup = group,
+                level = 1,
+                type = ExerciseType.SINGLE_SIMPLE_WORDS.name,
+            )
+        return seriesRepository.save(series)
+    }
+
+    private fun insertInactiveSeries(
+        group: ExerciseGroup,
+        name: String,
+    ): Series {
+        val series =
+            Series(
+                name = name,
+                description = "description",
+                exerciseGroup = group,
+                active = FALSE,
                 level = 1,
                 type = ExerciseType.SINGLE_SIMPLE_WORDS.name,
             )

@@ -13,6 +13,7 @@ import javax.persistence.Id
 import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
 import javax.persistence.OneToMany
+import java.lang.Boolean.TRUE
 
 @Entity
 class Series(
@@ -25,6 +26,8 @@ class Series(
     @Column
     var level: Int,
     var description: String? = "",
+    @Column
+    var active: Boolean = TRUE,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exercise_group_id")
     var exerciseGroup: ExerciseGroup,
