@@ -1,0 +1,5 @@
+ALTER TABLE series
+ADD COLUMN active BOOLEAN DEFAULT TRUE;
+
+UPDATE series
+SET active = TRUE;
