@@ -10,6 +10,7 @@ import com.epam.brn.repo.ExerciseGroupRepository
 import com.epam.brn.repo.SeriesRepository
 import com.fasterxml.jackson.core.type.TypeReference
 import com.google.gson.Gson
+import org.hamcrest.CoreMatchers.containsString
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
@@ -138,8 +139,13 @@ class SeriesControllerIT : BaseIT() {
             )
         // THEN
         resultAction
-            .andExpect(status().isOk)
-            .andExpect(MockMvcResultMatchers.content().json(""))
+            .andExpect(status().isNotFound)
+            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(
+                MockMvcResultMatchers.content().string(
+                    containsString("no series was found for id=${series.id}"),
+                ),
+            )
     }
 
     @Test
