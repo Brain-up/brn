@@ -48,9 +48,7 @@ internal class SeriesServiceTest {
     fun `should not get inactive series for group`() {
         // GIVEN
         val groupId: Long = 1
-        val series = mockk<Series>(relaxed = true)
-        val listSeries = listOf(series)
-        every { series.active } returns false
+        val listSeries = emptyList<Series>()
         every { seriesRepository.findByExerciseGroupLike(groupId) } returns listSeries
 
         // WHEN
@@ -68,41 +66,39 @@ internal class SeriesServiceTest {
         val series = mockk<Series>()
         val seriesDto = mockk<SeriesDto>()
         every { series.active } returns true
-        every { seriesRepository.findById(seriesId) } returns Optional.of(series)
+        every { seriesRepository.findBySeriesId(seriesId) } returns Optional.of(series)
         every { series.toDto() } returns seriesDto
 
         // WHEN
         seriesService.findSeriesDtoForId(seriesId)
 
         // THEN
-        verify(exactly = 1) { seriesRepository.findById(seriesId) }
+        verify(exactly = 1) { seriesRepository.findBySeriesId(seriesId) }
     }
 
     @Test
     fun `should not get inactive series for id`() {
         // GIVEN
         val seriesId: Long = 1
-        val series = mockk<Series>(relaxed = true)
-        every { series.active } returns false
-        every { seriesRepository.findById(seriesId) } returns Optional.of(series)
+        every { seriesRepository.findBySeriesId(seriesId) } returns Optional.empty<Series>()
 
         // WHEN
         assertThrows(EntityNotFoundException::class.java) { seriesService.findSeriesDtoForId(seriesId) }
 
         // THEN
-        verify(exactly = 1) { seriesRepository.findById(seriesId) }
+        verify(exactly = 1) { seriesRepository.findBySeriesId(seriesId) }
     }
 
     @Test
     fun `should not get series for id`() {
         // GIVEN
         val seriesId: Long = 1
-        every { seriesRepository.findById(seriesId) } returns Optional.empty()
+        every { seriesRepository.findBySeriesId(seriesId) } returns Optional.empty()
 
         // WHEN
         assertThrows(EntityNotFoundException::class.java) { seriesService.findSeriesDtoForId(seriesId) }
 
         // THEN
-        verify(exactly = 1) { seriesRepository.findById(seriesId) }
+        verify(exactly = 1) { seriesRepository.findBySeriesId(seriesId) }
     }
 }

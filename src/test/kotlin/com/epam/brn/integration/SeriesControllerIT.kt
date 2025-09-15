@@ -10,7 +10,6 @@ import com.epam.brn.repo.ExerciseGroupRepository
 import com.epam.brn.repo.SeriesRepository
 import com.fasterxml.jackson.core.type.TypeReference
 import com.google.gson.Gson
-import org.hamcrest.CoreMatchers.containsString
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
@@ -20,7 +19,6 @@ import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import java.lang.Boolean.FALSE
 import java.nio.charset.StandardCharsets
 
 @WithMockUser(username = "test@test.test", roles = [BrnRole.USER])
@@ -142,9 +140,11 @@ class SeriesControllerIT : BaseIT() {
             .andExpect(status().isNotFound)
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(
-                MockMvcResultMatchers.content().string(
-                    containsString("no series was found for id=${series.id}"),
-                ),
+                MockMvcResultMatchers
+                    .jsonPath("$.errors[0]")
+                    .value(
+                        "no active series was found for id=${series.id}",
+                    ),
             )
     }
 
@@ -194,7 +194,7 @@ class SeriesControllerIT : BaseIT() {
                 name = name,
                 description = "description",
                 exerciseGroup = group,
-                active = FALSE,
+                active = false,
                 level = 1,
                 type = ExerciseType.SINGLE_SIMPLE_WORDS.name,
             )
