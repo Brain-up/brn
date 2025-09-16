@@ -18,7 +18,7 @@ class SeriesService(
         log.debug("try to find active series for groupId=$groupId")
         val series =
             seriesRepository
-                .findByExerciseGroupLike(groupId)
+                .findDistinctByExerciseGroupIdAndActiveTrue(groupId)
         return series.map { seriesEntry -> seriesEntry.toDto() }
     }
 
@@ -27,7 +27,7 @@ class SeriesService(
         log.debug("try to find active series for seriesId=$seriesId")
         val series =
             seriesRepository
-                .findBySeriesId(seriesId)
+                .findDistinctByIdAndActiveTrue(seriesId)
                 .orElseThrow { EntityNotFoundException("no active series was found for id=$seriesId") }
         return series.toDto()
     }

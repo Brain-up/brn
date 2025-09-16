@@ -33,14 +33,14 @@ internal class SeriesServiceTest {
         val listSeries = listOf(series)
         val expectedResult = listOf(seriesDto)
         every { series.active } returns true
-        every { seriesRepository.findByExerciseGroupLike(groupId) } returns listSeries
+        every { seriesRepository.findDistinctByExerciseGroupIdAndActiveTrue(groupId) } returns listSeries
         every { series.toDto() } returns seriesDto
 
         // WHEN
         val actualResult = seriesService.findSeriesForGroup(groupId)
 
         // THEN
-        verify(exactly = 1) { seriesRepository.findByExerciseGroupLike(groupId) }
+        verify(exactly = 1) { seriesRepository.findDistinctByExerciseGroupIdAndActiveTrue(groupId) }
         assertEquals(expectedResult, actualResult)
     }
 
@@ -49,13 +49,13 @@ internal class SeriesServiceTest {
         // GIVEN
         val groupId: Long = 1
         val listSeries = emptyList<Series>()
-        every { seriesRepository.findByExerciseGroupLike(groupId) } returns listSeries
+        every { seriesRepository.findDistinctByExerciseGroupIdAndActiveTrue(groupId) } returns listSeries
 
         // WHEN
         val actualResult = seriesService.findSeriesForGroup(groupId)
 
         // THEN
-        verify(exactly = 1) { seriesRepository.findByExerciseGroupLike(groupId) }
+        verify(exactly = 1) { seriesRepository.findDistinctByExerciseGroupIdAndActiveTrue(groupId) }
         assertEquals(emptyList<SeriesDto>(), actualResult)
     }
 
@@ -66,39 +66,39 @@ internal class SeriesServiceTest {
         val series = mockk<Series>()
         val seriesDto = mockk<SeriesDto>()
         every { series.active } returns true
-        every { seriesRepository.findBySeriesId(seriesId) } returns Optional.of(series)
+        every { seriesRepository.findDistinctByIdAndActiveTrue(seriesId) } returns Optional.of(series)
         every { series.toDto() } returns seriesDto
 
         // WHEN
         seriesService.findSeriesDtoForId(seriesId)
 
         // THEN
-        verify(exactly = 1) { seriesRepository.findBySeriesId(seriesId) }
+        verify(exactly = 1) { seriesRepository.findDistinctByIdAndActiveTrue(seriesId) }
     }
 
     @Test
     fun `should not get inactive series for id`() {
         // GIVEN
         val seriesId: Long = 1
-        every { seriesRepository.findBySeriesId(seriesId) } returns Optional.empty<Series>()
+        every { seriesRepository.findDistinctByIdAndActiveTrue(seriesId) } returns Optional.empty<Series>()
 
         // WHEN
         assertThrows(EntityNotFoundException::class.java) { seriesService.findSeriesDtoForId(seriesId) }
 
         // THEN
-        verify(exactly = 1) { seriesRepository.findBySeriesId(seriesId) }
+        verify(exactly = 1) { seriesRepository.findDistinctByIdAndActiveTrue(seriesId) }
     }
 
     @Test
     fun `should not get series for id`() {
         // GIVEN
         val seriesId: Long = 1
-        every { seriesRepository.findBySeriesId(seriesId) } returns Optional.empty()
+        every { seriesRepository.findDistinctByIdAndActiveTrue(seriesId) } returns Optional.empty()
 
         // WHEN
         assertThrows(EntityNotFoundException::class.java) { seriesService.findSeriesDtoForId(seriesId) }
 
         // THEN
-        verify(exactly = 1) { seriesRepository.findBySeriesId(seriesId) }
+        verify(exactly = 1) { seriesRepository.findDistinctByIdAndActiveTrue(seriesId) }
     }
 }
