@@ -4,7 +4,6 @@ import com.epam.brn.model.Series
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
-import java.util.Optional
 
 @Repository
 interface SeriesRepository : CrudRepository<Series, Long> {
@@ -16,7 +15,6 @@ interface SeriesRepository : CrudRepository<Series, Long> {
         locale: String,
     ): Series?
 
-    @Query("select distinct s from Series s where s.type=?1 and s.name=?2")
     fun findByTypeAndName(
         type: String,
         name: String,
@@ -26,7 +24,7 @@ interface SeriesRepository : CrudRepository<Series, Long> {
 
     fun findDistinctByExerciseGroupIdAndActiveTrue(groupId: Long): List<Series>
 
-    fun findDistinctByIdAndActiveTrue(seriesId: Long): Optional<Series>
+    fun findByIdAndActiveTrue(seriesId: Long): Series?
 
 //    @Query("select distinct s from Series s left JOIN FETCH s.exercises where s.id=?1")
 //    fun findSeriesWithExercisesById(groupId: Long): Optional<Series>

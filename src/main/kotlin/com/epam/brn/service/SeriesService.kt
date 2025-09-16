@@ -27,8 +27,8 @@ class SeriesService(
         log.debug("try to find active series for seriesId=$seriesId")
         val series =
             seriesRepository
-                .findDistinctByIdAndActiveTrue(seriesId)
-                .orElseThrow { EntityNotFoundException("no active series was found for id=$seriesId") }
+                .findByIdAndActiveTrue(seriesId)
+                ?: throw EntityNotFoundException("no active series was found for id=$seriesId")
         return series.toDto()
     }
 }

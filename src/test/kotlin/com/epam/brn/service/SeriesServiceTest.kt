@@ -14,7 +14,6 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import java.util.Optional
 
 @ExtendWith(MockKExtension::class)
 internal class SeriesServiceTest {
@@ -66,39 +65,39 @@ internal class SeriesServiceTest {
         val series = mockk<Series>()
         val seriesDto = mockk<SeriesDto>()
         every { series.active } returns true
-        every { seriesRepository.findDistinctByIdAndActiveTrue(seriesId) } returns Optional.of(series)
+        every { seriesRepository.findByIdAndActiveTrue(seriesId) } returns series
         every { series.toDto() } returns seriesDto
 
         // WHEN
         seriesService.findSeriesDtoForId(seriesId)
 
         // THEN
-        verify(exactly = 1) { seriesRepository.findDistinctByIdAndActiveTrue(seriesId) }
+        verify(exactly = 1) { seriesRepository.findByIdAndActiveTrue(seriesId) }
     }
 
     @Test
     fun `should not get inactive series for id`() {
         // GIVEN
         val seriesId: Long = 1
-        every { seriesRepository.findDistinctByIdAndActiveTrue(seriesId) } returns Optional.empty<Series>()
+        every { seriesRepository.findByIdAndActiveTrue(seriesId) } returns null
 
         // WHEN
         assertThrows(EntityNotFoundException::class.java) { seriesService.findSeriesDtoForId(seriesId) }
 
         // THEN
-        verify(exactly = 1) { seriesRepository.findDistinctByIdAndActiveTrue(seriesId) }
+        verify(exactly = 1) { seriesRepository.findByIdAndActiveTrue(seriesId) }
     }
 
     @Test
     fun `should not get series for id`() {
         // GIVEN
         val seriesId: Long = 1
-        every { seriesRepository.findDistinctByIdAndActiveTrue(seriesId) } returns Optional.empty()
+        every { seriesRepository.findByIdAndActiveTrue(seriesId) } returns null
 
         // WHEN
         assertThrows(EntityNotFoundException::class.java) { seriesService.findSeriesDtoForId(seriesId) }
 
         // THEN
-        verify(exactly = 1) { seriesRepository.findDistinctByIdAndActiveTrue(seriesId) }
+        verify(exactly = 1) { seriesRepository.findByIdAndActiveTrue(seriesId) }
     }
 }
