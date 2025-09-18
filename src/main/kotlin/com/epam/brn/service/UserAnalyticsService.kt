@@ -10,10 +10,12 @@ interface UserAnalyticsService {
         pageable: Pageable,
         role: String,
     ): List<UserWithAnalyticsResponse>
+
     fun prepareAudioStreamForUser(
         exerciseId: Long,
         audioFileMetaData: AudioFileMetaData,
     ): InputStream
+
     fun prepareAudioFileMetaData(
         exerciseId: Long,
         audioFileMetaData: AudioFileMetaData,
