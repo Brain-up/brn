@@ -13,5 +13,6 @@ data class SeriesDto(
     val name: String,
     val level: Int,
     val description: String? = "",
+    val active: Boolean = true,
     val subGroups: List<Long> = emptyList(),
 )

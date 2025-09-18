@@ -25,6 +25,8 @@ class Series(
     @Column
     var level: Int,
     var description: String? = "",
+    @Column
+    var active: Boolean = true,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exercise_group_id")
     var exerciseGroup: ExerciseGroup,

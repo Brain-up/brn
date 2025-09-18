@@ -15,18 +15,18 @@ class SeriesService(
 
     @Cacheable("series")
     fun findSeriesForGroup(groupId: Long): List<SeriesDto> {
-        log.debug("try to find series for groupId=$groupId")
-        val series = seriesRepository.findByExerciseGroupLike(groupId)
-        return series.map { seriesEntry -> seriesEntry.toDto() }
+        log.debug("try to find active series for groupId=$groupId")
+        return seriesRepository
+            .findDistinctByExerciseGroupIdAndActiveTrue(groupId)
+            .map { it.toDto() }
     }
 
     @Cacheable("seriesDto")
     fun findSeriesDtoForId(seriesId: Long): SeriesDto {
-        log.debug("try to find series for seriesId=$seriesId")
-        val series =
-            seriesRepository
-                .findById(seriesId)
-                .orElseThrow { EntityNotFoundException("no series was found for id=$seriesId") }
-        return series.toDto()
+        log.debug("try to find active series for seriesId=$seriesId")
+        return seriesRepository
+            .findByIdAndActiveTrue(seriesId)
+            ?.toDto()
+            ?: throw EntityNotFoundException("no active series was found for id=$seriesId")
     }
 }
