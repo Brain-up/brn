@@ -88,11 +88,11 @@ internal class ExerciseControllerTest {
         val loadExercises = exerciseController.loadExercises(seriesId, file)
 
         // THEN
-        loadExercises.statusCodeValue shouldBe HttpStatus.SC_CREATED
+        loadExercises.statusCode.value() shouldBe HttpStatus.SC_CREATED
     }
 
     @Test
-    fun `createExerciseWords should return http status 204`() {
+    fun `createExerciseWords should return http status 201`() {
         // GIVEN
         val exerciseWordsCreateDto =
             ExerciseWordsCreateDto(
@@ -111,11 +111,11 @@ internal class ExerciseControllerTest {
 
         // THEN
         verify(exactly = 1) { exerciseService.createExercise(exerciseWordsCreateDto) }
-        createdExercise.statusCodeValue shouldBe HttpStatus.SC_CREATED
+        createdExercise.statusCode.value() shouldBe HttpStatus.SC_CREATED
     }
 
     @Test
-    fun `createExercisePhrases should return http status 204`() {
+    fun `createExercisePhrases should return http status 201`() {
         // GIVEN
         val exercisePhrasesCreateDto =
             ExercisePhrasesCreateDto(
@@ -134,11 +134,11 @@ internal class ExerciseControllerTest {
 
         // THEN
         verify(exactly = 1) { exerciseService.createExercise(exercisePhrasesCreateDto) }
-        createdExercise.statusCodeValue shouldBe HttpStatus.SC_CREATED
+        createdExercise.statusCode.value() shouldBe HttpStatus.SC_CREATED
     }
 
     @Test
-    fun `createExerciseSentences should return http status 204`() {
+    fun `createExerciseSentences should return http status 201`() {
         // GIVEN
         val exerciseSentencesCreateDto =
             ExerciseSentencesCreateDto(
@@ -157,7 +157,7 @@ internal class ExerciseControllerTest {
 
         // THEN
         verify(exactly = 1) { exerciseService.createExercise(exerciseSentencesCreateDto) }
-        createdExercise.statusCodeValue shouldBe HttpStatus.SC_CREATED
+        createdExercise.statusCode.value() shouldBe HttpStatus.SC_CREATED
     }
 
     @Test
@@ -173,7 +173,7 @@ internal class ExerciseControllerTest {
 
         // THEN
         verify(exactly = 1) { exerciseService.findExercisesWithTasksBySubGroup(subGroupId) }
-        exercises.statusCodeValue shouldBe HttpStatus.SC_OK
+        exercises.statusCode.value() shouldBe HttpStatus.SC_OK
         exercises.body!!.data shouldBe listOf(exerciseResponse)
     }
 
@@ -189,7 +189,7 @@ internal class ExerciseControllerTest {
 
         // THEN
         verify(exactly = 1) { exerciseService.findExercisesByWord(word) }
-        exercises.statusCodeValue shouldBe HttpStatus.SC_OK
+        exercises.statusCode.value() shouldBe HttpStatus.SC_OK
         exercises.body!!.data shouldBe listOf(exerciseResponse)
     }
 }

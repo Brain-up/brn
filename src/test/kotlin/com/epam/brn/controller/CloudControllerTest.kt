@@ -54,7 +54,7 @@ internal class CloudControllerTest {
 
         // THEN
         verify(exactly = 1) { cloudService.bucketUrl() }
-        assertEquals(HttpStatus.SC_OK, actualBucketUrl.statusCodeValue)
+        assertEquals(HttpStatus.SC_OK, actualBucketUrl.statusCode.value())
         assertEquals(urlContent, actualBucketUrl.body!!.data)
     }
 
@@ -69,7 +69,7 @@ internal class CloudControllerTest {
 
         // THEN
         verify(exactly = 1) { cloudService.baseFileUrl() }
-        assertEquals(HttpStatus.SC_OK, actualBaseFileUrl.statusCodeValue)
+        assertEquals(HttpStatus.SC_OK, actualBaseFileUrl.statusCode.value())
         assertEquals(baseFile, actualBaseFileUrl.body!!.data)
     }
 
@@ -84,7 +84,7 @@ internal class CloudControllerTest {
 
         // THEN
         verify(exactly = 1) { cloudService.getStorageFolders() }
-        assertEquals(HttpStatus.SC_OK, actualListBucket.statusCodeValue)
+        assertEquals(HttpStatus.SC_OK, actualListBucket.statusCode.value())
         assertEquals(listBucket, actualListBucket.body!!.data)
     }
 

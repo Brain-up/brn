@@ -15,7 +15,7 @@ import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
-import javax.servlet.FilterChain
+import jakarta.servlet.FilterChain
 
 @ExtendWith(MockKExtension::class)
 @DisplayName("RememberLastVisitFilter test using MockK")
@@ -37,7 +37,7 @@ internal class RememberLastVisitFilterTest {
     @Test
     fun `should mark visit for current user`() {
         // GIVEN
-        val requestMock = MockHttpServletRequest(HttpMethod.GET.name, "/test")
+        val requestMock = MockHttpServletRequest(HttpMethod.GET.name(), "/test")
         val tokenMock = "firebaseTokenMock"
         requestMock.addHeader("Authorization", "Bearer $tokenMock")
         val responseMock = MockHttpServletResponse()
@@ -56,7 +56,7 @@ internal class RememberLastVisitFilterTest {
     @Test
     fun `should not mark visit when request is anonymous`() {
         // GIVEN
-        val requestMock = MockHttpServletRequest(HttpMethod.GET.name, "/test")
+        val requestMock = MockHttpServletRequest(HttpMethod.GET.name(), "/test")
         val tokenMock = "firebaseTokenMock"
         requestMock.addHeader("Authorization", "Bearer $tokenMock")
         val responseMock = MockHttpServletResponse()

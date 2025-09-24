@@ -4,5 +4,4 @@
 ktlint_standard_import-ordering = disabled
 ktlint_standard_blank-line-before-declaration = disabled
 ktlint_standard_multiline-if-else = disabled
-ktlint_function_signature_body_expression_wrapping = disabled
 ktlint_standard_function-type-modifier-spacing = disabled

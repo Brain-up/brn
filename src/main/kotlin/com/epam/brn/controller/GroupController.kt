@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import javax.annotation.security.RolesAllowed
+import jakarta.annotation.security.RolesAllowed
 
 @RestController
 @RequestMapping("/groups")
@@ -34,7 +34,8 @@ class GroupController(
     @Operation(summary = "Get group by id")
     fun getGroupById(
         @PathVariable("groupId") groupId: Long,
-    ): ResponseEntity<BrnResponse<ExerciseGroupDto>> = ResponseEntity
-        .ok()
-        .body(BrnResponse(data = exerciseGroupsService.findGroupDtoById(groupId)))
+    ): ResponseEntity<BrnResponse<ExerciseGroupDto>> =
+        ResponseEntity
+            .ok()
+            .body(BrnResponse(data = exerciseGroupsService.findGroupDtoById(groupId)))
 }

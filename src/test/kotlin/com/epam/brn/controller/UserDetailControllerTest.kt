@@ -302,7 +302,7 @@ internal class UserDetailControllerTest {
 
         // THEN
         verify(exactly = 1) { userAnalyticsService.getUsersWithAnalytics(pageable, role) }
-        users.statusCodeValue shouldBe HttpStatus.SC_OK
+        users.statusCode.value() shouldBe HttpStatus.SC_OK
         (users.body as BrnResponse<*>).data shouldBe listOf(userWithAnalyticsResponse)
     }
 
@@ -319,7 +319,7 @@ internal class UserDetailControllerTest {
 
         // THEN
         verify(exactly = 1) { userAccountService.getUsers(pageable, role) }
-        users.statusCodeValue shouldBe HttpStatus.SC_OK
+        users.statusCode.value() shouldBe HttpStatus.SC_OK
         (users.body as BrnResponse<*>).data shouldBe listOf(userAccountDto)
     }
 
@@ -334,7 +334,7 @@ internal class UserDetailControllerTest {
 
         // THEN
         verify { userAccountService.deleteAutoTestUsers() }
-        result.statusCodeValue shouldBe HttpStatus.SC_OK
+        result.statusCode.value() shouldBe HttpStatus.SC_OK
         (result.body as BrnResponse<*>).data shouldBe usersCount
     }
 
@@ -350,7 +350,7 @@ internal class UserDetailControllerTest {
 
         // THEN
         verify { userAccountService.deleteAutoTestUserByEmail(email) }
-        result.statusCodeValue shouldBe HttpStatus.SC_OK
+        result.statusCode.value() shouldBe HttpStatus.SC_OK
         (result.body as BrnResponse<*>).data shouldBe usersCount
     }
 }

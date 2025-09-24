@@ -54,7 +54,7 @@ internal class UserStatisticsControllerV2Test {
 
         // THEN
         verify(exactly = 1) { userDayStatisticService.getStatisticsForPeriod(from, to) }
-        assertEquals(HttpStatus.SC_OK, userWeeklyStatistic.statusCodeValue)
+        assertEquals(HttpStatus.SC_OK, userWeeklyStatistic.statusCode.value())
         assertEquals(dayStudyStatisticList, (userWeeklyStatistic.body as BrnResponse).data)
     }
 
@@ -73,7 +73,7 @@ internal class UserStatisticsControllerV2Test {
 
         // THEN
         verify(exactly = 1) { userMonthStatisticService.getStatisticsForPeriod(from, to) }
-        assertEquals(HttpStatus.SC_OK, userYearlyStatistic.statusCodeValue)
+        assertEquals(HttpStatus.SC_OK, userYearlyStatistic.statusCode.value())
         assertEquals(monthStudyStatisticList, (userYearlyStatistic.body as BrnResponse).data)
     }
 
@@ -89,7 +89,7 @@ internal class UserStatisticsControllerV2Test {
 
         // THEN
         verify(exactly = 1) { studyHistoryService.getUserDailyStatistics(date, null) }
-        userWeeklyStatistic.statusCodeValue shouldBe HttpStatus.SC_OK
+        userWeeklyStatistic.statusCode.value() shouldBe HttpStatus.SC_OK
         userWeeklyStatistic.body!!.data shouldBe listOf(userDailyDetailStatisticsDto)
     }
 
@@ -107,7 +107,7 @@ internal class UserStatisticsControllerV2Test {
 
         // THEN
         verify(exactly = 1) { userDayStatisticService.getStatisticsForPeriod(date, date, userId) }
-        userWeeklyStatistic.statusCodeValue shouldBe HttpStatus.SC_OK
+        userWeeklyStatistic.statusCode.value() shouldBe HttpStatus.SC_OK
         userWeeklyStatistic.body!!.data shouldBe listOf(dayStudyStatistics)
     }
 
@@ -131,7 +131,7 @@ internal class UserStatisticsControllerV2Test {
 
         // THEN
         verify(exactly = 1) { userMonthStatisticService.getStatisticsForPeriod(date, date, userId) }
-        userYearlyStatistic.statusCodeValue shouldBe HttpStatus.SC_OK
+        userYearlyStatistic.statusCode.value() shouldBe HttpStatus.SC_OK
         userYearlyStatistic.body!!.data shouldBe listOf(monthStudyStatistics)
     }
 
@@ -149,7 +149,7 @@ internal class UserStatisticsControllerV2Test {
 
         // THEN
         verify(exactly = 1) { studyHistoryService.getUserDailyStatistics(date, userId) }
-        userWeeklyStatistic.statusCodeValue shouldBe HttpStatus.SC_OK
+        userWeeklyStatistic.statusCode.value() shouldBe HttpStatus.SC_OK
         userWeeklyStatistic.body!!.data shouldBe listOf(userDailyDetailStatisticsDto)
     }
 }

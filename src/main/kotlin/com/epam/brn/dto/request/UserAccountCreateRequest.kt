@@ -3,11 +3,11 @@ package com.epam.brn.dto.request
 import com.epam.brn.enums.BrnGender
 import com.epam.brn.model.UserAccount
 import com.fasterxml.jackson.annotation.JsonInclude
-import javax.validation.constraints.Email
-import javax.validation.constraints.NotBlank
-import javax.validation.constraints.NotNull
-import javax.validation.constraints.Pattern
-import javax.validation.constraints.Size
+import jakarta.validation.constraints.Email
+import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotNull
+import jakarta.validation.constraints.Pattern
+import jakarta.validation.constraints.Size
 
 const val VALID_EMAIL_ADDRESS_REGEX_WITH_EMPTY_SPACES_ACCEPTANCE: String =
     "(^\\s+$)|([a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)"
@@ -35,13 +35,14 @@ data class UserAccountCreateRequest(
     val description: String? = null,
 ) {
     var roles: MutableSet<String>? = mutableSetOf()
-    fun toModel() = UserAccount(
-        fullName = name,
-        email = email,
-        bornYear = bornYear,
-        gender = gender.toString(),
-        avatar = avatar,
-        photo = photo,
-        description = description,
-    )
+    fun toModel() =
+        UserAccount(
+            fullName = name,
+            email = email,
+            bornYear = bornYear,
+            gender = gender.toString(),
+            avatar = avatar,
+            photo = photo,
+            description = description,
+        )
 }

@@ -154,39 +154,45 @@ internal class LopotkoRecordProcessorTest {
         assertThat(actualtask.answerOptions).containsExactlyElementsOf(resources)
     }
 
-    private fun resource_бал(): Resource = Resource(
-        word = "бал",
-        wordType = WordType.OBJECT.toString(),
-        pictureFileUrl = "pictures/бал.jpg",
-    )
+    private fun resource_бал(): Resource =
+        Resource(
+            word = "бал",
+            wordType = WordType.OBJECT.toString(),
+            pictureFileUrl = "pictures/бал.jpg",
+        )
 
-    private fun resource_бум(): Resource = Resource(
-        word = "бум",
-        wordType = WordType.OBJECT.toString(),
-        pictureFileUrl = "pictures/бум.jpg",
-    )
+    private fun resource_бум(): Resource =
+        Resource(
+            word = "бум",
+            wordType = WordType.OBJECT.toString(),
+            pictureFileUrl = "pictures/бум.jpg",
+        )
 
-    private fun resource_быль(): Resource = Resource(
-        word = "быль",
-        wordType = WordType.OBJECT.toString(),
-        pictureFileUrl = "pictures/быль.jpg",
-    )
+    private fun resource_быль(): Resource =
+        Resource(
+            word = "быль",
+            wordType = WordType.OBJECT.toString(),
+            pictureFileUrl = "pictures/быль.jpg",
+        )
 
-    private fun resource_вить(): Resource = Resource(
-        word = "вить",
-        wordType = WordType.OBJECT.toString(),
-        pictureFileUrl = "pictures/вить.jpg",
-    )
+    private fun resource_вить(): Resource =
+        Resource(
+            word = "вить",
+            wordType = WordType.OBJECT.toString(),
+            pictureFileUrl = "pictures/вить.jpg",
+        )
 
-    private fun resource_гад(): Resource = Resource(
-        word = "гад",
-        wordType = WordType.OBJECT.toString(),
-        pictureFileUrl = "pictures/гад.jpg",
-    )
+    private fun resource_гад(): Resource =
+        Resource(
+            word = "гад",
+            wordType = WordType.OBJECT.toString(),
+            pictureFileUrl = "pictures/гад.jpg",
+        )
 
-    private fun resource_дуб(): Resource = Resource(
-        word = "дуб",
-        wordType = WordType.OBJECT.toString(),
-        pictureFileUrl = "pictures/дуб.jpg",
-    )
+    private fun resource_дуб(): Resource =
+        Resource(
+            word = "дуб",
+            wordType = WordType.OBJECT.toString(),
+            pictureFileUrl = "pictures/дуб.jpg",
+        )
 }

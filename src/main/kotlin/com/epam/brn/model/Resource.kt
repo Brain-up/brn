@@ -2,16 +2,16 @@ package com.epam.brn.model
 
 import com.epam.brn.dto.response.ResourceResponse
 import com.epam.brn.enums.WordType
-import javax.persistence.CascadeType
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
-import javax.persistence.Index
-import javax.persistence.ManyToMany
-import javax.persistence.Table
-import javax.persistence.UniqueConstraint
+import jakarta.persistence.CascadeType
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import jakarta.persistence.Index
+import jakarta.persistence.ManyToMany
+import jakarta.persistence.Table
+import jakarta.persistence.UniqueConstraint
 
 @Entity
 @Table(
@@ -34,15 +34,16 @@ class Resource(
     var tasks: MutableSet<Task> = HashSet(),
     var description: String? = "",
 ) {
-    fun toResponse() = ResourceResponse(
-        id = id,
-        word = word.replace("+", ""),
-        wordPronounce = word,
-        pictureFileUrl = pictureFileUrl,
-        soundsCount = soundsCount,
-        wordType = WordType.valueOf(wordType),
-        description = description,
-    )
+    fun toResponse() =
+        ResourceResponse(
+            id = id,
+            word = word.replace("+", ""),
+            wordPronounce = word,
+            pictureFileUrl = pictureFileUrl,
+            soundsCount = soundsCount,
+            wordType = WordType.valueOf(wordType),
+            description = description,
+        )
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

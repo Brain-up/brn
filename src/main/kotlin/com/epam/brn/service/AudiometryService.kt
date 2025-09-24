@@ -22,9 +22,10 @@ class AudiometryService(
     @Value("#{'\${frequencyForDiagnostic}'.split(',')}")
     lateinit var frequencyForDiagnostic: List<Int>
 
-    fun getAudiometrics(locale: String): List<AudiometryResponse> = audiometryRepository
-        .findByLocale(locale)
-        .map { a -> a.toDtoWithoutTasks() }
+    fun getAudiometrics(locale: String): List<AudiometryResponse> =
+        audiometryRepository
+            .findByLocale(locale)
+            .map { a -> a.toDtoWithoutTasks() }
 
     fun getAudiometry(audiometryId: Long): AudiometryResponse {
         val audiometry =
@@ -35,17 +36,18 @@ class AudiometryService(
         return audiometry.toDtoWithTasks(userTasks)
     }
 
-    fun getUserAudiometryTasks(audiometry: Audiometry): List<AudiometryTask> = when (audiometry.audiometryType) {
-        AudiometryType.SIGNALS.name, AudiometryType.MATRIX.name ->
-            audiometryTaskRepository.findByAudiometry(
-                audiometry,
-            )
-        AudiometryType.SPEECH.name -> {
-            val user = userAccountService.getCurrentUser()
-            findSecondSpeechAudiometryTasks(user, audiometry)
+    fun getUserAudiometryTasks(audiometry: Audiometry): List<AudiometryTask> =
+        when (audiometry.audiometryType) {
+            AudiometryType.SIGNALS.name, AudiometryType.MATRIX.name ->
+                audiometryTaskRepository.findByAudiometry(
+                    audiometry,
+                )
+            AudiometryType.SPEECH.name -> {
+                val user = userAccountService.getCurrentUser()
+                findSecondSpeechAudiometryTasks(user, audiometry)
+            }
+            else -> throw IllegalArgumentException("Audiometry `$audiometry` does not supported in the system.")
         }
-        else -> throw IllegalArgumentException("Audiometry `$audiometry` does not supported in the system.")
-    }
 
     fun findSecondSpeechAudiometryTasks(
         user: UserAccount,

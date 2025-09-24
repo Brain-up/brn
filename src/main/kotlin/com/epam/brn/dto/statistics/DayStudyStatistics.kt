@@ -8,9 +8,10 @@ data class DayStudyStatistics(
     val exercisingTimeSeconds: Int,
     var progress: UserExercisingProgressStatus? = null,
 ) : Statistics(progress) {
-    fun toDto(): DayStudyStatisticDto = DayStudyStatisticDto(
-        date = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
-        exercisingTimeSeconds = exercisingTimeSeconds,
-        progress = progress,
-    )
+    fun toDto(): DayStudyStatisticDto =
+        DayStudyStatisticDto(
+            date = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+            exercisingTimeSeconds = exercisingTimeSeconds,
+            progress = progress,
+        )
 }

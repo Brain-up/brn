@@ -6,7 +6,7 @@ import com.epam.brn.webclient.property.GitHubApiClientProperty
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.HttpHeaders
-import org.springframework.http.HttpStatus
+import org.springframework.http.HttpStatusCode
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 import reactor.core.publisher.Mono
@@ -61,19 +61,20 @@ class GitHubApiClient
             return gitHubContributorDtos
         }
 
-        fun getGitHubUser(username: String): GitHubUserDto? = gitHubApiWebClient
-            .get()
-            .uri(gitHubApiClientProperty.url.path.users, username)
-            .headers {
-                it.set(HttpHeaders.ACCEPT, "application/vnd.github+json")
-                if (gitHubApiClientProperty.token.isNotEmpty())
-                    it.set(
-                        HttpHeaders.AUTHORIZATION,
-                        "${gitHubApiClientProperty.typeToken} ${gitHubApiClientProperty.token}",
-                    )
-            }.retrieve()
-            .onStatus(HttpStatus::isError) { Mono.empty() }
-            .bodyToMono(GitHubUserDto::class.java)
-            .onErrorResume { Mono.empty() }
-            .block()
+        fun getGitHubUser(username: String): GitHubUserDto? =
+            gitHubApiWebClient
+                .get()
+                .uri(gitHubApiClientProperty.url.path.users, username)
+                .headers {
+                    it.set(HttpHeaders.ACCEPT, "application/vnd.github+json")
+                    if (gitHubApiClientProperty.token.isNotEmpty())
+                        it.set(
+                            HttpHeaders.AUTHORIZATION,
+                            "${gitHubApiClientProperty.typeToken} ${gitHubApiClientProperty.token}",
+                        )
+                }.retrieve()
+                .onStatus(HttpStatusCode::isError) { Mono.empty() }
+                .bodyToMono(GitHubUserDto::class.java)
+                .onErrorResume { Mono.empty() }
+                .block()
     }

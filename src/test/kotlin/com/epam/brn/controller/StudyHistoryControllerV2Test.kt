@@ -40,7 +40,7 @@ internal class StudyHistoryControllerV2Test {
 
         // THEN
         verify(exactly = 1) { studyHistoryService.getHistories(userId, date, date) }
-        histories.statusCodeValue shouldBe HttpStatus.SC_OK
+        histories.statusCode.value() shouldBe HttpStatus.SC_OK
         histories.body!!.data shouldBe listOf(studyHistoryDto)
     }
 }

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import javax.annotation.security.RolesAllowed
+import jakarta.annotation.security.RolesAllowed
 
 @RestController
 @RequestMapping("/tasks")
@@ -38,7 +38,8 @@ class TaskController(
     @Operation(summary = "Get task by id")
     fun getTaskById(
         @PathVariable("taskId") taskId: Long,
-    ): ResponseEntity<BrnResponse<Any>> = ResponseEntity
-        .ok()
-        .body(BrnResponse(data = taskService.getTaskById(taskId)))
+    ): ResponseEntity<BrnResponse<Any>> =
+        ResponseEntity
+            .ok()
+            .body(BrnResponse(data = taskService.getTaskById(taskId)))
 }

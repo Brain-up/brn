@@ -4,17 +4,17 @@ import com.epam.brn.dto.response.ContributorDetailsResponse
 import com.epam.brn.dto.response.ContributorResponse
 import com.epam.brn.enums.ContributorType
 import org.hibernate.annotations.DynamicUpdate
-import javax.persistence.CascadeType
-import javax.persistence.Entity
-import javax.persistence.EnumType
-import javax.persistence.Enumerated
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
-import javax.persistence.JoinColumn
-import javax.persistence.OneToMany
-import javax.persistence.OneToOne
-import javax.persistence.Table
+import jakarta.persistence.CascadeType
+import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.OneToMany
+import jakarta.persistence.OneToOne
+import jakarta.persistence.Table
 
 @Entity
 @Table
@@ -69,24 +69,25 @@ class Contributor(
         return dto
     }
 
-    fun toContributorDetailsDto(): ContributorDetailsResponse = ContributorDetailsResponse(
-        id = id!!,
-        type = type.name,
-        name = name,
-        description = description,
-        company = company,
-        nameEn = nameEn,
-        descriptionEn = descriptionEn,
-        companyEn = companyEn,
-        pictureUrl = pictureUrl,
-        active = active,
-        gitHubUser = gitHubUser?.toDto(),
-        contacts =
-            contacts
-                .map {
-                    it.toDto()
-                }.toSet(),
-    )
+    fun toContributorDetailsDto(): ContributorDetailsResponse =
+        ContributorDetailsResponse(
+            id = id!!,
+            type = type.name,
+            name = name,
+            description = description,
+            company = company,
+            nameEn = nameEn,
+            descriptionEn = descriptionEn,
+            companyEn = companyEn,
+            pictureUrl = pictureUrl,
+            active = active,
+            gitHubUser = gitHubUser?.toDto(),
+            contacts =
+                contacts
+                    .map {
+                        it.toDto()
+                    }.toSet(),
+        )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
