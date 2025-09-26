@@ -2,9 +2,9 @@ package com.epam.brn.model
 
 import com.epam.brn.dto.GitHubUserDto
 import org.hibernate.annotations.DynamicUpdate
-import javax.persistence.Entity
-import javax.persistence.Id
-import javax.persistence.Table
+import jakarta.persistence.Entity
+import jakarta.persistence.Id
+import jakarta.persistence.Table
 
 @Entity
 @Table(name = "github_user")
@@ -20,15 +20,16 @@ class GitHubUser(
     var company: String?,
     var contributions: Long,
 ) {
-    fun toDto(): GitHubUserDto = GitHubUserDto(
-        id = id,
-        login = login,
-        name = name,
-        email = email,
-        avatarUrl = avatarUrl,
-        bio = bio,
-        company = company,
-    )
+    fun toDto(): GitHubUserDto =
+        GitHubUserDto(
+            id = id,
+            login = login,
+            name = name,
+            email = email,
+            avatarUrl = avatarUrl,
+            bio = bio,
+            company = company,
+        )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

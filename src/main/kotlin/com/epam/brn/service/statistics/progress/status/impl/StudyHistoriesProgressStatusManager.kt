@@ -14,8 +14,9 @@ class StudyHistoriesProgressStatusManager(
     override fun getStatus(
         periodType: UserExercisingPeriod,
         progress: List<StudyHistory>,
-    ): UserExercisingProgressStatus? = retrievers
-        .filter { it.getSupportedPeriods().contains(periodType) }
-        .mapNotNull { it.getStatus(progress) }
-        .minByOrNull { it.ordinal }
+    ): UserExercisingProgressStatus? =
+        retrievers
+            .filter { it.getSupportedPeriods().contains(periodType) }
+            .mapNotNull { it.getStatus(progress) }
+            .minByOrNull { it.ordinal }
 }

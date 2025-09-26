@@ -5,18 +5,18 @@ import com.epam.brn.dto.response.AudiometryMatrixTaskResponse
 import com.epam.brn.dto.response.AudiometrySignalsTaskResponse
 import com.epam.brn.enums.AudiometryType
 import com.epam.brn.enums.EAR
-import javax.persistence.CascadeType
-import javax.persistence.Entity
-import javax.persistence.FetchType
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
-import javax.persistence.JoinColumn
-import javax.persistence.JoinTable
-import javax.persistence.ManyToMany
-import javax.persistence.ManyToOne
-import javax.persistence.Table
-import javax.persistence.UniqueConstraint
+import jakarta.persistence.CascadeType
+import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.JoinTable
+import jakarta.persistence.ManyToMany
+import jakarta.persistence.ManyToOne
+import jakarta.persistence.Table
+import jakarta.persistence.UniqueConstraint
 
 @Entity
 @Table(uniqueConstraints = [UniqueConstraint(columnNames = ["audiometryGroup", "frequencyZone"])])
@@ -66,34 +66,35 @@ class AudiometryTask(
         return result
     }
 
-    fun toDto(): Any = when (audiometry!!.audiometryType) {
-        AudiometryType.SIGNALS.name ->
-            AudiometrySignalsTaskResponse(
-                id,
-                EAR.valueOf(ear),
-                frequencies!!.removeSurrounding("[", "]").split(", ").map { it.toInt() },
-            )
+    fun toDto(): Any =
+        when (audiometry!!.audiometryType) {
+            AudiometryType.SIGNALS.name ->
+                AudiometrySignalsTaskResponse(
+                    id,
+                    EAR.valueOf(ear),
+                    frequencies!!.removeSurrounding("[", "]").split(", ").map { it.toInt() },
+                )
 
-        AudiometryType.SPEECH.name ->
-            AudiometryLopotkoTaskResponse(
-                id,
-                level!!,
-                audiometryGroup!!,
-                frequencyZone!!,
-                minFrequency!!,
-                maxFrequency!!,
-                count!!,
-                showSize!!,
-                answerOptions,
-            )
+            AudiometryType.SPEECH.name ->
+                AudiometryLopotkoTaskResponse(
+                    id,
+                    level!!,
+                    audiometryGroup!!,
+                    frequencyZone!!,
+                    minFrequency!!,
+                    maxFrequency!!,
+                    count!!,
+                    showSize!!,
+                    answerOptions,
+                )
 
-        AudiometryType.SPEECH.name ->
-            AudiometryMatrixTaskResponse(
-                id,
-                count!!,
-                answerOptions,
-            )
+            AudiometryType.SPEECH.name ->
+                AudiometryMatrixTaskResponse(
+                    id,
+                    count!!,
+                    answerOptions,
+                )
 
-        else -> throw IllegalArgumentException("${audiometry!!.audiometryType} does not supported!")
-    }
+            else -> throw IllegalArgumentException("${audiometry!!.audiometryType} does not supported!")
+        }
 }

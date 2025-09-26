@@ -66,7 +66,7 @@ internal class StudyHistoryControllerTest {
 
         // THEN
         verify(exactly = 1) { studyHistoryService.getMonthHistories(userId, month, year) }
-        monthHistories.statusCodeValue shouldBe org.apache.http.HttpStatus.SC_OK
+        monthHistories.statusCode.value() shouldBe org.apache.http.HttpStatus.SC_OK
         monthHistories.body!!.data shouldBe listOf(studyHistoryDto)
     }
 }

@@ -16,7 +16,7 @@ import com.epam.brn.upload.csv.RecordProcessor
 import com.epam.brn.upload.toStringWithoutBraces
 import org.apache.commons.lang3.StringUtils
 import org.springframework.stereotype.Component
-import javax.transaction.Transactional
+import jakarta.transaction.Transactional
 
 @Component
 class SeriesMatrixRecordProcessor(
@@ -56,20 +56,22 @@ class SeriesMatrixRecordProcessor(
     private fun extractAnswerOptions(
         record: SeriesMatrixRecord,
         locale: BrnLocale,
-    ): MutableSet<Resource> = extractWordGroups(record)
-        .map {
-            splitOnWords(it.second).map { word: String ->
-                toResource(word, it.first, locale)
-            }
-        }.flatten()
-        .toMutableSet()
+    ): MutableSet<Resource> =
+        extractWordGroups(record)
+            .map {
+                splitOnWords(it.second).map { word: String ->
+                    toResource(word, it.first, locale)
+                }
+            }.flatten()
+            .toMutableSet()
 
-    private fun extractWordGroups(record: SeriesMatrixRecord): Sequence<Pair<WordType, String>> = record.words
-        .asSequence()
-        .map { it.toStringWithoutBraces() }
-        .mapIndexed { wordGroupPosition, wordGroup ->
-            WordType.of(wordGroupPosition) to wordGroup
-        }.filter { StringUtils.isNotBlank(it.second) }
+    private fun extractWordGroups(record: SeriesMatrixRecord): Sequence<Pair<WordType, String>> =
+        record.words
+            .asSequence()
+            .map { it.toStringWithoutBraces() }
+            .mapIndexed { wordGroupPosition, wordGroup ->
+                WordType.of(wordGroupPosition) to wordGroup
+            }.filter { StringUtils.isNotBlank(it.second) }
 
     private fun splitOnWords(sentence: String): List<String> = sentence.split(' ').map { it.trim() }
 
@@ -96,15 +98,17 @@ class SeriesMatrixRecordProcessor(
         level = record.level,
     )
 
-    private fun calculateTemplate(record: SeriesMatrixRecord): String = extractWordGroups(record)
-        .joinToString(StringUtils.SPACE, "<", ">") { it.first.toString() }
+    private fun calculateTemplate(record: SeriesMatrixRecord): String =
+        extractWordGroups(record)
+            .joinToString(StringUtils.SPACE, "<", ">") { it.first.toString() }
 
     private fun extractTask(
         exercise: Exercise,
         answerOptions: MutableSet<Resource>,
-    ): Task = Task(
-        serialNumber = 2,
-        answerOptions = answerOptions,
-        exercise = exercise,
-    )
+    ): Task =
+        Task(
+            serialNumber = 2,
+            answerOptions = answerOptions,
+            exercise = exercise,
+        )
 }

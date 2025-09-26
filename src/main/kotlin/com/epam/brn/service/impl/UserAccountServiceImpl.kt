@@ -32,10 +32,11 @@ class UserAccountServiceImpl(
     @Value("\${autotest.users.deletion.prefix}")
     private lateinit var prefix: String
 
-    override fun findUserByEmail(email: String): UserAccountDto = userAccountRepository
-        .findUserAccountByEmail(email)
-        .map { it.toDto() }
-        .orElseThrow { EntityNotFoundException("No user was found for email=$email") }
+    override fun findUserByEmail(email: String): UserAccountDto =
+        userAccountRepository
+            .findUserAccountByEmail(email)
+            .map { it.toDto() }
+            .orElseThrow { EntityNotFoundException("No user was found for email=$email") }
 
     override fun findUserDtoByUuid(uuid: String): UserAccountDto? = userAccountRepository.findByUserId(uuid)?.toDto()
 
@@ -56,17 +57,19 @@ class UserAccountServiceImpl(
 
     override fun findUserDtoById(id: Long): UserAccountDto = findUserById(id).toDto()
 
-    override fun findUserById(id: Long): UserAccount = userAccountRepository
-        .findUserAccountById(id)
-        .orElseThrow { EntityNotFoundException("No user was found for id = $id") }
+    override fun findUserById(id: Long): UserAccount =
+        userAccountRepository
+            .findUserAccountById(id)
+            .orElseThrow { EntityNotFoundException("No user was found for id = $id") }
 
     override fun getAllHeadphonesForUser(userId: Long) = headphonesService.getAllHeadphonesForUser(userId)
 
-    override fun getAllHeadphonesForCurrentUser() = getCurrentUser()
-        .headphones
-        .filter { it.active }
-        .map(Headphones::toDto)
-        .toSet()
+    override fun getAllHeadphonesForCurrentUser() =
+        getCurrentUser()
+            .headphones
+            .filter { it.active }
+            .map(Headphones::toDto)
+            .toSet()
 
     override fun getCurrentUser(): UserAccount {
         val email = getCurrentUserEmail()
@@ -90,9 +93,10 @@ class UserAccountServiceImpl(
     override fun getUsers(
         pageable: Pageable,
         role: String,
-    ): List<UserAccountDto> = userAccountRepository
-        .findUsersAccountsByRole(role)
-        .map { it.toDto() }
+    ): List<UserAccountDto> =
+        userAccountRepository
+            .findUsersAccountsByRole(role)
+            .map { it.toDto() }
 
     override fun updateAvatarForCurrentUser(avatarUrl: String): UserAccountDto {
         val currentUserAccount = getCurrentUser()
@@ -125,13 +129,14 @@ class UserAccountServiceImpl(
         headphonesService.save(headphones)
     }
 
-    override fun updateCurrentUser(userChangeRequest: UserAccountChangeRequest): UserAccountDto = getCurrentUser()
-        .let {
-            if (userChangeRequest.isNotEmpty())
-                userAccountRepository.save(it.updateFields(changeRequest = userChangeRequest))
-            else
-                it
-        }.toDto()
+    override fun updateCurrentUser(userChangeRequest: UserAccountChangeRequest): UserAccountDto =
+        getCurrentUser()
+            .let {
+                if (userChangeRequest.isNotEmpty())
+                    userAccountRepository.save(it.updateFields(changeRequest = userChangeRequest))
+                else
+                    it
+            }.toDto()
 
     override fun updateDoctorForPatient(
         userId: Long,
@@ -144,12 +149,13 @@ class UserAccountServiceImpl(
     override fun getPatientsForDoctor(doctorId: Long): List<UserAccountDto> =
         userAccountRepository.findUserAccountsByDoctor(findUserById(doctorId)).map { it.toDto() }
 
-    private fun UserAccountChangeRequest.isNotEmpty(): Boolean = (!this.name.isNullOrBlank())
-        .or(this.avatar != null)
-        .or(this.bornYear != null)
-        .or(this.gender != null)
-        .or(this.description != null)
-        .or(this.photo != null)
+    private fun UserAccountChangeRequest.isNotEmpty(): Boolean =
+        (!this.name.isNullOrBlank())
+            .or(this.avatar != null)
+            .or(this.bornYear != null)
+            .or(this.gender != null)
+            .or(this.description != null)
+            .or(this.photo != null)
 
     private fun UserAccount.updateFields(changeRequest: UserAccountChangeRequest): UserAccount {
         this.fullName = changeRequest.name?.takeIf { it.isNotBlank() } ?: fullName
@@ -178,8 +184,9 @@ class UserAccountServiceImpl(
     private fun getDefaultRoleSet(): MutableSet<Role> = setOf(BrnRole.USER).mapTo(mutableSetOf()) { roleService.findByName(it) }
 
     override fun deleteAutoTestUsers(): Long = userAccountRepository.deleteUserAccountsByEmailStartsWith(prefix)
-    override fun deleteAutoTestUserByEmail(email: String): Long = if (email.startsWith(prefix))
-        userAccountRepository.deleteUserAccountByEmailIs(email)
-    else
-        throw IllegalArgumentException("email = [$email] must start with prefix = [$prefix]")
+    override fun deleteAutoTestUserByEmail(email: String): Long =
+        if (email.startsWith(prefix))
+            userAccountRepository.deleteUserAccountByEmailIs(email)
+        else
+            throw IllegalArgumentException("email = [$email] must start with prefix = [$prefix]")
 }

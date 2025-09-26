@@ -3,16 +3,16 @@ package com.epam.brn.model
 import com.epam.brn.dto.StudyHistoryDto
 import java.time.LocalDateTime
 import java.time.ZoneOffset
-import javax.persistence.Entity
-import javax.persistence.FetchType
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
-import javax.persistence.Index
-import javax.persistence.JoinColumn
-import javax.persistence.ManyToOne
-import javax.persistence.Table
-import javax.persistence.UniqueConstraint
+import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import jakarta.persistence.Index
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
+import jakarta.persistence.Table
+import jakarta.persistence.UniqueConstraint
 
 @Entity
 @Table(
@@ -43,14 +43,15 @@ class StudyHistory(
     var repetitionIndex: Float? = 0.0f,
     var rightAnswersIndex: Float? = 1.0f,
 ) {
-    fun toDto() = StudyHistoryDto(
-        id = this.id,
-        exerciseId = this.exercise.id!!,
-        startTime = this.startTime,
-        endTime = this.endTime,
-        executionSeconds = this.executionSeconds,
-        tasksCount = this.tasksCount,
-        wrongAnswers = this.wrongAnswers,
-        replaysCount = this.replaysCount,
-    )
+    fun toDto() =
+        StudyHistoryDto(
+            id = this.id,
+            exerciseId = this.exercise.id!!,
+            startTime = this.startTime,
+            endTime = this.endTime,
+            executionSeconds = this.executionSeconds,
+            tasksCount = this.tasksCount,
+            wrongAnswers = this.wrongAnswers,
+            replaysCount = this.replaysCount,
+        )
 }

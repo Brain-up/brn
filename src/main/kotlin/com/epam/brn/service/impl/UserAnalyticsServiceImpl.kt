@@ -75,9 +75,10 @@ class UserAnalyticsServiceImpl(
     override fun prepareAudioStreamForUser(
         exerciseId: Long,
         audioFileMetaData: AudioFileMetaData,
-    ): InputStream = textToSpeechService.generateAudioOggStreamWithValidation(
-        prepareAudioFileMetaData(exerciseId, audioFileMetaData),
-    )
+    ): InputStream =
+        textToSpeechService.generateAudioOggStreamWithValidation(
+            prepareAudioFileMetaData(exerciseId, audioFileMetaData),
+        )
 
     override fun prepareAudioFileMetaData(
         exerciseId: Long,
@@ -127,8 +128,9 @@ class UserAnalyticsServiceImpl(
     fun isMultiWords(seriesType: ExerciseType): Boolean =
         seriesType == ExerciseType.PHRASES || seriesType == ExerciseType.SENTENCE || seriesType == ExerciseType.WORDS_SEQUENCES
 
-    fun countWorkDaysForMonth(dayStudyStatistics: List<DayStudyStatistics>): Int = dayStudyStatistics
-        .map { it.date }
-        .groupBy { it.dayOfMonth }
-        .keys.size
+    fun countWorkDaysForMonth(dayStudyStatistics: List<DayStudyStatistics>): Int =
+        dayStudyStatistics
+            .map { it.date }
+            .groupBy { it.dayOfMonth }
+            .keys.size
 }

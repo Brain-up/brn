@@ -85,7 +85,7 @@ internal class SubGroupControllerTest {
         val createdSubGroup = subGroupController.addSubGroupToSeries(seriesId, subGroupRequest)
 
         // THEN
-        createdSubGroup.statusCodeValue shouldBe HttpStatus.SC_CREATED
+        createdSubGroup.statusCode.value() shouldBe HttpStatus.SC_CREATED
     }
 
     @Test

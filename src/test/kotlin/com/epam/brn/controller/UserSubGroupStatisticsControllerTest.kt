@@ -47,7 +47,7 @@ internal class UserSubGroupStatisticsControllerTest {
 
         // THEN
         verify(exactly = 1) { userStatisticService.getSubGroupStatistic(ids) }
-        assertEquals(HttpStatus.SC_OK, userSubGroupStatistic.statusCodeValue)
+        assertEquals(HttpStatus.SC_OK, userSubGroupStatistic.statusCode.value())
         assertEquals(subGroupStatisticDtoList, (userSubGroupStatistic.body as BrnResponse).data)
     }
 }

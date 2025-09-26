@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import javax.annotation.security.RolesAllowed
+import jakarta.annotation.security.RolesAllowed
 
 @RestController
 @RequestMapping("/resources")
@@ -39,9 +39,10 @@ class ResourceController(
     fun updateResourceDescription(
         @PathVariable(value = "id") id: Long,
         @RequestBody @Validated request: UpdateResourceDescriptionRequest,
-    ): ResponseEntity<BrnResponse<ResourceResponse>> = ResponseEntity
-        .ok()
-        .body(BrnResponse(data = resourceService.updateDescription(id, request.description!!)))
+    ): ResponseEntity<BrnResponse<ResourceResponse>> =
+        ResponseEntity
+            .ok()
+            .body(BrnResponse(data = resourceService.updateDescription(id, request.description!!)))
 
     @PostMapping("/update")
     @RolesAllowed(BrnRole.ADMIN)

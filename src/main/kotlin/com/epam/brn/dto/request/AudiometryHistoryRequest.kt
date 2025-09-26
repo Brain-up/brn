@@ -5,7 +5,7 @@ import com.epam.brn.model.AudiometryTask
 import com.epam.brn.model.Headphones
 import com.epam.brn.model.UserAccount
 import java.time.LocalDateTime
-import javax.validation.constraints.NotNull
+import jakarta.validation.constraints.NotNull
 
 data class AudiometryHistoryRequest(
     @field:NotNull

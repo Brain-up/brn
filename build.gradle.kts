@@ -1,7 +1,6 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 val kotestAssertionsVersion: String by properties
-val kotlinVersion: String by properties
 val flywayVersion: String by properties
 val log4jApiKotlinVersion: String by properties
 val jsonVersion: String by properties
@@ -25,9 +24,9 @@ plugins {
 }
 
 allOpen {
-    annotation("javax.persistence.Entity")
-    annotation("javax.persistence.MappedSuperclass")
-    annotation("javax.persistence.Embeddable")
+    annotation("jakarta.persistence.Entity")
+    annotation("jakarta.persistence.MappedSuperclass")
+    annotation("jakarta.persistence.Embeddable")
 }
 
 repositories {
@@ -36,7 +35,7 @@ repositories {
 
 dependencyManagement {
     imports {
-        mavenBom("software.amazon.awssdk:bom:2.17.198")
+        mavenBom("software.amazon.awssdk:bom:2.34.0")
     }
 }
 
@@ -57,7 +56,7 @@ dependencies {
     implementation("org.postgresql:postgresql")
     implementation("org.flywaydb:flyway-core:$flywayVersion")
 
-    implementation("com.google.firebase:firebase-admin:8.1.0")
+    implementation("com.google.firebase:firebase-admin:9.1.1")
 
     implementation("com.auth0:java-jwt:3.10.3")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
@@ -96,15 +95,16 @@ dependencies {
     testImplementation("org.testcontainers:junit-jupiter:$testContainersVersion")
     testImplementation("org.testcontainers:postgresql:$testContainersVersion")
     testImplementation("org.testcontainers:localstack:$testContainersVersion")
-    testImplementation("com.amazonaws:aws-java-sdk:1.11.808")
+    testImplementation("com.amazonaws:aws-java-sdk:1.12.791")
     testImplementation("com.squareup.okhttp3:okhttp:$okhttp3Version")
     testImplementation("com.squareup.okhttp3:mockwebserver:$okhttp3Version")
 }
 
-tasks.withType<KotlinCompile> {
-    kotlinOptions {
-        freeCompilerArgs = listOf("-Xjsr305=strict")
-        jvmTarget = "17"
+kotlin {
+    compilerOptions {
+        // apiVersion = KotlinVersion.KOTLIN_2_1
+        jvmTarget = JvmTarget.JVM_17
+        freeCompilerArgs.add("-Xjsr305=strict")
     }
 }
 
@@ -156,8 +156,8 @@ tasks.register<JavaExec>("ktlintFormat") {
     )
 }
 
-project.exec {
-    commandLine = "git config core.hooksPath .githooks".split(" ")
+tasks.register<Exec>("setGitHooksPath") {
+    commandLine("git", "config", "core.hooksPath", ".githooks")
 }
 
 tasks.named("compileKotlin") { dependsOn("ktlintCheck") }
@@ -178,9 +178,9 @@ tasks.withType<JacocoReport> {
     reports {
         xml.required.set(true)
         html.required.set(true)
-        xml.outputLocation.set(file("$buildDir/jacoco/coverage.xml"))
+        xml.outputLocation.set(layout.buildDirectory.file("jacoco/coverage.xml"))
         csv.required.set(false)
-        html.outputLocation.set(file("$buildDir/jacoco/html"))
+        html.outputLocation.set(layout.buildDirectory.dir("jacoco/html"))
     }
     afterEvaluate {
         classDirectories.setFrom(
@@ -202,10 +202,10 @@ tasks.withType<JacocoReport> {
             ),
         )
     }
-    executionData.setFrom("$buildDir/jacoco/test.exec")
+    executionData.setFrom(layout.buildDirectory.file("jacoco/test.exec"))
 }
 
-task<Test>("integrationTest") {
+tasks.register<Test>("integrationTest") {
     useJUnitPlatform { includeTags("integration-test") }
     mustRunAfter(tasks["test"])
     group = "Verification"

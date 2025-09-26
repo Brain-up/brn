@@ -33,7 +33,7 @@ internal class RoleControllerTest {
         val roles = roleController.getRoles()
 
         // THEN
-        roles.statusCodeValue shouldBe HttpStatus.SC_OK
+        roles.statusCode.value() shouldBe HttpStatus.SC_OK
         roles.body!!.data.size shouldBe 1
     }
 }

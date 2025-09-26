@@ -41,7 +41,7 @@ internal class ResourceControllerTest {
 
         // THEN
         verify(exactly = 1) { resourceService.updateDescription(id, description) }
-        updated.statusCodeValue shouldBe HttpStatus.SC_OK
+        updated.statusCode.value() shouldBe HttpStatus.SC_OK
         updated.body!!.data shouldBe resourceResponse
     }
 }

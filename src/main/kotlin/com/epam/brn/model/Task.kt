@@ -4,17 +4,17 @@ import com.epam.brn.dto.response.TaskResponse
 import com.epam.brn.dto.response.TaskWordsGroupResponse
 import com.epam.brn.enums.ExerciseType
 import com.epam.brn.enums.shouldBeWithPictures
-import javax.persistence.CascadeType
-import javax.persistence.Entity
-import javax.persistence.FetchType
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
-import javax.persistence.JoinColumn
-import javax.persistence.JoinTable
-import javax.persistence.ManyToMany
-import javax.persistence.ManyToOne
-import javax.persistence.OneToOne
+import jakarta.persistence.CascadeType
+import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.JoinTable
+import jakarta.persistence.ManyToMany
+import jakarta.persistence.ManyToOne
+import jakarta.persistence.OneToOne
 
 @Entity
 class Task(
@@ -44,14 +44,15 @@ class Task(
     )
     var answerParts: MutableMap<Int, Resource> = mutableMapOf(),
 ) {
-    fun toTaskResponse(exerciseType: ExerciseType) = TaskResponse(
-        id = id!!,
-        exerciseType = exerciseType,
-        name = name,
-        serialNumber = serialNumber,
-        answerOptions = answerOptions.map { answer -> answer.toResponse() }.toHashSet(),
-        shouldBeWithPictures = exerciseType.shouldBeWithPictures(),
-    )
+    fun toTaskResponse(exerciseType: ExerciseType) =
+        TaskResponse(
+            id = id!!,
+            exerciseType = exerciseType,
+            name = name,
+            serialNumber = serialNumber,
+            answerOptions = answerOptions.map { answer -> answer.toResponse() }.toHashSet(),
+            shouldBeWithPictures = exerciseType.shouldBeWithPictures(),
+        )
 
     fun toWordsGroupSeriesTaskDto(
         exerciseType: ExerciseType,

@@ -8,7 +8,7 @@ import com.epam.brn.repo.AudiometryHistoryRepository
 import com.epam.brn.repo.AudiometryTaskRepository
 import com.epam.brn.repo.SinAudiometryResultRepository
 import org.springframework.stereotype.Service
-import javax.transaction.Transactional
+import jakarta.transaction.Transactional
 
 @Service
 class AudiometryHistoryService(

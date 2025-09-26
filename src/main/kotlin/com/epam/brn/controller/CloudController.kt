@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
-import javax.annotation.security.RolesAllowed
+import jakarta.annotation.security.RolesAllowed
 
 /**
  * Provides form parameters for client direct file upload to cloud and url for client to list bucket contents
@@ -76,7 +76,8 @@ class CloudController(
     fun uploadContributorPicture(
         @RequestParam(value = "file") multipartFile: MultipartFile,
         @RequestParam(value = "fileName") fileName: String,
-    ): ResponseEntity<BrnResponse<String>> = ResponseEntity
-        .status(HttpStatus.CREATED)
-        .body(BrnResponse(cloudUploadService.uploadContributorPicture(multipartFile, fileName)))
+    ): ResponseEntity<BrnResponse<String>> =
+        ResponseEntity
+            .status(HttpStatus.CREATED)
+            .body(BrnResponse(cloudUploadService.uploadContributorPicture(multipartFile, fileName)))
 }

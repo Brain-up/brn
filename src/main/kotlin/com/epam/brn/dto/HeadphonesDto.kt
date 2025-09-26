@@ -2,7 +2,7 @@ package com.epam.brn.dto
 
 import com.epam.brn.enums.HeadphonesType
 import com.epam.brn.model.Headphones
-import javax.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotBlank
 
 data class HeadphonesDto(
     var id: Long? = null,
@@ -13,11 +13,12 @@ data class HeadphonesDto(
     var description: String = "",
     var userAccount: Long? = null,
 ) {
-    fun toEntity() = Headphones(
-        id = id,
-        name = name,
-        active = active ?: true,
-        type = type ?: HeadphonesType.NOT_DEFINED,
-        description = description,
-    )
+    fun toEntity() =
+        Headphones(
+            id = id,
+            name = name,
+            active = active ?: true,
+            type = type ?: HeadphonesType.NOT_DEFINED,
+            description = description,
+        )
 }

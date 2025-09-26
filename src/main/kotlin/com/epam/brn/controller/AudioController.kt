@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import javax.annotation.security.RolesAllowed
+import jakarta.annotation.security.RolesAllowed
 
 @RestController
 @RequestMapping("/audio")
@@ -34,23 +34,24 @@ class AudioController(
         @RequestParam(required = false) gender: String? = null,
         @RequestParam(required = false) pitch: String? = null,
         @RequestParam(required = false) style: String? = null,
-    ): ResponseEntity<ByteArray> = ResponseEntity
-        .ok()
-        .contentType(MediaType.APPLICATION_OCTET_STREAM)
-        .body(
-            toByteArray(
-                userAnalyticsService.prepareAudioStreamForUser(
-                    exerciseId,
-                    AudioFileMetaData(
-                        text = text,
-                        locale = locale,
-                        voice = voice,
-                        gender = gender,
-                        speedFloat = speed,
-                        pitch = pitch,
-                        style = style,
+    ): ResponseEntity<ByteArray> =
+        ResponseEntity
+            .ok()
+            .contentType(MediaType.APPLICATION_OCTET_STREAM)
+            .body(
+                toByteArray(
+                    userAnalyticsService.prepareAudioStreamForUser(
+                        exerciseId,
+                        AudioFileMetaData(
+                            text = text,
+                            locale = locale,
+                            voice = voice,
+                            gender = gender,
+                            speedFloat = speed,
+                            pitch = pitch,
+                            style = style,
+                        ),
                     ),
                 ),
-            ),
-        )
+            )
 }

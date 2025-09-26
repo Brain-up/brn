@@ -60,9 +60,10 @@ class RoleControllerIT : BaseIT() {
         roles.size shouldBe 3
     }
 
-    private fun insertRole(roleName: String): Role = roleRepository.save(
-        Role(
-            name = roleName,
-        ),
-    )
+    private fun insertRole(roleName: String): Role =
+        roleRepository.save(
+            Role(
+                name = roleName,
+            ),
+        )
 }

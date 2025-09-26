@@ -80,7 +80,7 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
 
     @Query(
         "SELECT COALESCE(sum(s.executionSeconds), 0) FROM StudyHistory s " +
-            " WHERE date_trunc('day', s.startTime) = :day" +
+            " WHERE DATE(s.startTime) = DATE(:day)" +
             " AND s.userAccount.id = :userId",
     )
     fun getDayTimer(
@@ -90,7 +90,7 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
 
     @Query(
         "SELECT COALESCE(sum(COALESCE(s.executionSeconds, 0)), 0) FROM StudyHistory s " +
-            " WHERE date_trunc('day', now()) = date_trunc('day', s.startTime)" +
+            " WHERE DATE(now()) = DATE(s.startTime)" +
             " AND s.userAccount.id = :userId",
     )
     fun getTodayDayTimer(userId: Long): Int
@@ -111,7 +111,7 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
     @Query(
         "SELECT MIN(s.startTime) AS firstStudy, MAX(s.startTime) AS lastStudy," +
             " COALESCE(SUM(s.spentTimeInSeconds), 0) AS spentTime, COUNT (DISTINCT s.exercise.id) as doneExercises" +
-            " FROM StudyHistory s WHERE user_id = :userId",
+            " FROM StudyHistory s WHERE s.userAccount.id = :userId",
     )
     fun getStatisticsByUserAccountId(userId: Long?): UserStatisticView
 
@@ -129,7 +129,7 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
 
     @Query(
         "SELECT s FROM StudyHistory s " +
-            " WHERE date_trunc('day', now()) = date_trunc('day', s.startTime) " +
+            " WHERE DATE(now()) = DATE(s.startTime) " +
             " AND s.userAccount.id = :userId",
     )
     fun getTodayHistories(userId: Long): List<StudyHistory>

@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import javax.annotation.security.RolesAllowed
-import javax.validation.Valid
+import jakarta.annotation.security.RolesAllowed
+import jakarta.validation.Valid
 
 @RestController
 @RequestMapping("/contributors")
@@ -36,17 +36,18 @@ class ContributorController(
     fun getContributors(
         @RequestParam(name = "locale", required = false, defaultValue = "ru-ru") locale: String,
         @RequestParam(name = "type", required = false) type: ContributorType?,
-    ): ResponseEntity<BrnResponse<List<ContributorResponse>>> = ResponseEntity
-        .ok()
-        .body(
-            BrnResponse(
-                data =
-                    if (type == null)
-                        contributorService.getAllContributors()
-                    else
-                        contributorService.getContributors(locale, type),
-            ),
-        )
+    ): ResponseEntity<BrnResponse<List<ContributorResponse>>> =
+        ResponseEntity
+            .ok()
+            .body(
+                BrnResponse(
+                    data =
+                        if (type == null)
+                            contributorService.getAllContributors()
+                        else
+                            contributorService.getContributors(locale, type),
+                ),
+            )
 
     @PostMapping
     @Operation(summary = "Add a new contributor")
@@ -55,9 +56,10 @@ class ContributorController(
         @Parameter(description = "Contributor data", required = true)
         @Valid
         @RequestBody contributorDto: ContributorRequest,
-    ): ResponseEntity<BrnResponse<ContributorResponse>> = ResponseEntity
-        .status(HttpStatus.CREATED)
-        .body(BrnResponse(data = contributorService.createContributor(contributorDto)))
+    ): ResponseEntity<BrnResponse<ContributorResponse>> =
+        ResponseEntity
+            .status(HttpStatus.CREATED)
+            .body(BrnResponse(data = contributorService.createContributor(contributorDto)))
 
     @PutMapping("/{contributorId}")
     @Operation(summary = "Update an existing contributor")
@@ -67,7 +69,8 @@ class ContributorController(
         @Parameter(description = "Contributor data", required = true)
         @Valid
         @RequestBody contributorDto: ContributorRequest,
-    ): ResponseEntity<BrnResponse<ContributorResponse>> = ResponseEntity
-        .ok()
-        .body(BrnResponse(data = contributorService.updateContributor(contributorId, contributorDto)))
+    ): ResponseEntity<BrnResponse<ContributorResponse>> =
+        ResponseEntity
+            .ok()
+            .body(BrnResponse(data = contributorService.updateContributor(contributorId, contributorDto)))
 }

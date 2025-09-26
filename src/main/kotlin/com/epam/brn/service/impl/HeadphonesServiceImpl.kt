@@ -12,9 +12,10 @@ class HeadphonesServiceImpl(
 ) : HeadphonesService {
     override fun save(headphones: Headphones): HeadphonesDto = headphonesRepository.save(headphones).toDto()
 
-    override fun getAllHeadphonesForUser(userId: Long): Set<HeadphonesDto> = headphonesRepository
-        .getHeadphonesForUser(userId)
-        .map {
-            it.toDto()
-        }.toSet()
+    override fun getAllHeadphonesForUser(userId: Long): Set<HeadphonesDto> =
+        headphonesRepository
+            .getHeadphonesForUser(userId)
+            .map {
+                it.toDto()
+            }.toSet()
 }

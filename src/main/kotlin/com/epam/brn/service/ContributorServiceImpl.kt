@@ -16,25 +16,27 @@ class ContributorServiceImpl(
     val contributorRepository: ContributorRepository,
 ) : ContributorService {
     @Transactional(readOnly = true)
-    override fun getAllContributors(): List<ContributorResponse> = contributorRepository
-        .findAll()
-        .stream()
-        .map { e -> e.toContributorResponse() }
-        .toList()
+    override fun getAllContributors(): List<ContributorResponse> =
+        contributorRepository
+            .findAll()
+            .stream()
+            .map { e -> e.toContributorResponse() }
+            .toList()
 
     @Transactional(readOnly = true)
     override fun getContributors(
         locale: String,
         type: ContributorType,
-    ): List<ContributorResponse> = contributorRepository
-        .findAllByType(type)
-        .stream()
-        .map { e -> e.toContributorResponse(locale) }
-        .toList()
+    ): List<ContributorResponse> =
+        contributorRepository
+            .findAllByType(type)
+            .stream()
+            .map { e -> e.toContributorResponse(locale) }
+            .toList()
 
     @Transactional
-    override fun createContributor(request: ContributorRequest): ContributorResponse =
-        contributorRepository.save(request.toEntity()).toContributorResponse()
+    override fun createContributor(contributorRequest: ContributorRequest): ContributorResponse =
+        contributorRepository.save(contributorRequest.toEntity()).toContributorResponse()
 
     @Transactional
     override fun updateContributor(
