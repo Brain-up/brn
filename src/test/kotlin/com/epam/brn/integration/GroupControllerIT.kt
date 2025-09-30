@@ -116,15 +116,12 @@ class GroupControllerIT : BaseIT() {
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(
                 MockMvcResultMatchers
-                    .jsonPath("$.data.series.length")
-                    .value(1)
-            )
-            .andExpect(
+                    .jsonPath("$.data.series.length()")
+                    .value(1),
+            ).andExpect(
                 MockMvcResultMatchers
                     .jsonPath("$.data.series[0]")
-                    .value(
-                        existingExerciseGroup.series[1].id,
-                    ),
+                    .value(existingExerciseGroup.series[1].id),
             )
         val response = resultAction.andReturn().response.contentAsString
         assertTrue(response.contains(existingExerciseGroup.name))
@@ -144,25 +141,19 @@ class GroupControllerIT : BaseIT() {
 
     fun insertExerciseGroupWithSeries(exerciseGroupName: String): ExerciseGroup {
         val group = ExerciseGroup(code = "CODE", name = exerciseGroupName, description = "description")
-        val series1 =
-            Series(
-                name = "series one",
-                description = "series one",
-                exerciseGroup = group,
-                level = 1,
-                type = "type",
-                active = false,
-            )
-        val series2 =
-            Series(
-                name = "series two",
-                description = "series two",
-                exerciseGroup = group,
-                level = 1,
-                type = "type",
-                active = true,
-            )
-        group.series.addAll(setOf(series1, series2))
+        val seriesList =
+            listOf(Pair("series one", false), Pair("series two", true))
+                .map {
+                    Series(
+                        name = it.first,
+                        description = it.first,
+                        exerciseGroup = group,
+                        level = 1,
+                        type = "type",
+                        active = it.second,
+                    )
+                } as MutableList<Series>
+        group.series.addAll(seriesList)
         return exerciseGroupRepository.save(group)
     }
 
