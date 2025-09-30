@@ -43,7 +43,11 @@ class ExerciseGroup(
         locale = locale,
         name = name,
         description = description,
-        series = series.map { series -> series.id }.toMutableList(),
+        series =
+            series
+                .filter { it.active }
+                .map { it.id }
+                .toMutableList(),
     )
 
     fun toDtoWithoutSeries() = ExerciseGroupDto(
