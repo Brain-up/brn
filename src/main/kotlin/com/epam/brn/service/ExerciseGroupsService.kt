@@ -8,7 +8,6 @@ import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
-import java.util.Optional
 
 @Service
 class ExerciseGroupsService(
@@ -19,8 +18,8 @@ class ExerciseGroupsService(
     @Cacheable("groupsById")
     fun findGroupDtoById(groupId: Long): ExerciseGroupDto {
         log.debug("Searching group with id=$groupId")
-        val group: Optional<ExerciseGroup> = exerciseGroupRepository.findById(groupId)
-        return group
+        return exerciseGroupRepository
+            .findById(groupId)
             .map { it.toDto() }
             .orElseThrow { EntityNotFoundException("No group was found for id=$groupId") }
     }

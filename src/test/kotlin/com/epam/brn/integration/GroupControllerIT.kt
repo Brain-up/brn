@@ -98,6 +98,35 @@ class GroupControllerIT : BaseIT() {
         assertTrue(response.contains(existingExerciseGroup.name))
     }
 
+    @Test
+    fun `test get group by Id with filtered series`() {
+        // GIVEN
+        val exerciseGroupName = "GroupName"
+        val existingExerciseGroup = insertExerciseGroupWithSeries(exerciseGroupName)
+        // WHEN
+        val resultAction =
+            mockMvc.perform(
+                MockMvcRequestBuilders
+                    .get(baseUrl + "/" + existingExerciseGroup.id)
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+        // THEN
+        resultAction
+            .andExpect(status().isOk)
+            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(
+                MockMvcResultMatchers
+                    .jsonPath("$.data.series.length()")
+                    .value(1),
+            ).andExpect(
+                MockMvcResultMatchers
+                    .jsonPath("$.data.series[0]")
+                    .value(existingExerciseGroup.series[1].id),
+            )
+        val response = resultAction.andReturn().response.contentAsString
+        assertTrue(response.contains(existingExerciseGroup.name))
+    }
+
     fun insertExerciseGroup(
         exerciseGroupName: String,
         locale: String = BrnLocale.RU.locale,
@@ -109,6 +138,24 @@ class GroupControllerIT : BaseIT() {
             locale = locale,
         ),
     )
+
+    fun insertExerciseGroupWithSeries(exerciseGroupName: String): ExerciseGroup {
+        val group = ExerciseGroup(code = "CODE", name = exerciseGroupName, description = "description")
+        val seriesList =
+            listOf(Pair("series one", false), Pair("series two", true))
+                .map {
+                    Series(
+                        name = it.first,
+                        description = it.first,
+                        exerciseGroup = group,
+                        level = 1,
+                        type = "type",
+                        active = it.second,
+                    )
+                } as MutableList<Series>
+        group.series.addAll(seriesList)
+        return exerciseGroupRepository.save(group)
+    }
 
     fun insertSeries(
         group: ExerciseGroup,
