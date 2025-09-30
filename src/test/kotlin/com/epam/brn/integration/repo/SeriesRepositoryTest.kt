@@ -15,6 +15,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
 import kotlin.test.assertNotNull
+import org.assertj.core.api.Assertions.assertThat
+import kotlin.test.assertTrue
 
 @DataJpaTest
 @Tag("integration-test")
@@ -60,8 +62,8 @@ class SeriesRepositoryTest {
 
         // THEN
         assertNotNull(result)
-        assertEquals(1, result.size)
-        assertEquals(true, result[0].active)
+        assertThat(result).hasSize(1)
+        assertTrue(result[0].active)
         assertEquals(series1.id!!, result[0].id)
         assertNotEquals(series2.id!!, result[0].id)
     }

@@ -116,6 +116,11 @@ class GroupControllerIT : BaseIT() {
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(
                 MockMvcResultMatchers
+                    .jsonPath("$.data.series.length")
+                    .value(1)
+            )
+            .andExpect(
+                MockMvcResultMatchers
                     .jsonPath("$.data.series[0]")
                     .value(
                         existingExerciseGroup.series[1].id,
