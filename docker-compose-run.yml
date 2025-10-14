@@ -24,12 +24,14 @@ services:
       SPRING_PROFILE: prod
       aws.credentialsPath: /run/secrets/aws-key
       GOOGLE_APPLICATION_CREDENTIALS: /run/secrets/firebase_config_json
+      GOOGLE_APPLICATION_TEST_CREDENTIALS: /run/secrets/firebase_test_config_json
       YANDEX_AUTH_TOKEN: _YANDEX_AUTH_TOKEN_
       YANDEX_FOLDER_ID: _YANDEX_FOLDER_ID_
       API_GITHUB_TOKEN: _API_GITHUB_TOKEN_
     secrets:
       - aws-key
       - firebase_config_json
+      - firebase_test_config_json
     depends_on:
       - db_brn
 #   brn_fe:
@@ -66,6 +68,8 @@ secrets:
     file: aws-key.properties
   firebase_config_json:
     file: firebase_config.json
+  firebase_test_config_json:
+    file: firebase_test_config.json
 volumes:
   dbdata:
   web-root-for-certbot: #volumes for certbot
