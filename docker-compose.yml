@@ -19,7 +19,6 @@ services:
       - 8081:8081
     environment:
       GOOGLE_APPLICATION_CREDENTIALS: /run/secrets/firebase_config_json
-      GOOGLE_APPLICATION_TEST_CREDENTIALS: /run/secrets/firebase_test_config_json
       DB_HOST: db_brn
       DB_PORT: 5432
       POSTGRES_DB: brn
@@ -28,7 +27,6 @@ services:
       SPRING_PROFILE: dev
     secrets:
       - firebase_config_json
-      - firebase_test_config_json
     depends_on:
       - db_brn
   brn_fe:
@@ -47,5 +45,3 @@ services:
 secrets:
   firebase_config_json:
     file: ./src/main/resources/firebase-brainupspb-dev.json
-  firebase_test_config_json:
-    file: ./src/test/resources/firebase-brainupspb-test.json
