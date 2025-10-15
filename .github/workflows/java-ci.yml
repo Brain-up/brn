@@ -16,7 +16,10 @@ jobs:
         with:
           java-version: 17
       - name: Build, Unit and Integration Tests
-        run: ./gradlew build test integrationTest jacocoTestReport sonarqube
+        run: |
+          echo "$FIREBASE_TEST_CONFIG"|base64 -d > firebase_config.json
+          export FIREBASE_TEST_CONFIG_PATH=./firebase_config.json
+          ./gradlew build test integrationTest jacocoTestReport sonarqube
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
