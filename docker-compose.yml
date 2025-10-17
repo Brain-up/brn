@@ -42,6 +42,41 @@ services:
       - 80:80
     depends_on:
       - brn
+  docker_socket_proxy:
+    image: tecnativa/docker-socket-proxy
+    container_name: docker_socket_proxy
+    restart: always
+    environment:
+      CONTAINERS: 1
+      CONTAINERS_INSPECT: 1
+      CONTAINERS_LOGS: 1
+      INFO: 1
+      VERSION: 1
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - portainer_ro_net
+
+  portainer_readonly:
+    image: portainer/portainer-ce
+    container_name: portainer_readonly
+    restart: always
+    ports:
+      - "9001:9000"
+    environment:
+      - LOG_LEVEL=INFO
+    volumes:
+      - portainer_ro_data:/data
+    networks:
+      - portainer_ro_net
+    depends_on:
+      - docker_socket_proxy
+    command: -H tcp://docker_socket_proxy:2375
 secrets:
   firebase_config_json:
     file: ./src/main/resources/firebase-brainupspb-dev.json
+volumes:
+  portainer_ro_data:
+
+networks:
+  portainer_ro_net:
