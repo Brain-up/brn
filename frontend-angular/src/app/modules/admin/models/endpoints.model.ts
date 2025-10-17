@@ -1,3 +1,4 @@
+import { Resources } from './resources.model';
 import { User, UserMapped, UserWithNoAnalytics } from './user.model';
 import { Contributor } from '@admin/models/contrubutor.model';
 
@@ -9,6 +10,12 @@ export class GetUsers {
 
 export class GetContributors {
   data: Contributor[];
+  errors: string[];
+  meta: string[];
+}
+
+export class GetResources {
+  data: Resources[];
   errors: string[];
   meta: string[];
 }
