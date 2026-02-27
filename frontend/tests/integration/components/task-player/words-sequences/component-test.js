@@ -40,6 +40,7 @@ module('Integration | Component | words-seq-task-player | per-word correctness',
 
   hooks.beforeEach(async function () {
     class MockAudio extends AudioService {
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
       startPlayTask() {}
       audioUrlForText() { return ''; }
     }
@@ -65,9 +66,9 @@ module('Integration | Component | words-seq-task-player | per-word correctness',
       },
     });
     this.set('model', model);
-    this.set('onRightAnswer', function () {});
-    this.set('onWrongAnswer', function () {});
-    this.set('onPlayText', function () {});
+    this.set('onRightAnswer', () => undefined);
+    this.set('onWrongAnswer', () => undefined);
+    this.set('onPlayText', () => undefined);
   });
 
   test('it marks each word individually as correct or incorrect when answer is partially wrong', async function (assert) {

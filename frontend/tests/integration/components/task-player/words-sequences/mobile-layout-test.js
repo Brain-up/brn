@@ -13,6 +13,7 @@ module(
 
     hooks.beforeEach(function () {
       class MockAudio extends AudioService {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
         startPlayTask() {}
         audioUrlForText() {
           return '';
@@ -68,9 +69,9 @@ module(
         },
       });
       this.set('model', model);
-      this.set('onRightAnswer', function () {});
-      this.set('onWrongAnswer', function () {});
-      this.set('onPlayText', function () {});
+      this.set('onRightAnswer', () => undefined);
+      this.set('onWrongAnswer', () => undefined);
+      this.set('onPlayText', () => undefined);
     });
 
     test('columns container has scrollable class for mobile support', async function (assert) {
