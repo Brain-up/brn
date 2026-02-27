@@ -173,125 +173,139 @@ contact:
   for_developers: 'For developers:'
 
 description:
-  header: 'About the ''<span class="text-indigo-600">''BrainUp''</span>'''
-  intro:
-    A team of volunteers started to develop the BrainUp interactive audio exercise platform for people with cognitive speech problems.
-    The ability to hear and to understand speech can be significantly improved thanks to these special and regular activities. Welcome!
-  context:
-    header: Background information
-    text:
+  tabs:
+    users: For Users
+    developers: For Developers
+  users:
+    header: "BrainUp — Free Online Hearing and Speech Comprehension Trainer!"
+    intro:
+      "Welcome! You have come to a unique platform designed to help you or your loved ones hear and understand speech better.
+      We don't just amplify sound — we train your brain to recognize words, phrases, sentences, and speech."
+    audience:
+      header: Who is BrainUp for?
       0:
-        According to statistics, almost 10% of people have hearing problems of different origins. However, about 20-30% of people can significantly
-        improve the ability to hear with the help of special exercises. The analysis of electrical impulses, which transform sound signals into words
-        and speech, occurs in separate areas of the brain. The recent data showed that the brain does not stop developing over the years and lends
-        itself to training at almost any age.
+        "<b>For people after cochlear implantation (CI).</b> After surgery, the brain receives new signals and must learn to 'decode' them.
+        BrainUp is your daily rehabilitation, the key to success."
       1:
-        American specialists began to study the mentioned topic above about 20 years ago. As a result, they have accumulated good experience and
-        analytics. Worked with engineers, they have developed several programs with exercises that genuinely  work and help many people to restore
-        their listening skills. Unfortunately all of these apps are quite expensive. Furthermore, they not adapted for non-English speaking populations.
-        In addition, they do not plan to support multilingual language blocks in the near future. One can see the obvious necessity of analogues of
-        apps for Russian-speaking people.
+        "<b>For the hard of hearing and those who are beginning to lose hearing.</b> If you notice that you 'hear but can't make out words',
+        especially in noise — that's a sign. The trainer will help maintain and improve speech comprehension skills, slow down isolation."
+      2: "<b>For anyone who wants to train auditory attention and perception.</b>"
+    importance:
+      header: Why is this important?
+      text:
+        "Hearing problems are often a brain problem, not just an ear problem. The brain loses the ability to process unclear sound signals.
+        BrainUp offers scientifically-based training of the auditory cortex, similar to physical exercise for hearing.
+        For Russian-speaking people, this is the first and only such free resource."
+    how_it_works:
+      header: "How does it work? (Just start!)"
+      0: "<b>Registration.</b> Create a personal account so we can adapt to you."
+      1: "<b>Adaptive start.</b> The system will assess your initial level of speech comprehension."
       2:
-        This project is being developed jointly with leading experts in the field of defectology in order to create a similar analogue
-        of apps thanks to public scientific developments in this area. The project is not commercial. Volunteers take part in the development of this
-        project. We are open to any help and cooperation.
-      3:
-        In the history of this draft more than 60 people have taken part in the development of apps from different countries (Russia, Ukraine,
-        Belarus, Poland, Netherlands, Mexico) since 2019.
-      4: The working version of the BrainUp program is already ready, where one can register and practice right now."
-  exercises:
-    header: Training plan and exercise program
-    us_recomendations:
-      title: 'Lesson recommendations given by American colleagues:'
-      0: it is necessary to exercise regularly (at least 6 times a week 30 minutes a day)
-      1: it is necessary to listen to audio material, heed and complete tasks
-      2: if you feel that the task is not very easy for you, do it again and again
-      3: the aim is not the number of correct answers, but the duration of lessons on the development of auditory perception
-    description:
-      exercise_groups: The block of classes consists of two groups of exercises - non-speech and speech exercises.
-      non_speech_group: The non-speech block is still in development, but there are already several exercises.
-      speech_group:
-        "There are several series of the same type in the speech block: Words, Group of words, Phrases. They have already been practically completed
-        technically. Series will soon be supplemented with exercises. It is already possible to study these series."
-    series:
+        "<b>Personalized training.</b> More than 3,000 audio exercises await you. Their difficulty will automatically adjust
+        to your progress: becoming easier or harder to provide optimal workload."
+      3: "<b>Progress and statistics.</b> In your personal account, you can always see how often and how successfully you practice. This motivates and shows dynamics."
+    exercises:
+      header: What's here?
+      intro: "Exercises are divided into blocks to train different skills:"
+      0: "<b>Words:</b> Learning to clearly distinguish individual words in silence and in noise."
+      1: "<b>Word Groups (Matrices):</b> Training to understand short phrases where logic won't hint at the missing word. An excellent methodology for concentration."
+      2: "<b>Phrases:</b> Learning to hear endings, prepositions, the particle 'not' — things that are often 'lost'."
+      3: "<b>Non-speech sounds (in development):</b> Training basic auditory attention."
+    recommendations:
+      header: How to practice best? Key rules
+      0: "<b>Regularity is more important than results.</b> Optimally — 30 minutes a day, at least 5-6 times a week."
+      1: "<b>Don't chase 100% correct answers.</b> If an exercise is difficult — that's good! It means the brain is actively working. Repeat challenging tasks."
+      2: "<b>The main goal is not to 'guess' but to listen as closely as possible.</b> Relax and concentrate on the sound."
+      3: "<b>Don't use headphones</b> for better simulation of being in an open auditory space."
+    who_we_are:
+      header: Who are we and why is it free?
+      intro:
+        "BrainUp is a non-commercial project created and maintained by a team of volunteers: developers, deaf education specialists, and enthusiasts.
+        We believe that hearing rehabilitation assistance should be accessible to everyone."
+      0: "<b>Methodology:</b> based on developments by the leading specialist in hearing rehabilitation, Professor Inna Vasilievna Koroleva."
+      1: "<b>Content:</b> prepared by professional deaf education specialists."
+      2: "<b>Technology:</b> the platform is written in Kotlin and maintained by volunteers from different countries."
+    help:
+      header: Want to help the project?
+      0: Tell people who might need it about us.
+      1: Report errors or inaccuracies through the special form.
+      2: "If you are an IT specialist (Kotlin, Ember.js, Angular, QA, DevOps, designer) and want to volunteer — write to the project founder, Elena Moshnikova, on Telegram: "
+    welcome: "Welcome to BrainUp! Your path to a clearer world of sounds starts here."
+    cta: Start Training
+  dev:
+    header: "About '<span class=\"text-indigo-600\">'BrainUp'</span>'"
+    intro:
+      "Want your code and your decisions to directly change people's quality of life? Join the BrainUp project team."
+    done:
+      header: What has already been done and is working?
+      text:
+        "We, a team of volunteers from different countries, have been developing, launching, and maintaining a free
+        online trainer for hearing development and speech comprehension since 2019. This is not a prototype. This is a working
+        product in production that people are already using today."
+      features_header: "Key capabilities of the launched product:"
+      features:
+        0: More than 3,000 diverse audio exercises.
+        1:
+          "Smart adaptive system: exercise difficulty automatically adjusts to each user's level of hearing and speech
+          comprehension, providing the most effective personalized training."
+        2: Personal account with detailed statistics and session dynamics tracking.
+        3: Adaptive interface, convenient on any device.
+        4: "Stack: Backend written in Kotlin, frontend — Ember.js/Angular."
+    target_users:
+      header: Who are our users and why is this critically important?
       0:
-        "The \"Words\" series is the first one to start with. This series is aimed to help the user to train the ability to hear words spoken in
-        silence and words with the imposition of various noises (more difficult version)."
+        "People after cochlear implantation: for them, this is a tool for daily rehabilitation to learn to decode
+        new signals from the implant into articulate speech. The success of the entire operation depends on such training."
       1:
-        "The matrix form of the exercises of the \"Group of words\" series was created by Inna Vasilievna Koroleva, professor of the Department
-        of Hearing and Speech, LORNII. This successful methodology has already proven itself for many years. The user sees the matrix and hears
-        words from each column in random order. As a result, there is a grammatically correct sentence with no meaning. The goal is for the
-        brain to concentrate on the words, and not guess the meaning. For example, the following sentences can be generated: \"A girl reads
-        cherries\", \"Grandmother draws books\", \"A woman dances money\", \"A girl draws money\", etc."
-      2:
-        "A series of \"Phrases\" teaches the user to focus on such difficulties as endings, prepositions and the particle \"not\" in a sentence."
-  contribute:
-    header: How to support our project
-    details: We ask users to actively participate in the tasks and inform us about possible errors
-    bug_tracking:
-      link: 'https://docs.google.com/document/d/1ihOrk7RRmz92teGMsw068KifR5MWpoBo8wq2Lb7gL44/edit'
-      title: using the link
-      goal: ', so that we can quickly fix these.'
-    contact_us:
-      "We are open to new volunteers as a developer (Kotlin, Ember, Angular), a tester, a painter and as a content volunteer. If you want to
-      become a part of the team, write to our project email: "
-    motivation:
-      "Only our joint efforts can make this project \"alive\" and, possibly, we can help many people discover or return for themselves
-      \"the world of understandable sounds\"."
-  links:
-    header: Useful links
-    articles:
-      title: 'Articles about the project:'
-      0:
-        title: Follow us on habr.ru
-        link: 'https://habr.com/ru/company/epam_systems/blog/530824/'
+        "People with hearing loss (hard of hearing): the trainer helps maintain and train the ability to understand speech in noise,
+        slow down the process of isolation, and improve the quality of communication."
+      2: Children from age 6 who are beginning to lose hearing.
+    uniqueness:
+      header: What makes us unique and strong?
+      0: A working and free product. Exercises are available to everyone 24/7.
+      1: The only scientifically-based analogue for Russian speakers compared to expensive Western programs.
+      2: "Based on the methodology of a leading expert (Prof. I.V. Koroleva) and content from leading deaf education specialists."
+      3: "We solve the 'I hear but don't understand' problem at the brain signal processing level."
+    growth:
+      header: The project is alive, growing, and needs development!
+      intro: "We face new ambitious tasks, and we really need your hands and expertise:"
+      tasks:
+        0:
+          "Feature development: creating a new hearing diagnostics module for user progress tracking,
+          creating new exercise types, deepening analytics, improving the website landing page."
+        1: "Scaling and optimization: improving architecture, performance, and fault tolerance for a growing audience."
+        2: "UX/UI improvement: making an already convenient interface even more accessible and engaging."
+        3: "Testing and reliability: ensuring the highest quality of a constantly evolving product with real users."
+    volunteers:
+      header: We currently need volunteers
+      0: Backend developers (Kotlin)
+      1: Frontend developers (Ember.js / Angular)
+      2: QA engineers / Autotesters
+      3: DevOps / System administrators
+      4: UX/UI designers
+      5: Product managers and analysts
+    benefits:
+      header: What will you get by joining?
+      0: Real, measurable social impact. You see how your work helps specific people here and now.
       1:
-        title: Follow us on wearecommunity.io
-        link: 'https://wearecommunity.io/communities/community-platform/articles/753'
-    foreign_programs:
-      title: 'Foreign programs for the development of auditory perception:'
-      0:
-        title: Advanced Brain Technologies
-        link: 'https://advancedbrain.com/'
-        description: '― exercises to improve brain, emotional, and mental health through melodies and sounds'
-      1:
-        title: Musical Auditory Training
-        link: 'http://musicalauditorytraining.com/'
-        description: '― development of auditory perception through music'
-      2:
-        title: Fast ForWord Reading Program
-        link: 'https://www.scilearn.com/program/'
-        description: '― program for the development of brain abilities and speech understanding'
-    scientific_basis:
-      header: 'Scientific basis:'
-      0:
-        title: The Brain That Changes Itself I (2008)
-        link: 'https://youtu.be/BMNrFENZ4Rw'
-      1:
-        title: The Brain That Changes Itself II (2010)
-        link: 'https://youtu.be/QUoBMSKq7zg'
-      2:
-        title: Hearing complaints among veterans following traumatic brain injury
-        link: 'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6417420/'
-      3:
-        title: The official website of I.V. Koroleva (professor, doctor of psychological sciences)
-        link: 'https://profkoroleva.ru/'
+        "Experience working with a production project with real users, complex logic, and a large volume of content
+        on a modern technology stack."
+      2: "Freedom for technological initiatives within a product that is truly needed."
+    cta:
+      header: Want to see the product, ask a question, or join?
+      0: "Visit and try it yourself: "
+      1: Tell colleagues who might find this meaningful.
+      2: Tell friends who might benefit as potential users.
+      3: "Our codebase and tasks are here: "
+      4: "To participate, contact the project founder, Elena Moshnikova, on Telegram: "
+    closing: Let's develop a project together that is already working and changing lives.
+    signature: "Best regards, BrainUp Project Team."
   team:
     header: Meet our team
     thanks_words: 'We are glad to all the contributors who have helped at different times and those who continue to develop the platform today.'
     image_alt: Team member photo {i}
-  doctors:
-    thanks_words: 'Also, we are very grateful to our medical specialists, consultants and authors of the exercises!'
   support:
     header: With the support
-    thanks_words: We would like to thank everyone who participates and supports our project!
-  join_us:
-    header: 'Join ''<span class="text-indigo-600">''BrainUp''</span>''!'
-    description: We will be glad to see everyone who wants to join and contribute to our project.
-    contact:
-      start: "If you want to join our team, you can write to our lead Elena Moshnikova: "
-      end: Elena will be happy to answer all your questions and to cooperate.
-    motivation: 'Our joint efforts make this project "alive" and, perhaps, we will be able to help many people discover or return the world of understandable sounds.'
 
 profile:
   statistics:
