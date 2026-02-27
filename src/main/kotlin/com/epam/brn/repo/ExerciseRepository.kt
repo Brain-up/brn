@@ -10,6 +10,22 @@ import java.util.Optional
 interface ExerciseRepository : JpaRepository<Exercise, Long> {
     fun findExercisesBySubGroupId(subGroupId: Long): List<Exercise>
 
+    @Query(
+        "SELECT DISTINCT e FROM Exercise e " +
+            "JOIN FETCH e.subGroup sg " +
+            "JOIN FETCH sg.series " +
+            "WHERE sg.id = :subGroupId",
+    )
+    fun findExercisesWithSubGroupBySubGroupId(subGroupId: Long): List<Exercise>
+
+    @Query(
+        "SELECT DISTINCT e FROM Exercise e " +
+            "JOIN FETCH e.subGroup sg " +
+            "JOIN FETCH sg.series " +
+            "WHERE e.id = :id",
+    )
+    fun findByIdWithSubGroup(id: Long): Exercise?
+
     fun findByNameAndLevel(
         name: String,
         level: Int,

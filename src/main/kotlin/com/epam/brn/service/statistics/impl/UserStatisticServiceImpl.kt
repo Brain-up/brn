@@ -23,7 +23,7 @@ class UserStatisticServiceImpl(
             .map {
                 SubGroupStatisticsResponse(
                     subGroupId = it,
-                    totalExercises = exerciseRepository.findExercisesBySubGroupId(it).size,
+                    totalExercises = exerciseRepository.findExerciseIdsBySubGroupId(it).size,
                     completedExercises = studyHistoryRepository.getDoneExercises(it, userAccount.id!!).size,
                 )
             }.toList()
