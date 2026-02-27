@@ -97,9 +97,12 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
 
     @Query(
         "SELECT s FROM StudyHistory s " +
-            " WHERE s.startTime >= :from " +
-            " AND s.startTime <= :to " +
-            " AND s.userAccount.id = :userId " +
+            "JOIN FETCH s.exercise e " +
+            "LEFT JOIN FETCH e.subGroup sg " +
+            "LEFT JOIN FETCH sg.series " +
+            "WHERE s.startTime >= :from " +
+            "AND s.startTime <= :to " +
+            "AND s.userAccount.id = :userId " +
             "ORDER BY s.startTime",
     )
     fun getHistories(
@@ -117,9 +120,10 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
 
     @Query(
         "SELECT s FROM StudyHistory s " +
-            " WHERE EXTRACT(MONTH FROM s.startTime) = :month " +
-            " AND EXTRACT(YEAR FROM s.startTime) = :year " +
-            " AND s.userAccount.id = :userId",
+            "JOIN FETCH s.exercise " +
+            "WHERE EXTRACT(MONTH FROM s.startTime) = :month " +
+            "AND EXTRACT(YEAR FROM s.startTime) = :year " +
+            "AND s.userAccount.id = :userId",
     )
     fun getMonthHistories(
         userId: Long,
