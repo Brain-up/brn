@@ -1,6 +1,6 @@
-import { RestSerializer, } from 'ember-cli-mirage';
+import { EmberDataSerializer } from "ember-cli-mirage";
 
-export default RestSerializer.extend({
+export default EmberDataSerializer.extend({
   keyForModel:()=>'data',
   keyForRelationshipIds:(key)=> key,
   keyForForeignKey:(key)=> key,

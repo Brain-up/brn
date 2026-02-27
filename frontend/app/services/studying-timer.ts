@@ -2,6 +2,7 @@ import Service from '@ember/service';
 import { action } from '@ember/object';
 import config from 'brn/config/environment';
 import { tracked } from '@glimmer/tracking';
+import Ember from 'ember';
 
 export default class StudyingTimerService extends Service {
   willDestroy() {
@@ -55,6 +56,9 @@ export default class StudyingTimerService extends Service {
   }
   @action
   async startIdleWatcher() {
+    if (Ember.testing) {
+      return;
+    }
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const player = this;
     const { timerInstance } = player;
