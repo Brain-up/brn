@@ -28,6 +28,9 @@ interface ExerciseRepository : JpaRepository<Exercise, Long> {
     )
     fun findExercisesByWord(word: String): List<Exercise>
 
+    @Query("SELECT e.id FROM Exercise e WHERE e.subGroup.id = :subGroupId")
+    fun findExerciseIdsBySubGroupId(subGroupId: Long): List<Long>
+
     fun existsBySubGroupId(subGroupId: Long): Boolean
 
     override fun findById(id: Long): Optional<Exercise>
