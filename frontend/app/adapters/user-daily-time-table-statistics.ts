@@ -10,7 +10,7 @@ export default class UserDailyTimeTableStatisticsAdapter extends ApplicationAdap
     day: string;
   } {
     return {
-      day: query.day.toUTC().toFormat('yyyy-MM-dd\'T\'HH:mm:ss'),
+      day: query.day.toFormat('yyyy-MM-dd'),
     };
   }
 }

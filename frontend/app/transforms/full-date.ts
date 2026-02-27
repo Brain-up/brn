@@ -8,7 +8,7 @@ class FullDate extends DateTransform {
     const browserLocale  = (navigator && navigator.language) || 'en';
     return (
       (serialized &&
-        DateTime.fromISO(serialized as unknown as string, { zone: 'utc', locale: browserLocale })) ||
+        DateTime.fromISO(serialized as unknown as string, { zone: 'utc', locale: browserLocale }).toLocal()) ||
       null
     );
   }

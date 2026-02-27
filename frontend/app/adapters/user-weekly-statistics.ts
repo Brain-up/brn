@@ -11,8 +11,8 @@ export default class UserWeeklyStatisticsAdapter extends ApplicationAdapter {
     to: string;
   } {
     const newQuery = {
-      from: query.from.toUTC().toFormat('yyyy-MM-dd\'T\'HH:mm:ss'),
-      to: query.to.toUTC().toFormat('yyyy-MM-dd\'T\'HH:mm:ss'),
+      from: query.from.toFormat('yyyy-MM-dd'),
+      to: query.to.toFormat('yyyy-MM-dd'),
     };
     return newQuery;
   }
