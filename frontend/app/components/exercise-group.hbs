@@ -1,6 +1,5 @@
 <LinkTo
-  class="sm:m-2 m-1 overflow-hidden border-2 border-gray-200 rounded-lg shadow-lg"
-  {{on "mouseenter" this.mouseEnter}}
+  class="sm:m-2 m-1 overflow-hidden border-2 border-gray-200 rounded-lg shadow-lg" {{on "mouseenter" this.mouseEnter}}
   {{on "mouseleave" this.mouseLeave}}
   @route="group.series.subgroup"
   @model={{@group.id}}
@@ -8,20 +7,18 @@
 >
   {{! template-lint-disable no-inline-styles style-concatenation }}
   <div
-    class="sm:h-40 h-16 bg-center bg-no-repeat bg-contain"
-    style={{html-safe (concat "background-image: url(" @group.picture ");")}}
+    class="sm:h-40 h-16 bg-blue-100 bg-center bg-no-repeat bg-contain" style={{html-safe (concat "background-image: url(" @group.picture ");")}}
   >
     {{#if this.isFlipped}}
       {{! @ts-ignore }}
       <div
-        class="sm:text-6xl w-full h-full pt-5 text-2xl font-extrabold text-center text-blue-600 bg-blue-300 bg-opacity-75"
-        title={{concat @group.description ' / ' (t "exercise.progress") ': ' this.completedStats}}
+        class="sm:text-6xl w-full h-full pt-5 text-2xl font-extrabold text-center text-blue-600 bg-blue-300 bg-opacity-75" title={{concat @group.description ' / ' (t "exercise.progress") ': ' this.completedStats}}
       >{{this.completedStats}}</div>
     {{/if}}
   </div>
-  <div class="sm:px-2 sm:py-2 h-full px-0 py-1 bg-gray-200">
+  <div class="sm:px-2 sm:py-2 flex items-center justify-center px-1 py-1 bg-gray-200">
     <div
-      class="sm:tracking-normal sm:leading-normal sm:text-base text-xs leading-none tracking-tighter text-center"
+      class="sm:tracking-normal sm:leading-normal sm:text-base text-xs leading-tight tracking-tighter text-center"
     >
       {{@group.name}}
     </div>
