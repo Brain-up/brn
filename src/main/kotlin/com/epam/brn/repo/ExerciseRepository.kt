@@ -37,9 +37,11 @@ interface ExerciseRepository : JpaRepository<Exercise, Long> {
     ): Optional<Exercise>
 
     @Query(
-        "SELECT e FROM Exercise e " +
-            "JOIN e.tasks t " +
-            "JOIN t.answerOptions ao " +
+        "SELECT DISTINCT e FROM Exercise e " +
+            "LEFT JOIN FETCH e.subGroup sg " +
+            "LEFT JOIN FETCH sg.series " +
+            "JOIN FETCH e.tasks t " +
+            "JOIN FETCH t.answerOptions ao " +
             "WHERE UPPER(ao.word) like UPPER(concat('%',:word,'%'))",
     )
     fun findExercisesByWord(word: String): List<Exercise>
@@ -52,5 +54,5 @@ interface ExerciseRepository : JpaRepository<Exercise, Long> {
     override fun findById(id: Long): Optional<Exercise>
 
     @Query("SELECT e.subGroup.series.type FROM Exercise e WHERE e.id = :id")
-    fun findTypeByExerciseId(id: Long): String
+    fun findTypeByExerciseId(id: Long): String?
 }

@@ -11,6 +11,7 @@ import java.time.LocalDateTime
 import java.time.ZoneOffset
 import org.hibernate.annotations.BatchSize
 import javax.persistence.CascadeType
+import javax.persistence.OrderBy
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.EntityListeners
@@ -44,6 +45,7 @@ class Exercise(
     var subGroup: SubGroup? = null,
     @OneToMany(mappedBy = "exercise", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     @BatchSize(size = 100)
+    @OrderBy("serialNumber ASC")
     val tasks: MutableSet<Task> = LinkedHashSet(),
     @OneToMany(mappedBy = "exercise", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     @BatchSize(size = 100)

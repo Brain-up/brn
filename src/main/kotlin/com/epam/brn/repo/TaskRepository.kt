@@ -24,5 +24,5 @@ interface TaskRepository : JpaRepository<Task, Long> {
     override fun findById(id: Long): Optional<Task>
 
     @Query("SELECT t.exercise.subGroup.series.type FROM Task t WHERE t.id = :taskId")
-    fun findExerciseTypeByTaskId(taskId: Long): String
+    fun findExerciseTypeByTaskId(taskId: Long): String?
 }
