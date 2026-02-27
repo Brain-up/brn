@@ -61,4 +61,20 @@ button:disabled {
   color: #ff0100;
 }
 
+.text-mode button {
+  background-image: none;
+  min-height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+}
+
+.text-mode .word {
+  position: static;
+  box-shadow: none;
+  background: transparent;
+  width: auto;
+}
+
 /*! purgecss end ignore */

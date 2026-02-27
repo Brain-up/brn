@@ -1,5 +1,6 @@
 <div
-  class={{style-namespace "text-image-button"}}
+  class="{{style-namespace "text-image-button"}} {{unless this.studyConfig.showImages "text-mode"}}"
+  data-test-text-image-button
   {{did-insert this.setStyle @pictureFileUrl}}
   {{did-update this.setStyle @pictureFileUrl}}
 >
