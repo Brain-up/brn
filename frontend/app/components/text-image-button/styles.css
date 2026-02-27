@@ -80,7 +80,7 @@ button:disabled {
   color: #ff0100;
 }
 
-.text-mode button {
+&.text-mode button {
   background-image: none;
   min-height: auto;
   display: flex;
@@ -89,7 +89,7 @@ button:disabled {
   padding: 8px 12px;
 }
 
-.text-mode .word {
+&.text-mode .word {
   position: static;
   box-shadow: none;
   background: transparent;
