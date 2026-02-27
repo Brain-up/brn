@@ -23,6 +23,8 @@ class ContributorServiceImpl(
         .findAllWithAssociations()
         .map { it.toContributorResponse() }
 
+    // Cache key intentionally excludes `locale` because the response always includes both
+    // RU and EN fields, so the locale parameter does not affect the cached result.
     @Cacheable(value = ["contributorsByType"], key = "#type")
     @Transactional(readOnly = true)
     override fun getContributors(

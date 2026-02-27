@@ -163,7 +163,9 @@ internal class SubGroupServiceTest {
         every { seriesRepository.findById(seriesId) } returns Optional.of(seriesMockk)
         every { subGroupRepository.save(subGroupRequest.toModel(seriesMockk)) } returns subGroupMockk
         every { subGroupMockk.code } returns "code"
+        every { subGroupMockk.id } returns 1L
         every { urlConversionService.makeUrlForSubGroupPicture("code") } returns "url/code"
+        every { exerciseRepository.findExerciseIdsBySubGroupId(any()) } returns emptyList()
         // WHEN
         subGroupService.addSubGroupToSeries(seriesId = seriesId, subGroupRequest = subGroupRequest)
         // THEN
