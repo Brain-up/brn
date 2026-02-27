@@ -417,7 +417,7 @@ internal class TaskServiceTest {
         @Test
         fun `should throw an exception when there is no task by exercise id`() {
             // GIVEN
-            every { taskRepositoryMock.findTasksByExerciseIdWithJoinedAnswers(LONG_ONE) } returns emptyList()
+            every { exerciseRepositoryMock.findTypeByExerciseId(LONG_ONE) } returns null
 
             // THEN
             shouldThrowExactly<EntityNotFoundException> {
