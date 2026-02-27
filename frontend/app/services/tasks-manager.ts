@@ -8,8 +8,8 @@ export default class TasksManagerService extends Service {
   @tracked
   completedCycleTasks = A();
   saveAsCompleted(task: any) {
-    this.completedTasks.pushObject(task);
-    this.completedCycleTasks.pushObject(task);
+    this.completedTasks = A([...this.completedTasks, task]);
+    this.completedCycleTasks = A([...this.completedCycleTasks, task]);
   }
   isCompleted(task: any) {
     return this.completedTasks.includes(task);

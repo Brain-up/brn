@@ -22,9 +22,11 @@ export default class GroupSeriesSubgroupExerciseController extends Controller {
   @tracked exerciseStats = {};
 
   get exerciseIsCompletedInCurrentCycle() {
-    return this.model
-      .get('tasks')
-      .every((task: any) => task.get('completedInCurrentCycle'));
+    const tasks = this.model.hasMany('tasks').value();
+    if (!tasks) return false;
+    return tasks
+      .slice()
+      .every((task: any) => task.completedInCurrentCycle);
   }
 
   goToSeries() {

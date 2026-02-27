@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { module, skip, test } from 'qunit';
-import setupMirage from 'ember-cli-mirage/test-support/setup-mirage';
+import { setupMirage } from "ember-cli-mirage/test-support";
 import { setupApplicationTest } from 'ember-qunit';
 import pageObject from './test-support/page-object';
 import { setupAfterPageVisit } from './test-support/helpers';
@@ -86,11 +86,9 @@ module('Acceptance | tasks flow', function (hooks) {
 
     await customTimeout();
 
+    await waitFor('[data-test-continue]', { timeout: 3000 });
     await click('[data-test-continue]');
 
-    // const targetTask2 = setupAfterPageVisit().targetTask;
-    // await waitFor('[data-test-task-answer-option]');
-    // await chooseAnswer(targetTask2.correctAnswer.word);
     await customTimeout();
   });
 

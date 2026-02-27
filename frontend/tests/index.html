@@ -29,6 +29,22 @@
     </div>
 
     <script src="/testem.js" integrity=""></script>
+    <script>
+      // ember-auto-import 2.x loads QUnit via webpack chunks that are injected
+      // after vendor.js by the build. test-support.js calls
+      // Testem.hookIntoTestFramework() at file scope before QUnit is available
+      // as a global, causing a "unable to detect a test framework" error.
+      // Defer the hook call until ember-qunit's start() loads QUnit properly.
+      if (typeof Testem !== 'undefined') {
+        var _origHook = Testem.hookIntoTestFramework;
+        Testem.hookIntoTestFramework = function() {
+          if (typeof QUnit !== 'undefined' || typeof mocha !== 'undefined' || typeof jasmine !== 'undefined') {
+            return _origHook.call(Testem);
+          }
+          // Will be called again by ember-qunit after QUnit is loaded via webpack
+        };
+      }
+    </script>
     <script src="{{rootURL}}assets/vendor.js"></script>
     <script src="{{rootURL}}assets/test-support.js"></script>
     <script src="{{rootURL}}assets/brn.js"></script>

@@ -8,8 +8,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 22
       - uses: rwjblue/setup-volta@v1
-      - uses: H1D/actions-ember-testing@8ca8da615c2db5889b7fbd3834e4093706754435
       - name: Install dependencies
         working-directory: ./frontend
         run: yarn install
@@ -31,8 +33,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 22
       - uses: rwjblue/setup-volta@v1
-      - uses: H1D/actions-ember-testing@8ca8da615c2db5889b7fbd3834e4093706754435
       - name: Install dependencies
         working-directory: ./frontend
         run: yarn install

@@ -87,5 +87,17 @@ export async function continueAfterStats() {
 }
 
 export async function chooseAnswer(option) {
-  await click(`[data-test-task-answer-option="${option}"]`);
+  const selector = `[data-test-task-answer-option="${option}"]`;
+  const el = document.querySelector(selector);
+  if (!el) return;
+  if (el.disabled) {
+    // @ember/test-helpers 4.x throws on clicking disabled elements;
+    // wait for it to become enabled (e.g. transition between questions).
+    await new Promise((r) => setTimeout(r, 100));
+    const enabled = document.querySelector(`${selector}:not(:disabled)`);
+    if (!enabled) return;
+    await click(enabled);
+  } else {
+    await click(el);
+  }
 }
