@@ -4,12 +4,12 @@
   {{did-insert this.didInit}}
   {{did-update this.didInit @day}}
 >
-  <div class="h-200px box-content flex items-center justify-center px-5 py-6">
+  <div class="sm:px-5 box-content flex items-center justify-center px-2 py-6">
     {{#if this.isLoading}}
       <LoadingSpinner />
     {{else}}
-      <div>
-        <table class="table-auto">
+      <div class="w-full overflow-x-auto">
+        <table class="w-full table-auto">
           <thead>
           <tr>
             <th class="px-4 py-2">{{t "profile.statistics.daily_time_table.series_name"}}</th>
