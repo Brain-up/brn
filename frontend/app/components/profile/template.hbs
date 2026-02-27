@@ -19,13 +19,11 @@
       title="{{this.user.email}}"
       style={{html-safe
         (concat "background-image: url('" this.avatarUrl "');")
-      }}
-      class="gradient-background focus:outline-none inline-flex items-center justify-center w-32 h-32 m-auto bg-center bg-contain border border-gray-400 rounded-full"
-      {{on "click" this.onShowAvatars}}
+      }} class="gradient-background focus:outline-none inline-flex items-center justify-center w-32 h-32 m-auto bg-center bg-contain border border-gray-400 rounded-full" {{on "click" this.onShowAvatars}}
     >
     </button>
   </div>
-  <div class="p-4 sm:p-8 lg:p-12">
+  <div class="sm:p-8 lg:p-12 p-4">
     <div class="mb-4">
       <LoginForm::Input
         @model={{this.user}}
@@ -70,9 +68,7 @@
           name="gender"
           value="FEMALE"
           type="radio"
-          checked={{eq this.user.gender "FEMALE"}}
-          class="w-3 h-3 border-gray-300"
-          id="female"
+          checked={{eq this.user.gender "FEMALE"}} class="w-3 h-3 border-gray-300" id="female"
           {{on "change" (fn this.onInput "gender")}}
         />
         {{t "registration_form.gender_female"}}
@@ -84,9 +80,7 @@
           name="gender"
           type="radio"
           value="MALE"
-          checked={{eq this.user.gender "MALE"}}
-          class="w-3 h-3 ml-4"
-          id="male"
+          checked={{eq this.user.gender "MALE"}} class="w-3 h-3 ml-4" id="male"
           {{on "change" (fn this.onInput "gender")}}
         />
         {{t "registration_form.gender_male"}}
@@ -103,8 +97,7 @@
     </div>
     <div class="mb-4">
       <LinkTo
-        @route="password-recovery"
-        class="hover:text-indigo-600 text-md focus:outline-none focus:underline font-medium text-indigo-500 transition duration-150 ease-in-out"
+        @route="password-recovery" class="hover:text-indigo-600 text-md focus:outline-none focus:underline font-medium text-indigo-500 transition duration-150 ease-in-out"
       >
         {{t "password_reset_form.update_password"}}
       </LinkTo>
