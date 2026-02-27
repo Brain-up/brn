@@ -12,7 +12,13 @@ interface ContributorRepository : JpaRepository<Contributor, Long> {
     fun findByGitHubUser(gitHubUser: GitHubUser): Contributor?
 
     @Query(
-        "SELECT c FROM Contributor c LEFT JOIN FETCH c.gitHubUser LEFT JOIN FETCH c.contacts " +
+        "SELECT DISTINCT c FROM Contributor c LEFT JOIN FETCH c.gitHubUser LEFT JOIN FETCH c.contacts " +
+            "ORDER BY c.contribution DESC",
+    )
+    fun findAllWithAssociations(): List<Contributor>
+
+    @Query(
+        "SELECT DISTINCT c FROM Contributor c LEFT JOIN FETCH c.gitHubUser LEFT JOIN FETCH c.contacts " +
             "WHERE c.type = ?1 AND c.active = true ORDER BY c.contribution DESC",
     )
     fun findAllByType(type: ContributorType): List<Contributor>
