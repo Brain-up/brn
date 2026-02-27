@@ -73,7 +73,6 @@ internal class TaskServiceTest {
     @MockK
     lateinit var exerciseMock: Exercise
 
-
     @Nested
     @DisplayName("Tests for getting tasks with parameters")
     inner class GetTasks {
@@ -407,6 +406,19 @@ internal class TaskServiceTest {
             every { taskRepositoryMock.findById(ofType(Long::class)) } returns Optional.of(task1Mock)
             every { task1Mock.answerOptions } returns mutableSetOf()
             every { taskRepositoryMock.findExerciseTypeByTaskId(ofType(Long::class)) } returns ExerciseType.DI.name
+
+            // THEN
+            shouldThrowExactly<EntityNotFoundException> {
+                taskService.getTaskById(LONG_ONE)
+            }
+        }
+
+        @Test
+        fun `should throw an exception when exercise type not found for task id`() {
+            // GIVEN
+            every { taskRepositoryMock.findById(ofType(Long::class)) } returns Optional.of(task1Mock)
+            every { task1Mock.answerOptions } returns mutableSetOf()
+            every { taskRepositoryMock.findExerciseTypeByTaskId(ofType(Long::class)) } returns null
 
             // THEN
             shouldThrowExactly<EntityNotFoundException> {

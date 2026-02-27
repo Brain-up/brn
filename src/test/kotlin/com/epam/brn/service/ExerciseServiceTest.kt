@@ -10,6 +10,7 @@ import com.epam.brn.dto.request.exercise.SetOfWords
 import com.epam.brn.dto.response.ExerciseWithWordsResponse
 import com.epam.brn.enums.BrnLocale
 import com.epam.brn.enums.BrnRole
+import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.Series
@@ -278,6 +279,19 @@ internal class ExerciseServiceTest {
         // THEN
         actualResult shouldBe exerciseDtoMock
         verify(exactly = 1) { exerciseRepository.findByIdWithSubGroup(ofType(Long::class)) }
+    }
+
+    @Test
+    fun `should throw EntityNotFoundException when exercise not found by id`() {
+        // GIVEN
+        val exerciseId = 999L
+        every { exerciseRepository.findByIdWithSubGroup(exerciseId) } returns null
+
+        // WHEN & THEN
+        shouldThrow<EntityNotFoundException> {
+            exerciseService.findExerciseById(exerciseId)
+        }
+        verify(exactly = 1) { exerciseRepository.findByIdWithSubGroup(exerciseId) }
     }
 
     @Test

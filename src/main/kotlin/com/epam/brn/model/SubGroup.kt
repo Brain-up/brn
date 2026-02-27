@@ -41,7 +41,10 @@ class SubGroup(
         description = record.description,
     )
 
-    fun toResponse(pictureUrl: String, exerciseIds: List<Long?>) = SubGroupResponse(
+    fun toResponse(
+        pictureUrl: String,
+        exerciseIds: List<Long?>,
+    ) = SubGroupResponse(
         seriesId = series.id!!,
         id = id!!,
         name = name,

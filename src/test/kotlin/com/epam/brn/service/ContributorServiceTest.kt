@@ -38,7 +38,7 @@ internal class ContributorServiceTest {
         // GIVEN
         val contributor = createContributor(id = 1, name = "Contributor", contribution = 5)
         val contributorList = listOf(contributor)
-        every { contributorRepository.findAll() } returns contributorList
+        every { contributorRepository.findAllWithAssociations() } returns contributorList
 
         // WHEN
         val actualResult = contributorService.getAllContributors()
@@ -49,6 +49,20 @@ internal class ContributorServiceTest {
         assertEquals(contributor.name, actualContributor.name)
         assertEquals(contributor.contribution, actualContributor.contribution)
         assertEquals(contributor.type, actualContributor.type)
+        verify(exactly = 1) { contributorRepository.findAllWithAssociations() }
+    }
+
+    @Test
+    fun `should get all contributors with empty list`() {
+        // GIVEN
+        every { contributorRepository.findAllWithAssociations() } returns emptyList()
+
+        // WHEN
+        val actualResult = contributorService.getAllContributors()
+
+        // THEN
+        assertEquals(0, actualResult.size)
+        verify(exactly = 1) { contributorRepository.findAllWithAssociations() }
     }
 
     @Test

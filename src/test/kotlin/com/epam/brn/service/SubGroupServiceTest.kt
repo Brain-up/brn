@@ -206,6 +206,29 @@ internal class SubGroupServiceTest {
     }
 
     @Test
+    fun `should return subgroup dto with exercise ids populated`() {
+        // GIVEN
+        val code = "code"
+        val pictureUrl = "url/code"
+        val seriesMockk = mockkClass(Series::class)
+        val seriesId = 1L
+        val subGroupId = 10L
+        val exerciseIds = listOf(100L, 200L, 300L)
+        val subGroup = spyk(SubGroup(subGroupId, "", code = code, 2, "", false, seriesMockk))
+        val subGroupResponse = SubGroupResponse(2, 2, 2, "name", pictureUrl, "description", false, exercises = exerciseIds.toMutableList())
+        every { seriesMockk.id } returns seriesId
+        every { exerciseRepository.findExerciseIdsBySubGroupId(subGroupId) } returns exerciseIds
+        every { subGroup.toResponse(pictureUrl, exerciseIds) } returns subGroupResponse
+        every { urlConversionService.makeUrlForSubGroupPicture(code) } returns pictureUrl
+        // WHEN
+        val resultSubGroupDto = subGroupService.toSubGroupResponse(subGroup)
+        // THEN
+        verify(exactly = 1) { exerciseRepository.findExerciseIdsBySubGroupId(subGroupId) }
+        verify(exactly = 1) { subGroup.toResponse(pictureUrl, exerciseIds) }
+        resultSubGroupDto.exercises shouldBe exerciseIds.toMutableList()
+    }
+
+    @Test
     fun `updateSubGroupById should update existing subgroup`() {
         // GIVEN
         val subGroupId = 1L
