@@ -118,3 +118,93 @@ module('Integration | Component | words-seq-task-player | per-word correctness',
     await settled();
   });
 });
+
+module('Integration | Component | words-seq-task-player | progress stability on wrong answer', function (hooks) {
+  setupRenderingTest(hooks);setupIntl(hooks, 'en-us');
+
+  hooks.beforeEach(async function () {
+    class MockAudio extends AudioService {
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      startPlayTask() {}
+      audioUrlForText() { return ''; }
+    }
+    this.owner.register('service:audio', MockAudio);
+
+    const store = this.owner.lookup('service:store');
+    const model = store.createRecord('task/words-sequences');
+    model.setProperties({
+      exerciseMechanism: 'MATRIX',
+      type: 'task/MATRIX',
+      name: '',
+      wrongAnswers: [],
+      template: '<OBJECT OBJECT_ACTION>',
+      answerOptions: {
+        OBJECT_ACTION: [
+          { id: 345, audioFileUrl: '', word: 'линь', wordType: 'OBJECT_ACTION', pictureFileUrl: '', soundsCount: 0 },
+          { id: 346, audioFileUrl: '', word: 'бал', wordType: 'OBJECT_ACTION', pictureFileUrl: '', soundsCount: 0 },
+        ],
+        OBJECT: [
+          { id: 344, audioFileUrl: '', word: 'вить', wordType: 'OBJECT', pictureFileUrl: '', soundsCount: 0 },
+          { id: 347, audioFileUrl: '', word: 'быль', wordType: 'OBJECT', pictureFileUrl: '', soundsCount: 0 },
+        ],
+      },
+    });
+    this.set('model', model);
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    this.set('onRightAnswer', function () {});
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    this.set('onWrongAnswer', function () {});
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    this.set('onPlayText', function () {});
+  });
+
+  test('progress bar does not reset on wrong answer', async function (assert) {
+    await render(hbs`
+      <TaskPlayer::WordsSequences
+        @task={{this.model}}
+        @mode="task"
+        @onRightAnswer={{this.onRightAnswer}}
+        @onWrongAnswer={{this.onWrongAnswer}}
+        @onPlayText={{this.onPlayText}}
+      >
+        <:header as |data|>
+          <span data-test-tasks-count>{{data.tasks.length}}</span>
+        </:header>
+      </TaskPlayer::WordsSequences>
+    `);
+
+    // Record initial state
+    const initialTasksCount = document.querySelector('[data-test-tasks-count]').textContent.trim();
+    const initialCorrectAnswer = document.body.dataset.correctAnswer;
+    assert.ok(initialCorrectAnswer, 'correct answer is set on body');
+    assert.ok(parseInt(initialTasksCount) > 0, 'tasks count is positive');
+
+    // Build a wrong answer: pick the correct OBJECT word but a wrong OBJECT_ACTION word
+    const correctAnswer = initialCorrectAnswer.split(',');
+    const correctObjectWord = correctAnswer[0];
+    const correctActionWord = correctAnswer[1];
+    const allActionWords = this.model.answerOptions.OBJECT_ACTION.map(o => o.word);
+    const wrongActionWord = allActionWords.find(w => w !== correctActionWord);
+    assert.ok(wrongActionWord, 'found a wrong action word to use');
+
+    // Submit wrong answer
+    await click(`[data-test-task-answer-option="${correctObjectWord}"]`);
+    await click(`[data-test-task-answer-option="${wrongActionWord}"]`);
+
+    // After wrong answer: tasks count should stay the same (progress denominator unchanged)
+    const afterWrongTasksCount = document.querySelector('[data-test-tasks-count]').textContent.trim();
+    assert.strictEqual(afterWrongTasksCount, initialTasksCount, 'tasksCopy length stays the same after wrong answer');
+
+    // The same task should repeat (same correctAnswer)
+    const afterWrongCorrectAnswer = document.body.dataset.correctAnswer;
+    assert.strictEqual(afterWrongCorrectAnswer, initialCorrectAnswer, 'same task repeats after wrong answer');
+
+    // Now submit the correct answer
+    await click(`[data-test-task-answer-option="${correctObjectWord}"]`);
+    await click(`[data-test-task-answer-option="${correctActionWord}"]`);
+
+    // After correct answer: task should advance (different correctAnswer)
+    const afterCorrectAnswer = document.body.dataset.correctAnswer;
+    assert.notStrictEqual(afterCorrectAnswer, initialCorrectAnswer, 'task advances after correct answer');
+  });
+});
