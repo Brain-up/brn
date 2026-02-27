@@ -38,8 +38,9 @@ class TaskService(
 
     @Cacheable("tasksByExerciseId")
     fun getTasksByExerciseId(exerciseId: Long): List<Any> {
-        val exerciseType = exerciseRepository.findTypeByExerciseId(exerciseId)
-            ?: throw EntityNotFoundException("No exercise found for id=$exerciseId")
+        val exerciseType =
+            exerciseRepository.findTypeByExerciseId(exerciseId)
+                ?: throw EntityNotFoundException("No exercise found for id=$exerciseId")
         val tasks = taskRepository.findTasksByExerciseIdWithJoinedAnswers(exerciseId)
         tasks.forEach { task -> processAnswerOptions(task) }
         return when (val type = valueOf(exerciseType)) {
@@ -64,8 +65,9 @@ class TaskService(
         val task =
             taskRepository.findById(taskId).orElseThrow { EntityNotFoundException("No task found for id=$taskId") }
         processAnswerOptions(task)
-        val exerciseType = taskRepository.findExerciseTypeByTaskId(taskId)
-            ?: throw EntityNotFoundException("No exercise type found for taskId=$taskId")
+        val exerciseType =
+            taskRepository.findExerciseTypeByTaskId(taskId)
+                ?: throw EntityNotFoundException("No exercise type found for taskId=$taskId")
         return when (val type = valueOf(exerciseType)) {
             SINGLE_SIMPLE_WORDS, FREQUENCY_WORDS, SYLLABLES_KOROLEVA, PHRASES ->
                 task.toTaskResponse(type)

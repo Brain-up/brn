@@ -32,14 +32,14 @@ internal class SeriesServiceTest {
         val listSeries = listOf(series)
         val expectedResult = listOf(seriesDto)
         every { series.active } returns true
-        every { seriesRepository.findDistinctByExerciseGroupIdAndActiveTrue(groupId) } returns listSeries
+        every { seriesRepository.findByExerciseGroupIdWithSubGroups(groupId) } returns listSeries
         every { series.toDto() } returns seriesDto
 
         // WHEN
         val actualResult = seriesService.findSeriesForGroup(groupId)
 
         // THEN
-        verify(exactly = 1) { seriesRepository.findDistinctByExerciseGroupIdAndActiveTrue(groupId) }
+        verify(exactly = 1) { seriesRepository.findByExerciseGroupIdWithSubGroups(groupId) }
         assertEquals(expectedResult, actualResult)
     }
 
@@ -48,13 +48,13 @@ internal class SeriesServiceTest {
         // GIVEN
         val groupId: Long = 1
         val listSeries = emptyList<Series>()
-        every { seriesRepository.findDistinctByExerciseGroupIdAndActiveTrue(groupId) } returns listSeries
+        every { seriesRepository.findByExerciseGroupIdWithSubGroups(groupId) } returns listSeries
 
         // WHEN
         val actualResult = seriesService.findSeriesForGroup(groupId)
 
         // THEN
-        verify(exactly = 1) { seriesRepository.findDistinctByExerciseGroupIdAndActiveTrue(groupId) }
+        verify(exactly = 1) { seriesRepository.findByExerciseGroupIdWithSubGroups(groupId) }
         assertEquals(emptyList<SeriesDto>(), actualResult)
     }
 

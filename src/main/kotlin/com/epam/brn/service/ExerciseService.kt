@@ -36,8 +36,9 @@ class ExerciseService(
     private val log = logger()
 
     fun findExerciseById(exerciseID: Long): ExerciseDto {
-        val exercise = exerciseRepository.findByIdWithSubGroup(exerciseID)
-            ?: throw EntityNotFoundException("Could not find requested exerciseID=$exerciseID")
+        val exercise =
+            exerciseRepository.findByIdWithSubGroup(exerciseID)
+                ?: throw EntityNotFoundException("Could not find requested exerciseID=$exerciseID")
         return updateExerciseDto(exercise.toDto())
     }
 
