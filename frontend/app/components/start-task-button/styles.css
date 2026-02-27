@@ -37,6 +37,14 @@ button {
   transition: 0.3s;
 }
 
+@media (max-width: 640px) {
+  button {
+    padding: 40px 45px 40px 50px;
+    font-size: 40px;
+    line-height: 40px;
+  }
+}
+
 button:active {
   transform: scale(0.9);
   outline: none;
