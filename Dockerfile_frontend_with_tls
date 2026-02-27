@@ -1,4 +1,4 @@
-FROM node:12 AS build-frontend
+FROM node:22 AS build-frontend
 COPY frontend/ /src/
 WORKDIR /src
 RUN yarn
@@ -8,7 +8,7 @@ FROM node:20 AS build-frontend-angular
 COPY frontend-angular/ /src/
 WORKDIR /src
 ENV NODE_OPTIONS=--openssl-legacy-provider
-RUN npm ci
+RUN npm ci --legacy-peer-deps
 RUN npm run build
 
 FROM nginx:alpine AS brn_fe_with_tls
