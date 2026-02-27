@@ -8,8 +8,6 @@ import java.util.Optional
 
 @Repository
 interface ExerciseRepository : JpaRepository<Exercise, Long> {
-    fun findExercisesBySubGroupId(subGroupId: Long): List<Exercise>
-
     @Query(
         "SELECT DISTINCT e FROM Exercise e " +
             "JOIN FETCH e.subGroup sg " +
@@ -40,8 +38,8 @@ interface ExerciseRepository : JpaRepository<Exercise, Long> {
         "SELECT DISTINCT e FROM Exercise e " +
             "LEFT JOIN FETCH e.subGroup sg " +
             "LEFT JOIN FETCH sg.series " +
-            "JOIN FETCH e.tasks t " +
-            "JOIN FETCH t.answerOptions ao " +
+            "JOIN e.tasks t " +
+            "JOIN t.answerOptions ao " +
             "WHERE UPPER(ao.word) like UPPER(concat('%',:word,'%'))",
     )
     fun findExercisesByWord(word: String): List<Exercise>
