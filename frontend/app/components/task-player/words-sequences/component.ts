@@ -173,7 +173,6 @@ export default class WordsSequencesComponent<
   async handleWrongAnswer() {
     this.task.wrongAnswers.pushObject(this.firstUncompletedTask?.serialize());
     this.markNextAttempt(this.firstUncompletedTask as TaskItem);
-    this.updateLocalTasks();
     await customTimeout(300);
     this.startTask();
     this.onWrongAnswer({ skipRetry: true });
