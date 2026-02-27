@@ -7,4 +7,22 @@
   flex-direction: column;
 }
 
+.words-sequences-columns {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 640px) {
+  .type-column {
+    min-width: 0;
+    max-width: none;
+    flex: 1 1 0;
+  }
+
+  .words-sequences-columns {
+    gap: 4px;
+    padding: 0 4px;
+  }
+}
+
 /*! purgecss end ignore */
