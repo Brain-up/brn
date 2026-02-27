@@ -36,10 +36,8 @@ class ExerciseService(
     private val log = logger()
 
     fun findExerciseById(exerciseID: Long): ExerciseDto {
-        val exercise =
-            exerciseRepository
-                .findById(exerciseID)
-                .orElseThrow { EntityNotFoundException("Could not find requested exerciseID=$exerciseID") }
+        val exercise = exerciseRepository.findByIdWithSubGroup(exerciseID)
+            ?: throw EntityNotFoundException("Could not find requested exerciseID=$exerciseID")
         return updateExerciseDto(exercise.toDto())
     }
 
@@ -69,7 +67,7 @@ class ExerciseService(
         subGroupId: Long,
     ): List<ExerciseDto> {
         log.debug("Searching exercises for user=$userId with subGroupId=$subGroupId with Availability")
-        val subGroupExercises = exerciseRepository.findExercisesBySubGroupId(subGroupId).sortedBy { s -> s.level }
+        val subGroupExercises = exerciseRepository.findExercisesWithSubGroupBySubGroupId(subGroupId).sortedBy { s -> s.level }
         val currentUserRoles = userAccountService.getCurrentUserRoles()
         if (currentUserRoles.contains(BrnRole.ADMIN) || currentUserRoles.contains(BrnRole.SPECIALIST))
             return subGroupExercises.map { exercise -> updateExerciseDto(exercise.toDto(true)) }
@@ -159,7 +157,7 @@ class ExerciseService(
     }
 
     fun findExercisesWithTasksBySubGroup(subGroupId: Long): List<ExerciseDto> = exerciseRepository
-        .findExercisesBySubGroupId(subGroupId)
+        .findExercisesWithSubGroupBySubGroupId(subGroupId)
         .map { updateExerciseDto(it.toDto()) }
 
     fun findExercisesByWord(word: String): List<ExerciseWithWordsResponse> = exerciseRepository
