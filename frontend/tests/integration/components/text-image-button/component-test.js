@@ -30,6 +30,7 @@ module('Integration | Component | text-image-button', function (hooks) {
     const controller = this.owner.lookup('controller:group.series.subgroup.exercise.task');
     controller.set('model', { shouldBeWithPictures: true });
 
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     this.set('noop', () => {});
 
     await render(hbs`<TextImageButton
@@ -49,6 +50,7 @@ module('Integration | Component | text-image-button', function (hooks) {
     const studyConfig = this.owner.lookup('service:study-config');
     studyConfig.toggleImageVisibility();
 
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     this.set('noop', () => {});
 
     await render(hbs`<TextImageButton
@@ -64,6 +66,7 @@ module('Integration | Component | text-image-button', function (hooks) {
     const controller = this.owner.lookup('controller:group.series.subgroup.exercise.task');
     controller.set('model', { shouldBeWithPictures: true });
 
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     this.set('noop', () => {});
 
     await render(hbs`<TextImageButton
