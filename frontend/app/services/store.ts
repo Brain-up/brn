@@ -19,7 +19,7 @@ export default class Store extends LegacyStore {
   constructor(args: any) {
     super(args);
     this.requestManager = new RequestManager()
-      .use([new AuthHandler(this.authToken), new BrnApiHandler(), Fetch])
+      .use([new AuthHandler(this.authToken), new BrnApiHandler(this), Fetch])
       .useCache(CacheHandler);
   }
 

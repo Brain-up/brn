@@ -42,12 +42,19 @@ function buildQueryString(type: string, query: Record<string, any>): string {
 
 // ─── JSON:API Normalization ──────────────────────────────────────────────────
 
+// Maps raw API key → JSON:API attribute name
 const ATTR_REMAP: Record<string, Record<string, string>> = {
-  exercise: { order: 'level' },
   task: { serialNumber: 'order' },
   'task/signal': { serialNumber: 'order' },
   'task/single-simple-words': { serialNumber: 'order' },
   'task/words-sequences': { serialNumber: 'order' },
+};
+
+// Model attrs that should be aliased from another raw key.
+// { modelAttr: rawKey } — after normal attribute processing, copy rawKey's value to modelAttr.
+// This handles the case where the old keyForAttribute mapped multiple model attrs to the same JSON key.
+const ATTR_ALIAS: Record<string, Record<string, string>> = {
+  exercise: { order: 'level' }, // model has both @attr level and @attr order; API sends only 'level'
 };
 
 const PRIMARY_KEY: Record<string, string> = {
@@ -144,13 +151,13 @@ function normalizeContributor(raw: any): JsonApiResource {
 }
 
 function normalizeSignalRecord(raw: any): JsonApiResource {
+  const { id, ...rest } = raw;
   return {
-    id: String(raw.id),
+    id: String(id),
     type: 'signal',
     attributes: {
-      ...raw,
+      ...rest,
       duration: raw.length,
-      id: undefined,
     },
   };
 }
@@ -159,13 +166,27 @@ function normalizeTaskSignalRecord(
   signalPayload: { id: number },
   exerciseId: string,
   allSignals: any[],
+  store: any,
 ): JsonApiResource {
   const id = `signal-task-${signalPayload.id}`;
-  const opts = allSignals.map((_el: any, i: number) => ({
-    word: `${i + 1}: [signal]`,
-    signal: { id: String(_el.id), type: 'signal' },
-    audioFileUrl: { id: String(_el.id), type: 'signal' },
-  }));
+  // Create answer options with lazy getters that resolve Signal model instances
+  // at access time (after CacheHandler has processed the included signals).
+  // The JSON:API cache stores attribute values by reference, so these getters survive.
+  const opts = allSignals.map((_el: any, i: number) => {
+    const signalId = String(_el.id);
+    return {
+      get word() {
+        const sig = store.peekRecord('signal', signalId);
+        return `${i + 1}: [${sig?.duration}ms, ${sig?.frequency}Mhz]`;
+      },
+      get signal() {
+        return store.peekRecord('signal', signalId);
+      },
+      get audioFileUrl(): any {
+        return this.signal;
+      },
+    };
+  });
   return {
     id,
     type: 'task/signal',
@@ -182,7 +203,7 @@ function normalizeTaskSignalRecord(
 }
 
 function normalizeTask(raw: any, exerciseId?: string): JsonApiResource {
-  const type = MECHANISM_TO_TYPE[raw.exerciseMechanism] || 'task/single-simple-words';
+  const type = MECHANISM_TO_TYPE[raw.exerciseMechanism] || 'task/signal';
   const remap = ATTR_REMAP[type] || {};
   const excludes = EXCLUDE_FROM_ATTRS[type] || new Set();
 
@@ -230,7 +251,7 @@ function normalizeTask(raw: any, exerciseId?: string): JsonApiResource {
   return resource;
 }
 
-function normalizeRecord(modelType: string, raw: any, included: JsonApiResource[]): JsonApiResource {
+function normalizeRecord(modelType: string, raw: any, included: JsonApiResource[], store: any): JsonApiResource {
   if (modelType === 'contributor') {
     return normalizeContributor(raw);
   }
@@ -238,6 +259,7 @@ function normalizeRecord(modelType: string, raw: any, included: JsonApiResource[
   const pk = PRIMARY_KEY[modelType] || 'id';
   const id = String(raw[pk]);
   const remap = ATTR_REMAP[modelType] || {};
+  const aliases = ATTR_ALIAS[modelType] || {};
   const rels = RELATIONSHIPS[modelType] || {};
   const excludes = EXCLUDE_FROM_ATTRS[modelType] || new Set();
 
@@ -254,11 +276,38 @@ function normalizeRecord(modelType: string, raw: any, included: JsonApiResource[
   const attributes: Record<string, any> = {};
   const relationships: Record<string, any> = {};
 
+  // For exercises, process signals BEFORE tasks so that signal-based task/signal
+  // records are created first. If signals exist, they define the tasks relationship.
+  if (modelType === 'exercise' && Array.isArray(raw.signals) && raw.signals.length > 0) {
+    const signalRefs: { id: string; type: string }[] = [];
+    const taskRefs: { id: string; type: string }[] = [];
+    for (const signalData of raw.signals) {
+      const signalResource = normalizeSignalRecord(signalData);
+      included.push(signalResource);
+      signalRefs.push({ id: signalResource.id, type: 'signal' });
+
+      const taskSignalResource = normalizeTaskSignalRecord(signalData, id, raw.signals, store);
+      included.push(taskSignalResource);
+      taskRefs.push({ id: taskSignalResource.id, type: 'task/signal' });
+    }
+    relationships.signals = { data: signalRefs };
+    // For signal exercises, tasks ARE the task/signal records
+    relationships.tasks = { data: taskRefs };
+  }
+
   for (const [key, value] of Object.entries(raw)) {
-    if (key === 'id' || key === pk) continue;
+    // Don't skip pk from attributes when it's also a model attribute (stats models)
+    if (key === 'id') continue;
+    if (key === pk && pk !== 'id') {
+      // Include the pk value as an attribute too (e.g. 'date', 'seriesName')
+      attributes[key] = value;
+      continue;
+    }
 
     // Handle exercise tasks specially — embed full task records
     if (modelType === 'exercise' && key === 'tasks' && Array.isArray(value)) {
+      // If signals already set the tasks relationship, skip regular tasks
+      if (relationships.tasks) continue;
       const taskRefs: { id: string; type: string }[] = [];
       for (const taskData of value as any[]) {
         const taskResource = normalizeTask(taskData, id);
@@ -269,24 +318,8 @@ function normalizeRecord(modelType: string, raw: any, included: JsonApiResource[
       continue;
     }
 
-    // Handle exercise signals — normalize and create task/signal records
-    if (modelType === 'exercise' && key === 'signals' && Array.isArray(value) && (value as any[]).length > 0) {
-      const signalRefs: { id: string; type: string }[] = [];
-      const taskRefs: { id: string; type: string }[] = [];
-      for (const signalData of value as any[]) {
-        const signalResource = normalizeSignalRecord(signalData);
-        included.push(signalResource);
-        signalRefs.push({ id: signalResource.id, type: 'signal' });
-
-        const taskSignalResource = normalizeTaskSignalRecord(signalData, id, value as any[]);
-        included.push(taskSignalResource);
-        taskRefs.push({ id: taskSignalResource.id, type: 'task/signal' });
-      }
-      relationships.signals = { data: signalRefs };
-      // For signal exercises, tasks are the task/signal records
-      if (!relationships.tasks) {
-        relationships.tasks = { data: taskRefs };
-      }
+    // Skip signals — already handled above for exercises
+    if (modelType === 'exercise' && key === 'signals') {
       continue;
     }
 
@@ -319,6 +352,13 @@ function normalizeRecord(modelType: string, raw: any, included: JsonApiResource[
     attributes[attrName] = value;
   }
 
+  // Apply attribute aliases (copy one attr's value to another attr name)
+  for (const [attrName, sourceKey] of Object.entries(aliases)) {
+    if (sourceKey in attributes) {
+      attributes[attrName] = attributes[sourceKey];
+    }
+  }
+
   const resource: JsonApiResource = { id, type: modelType, attributes };
   if (Object.keys(relationships).length > 0) {
     resource.relationships = relationships;
@@ -337,6 +377,12 @@ function normalizeRecord(modelType: string, raw: any, included: JsonApiResource[
  * Replaces all adapters and serializers.
  */
 export class BrnApiHandler {
+  private store: any;
+
+  constructor(store: any) {
+    this.store = store;
+  }
+
   async request<T>(context: any, next: (req: any) => Promise<T>): Promise<T> {
     const { op, data } = context.request;
 
@@ -379,10 +425,10 @@ export class BrnApiHandler {
     let normalized: JsonApiDocument;
 
     if (Array.isArray(rawData)) {
-      const resources = rawData.map((item: any) => normalizeRecord(type, item, included));
+      const resources = rawData.map((item: any) => normalizeRecord(type, item, included, this.store));
       normalized = { data: resources };
     } else if (rawData && typeof rawData === 'object') {
-      const resource = normalizeRecord(type, rawData, included);
+      const resource = normalizeRecord(type, rawData, included, this.store);
       normalized = { data: resource };
     } else {
       return json;
