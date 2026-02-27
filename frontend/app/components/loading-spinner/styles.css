@@ -21,6 +21,12 @@
   -webkit-animation-delay: -0.16s;
   animation-delay: -0.16s;
 }
+
+@media (max-width: 640px) {
+  .loader {
+    margin: 32px auto;
+  }
+}
 .loader:before,
 .loader:after {
   position: absolute;

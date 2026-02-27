@@ -120,6 +120,19 @@ a[disabled] {
   padding: 25px 40px 40px;
 }
 
+@media (max-width: 640px) {
+  .custom-modal-overlay {
+    min-height: 0;
+  }
+
+  .modal-body {
+    width: 95vw;
+    height: auto;
+    min-height: 80vh;
+    padding: 16px;
+  }
+}
+
 /* Bugfix: #2399 */
 #exercise-timer-slot {
   margin-right: 100px;

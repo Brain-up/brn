@@ -8,6 +8,14 @@
   align-items: stretch;
 }
 
+@media (max-width: 640px) {
+  & {
+    padding: 10px 0;
+    grid-gap: 10px 0;
+    grid-template-columns: 8px 1fr 8px;
+  }
+}
+
 & > * {
   grid-column: 2 / -2;
 }
