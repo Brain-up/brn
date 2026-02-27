@@ -106,6 +106,6 @@ export default class GroupSeriesSubgroupExerciseController extends Controller {
 
   @action
   enableBodyScroll() {
-    this.bodyStyleNode.overflow = 'scroll';
+    this.bodyStyleNode.overflow = 'auto';
   }
 }

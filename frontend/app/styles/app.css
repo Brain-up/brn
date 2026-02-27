@@ -93,6 +93,19 @@ a[disabled] {
   position: relative;
 }
 
+@media (max-width: 640px) {
+  .exercise-container {
+    overflow: auto;
+  }
+}
+
+@media (max-width: 640px) and (orientation: landscape) {
+  .exercise-container {
+    overflow: auto;
+    min-height: 0;
+  }
+}
+
 .modal-fixed {
   position: fixed;
 }
@@ -114,5 +127,17 @@ a[disabled] {
 #modal-close-button {
   top: 20px;
   right: 45px;
+}
+
+@media (max-width: 640px) {
+  #exercise-timer-slot {
+    margin-right: 40px;
+  }
+
+  #modal-close-button {
+    top: 10px;
+    right: 10px;
+    z-index: 10;
+  }
 }
 /*! purgecss end ignore */
