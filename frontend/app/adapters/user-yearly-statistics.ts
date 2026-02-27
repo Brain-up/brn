@@ -6,8 +6,3 @@ export default class UserYearlyStatisticsAdapter extends UserWeeklyStatisticsAda
   }
 }
 
-declare module 'ember-data/types/registries/adapter' {
-  export default interface AdapterRegistry {
-    'v2/statistics/study/year': UserYearlyStatisticsAdapter;
-  }
-}

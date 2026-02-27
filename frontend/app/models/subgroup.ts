@@ -1,8 +1,10 @@
-import Model, { attr, hasMany, AsyncHasMany } from '@ember-data/model';
+import Model, { attr, hasMany, SyncHasMany } from '@warp-drive-mirror/legacy/model';
+import { Type } from '@warp-drive-mirror/core/types/symbols';
 import Exercise from './exercise';
 import { cached } from 'tracked-toolbox';
 
 export default class Subgroup extends Model {
+  declare [Type]: 'subgroup';
   @attr('string') seriesId!: string;
   @attr('string') name!: string;
   @attr('number') level!: number;
@@ -12,7 +14,7 @@ export default class Subgroup extends Model {
   }
   @attr('string') description!: string;
   @hasMany('exercise', { async: false, inverse: 'parent' })
-  exercises!: AsyncHasMany<Exercise>;
+  exercises!: SyncHasMany<Exercise>;
   get count() {
     return this.exercisesIds.length;
   }
@@ -25,9 +27,3 @@ export default class Subgroup extends Model {
   }
 }
 
-// DO NOT DELETE: this is how TypeScript knows how to look up your models.
-declare module 'ember-data/types/registries/model' {
-  export default interface ModelRegistry {
-    subgroup: Subgroup;
-  }
-}

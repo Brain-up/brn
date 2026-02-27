@@ -1,7 +1,9 @@
-import { attr } from '@ember-data/model';
+import { attr } from '@warp-drive-mirror/legacy/model';
+import { Type } from '@warp-drive-mirror/core/types/symbols';
 import UserWeeklyStatisticsModel from './user-weekly-statistics';
 
 export default class UserYearlyStatisticsModel extends UserWeeklyStatisticsModel {
+  declare [Type]: 'user-yearly-statistics';
   @attr('number') exercisingDays!: number;
 
   get days() {
@@ -9,9 +11,3 @@ export default class UserYearlyStatisticsModel extends UserWeeklyStatisticsModel
   }
 }
 
-// DO NOT DELETE: this is how TypeScript knows how to look up your models.
-declare module 'ember-data/types/registries/model' {
-  export default interface ModelRegistry {
-    userYearlyStatistics: UserYearlyStatisticsModel;
-  }
-}

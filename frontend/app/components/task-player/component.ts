@@ -12,7 +12,7 @@ import AudioService from 'brn/services/audio';
 import StudyingTimerService from 'brn/services/studying-timer';
 import TaskModel from 'brn/models/task';
 import type AnswerOption from 'brn/utils/answer-option';
-import { ExerciseMechanism } from 'brn/serializers/application';
+import { ExerciseMechanism } from 'brn/utils/exercise-types';
 
 export default class TaskPlayerComponent extends Component {
   @service('audio') audio!: AudioService;
@@ -96,7 +96,7 @@ export default class TaskPlayerComponent extends Component {
     const sortedWords = this.task.normalizedAnswerOptions.sort((a, b) => {
       return words.indexOf(a.word) - words.indexOf(b.word);
     });
-    this.task.set('normalizedAnswerOptions', sortedWords);
+    this.task.normalizedAnswerOptions = sortedWords;
   }
   get taskModelName() {
     return this.task.exerciseMechanism;
@@ -165,7 +165,7 @@ export default class TaskPlayerComponent extends Component {
   listenModeTask!: any;
 
   maybeStartExercise() {
-    if (!this.task.get('exercise.isStarted')) {
+    if (!this.task.exercise?.isStarted) {
       this.stats.addEvent(StatEvents.Start);
       this.task.exercise.trackTime('start');
     }

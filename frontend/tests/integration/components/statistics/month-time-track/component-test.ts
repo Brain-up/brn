@@ -7,7 +7,7 @@ import { DateTime } from 'luxon';
 import { PROGRESS } from 'brn/models/user-weekly-statistics';
 import sinon from 'sinon';
 import click from '@ember/test-helpers/dom/click';
-import Store from '@ember-data/store';
+import { type Store } from '@warp-drive-mirror/core';
 
 const generateTrackData = (
   store: Store,

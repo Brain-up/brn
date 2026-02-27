@@ -1,7 +1,9 @@
-import Model, { attr } from '@ember-data/model';
+import Model, { attr } from '@warp-drive-mirror/legacy/model';
+import { Type } from '@warp-drive-mirror/core/types/symbols';
 import { inject as service } from '@ember/service';
 import UserDataService from 'brn/services/user-data';
 export default class Contributor extends Model {
+  declare [Type]: 'contributor';
   @service('user-data') userData!: UserDataService;
   @attr() rawName!: Record<string, string>;
   @attr() rawDescription!: Record<string, string>;
@@ -32,9 +34,3 @@ export default class Contributor extends Model {
   }
 }
 
-// DO NOT DELETE: this is how TypeScript knows how to look up your models.
-declare module 'ember-data/types/registries/model' {
-  export default interface ModelRegistry {
-    contributor: Contributor;
-  }
-}

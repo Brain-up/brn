@@ -5,11 +5,13 @@ import type Transition from '@ember/routing/-private/transition';
 import TasksManagerService from 'brn/services/tasks-manager';
 import NetworkService from 'brn/services/network';
 import Ember from 'ember';
-import type Store from '@ember-data/store';
+import type { Store } from '@warp-drive-mirror/core';
+import type Router from '@ember/routing/router-service';
 import GroupSeriesSubgroupExerciseController from 'brn/controllers/group/series/subgroup/exercise';
 
 export default class GroupSeriesSubgroupExerciseRoute extends Route {
   @service('store') store!: Store;
+  @service('router') declare router: Router;
   @service('tasks-manager')
   tasksManager!: TasksManagerService;
   @service('network')
@@ -29,28 +31,26 @@ export default class GroupSeriesSubgroupExerciseRoute extends Route {
 
   redirect(exercise: Exercise, { to }: Transition) {
     if (!Ember.testing && !this.isAvailable) {
-      return this.transitionTo(
+      return this.router.transitionTo(
         'group.series.subgroup',
-        exercise.get('parent.id'),
+        exercise.parent?.id,
       );
     }
     if (exercise.hasMany('tasks').ids().length === 0) {
-      alert(`Unable to find tasks for exercise ${exercise.get('id')}`);
-      this.transitionTo('group.series', exercise.get('series.id'));
+      alert(`Unable to find tasks for exercise ${exercise.id}`);
+      this.router.transitionTo('group.series', exercise.series?.id);
       return;
     }
-    // if (!exercise.canInteract) {
-    //   this.transitionTo('group.series.subgroup.exercise', exercise.get('series.id'));
-    //   return;
-    // }
+    const sortedTasks = exercise.sortedTasks;
+    const firstTask = sortedTasks?.[0];
     if (
       to.name.endsWith('exercise.index') &&
-      exercise.get('sortedTasks.firstObject') &&
+      firstTask &&
       !to.paramNames.includes('task_id')
     ) {
-      this.transitionTo(
+      this.router.transitionTo(
         'group.series.subgroup.exercise.task',
-        exercise.get('sortedTasks.firstObject.id'),
+        firstTask.id,
       );
     }
   }

@@ -1,5 +1,5 @@
 import ApplicationSerializer from './application';
-import Store from '@ember-data/store';
+import { type Store } from '@warp-drive-mirror/core';
 export default class ExerciseSerializer extends ApplicationSerializer {
   ATTR_NAMES_MAP = Object.freeze({
     order: 'level',
@@ -8,9 +8,6 @@ export default class ExerciseSerializer extends ApplicationSerializer {
     tasks: { serialize: 'ids-and-types', deserialize: 'records' },
     signals: { serialize: 'ids-and-types', deserialize: 'records' },
   };
-  modelNameFromPayloadKey(key: string) {
-    return super.modelNameFromPayloadKey(key);
-  }
   normalizeSignal(store: Store, payloadItem: any) {
     const included: any[] = [];
     const signalSerializer = store.serializerFor('signal');
@@ -73,9 +70,3 @@ export default class ExerciseSerializer extends ApplicationSerializer {
   }
 }
 
-// DO NOT DELETE: this is how TypeScript knows how to look up your serializers.
-declare module 'ember-data/types/registries/serializer' {
-  export default interface SerializerRegistry {
-    exercise: ExerciseSerializer;
-  }
-}

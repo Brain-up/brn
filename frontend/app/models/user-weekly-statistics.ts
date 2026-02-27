@@ -1,5 +1,6 @@
-import { attr } from '@ember-data/model';
-import Model from '@ember-data/model';
+import { attr } from '@warp-drive-mirror/legacy/model';
+import Model from '@warp-drive-mirror/legacy/model';
+import { Type } from '@warp-drive-mirror/core/types/symbols';
 import { DateTime } from 'luxon';
 import { secondsTo } from 'brn/utils/seconds-to';
 import UserDataService from 'brn/services/user-data';
@@ -18,6 +19,7 @@ export type UserExercisingProgressStatusType =
   | PROGRESS.GREAT;
 
 export default class UserWeeklyStatisticsModel extends Model {
+  declare [Type]: 'user-weekly-statistics';
   @attr('full-date') date!: DateTime;
   @attr('number') exercisingTimeSeconds!: number;
   @attr('string') progress!: UserExercisingProgressStatusType;
@@ -38,9 +40,3 @@ export default class UserWeeklyStatisticsModel extends Model {
   }
 }
 
-// DO NOT DELETE: this is how TypeScript knows how to look up your models.
-declare module 'ember-data/types/registries/model' {
-  export default interface ModelRegistry {
-    userWeeklyStatistics: UserWeeklyStatisticsModel;
-  }
-}

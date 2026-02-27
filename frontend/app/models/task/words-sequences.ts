@@ -1,9 +1,10 @@
-import { attr } from '@ember-data/model';
+import { attr } from '@warp-drive-mirror/legacy/model';
+import { Type } from '@warp-drive-mirror/core/types/symbols';
 import BaseTask from '../task';
 import shuffleArray from 'brn/utils/shuffle-array';
 import deepCopy from '../../utils/deep-copy';
 import { cached } from 'tracked-toolbox';
-import { ExerciseMechanism } from 'brn/serializers/application';
+import { ExerciseMechanism } from 'brn/utils/exercise-types';
 
 function createTasks(
   [first, ...tail]: Array<string[]>,
@@ -29,6 +30,7 @@ function createTasks(
 }
 
 export default class WordsSequences extends BaseTask {
+  declare [Type]: 'task/words-sequences';
   @attr('string') template!: string;
   @attr() answerOptions!: string;
   @attr('array', {
@@ -81,9 +83,3 @@ export default class WordsSequences extends BaseTask {
   }
 }
 
-// DO NOT DELETE: this is how TypeScript knows how to look up your models.
-declare module 'ember-data/types/registries/model' {
-  export default interface ModelRegistry {
-    'task/words-sequences': WordsSequences;
-  }
-}

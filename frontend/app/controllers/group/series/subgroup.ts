@@ -23,8 +23,8 @@ export default class GroupSeriesSubgroupController extends Controller {
       return;
     }
     // @todo - fix;
-    const exercises = this.model.toArray();
-    const targets = exercises.mapBy('id');
+    const exercises = Array.from(this.model);
+    const targets = exercises.map((e: { id: string }) => e.id);
     const results = yield this.network.availableExercises(targets);
     this.availableExercises = results as string[];
   }).keepLatest())

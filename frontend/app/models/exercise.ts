@@ -1,5 +1,5 @@
-/* eslint-disable  ember/no-get, ember/classic-decorator-no-classic-methods */
-import { belongsTo, hasMany, attr, AsyncHasMany } from '@ember-data/model';
+import { belongsTo, hasMany, attr, SyncHasMany } from '@warp-drive-mirror/legacy/model';
+import { Type } from '@warp-drive-mirror/core/types/symbols';
 import CompletionDependent from './completion-dependent';
 import arrayPreviousItems from 'brn/utils/array-previous-items';
 import { inject as service } from '@ember/service';
@@ -34,6 +34,7 @@ interface IStatsSaveDTO {
   wrongAnswers: number;
 }
 export default class Exercise extends CompletionDependent {
+  declare [Type]: 'exercise';
   @service('session') session!: Session;
   @service('network') network!: NetworkService;
   @attr('string') name!: string;
@@ -46,11 +47,11 @@ export default class Exercise extends CompletionDependent {
   @attr('number') order!: number;
   // @todo - add enum
   @attr('string') exerciseType!: string;
-  @belongsTo('series', { async: false }) series!: SeriesModel;
-  @hasMany('signal', { async: false }) signals!: SignalModel[];
-  @hasMany('task', { async: true, inverse: 'exercise', polymorphic: true })
-  tasks!: AsyncHasMany<TaskModel>;
-  // @ts-expect-error owerriden property
+  @belongsTo('series', { async: false, inverse: 'exercises' }) series!: SeriesModel;
+  @hasMany('signal', { async: false, inverse: null }) signals!: SignalModel[];
+  @hasMany('task', { async: false, inverse: 'exercise', polymorphic: true })
+  tasks!: SyncHasMany<TaskModel>;
+  // @ts-expect-error overridden property
   get children() {
     return this.tasks;
   }
@@ -76,15 +77,13 @@ export default class Exercise extends CompletionDependent {
   get previousSiblings() {
     return arrayPreviousItems(
       this,
-      // @ts-expect-error types mismatch
-      this.get('series.groupedByNameExercises')[this.name],
+      this.series?.groupedByNameExercises?.[this.name],
     );
   }
   @cached
   get isCompleted() {
-    // @ts-expect-error edata type error
     const tasksIds = this.hasMany('tasks').ids();
-    const completedTaskIds = this.tasksManager.completedTasks.mapBy('id');
+    const completedTaskIds = this.tasksManager.completedTasks.map((t: { id: string }) => t.id);
     const tasksCompleted = tasksIds.every((taskId) =>
       completedTaskIds.includes(taskId),
     );
@@ -93,7 +92,7 @@ export default class Exercise extends CompletionDependent {
     );
   }
   get siblingExercises() {
-    return this.series.get('sortedExercises') || [];
+    return this.series?.sortedExercises || [];
   }
   get nextSiblings() {
     return this.siblingExercises.slice(this.siblingExercises.indexOf(this) + 1);
@@ -111,8 +110,10 @@ export default class Exercise extends CompletionDependent {
     };
   }
   trackTime(type = 'start') {
-    if (type === 'start' || type === 'end') {
-      this.set(`${type}Time`, new Date());
+    if (type === 'start') {
+      this.startTime = new Date();
+    } else if (type === 'end') {
+      this.endTime = new Date();
     }
   }
   calcStats(data: IStatsExerciseStats | undefined): IStatsObject {
@@ -157,9 +158,3 @@ export default class Exercise extends CompletionDependent {
   }
 }
 
-// DO NOT DELETE: this is how TypeScript knows how to look up your models.
-declare module 'ember-data/types/registries/model' {
-  export default interface ModelRegistry {
-    exercise: Exercise;
-  }
-}

@@ -14,9 +14,3 @@ export default class UserDailyTimeTableStatisticsAdapter extends ApplicationAdap
     };
   }
 }
-
-declare module 'ember-data/types/registries/adapter' {
-  export default interface AdapterRegistry {
-    'v2/statistics/study/day': UserDailyTimeTableStatisticsAdapter;
-  }
-}

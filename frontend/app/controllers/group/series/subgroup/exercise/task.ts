@@ -14,8 +14,8 @@ export default class GroupSeriesSubgroupExerciseTaskController extends Controlle
     if (!this.model.isLastTask) {
       this.router.transitionTo(
         'group.series.subgroup.exercise.task',
-        this.model.get('nextTask.exercise.id'),
-        this.model.get('nextTask.id'),
+        this.model.nextTask?.exercise?.id,
+        this.model.nextTask?.id,
       );
     }
   }

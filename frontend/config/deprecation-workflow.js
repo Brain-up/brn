@@ -9,7 +9,6 @@ self.deprecationWorkflow.config = {
         { handler: "silence", matchId: "deprecated-run-loop-and-computed-dot-access" },
         { handler: "silence", matchId: "implicit-injections" },
         { handler: "silence", matchId: "ember-global" },
-        { handler: "silence", matchId: "routing.transition-methods" },
         { handler: "silence", matchId: "computed-property.override" },
         { handler: "silence", matchId: "argument-less-helper-paren-less-invocation" }
     ]

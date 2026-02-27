@@ -3,7 +3,7 @@ import Route from '@ember/routing/route';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 import { inject as service } from '@ember/service';
 import NetworkService from 'brn/services/network';
-import type Store from '@ember-data/store';
+import type { Store } from '@warp-drive-mirror/core';
 import UserDataService from 'brn/services/user-data';
 
 export default class GroupsRoute extends Route.extend(AuthenticatedRouteMixin) {

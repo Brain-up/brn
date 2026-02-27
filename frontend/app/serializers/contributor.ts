@@ -1,4 +1,4 @@
-import Model from '@ember-data/model';
+import Model from '@warp-drive-mirror/legacy/model';
 import ApplicationSerializer, { IContributorDTO } from './application';
 
 export default class ContributorSerializer extends ApplicationSerializer {

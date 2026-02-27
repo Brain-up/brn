@@ -68,9 +68,9 @@ export default class WordsSequencesComponent<
     document.body.dataset.correctAnswer = '';
   }
   get firstUncompletedTask() {
-    const item = this.uncompletedTasks.firstObject;
-    const words = item?.answer.mapBy('word');
-    document.body.dataset.correctAnswer = words?.join(',');
+    const item = this.uncompletedTasks[0];
+    const words = item?.answer.map((a: { word: string }) => a.word);
+    document.body.dataset.correctAnswer = words?.join(',') ?? '';
     return item;
   }
   get audioFiles() {
@@ -113,12 +113,12 @@ export default class WordsSequencesComponent<
   }
   updateLocalTasks() {
     const completedOrders = this.tasksCopy
-      .filterBy('completedInCurrentCycle', true)
-      .mapBy('order');
+      .filter((t) => t.completedInCurrentCycle)
+      .map((t) => t.order);
     const tasksCopy: TaskItem[] = deepCopy(this.task.tasksToSolve).map(
       (copy: { order: number }) => {
         const completedInCurrentCycle = completedOrders.includes(copy.order);
-        const copyEquivalent = this.tasksCopy.findBy('order', copy.order);
+        const copyEquivalent = this.tasksCopy.find((t) => t.order === copy.order);
         return new TaskItem({
           ...copy,
           completedInCurrentCycle,
@@ -139,7 +139,7 @@ export default class WordsSequencesComponent<
       [selected.wordType]: selected.word,
     };
     if (this.answerCompleted) {
-      const correctAnswerWords = this.firstUncompletedTask?.answer.mapBy('word') || [];
+      const correctAnswerWords = this.firstUncompletedTask?.answer.map((a: { word: string }) => a.word) || [];
       const userAnswerWords = this.task.selectedItemsOrder.map(
         (orderName: string) =>
           (this.currentAnswerObject as any)[orderName] as string,
@@ -171,7 +171,7 @@ export default class WordsSequencesComponent<
   }
 
   async handleWrongAnswer() {
-    this.task.wrongAnswers.pushObject(this.firstUncompletedTask?.serialize());
+    this.task.wrongAnswers.push(this.firstUncompletedTask?.serialize());
     this.markNextAttempt(this.firstUncompletedTask as TaskItem);
     this.updateLocalTasks();
     await customTimeout(300);

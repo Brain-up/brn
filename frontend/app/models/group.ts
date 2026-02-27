@@ -1,28 +1,24 @@
-import { hasMany, attr, SyncHasMany } from '@ember-data/model';
+import { hasMany, attr, SyncHasMany } from '@warp-drive-mirror/legacy/model';
+import { Type } from '@warp-drive-mirror/core/types/symbols';
 import CompletionDependent from './completion-dependent';
 import SeriesModel from './series';
 
 export default class Group extends CompletionDependent {
+  declare [Type]: 'group';
   parent = null;
   sortChildrenBy = 'id';
 
   @attr('string') name!: string;
   @attr('string') description!: string;
   @attr('string') locale!: string;
-  @hasMany('series', { async: false }) series!: SyncHasMany<SeriesModel>;
+  @hasMany('series', { async: false, inverse: 'group' }) series!: SyncHasMany<SeriesModel>;
 
-  // @ts-expect-error childern owerride
+  // @ts-expect-error children override
   get children(): SeriesModel[] {
-    return this.series.toArray();
+    return Array.from(this.series);
   }
   get sortedSeries(): SeriesModel[] {
     return this.sortedChildren as unknown as SeriesModel[];
   }
 }
 
-// DO NOT DELETE: this is how TypeScript knows how to look up your models.
-declare module 'ember-data/types/registries/model' {
-  export default interface ModelRegistry {
-    group: Group;
-  }
-}

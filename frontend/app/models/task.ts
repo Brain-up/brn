@@ -1,5 +1,5 @@
-/* eslint-disable ember/classic-decorator-no-classic-methods */
-import { belongsTo, attr } from '@ember-data/model';
+import { belongsTo, attr } from '@warp-drive-mirror/legacy/model';
+import { Type } from '@warp-drive-mirror/core/types/symbols';
 import { isEmpty } from '@ember/utils';
 import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
@@ -10,8 +10,9 @@ import TasksManagerService from 'brn/services/tasks-manager';
 import StudyingTimerService from 'brn/services/studying-timer';
 import { tracked } from '@glimmer/tracking';
 import AnswerOption from 'brn/utils/answer-option';
-import { ExerciseMechanism } from 'brn/serializers/application';
+import { ExerciseMechanism } from 'brn/utils/exercise-types';
 export default class Task extends CompletionDependent {
+  declare [Type]: 'task';
   get usePreGeneratedAudio() {
     return this.exercise.audioFileUrlGenerated;
   }
@@ -29,8 +30,7 @@ export default class Task extends CompletionDependent {
   @attr('boolean') shouldBeWithPictures!: boolean;
 
   @attr() answerOptions!: any;
-  // @ts-expect-error attr default value
-  @attr('', {
+  @attr({
     defaultValue() {
       return [];
     },
@@ -41,6 +41,7 @@ export default class Task extends CompletionDependent {
     async: false,
     inverse: 'tasks',
     polymorphic: true,
+    as: 'task',
   })
   exercise!: Exercise;
 
@@ -52,7 +53,7 @@ export default class Task extends CompletionDependent {
     return this.exercise;
   }
   set parent(value) {
-    this.set('exercise', value);
+    this.exercise = value;
   }
   get pauseExecution() {
     return this.studyingTimer.isPaused;
@@ -83,9 +84,3 @@ export default class Task extends CompletionDependent {
   }
 }
 
-// DO NOT DELETE: this is how TypeScript knows how to look up your models.
-declare module 'ember-data/types/registries/model' {
-  export default interface ModelRegistry {
-    task: Task;
-  }
-}

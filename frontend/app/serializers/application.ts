@@ -1,6 +1,9 @@
-import JSONSerializer from '@ember-data/serializer/json';
-import Store from '@ember-data/store';
-import Model from '@ember-data/model';
+import { JSONSerializer } from '@warp-drive-mirror/legacy/serializer/json';
+import { type Store } from '@warp-drive-mirror/core';
+import Model from '@warp-drive-mirror/legacy/model';
+import type { ExerciseDTOType } from 'brn/utils/exercise-types';
+import { ExerciseMechanism } from 'brn/utils/exercise-types';
+export { ExerciseMechanism };
 
 type GroupDTO = {
   description: string;
@@ -9,22 +12,6 @@ type GroupDTO = {
   name: string;
   series: number[];
 };
-
-export enum ExerciseMechanism {
-  WORDS = 'WORDS', // show words in random places, play one after another min n*2+1 times
-  MATRIX = 'MATRIX', // show words by exercise template, play whole sentence by random words in columns
-  SIGNALS = 'SIGNALS'
-}
-
-type ExerciseDTOType =
-  | 'WORDS_SEQUENCES'
-  | 'SENTENCE'
-  | 'SINGLE_SIMPLE_WORDS'
-  | 'SINGLE_WORDS_KOROLEVA'
-  | 'PHRASES'
-  | 'DI'
-  | 'DURATION_SIGNALS'
-  | 'FREQUENCY_SIGNALS';
 
 type SeriesDTO = {
   description: string;
@@ -152,6 +139,14 @@ export default class ApplicationSerializer extends JSONSerializer {
     );
   }
 
+  modelNameFromPayloadKey(key: string) {
+    // WarpDrive requires exact model type names (no singularization for these)
+    if (key.startsWith('task/')) {
+      return key;
+    }
+    return super.modelNameFromPayloadKey(key);
+  }
+
   keyForAttribute(attrKey: string) {
     return this.ATTR_NAMES_MAP[attrKey] || attrKey;
   }
@@ -161,9 +156,3 @@ export default class ApplicationSerializer extends JSONSerializer {
   }
 }
 
-// DO NOT DELETE: this is how TypeScript knows how to look up your serializers.
-declare module 'ember-data/types/registries/serializer' {
-  export default interface SerializerRegistry {
-    application: ApplicationSerializer;
-  }
-}

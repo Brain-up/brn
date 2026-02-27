@@ -1,13 +1,9 @@
-import Model, { attr } from '@ember-data/model';
+import Model, { attr } from '@warp-drive-mirror/legacy/model';
+import { Type } from '@warp-drive-mirror/core/types/symbols';
 
 export default class Signal extends Model {
+  declare [Type]: 'signal';
   @attr('number') frequency!: number;
   @attr('number') duration!: number;
 }
 
-// DO NOT DELETE: this is how TypeScript knows how to look up your models.
-declare module 'ember-data/types/registries/model' {
-  export default interface ModelRegistry {
-    signal: Signal;
-  }
-}

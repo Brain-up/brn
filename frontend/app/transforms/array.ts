@@ -1,29 +1,19 @@
-/* eslint-disable ember/no-classic-classes */
-import Transform from '@ember-data/serializer/transform';
-import { A, isArray } from '@ember/array';
-import { isEmpty } from '@ember/utils';
+import { Transform } from '@warp-drive-mirror/legacy/serializer/transform';
 
-function transformToArray(target: unknown) {
-  if (isEmpty(target)) {
-    return A();
+function transformToArray(target: unknown): unknown[] {
+  if (target == null || (Array.isArray(target) && target.length === 0)) {
+    return [];
   }
-  return isArray(target) ? A(target as unknown[]) : A([target]);
+  return Array.isArray(target) ? target : [target];
 }
 
-const ArrayTransform = Transform.extend({
-  deserialize(serialized: unknown) {
+export default class ArrayTransform extends Transform {
+  deserialize(serialized: unknown): unknown[] {
     return transformToArray(serialized);
-  },
+  }
 
-  serialize(deserialized: unknown[]) {
+  serialize(deserialized: unknown): unknown[] {
     return transformToArray(deserialized);
-  },
-});
-
-export default ArrayTransform;
-
-declare module 'ember-data/types/registries/transform' {
-  export default interface TransformRegistry {
-    array: typeof ArrayTransform;
   }
 }
+

@@ -17,9 +17,3 @@ export default class UserWeeklyStatisticsAdapter extends ApplicationAdapter {
     return newQuery;
   }
 }
-
-declare module 'ember-data/types/registries/adapter' {
-  export default interface AdapterRegistry {
-    'v2/statistics/study/week': UserWeeklyStatisticsAdapter;
-  }
-}

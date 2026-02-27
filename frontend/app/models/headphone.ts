@@ -1,9 +1,11 @@
 import Model, {
   // belongsTo,
   attr,
-} from '@ember-data/model';
+} from '@warp-drive-mirror/legacy/model';
+import { Type } from '@warp-drive-mirror/core/types/symbols';
 
 export default class HeadphoneModel extends Model {
+  declare [Type]: 'headphone';
   @attr('string')
   description!: string;
   @attr('string')
@@ -12,8 +14,3 @@ export default class HeadphoneModel extends Model {
   // user!: User;
 }
 
-declare module 'ember-data/types/registries/model' {
-  export default interface ModelRegistry {
-    headphone: HeadphoneModel;
-  }
-}

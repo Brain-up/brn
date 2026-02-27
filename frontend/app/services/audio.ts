@@ -98,7 +98,7 @@ export default class AudioService extends Service {
       window.location.host +
       `/api/audio?text=${encodeURIComponent(text)}&locale=${encodeURIComponent(
         this.intl.primaryLocale,
-      )}&exerciseId=${encodeURIComponent(exercise?.get('id') ?? '0')}`
+      )}&exerciseId=${encodeURIComponent(exercise?.id ?? '0')}`
     );
   }
 

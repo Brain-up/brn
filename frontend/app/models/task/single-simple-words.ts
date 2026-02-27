@@ -1,8 +1,9 @@
-import { attr } from '@ember-data/model';
+import { attr } from '@warp-drive-mirror/legacy/model';
+import { Type } from '@warp-drive-mirror/core/types/symbols';
 import BaseTask from '../task';
 import shuffleArray from 'brn/utils/shuffle-array';
 import { cached } from 'tracked-toolbox';
-import { ExerciseMechanism } from 'brn/serializers/application';
+import { ExerciseMechanism } from 'brn/utils/exercise-types';
 
 interface IRawAnswerOption {
   audioFileUrl: string;
@@ -15,6 +16,7 @@ interface IRawAnswerOption {
   wordType: 'OBJECT';
 }
 export default class TaskSingleSimpleWordsModel extends BaseTask {
+  declare [Type]: 'task/single-simple-words';
   @attr() answerOptions!: IRawAnswerOption[];
   exerciseMechanism = ExerciseMechanism.WORDS;
   @cached
@@ -44,9 +46,3 @@ export default class TaskSingleSimpleWordsModel extends BaseTask {
   }
 }
 
-// DO NOT DELETE: this is how TypeScript knows how to look up your models.
-declare module 'ember-data/types/registries/model' {
-  export default interface ModelRegistry {
-    'task/single-simple-words': TaskSingleSimpleWordsModel;
-  }
-}

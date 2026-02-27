@@ -1,4 +1,4 @@
-import Model from '@ember-data/model';
+import Model from '@warp-drive-mirror/legacy/model';
 import { inject as service } from '@ember/service';
 import arrayPreviousItems from 'brn/utils/array-previous-items';
 import TasksManagerService from '../services/tasks-manager';
@@ -27,7 +27,15 @@ export default class CompletionDependentModel extends Model {
   }
 
   get sortedChildren() {
-    return this.children ? this.children.sortBy(this.sortChildrenBy) : null;
+    if (!this.children) return null;
+    const key = this.sortChildrenBy;
+    return Array.from(this.children).filter(Boolean).sort((a: any, b: any) => {
+      const aVal = a[key];
+      const bVal = b[key];
+      if (aVal < bVal) return -1;
+      if (aVal > bVal) return 1;
+      return 0;
+    });
   }
 
   @cached
@@ -39,10 +47,10 @@ export default class CompletionDependentModel extends Model {
       return false;
     }
 
-    // eslint-disable-next-line ember/no-get, ember/classic-decorator-no-classic-methods
-    const children = this.get('children');
+    const children = this.children;
     // @ts-expect-error unknown children
-    return children.length && children.every((child) => child.isCompleted)
+    const validChildren = children ? Array.from(children).filter(Boolean) : [];
+    return validChildren.length > 0 && validChildren.every((child) => child.isCompleted)
       ? true
       : false;
   }
@@ -50,8 +58,8 @@ export default class CompletionDependentModel extends Model {
     return !this.previousSiblings.length;
   }
   get allSiblings() {
-    // @ts-expect-error unknown children
-    return this.parent.get('sortedChildren') || [];
+    // @ts-expect-error unknown parent type
+    return this.parent?.sortedChildren || [];
   }
   get previousSiblings() {
     return arrayPreviousItems(this, this.allSiblings);
@@ -61,9 +69,3 @@ export default class CompletionDependentModel extends Model {
   }
 }
 
-// DO NOT DELETE: this is how TypeScript knows how to look up your models.
-declare module 'ember-data/types/registries/model' {
-  export default interface ModelRegistry {
-    'completion-dependent': CompletionDependentModel;
-  }
-}

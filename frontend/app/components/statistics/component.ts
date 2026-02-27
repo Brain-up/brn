@@ -7,7 +7,7 @@ import { DateTime } from 'luxon';
 import { tracked } from '@glimmer/tracking';
 import { task, Task as TaskGenerator } from 'ember-concurrency';
 import { action } from '@ember/object';
-import Store from '@ember-data/store';
+import { type Store } from '@warp-drive-mirror/core';
 
 interface IStatisticsComponentArgs {
   initialSelectedMonth?: DateTime;

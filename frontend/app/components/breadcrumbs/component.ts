@@ -1,7 +1,7 @@
 import Component from '@glimmer/component'
 import { inject as service } from '@ember/service';
 import Router from '@ember/routing/router-service';
-import Store from '@ember-data/store';
+import { type Store } from '@warp-drive-mirror/core';
 import { getOwner } from '@ember/application';
 
 export default class BreadcrumbsComponent extends Component {

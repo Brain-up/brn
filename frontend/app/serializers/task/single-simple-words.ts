@@ -1,5 +1,5 @@
 import BaseTaskSerializer from '../task';
-import Model from '@ember-data/model';
+import Model from '@warp-drive-mirror/legacy/model';
 // import { urlForImage, urlForAudio } from 'brn/utils/file-url';
 
 export default class TaskSingleSimpleWordsSerializer extends BaseTaskSerializer {
@@ -8,9 +8,3 @@ export default class TaskSingleSimpleWordsSerializer extends BaseTaskSerializer 
   }
 }
 
-// DO NOT DELETE: this is how TypeScript knows how to look up your serializers.
-declare module 'ember-data/types/registries/serializer' {
-  export default interface SerializerRegistry {
-    'task/single-simple-words': TaskSingleSimpleWordsSerializer;
-  }
-}

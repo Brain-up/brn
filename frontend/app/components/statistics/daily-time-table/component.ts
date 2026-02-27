@@ -3,7 +3,7 @@ import {DateTime} from "luxon";
 import {tracked} from "@glimmer/tracking";
 import UserDailyTimeTableStatisticsModel from "brn/models/user-daily-time-table-statistics";
 import {inject as service} from "@ember/service";
-import Store from "@ember-data/store";
+import { type Store } from '@warp-drive-mirror/core';
 import {action} from "@ember/object";
 
 interface IDailyTimeTableComponentArgs {
@@ -30,7 +30,7 @@ export default class DailyTimeTableComponent extends Component<IDailyTimeTableCo
           day: this.args.day,
         },
       );
-      this.userDailyDetailsData = data.toArray();
+      this.userDailyDetailsData = data.slice();
     } catch (error) {
       console.error(error);
     }

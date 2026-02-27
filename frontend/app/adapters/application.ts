@@ -1,22 +1,15 @@
-import RESTAdapter from '@ember-data/adapter/rest';
+import { RESTAdapter } from '@warp-drive-mirror/legacy/adapter/rest';
 import { inject as service } from '@ember/service';
-import Session from 'ember-simple-auth/services/session';
+import AuthTokenService from 'brn/services/auth-token';
 
 export default class ApplicationAdapter extends RESTAdapter {
-  @service('session')
-  session!: Session;
+  @service('auth-token')
+  authToken!: AuthTokenService;
   get token() {
-    return (
-      this.session.data?.authenticated?.user?.stsTokenManager?.accessToken ?? ''
-    );
+    return this.authToken.token;
   }
   get headers() {
-    if (!this.session.isAuthenticated) {
-      return {};
-    }
-    return {
-      Authorization: `Bearer ${this.token}`,
-    };
+    return this.authToken.headers;
   }
   namespace = 'api';
   coalesceFindRequests = false;
@@ -37,8 +30,3 @@ export default class ApplicationAdapter extends RESTAdapter {
   }
 }
 
-declare module 'ember-data/types/registries/adapter' {
-  export default interface AdapterRegistry {
-    application: ApplicationAdapter;
-  }
-}

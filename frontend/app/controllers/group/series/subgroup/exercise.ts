@@ -22,11 +22,9 @@ export default class GroupSeriesSubgroupExerciseController extends Controller {
   @tracked exerciseStats = {};
 
   get exerciseIsCompletedInCurrentCycle() {
-    const tasks = this.model.hasMany('tasks').value();
-    if (!tasks) return false;
-    return tasks
-      .slice()
-      .every((task: any) => task.completedInCurrentCycle);
+    const tasksArray = Array.from(this.model.tasks);
+    if (tasksArray.length === 0) return false;
+    return tasksArray.every((task: any) => task.completedInCurrentCycle);
   }
 
   goToSeries() {
@@ -73,13 +71,13 @@ export default class GroupSeriesSubgroupExerciseController extends Controller {
 
   enableNextExercise(model: Exercise) {
     // to-do add integration test for it
-    const children = model.parent.exercises.toArray();
+    const children = Array.from(model.parent.exercises);
     const index = children.indexOf(this.model);
     const nextIndex = index + 1;
-    model.set('isManuallyCompleted', true);
+    model.isManuallyCompleted = true;
 
     if (children[nextIndex]) {
-      children[nextIndex].set('available', true);
+      children[nextIndex].available = true;
     }
   }
 

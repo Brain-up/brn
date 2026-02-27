@@ -1,7 +1,7 @@
 import Route from '@ember/routing/route';
 import Series from 'brn/models/series';
 import { inject as service } from '@ember/service';
-import type Store from '@ember-data/store';
+import type { Store } from '@warp-drive-mirror/core';
 
 export default class GroupSeriesRoute extends Route {
   @service('store') store!: Store;
