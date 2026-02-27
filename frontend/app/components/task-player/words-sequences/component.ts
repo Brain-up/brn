@@ -45,6 +45,7 @@ export default class WordsSequencesComponent<
   @tracked tasksCopy: TaskItem[] = [];
   @tracked currentAnswerObject: null | Record<string, string | null> = null;
   @tracked isCorrect = false;
+  @tracked correctnessPerType: Record<string, boolean> = {};
   get task(): T {
     return this.args.task;
   }
@@ -104,6 +105,7 @@ export default class WordsSequencesComponent<
   }
   startTask() {
     this.isCorrect = false;
+    this.correctnessPerType = {};
     this.currentAnswerObject = getEmptyTemplate(this.task.selectedItemsOrder);
     if (this.mode === MODES.TASK) {
       this.audio.startPlayTask(this.audioFiles);
@@ -137,13 +139,18 @@ export default class WordsSequencesComponent<
       [selected.wordType]: selected.word,
     };
     if (this.answerCompleted) {
-      const isCorrect = deepEqual(
-        this.task.selectedItemsOrder.map(
-          (orderName: string) =>
-            (this.currentAnswerObject as any)[orderName] as string,
-        ),
-        this.firstUncompletedTask?.answer.mapBy('word'),
+      const correctAnswerWords = this.firstUncompletedTask?.answer.mapBy('word') || [];
+      const userAnswerWords = this.task.selectedItemsOrder.map(
+        (orderName: string) =>
+          (this.currentAnswerObject as any)[orderName] as string,
       );
+      const isCorrect = deepEqual(userAnswerWords, correctAnswerWords);
+
+      const correctnessPerType: Record<string, boolean> = {};
+      this.task.selectedItemsOrder.forEach((orderName: string, index: number) => {
+        correctnessPerType[orderName] = userAnswerWords[index] === correctAnswerWords[index];
+      });
+      this.correctnessPerType = correctnessPerType;
 
       this.isCorrect = isCorrect;
 

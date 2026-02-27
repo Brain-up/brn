@@ -16,7 +16,7 @@
             {{#each (get @task.answerOptions type) as |answerOption|}}
               <TextImageButton
                 @checked={{this.answerCompleted}}
-                @isCorrect={{this.isCorrect}}
+                @isCorrect={{get this.correctnessPerType type}}
                 @disabled={{@disableAnswers}}
                 @isSelected={{or
                   (eq @activeWord answerOption.word)
