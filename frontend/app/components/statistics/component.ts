@@ -1,13 +1,13 @@
 import Component from '@glimmer/component';
-import UserWeeklyStatisticsModel from 'brn/models/user-weekly-statistics';
-import UserYearlyStatisticsModel from 'brn/models/user-yearly-statistics';
+import type UserWeeklyStatisticsModel from 'brn/models/user-weekly-statistics';
+import type UserYearlyStatisticsModel from 'brn/models/user-yearly-statistics';
 import NetworkService from 'brn/services/network';
 import { inject as service } from '@ember/service';
 import { DateTime } from 'luxon';
 import { tracked } from '@glimmer/tracking';
 import { task, Task as TaskGenerator } from 'ember-concurrency';
 import { action } from '@ember/object';
-import { type Store } from '@warp-drive-mirror/core';
+import type Store from 'brn/services/store';
 
 interface IStatisticsComponentArgs {
   initialSelectedMonth?: DateTime;
@@ -31,7 +31,7 @@ export default class StatisticsComponent extends Component<IStatisticsComponentA
     this.isLoadingWeekTimeTrackData = true;
 
     try {
-      this.weekTimeTrackData = yield this.store.query(
+      this.weekTimeTrackData = yield this.store.query<UserWeeklyStatisticsModel>(
         'user-weekly-statistics',
         {
           from: fromMonth,
@@ -52,7 +52,7 @@ export default class StatisticsComponent extends Component<IStatisticsComponentA
     this.isLoadingMonthTimeTrackData = true;
 
     try {
-      this.monthTimeTrackData = yield this.store.query(
+      this.monthTimeTrackData = yield this.store.query<UserYearlyStatisticsModel>(
         'user-yearly-statistics',
         {
           from: fromYear,

@@ -42,7 +42,8 @@ export async function transcodeFile(file: ArrayBuffer) {
   ffmpeg.FS('unlink', inputName);
   ffmpeg.FS('unlink', outputName);
 
-  return await new Blob([data.buffer], { type: 'audio/wav' }).arrayBuffer();
+  const arrayBuffer = new Uint8Array(data).buffer as ArrayBuffer;
+  return await new Blob([arrayBuffer], { type: 'audio/wav' }).arrayBuffer();
 }
 
 export const TIMINGS = {

@@ -1,13 +1,14 @@
 import Route from '@ember/routing/route';
-import Series from 'brn/models/series';
+import type Series from 'brn/models/series';
+import type Subgroup from 'brn/models/subgroup';
 import { inject as service } from '@ember/service';
-import type { Store } from '@warp-drive-mirror/core';
+import type Store from 'brn/services/store';
 
 export default class GroupSeriesRoute extends Route {
   @service('store') store!: Store;
   model({ series_id }: { series_id: string }) {
-    const seria = this.store.peekRecord('series', series_id) as Series;
-    return this.store.query('subgroup', { seriesId: seria.id });
+    const seria = this.store.peekRecord<Series>('series', series_id);
+    return this.store.query<Subgroup>('subgroup', { seriesId: seria!.id });
   }
 
   // redirect(series, { to }) {

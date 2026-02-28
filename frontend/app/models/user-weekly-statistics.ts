@@ -19,7 +19,8 @@ export type UserExercisingProgressStatusType =
   | PROGRESS.GREAT;
 
 export default class UserWeeklyStatisticsModel extends Model {
-  declare [Type]: 'user-weekly-statistics';
+  // Union includes subclass types to satisfy WarpDrive's [Type] brand variance requirements
+  declare [Type]: 'user-weekly-statistics' | 'user-yearly-statistics';
   @attr('full-date') date!: DateTime;
   @attr('number') exercisingTimeSeconds!: number;
   @attr('string') progress!: UserExercisingProgressStatusType;

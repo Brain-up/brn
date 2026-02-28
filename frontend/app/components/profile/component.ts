@@ -118,8 +118,8 @@ export default class ProfileComponent extends Component {
     }
   }
 
-  @action 
-  setBirthday(e: Event) {
+  @action
+  setBirthday(e: KeyboardEvent) {
       const key = e.key;
       const allowedKeys = [
         'Backspace',

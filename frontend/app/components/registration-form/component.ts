@@ -98,7 +98,7 @@ export default class RegistrationFormComponent extends LoginFormComponent {
   set login(value) {
     this.email = value;
   }
-  @(task(function* (this: RegistrationFormComponent) {
+  @(task(function* (this: RegistrationFormComponent): Generator<unknown, void, any> {
     const user: LatestUserDTO = {
       name: this.firstName.trim(),
       email: this.email,
@@ -113,7 +113,8 @@ export default class RegistrationFormComponent extends LoginFormComponent {
       ) as FirebaseAuthenticator;
       yield auth.registerUser(user.email, user.password);
     } catch (e) {
-      this.serverErrorMessage = e.message;
+      const error = e as Error;
+      this.serverErrorMessage = error.message;
       yield this.registrationTask.cancelAll();
       return;
     }
@@ -171,7 +172,7 @@ export default class RegistrationFormComponent extends LoginFormComponent {
   }
 
   @action
-  setBirthday(e: Event) {
+  setBirthday(e: KeyboardEvent) {
     const key = e.key;
     const allowedKeys = [
       'Backspace',

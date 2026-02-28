@@ -39,7 +39,11 @@ export default class ExerciseGroup extends Component<IExerciseGroupArgs> {
   }
 
   async loadStats() {
-    const stats = await this.network.subgroupStats(this.group);
+    const groupId = this.group;
+    if (!groupId) {
+      return null;
+    }
+    const stats = await this.network.subgroupStats(groupId);
     return stats;
   }
 

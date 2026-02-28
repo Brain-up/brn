@@ -28,36 +28,42 @@ export default class Store extends LegacyStore {
   // internally. Our custom BrnApiHandler returns JSON:API documents that need to
   // go through the CacheHandler for proper caching and record hydration.
 
-  findRecord(type: string, id: string | number, options: any = {}): any {
+  // @ts-expect-error - return type differs from base (we unwrap the reactive document)
+  findRecord<T>(type: string, id: string | number, options?: Record<string, unknown>): Promise<T> {
     const normalizedId = String(id);
     const identifier = this.cacheKeyManager.getOrCreateRecordIdentifier({ type, id: normalizedId });
     const promise = this.request({
       op: 'findRecord',
-      data: { record: identifier, options },
+      data: { record: identifier, options: options || {} },
       [EnableHydration]: true,
     });
     // CacheHandler returns a reactive document { data: record }; unwrap to get the model instance
     return promise.then((doc: any) => doc.content?.data ?? doc.content);
   }
 
-  query(type: string, query: any, options: any = {}): any {
+  // @ts-expect-error - return type differs from base (we unwrap the reactive document)
+  query<T>(type: string, query: Record<string, unknown>, options?: Record<string, unknown>): Promise<T[]> {
     const promise = this.request({
       op: 'query',
-      data: { type, query, options },
+      data: { type, query, options: options || {} },
       [EnableHydration]: true,
     });
-    // CacheHandler returns a reactive document { data: records[] }
-    // The old RecordArray was iterable; the reactive document is not.
-    // Return the data array for template compatibility.
     return promise.then((doc: any) => doc.content?.data ?? doc.content);
   }
 
-  findAll(type: string, options: any = {}): any {
+  // @ts-expect-error - return type differs from base (we unwrap the reactive document)
+  findAll<T>(type: string, options?: Record<string, unknown>): Promise<T[]> {
     const promise = this.request({
       op: 'findAll',
-      data: { type, options },
+      data: { type, options: options || {} },
       [EnableHydration]: true,
     });
     return promise.then((doc: any) => doc.content?.data ?? doc.content);
+  }
+}
+
+declare module '@ember/service' {
+  interface Registry {
+    store: Store;
   }
 }

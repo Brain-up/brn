@@ -110,10 +110,10 @@ export default class NetworkService extends Service {
       user.initials = `${user.firstName.charAt(0)}${user.lastName.charAt(
         0,
       )}`.toUpperCase();
-      this.userData.userModel = user;
+      this.userData!.userModel = user;
     } catch (e) {
       this.router.transitionTo('login');
-      const error = new Error('Unable to login');
+      const error: Error & { code?: number } = new Error('Unable to login');
       error.message = 'Unable to login';
       error.name = 'Unauthorized';
       error.code = 401;

@@ -1,7 +1,8 @@
 import Route from '@ember/routing/route';
-import Task from 'brn/models/task';
+import type Task from 'brn/models/task';
+import type Exercise from 'brn/models/exercise';
 import { inject as service } from '@ember/service';
-import type { Store } from '@warp-drive-mirror/core';
+import type Store from 'brn/services/store';
 import type Router from '@ember/routing/router-service';
 
 export default class GroupSeriesSubgroupExerciseTaskRoute extends Route {
@@ -9,8 +10,8 @@ export default class GroupSeriesSubgroupExerciseTaskRoute extends Route {
   @service('router') declare router: Router;
 
   model({ task_id }: { task_id: string }) {
-    const tasks = this.modelFor('group.series.subgroup.exercise').tasks;
-    return Array.from(tasks).find(({ id }: { id: string }) => task_id === id);
+    const exercise = this.modelFor('group.series.subgroup.exercise') as Exercise;
+    return Array.from(exercise.tasks).find((task) => task_id === task.id);
   }
   async afterModel(task: Task, { to }: any) {
     if (
@@ -19,21 +20,21 @@ export default class GroupSeriesSubgroupExerciseTaskRoute extends Route {
         task.exercise &&
         to.parent.params.exercise_id !== task.exercise.id)
     ) {
-      const exercise = await this.store.findRecord(
+      const exercise = await this.store.findRecord<Exercise>(
         'exercise',
         to.parent.params.exercise_id,
       );
-      await exercise.hasMany('tasks').load();
+      await (exercise as any).hasMany('tasks').load();
 
       const series = exercise.series;
-      const sortedTasks = exercise.sortedTasks;
+      const sortedTasks = exercise.sortedTasks as Task[] | null;
       const firstTask = sortedTasks?.[0];
       this.router.transitionTo(
         'group.series.subgroup.exercise.task',
-        series?.id,
-        exercise.parent?.id,
-        exercise.id,
-        firstTask?.id,
+        series!.id!,
+        exercise.parent!.id!,
+        exercise.id!,
+        firstTask!.id!,
       );
     }
 

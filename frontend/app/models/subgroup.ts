@@ -1,6 +1,7 @@
-import Model, { attr, hasMany, SyncHasMany } from '@warp-drive-mirror/legacy/model';
+import Model, { attr, hasMany, type HasMany } from '@warp-drive-mirror/legacy/model';
 import { Type } from '@warp-drive-mirror/core/types/symbols';
-import Exercise from './exercise';
+import type Exercise from './exercise';
+import type Series from './series';
 import { cached } from 'tracked-toolbox';
 
 export default class Subgroup extends Model {
@@ -14,16 +15,16 @@ export default class Subgroup extends Model {
   }
   @attr('string') description!: string;
   @hasMany('exercise', { async: false, inverse: 'parent' })
-  exercises!: SyncHasMany<Exercise>;
-  get count() {
+  exercises!: HasMany<Exercise>;
+  get count(): number {
     return this.exercisesIds.length;
   }
   get parent() {
-    return this.store.peekRecord('series', this.seriesId);
+    return this.store.peekRecord<Series>('series', this.seriesId);
   }
   @cached
-  get exercisesIds() {
-    return this.hasMany('exercises').ids();
+  get exercisesIds(): string[] {
+    return (this as any).hasMany('exercises').ids();
   }
 }
 

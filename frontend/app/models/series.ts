@@ -2,7 +2,7 @@ import Model, {
   belongsTo,
   hasMany,
   attr,
-  SyncHasMany,
+  type HasMany,
 } from '@warp-drive-mirror/legacy/model';
 import { Type } from '@warp-drive-mirror/core/types/symbols';
 import Exercise from './exercise';
@@ -17,8 +17,8 @@ export default class Series extends Model {
   @attr('string') kind!: string;
   @belongsTo('group', { async: false, inverse: 'series' }) group?: Group | null;
   @hasMany('subgroup', { async: false, inverse: null })
-  subGroups!: SyncHasMany<SubgroupModel>;
-  @hasMany('exercise', { async: false, inverse: 'series' }) exercises!: SyncHasMany<Exercise>;
+  subGroups!: HasMany<SubgroupModel>;
+  @hasMany('exercise', { async: false, inverse: 'series' }) exercises!: HasMany<Exercise>;
   get children() {
     return this.exercises;
   }

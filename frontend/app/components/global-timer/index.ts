@@ -49,7 +49,7 @@ export default class GlobalTimerComponent extends Component<IGlobalTimerArgs> {
       return 'bg-pink-secondary';
     }
   }
-  @(task(function* (this: GlobalTimerComponent) {
+  @(task(function* (this: GlobalTimerComponent): Generator<unknown, void, any> {
     do {
       try {
         if (!Ember.testing) {

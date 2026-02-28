@@ -1,9 +1,9 @@
 import Component from '@glimmer/component';
 import {DateTime} from "luxon";
 import {tracked} from "@glimmer/tracking";
-import UserDailyTimeTableStatisticsModel from "brn/models/user-daily-time-table-statistics";
+import type UserDailyTimeTableStatisticsModel from "brn/models/user-daily-time-table-statistics";
 import {inject as service} from "@ember/service";
-import { type Store } from '@warp-drive-mirror/core';
+import type Store from 'brn/services/store';
 import {action} from "@ember/object";
 
 interface IDailyTimeTableComponentArgs {
@@ -24,7 +24,7 @@ export default class DailyTimeTableComponent extends Component<IDailyTimeTableCo
   async loadData() {
     this.isLoading = true;
     try {
-      const data = await this.store.query(
+      const data = await this.store.query<UserDailyTimeTableStatisticsModel>(
         'user-daily-time-table-statistics',
         {
           day: this.args.day,

@@ -48,9 +48,8 @@ export default class CompletionDependentModel extends Model {
     }
 
     const children = this.children;
-    // @ts-expect-error unknown children
     const validChildren = children ? Array.from(children).filter(Boolean) : [];
-    return validChildren.length > 0 && validChildren.every((child) => child.isCompleted)
+    return validChildren.length > 0 && validChildren.every((child: any) => child.isCompleted)
       ? true
       : false;
   }

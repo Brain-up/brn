@@ -1,4 +1,4 @@
-import { belongsTo, hasMany, attr, SyncHasMany } from '@warp-drive-mirror/legacy/model';
+import { belongsTo, hasMany, attr, type HasMany } from '@warp-drive-mirror/legacy/model';
 import { Type } from '@warp-drive-mirror/core/types/symbols';
 import CompletionDependent from './completion-dependent';
 import arrayPreviousItems from 'brn/utils/array-previous-items';
@@ -50,7 +50,7 @@ export default class Exercise extends CompletionDependent {
   @belongsTo('series', { async: false, inverse: 'exercises' }) series!: SeriesModel;
   @hasMany('signal', { async: false, inverse: null }) signals!: SignalModel[];
   @hasMany('task', { async: false, inverse: 'exercise', polymorphic: true })
-  tasks!: SyncHasMany<TaskModel>;
+  tasks!: HasMany<TaskModel>;
   // @ts-expect-error overridden property
   get children() {
     return this.tasks;
@@ -81,10 +81,10 @@ export default class Exercise extends CompletionDependent {
     );
   }
   @cached
-  get isCompleted() {
-    const tasksIds = this.hasMany('tasks').ids();
+  get isCompleted(): boolean {
+    const tasksIds: string[] = (this as any).hasMany('tasks').ids();
     const completedTaskIds = this.tasksManager.completedTasks.map((t: { id: string }) => t.id);
-    const tasksCompleted = tasksIds.every((taskId) =>
+    const tasksCompleted = tasksIds.every((taskId: string) =>
       completedTaskIds.includes(taskId),
     );
     return (
@@ -148,7 +148,7 @@ export default class Exercise extends CompletionDependent {
       endTime: stats.endTime,
       startTime: stats.startTime,
       executionSeconds: stats.countedSeconds,
-      exerciseId: parseInt(this.id, 10),
+      exerciseId: parseInt(this.id!, 10),
       replaysCount: data.repeatsCount,
       wrongAnswers: data.wrongAnswersCount,
       tasksCount: data.rightAnswersCount,

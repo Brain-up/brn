@@ -32,7 +32,7 @@ function createTasks(
 export default class WordsSequences extends BaseTask {
   declare [Type]: 'task/words-sequences';
   @attr('string') template!: string;
-  @attr() answerOptions!: string;
+  @attr() answerOptions!: Record<string, string[]>;
   @attr('array', {
     defaultValue() {
       return [];
@@ -54,7 +54,7 @@ export default class WordsSequences extends BaseTask {
   }
   @cached
   get doubledTasks() {
-    return [].concat(
+    return ([] as any[]).concat(
       deepCopy(this.possibleTasks),
       shuffleArray(deepCopy(this.possibleTasks), 3),
     );

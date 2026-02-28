@@ -3,7 +3,8 @@ import Route from '@ember/routing/route';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 import { inject as service } from '@ember/service';
 import NetworkService from 'brn/services/network';
-import type { Store } from '@warp-drive-mirror/core';
+import type Store from 'brn/services/store';
+import type GroupModel from 'brn/models/group';
 import UserDataService from 'brn/services/user-data';
 
 export default class GroupsRoute extends Route.extend(AuthenticatedRouteMixin) {
@@ -18,7 +19,7 @@ export default class GroupsRoute extends Route.extend(AuthenticatedRouteMixin) {
   };
   async model() {
     await this.network.loadCurrentUser();
-    return await this.store.query('group', {
+    return await this.store.query<GroupModel>('group', {
       locale: this.userData.activeLocale,
     });
   }

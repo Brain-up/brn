@@ -1,6 +1,6 @@
 import Controller from '@ember/controller';
 import { inject as service } from '@ember/service';
-import { task } from 'ember-concurrency';
+import { task, Task } from 'ember-concurrency';
 import customTimeout from 'brn/utils/custom-timeout';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
@@ -51,7 +51,7 @@ export default class GroupSeriesSubgroupExerciseController extends Controller {
     yield customTimeout(waitingTime);
     this.correctnessWidgetIsShown = false;
   }).drop())
-  runCorrectnessWidgetTimer;
+  runCorrectnessWidgetTimer!: Task<void, [boolean?]>;
 
   @action
   async greedOnCompletedExercise() {
@@ -61,11 +61,11 @@ export default class GroupSeriesSubgroupExerciseController extends Controller {
     this.exerciseStats = stats;
   }
 
-  @action startStatsTracking(_, [model]) {
+  @action startStatsTracking(_element: unknown, [model]: [Exercise]) {
     this.stats.registerModel(model);
   }
 
-  @action stopStatsTracking(_, [model]) {
+  @action stopStatsTracking(_element: unknown, [model]: [Exercise]) {
     this.stats.unregisterModel(model);
   }
 

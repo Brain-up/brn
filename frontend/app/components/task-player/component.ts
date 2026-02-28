@@ -11,6 +11,7 @@ import StatsService, { StatEvents } from 'brn/services/stats';
 import AudioService from 'brn/services/audio';
 import StudyingTimerService from 'brn/services/studying-timer';
 import TaskModel from 'brn/models/task';
+import type WordsSequencesModel from 'brn/models/task/words-sequences';
 import type AnswerOption from 'brn/utils/answer-option';
 import { ExerciseMechanism } from 'brn/utils/exercise-types';
 
@@ -28,7 +29,7 @@ export default class TaskPlayerComponent extends Component {
   tagName = '';
   activeTask: null | TaskInstance<any> = null;
   willDestroyElement() {
-    super.willDestroyElement(...arguments);
+    super.willDestroyElement();
     this.audio.stopNoise();
   }
 
@@ -102,7 +103,7 @@ export default class TaskPlayerComponent extends Component {
     return this.task.exerciseMechanism;
   }
   get orderedPlaylist(): AnswerOption[] {
-    const { answerOptions, selectedItemsOrder, normalizedAnswerOptions } =
+    const { answerOptions, normalizedAnswerOptions } =
       this.task;
     // for ordered tasks we need to align audio stream with object order;
 
@@ -115,10 +116,12 @@ export default class TaskPlayerComponent extends Component {
     }
 
     if (this.task.exerciseMechanism === ExerciseMechanism.MATRIX) {
+      const matrixTask = this.task as WordsSequencesModel;
+      const { selectedItemsOrder: itemsOrder } = matrixTask;
       const sortedItems: any[] = [];
-      const length = answerOptions[selectedItemsOrder[0]].length;
+      const length = answerOptions[itemsOrder[0]].length;
       for (let i = 0; i < length; i++) {
-        selectedItemsOrder.forEach((key: string) => {
+        itemsOrder.forEach((key: string) => {
           sortedItems.push(
             this.task.normalizedAnswerOptions.find(
               ({ word }: any) => word === answerOptions[key][i].word,

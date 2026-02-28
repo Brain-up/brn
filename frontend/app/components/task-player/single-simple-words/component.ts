@@ -101,9 +101,9 @@ export default class SingleSimpleWordsComponent extends Component<SingleSimpleWo
       .filter((t) => t.completedInCurrentCycle)
       .map((t) => t.order);
     const tasksCopy = deepCopy(this.task.tasksToSolve).map(
-      (copy: { order: string }) => {
+      (copy: { order: number }) => {
         const completedInCurrentCycle = completedOrders.includes(copy.order);
-        const copyEquivalent: any = this.tasksCopy.find((t: TaskItem) => t.order === copy.order);
+        const copyEquivalent = this.tasksCopy.find((t: TaskItem) => t.order === copy.order);
         return new TaskItem({
           ...copy,
           completedInCurrentCycle,

@@ -24,7 +24,7 @@ function buildPath(type: string, id?: string): string {
   return id ? `${path}/${id}` : path;
 }
 
-function buildQueryString(type: string, query: Record<string, any>): string {
+function buildQueryString(_type: string, query: Record<string, any>): string {
   const params: Record<string, string> = {};
   for (const [key, value] of Object.entries(query)) {
     if (value != null) {
@@ -329,14 +329,14 @@ function normalizeRecord(modelType: string, raw: any, included: JsonApiResource[
       if (rel.kind === 'hasMany' && Array.isArray(value)) {
         relationships[key] = {
           data: (value as any[]).map((item: any) => ({
-            id: String(typeof item === 'object' ? item.id : item),
+            id: String(typeof item === 'object' ? (item as any).id : item),
             type: rel.type,
           })),
         };
       } else if (rel.kind === 'belongsTo') {
         if (value != null) {
           relationships[key] = {
-            data: { id: String(typeof value === 'object' ? value.id : value), type: rel.type },
+            data: { id: String(typeof value === 'object' ? (value as any).id : value), type: rel.type },
           };
         } else {
           relationships[key] = { data: null };
@@ -438,6 +438,6 @@ export class BrnApiHandler {
       normalized.included = included;
     }
 
-    return normalized as T;
+    return normalized as unknown as T;
   }
 }

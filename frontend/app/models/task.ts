@@ -12,7 +12,8 @@ import { tracked } from '@glimmer/tracking';
 import AnswerOption from 'brn/utils/answer-option';
 import { ExerciseMechanism } from 'brn/utils/exercise-types';
 export default class Task extends CompletionDependent {
-  declare [Type]: 'task';
+  // Union includes subclass types to satisfy WarpDrive's [Type] brand variance requirements
+  declare [Type]: 'task' | 'task/signal' | 'task/single-simple-words' | 'task/words-sequences';
   get usePreGeneratedAudio() {
     return this.exercise.audioFileUrlGenerated;
   }
