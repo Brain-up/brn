@@ -1,5 +1,9 @@
 import { pluralize } from 'ember-inflector';
 import AnswerOption from 'brn/utils/answer-option';
+import { ALL_SCHEMAS } from 'brn/schemas';
+import type { Handler, NextFn } from '@warp-drive/core/request';
+import type { RequestContext, StructuredDataDocument } from '@warp-drive/core/types/request';
+import type { Store } from '@warp-drive/core';
 
 // ─── URL Building ────────────────────────────────────────────────────────────
 
@@ -24,12 +28,20 @@ function buildPath(type: string, id?: string): string {
   return id ? `${path}/${id}` : path;
 }
 
-function buildQueryString(_type: string, query: Record<string, any>): string {
+interface DateTimeLike {
+  toUTC(): { toFormat(fmt: string): string };
+}
+
+function isDateTimeLike(value: unknown): value is DateTimeLike {
+  return typeof value === 'object' && value !== null && typeof (value as DateTimeLike).toUTC === 'function';
+}
+
+function buildQueryString(_type: string, query: Record<string, unknown>): string {
   const params: Record<string, string> = {};
   for (const [key, value] of Object.entries(query)) {
     if (value != null) {
       // Statistics adapters transform DateTime to ISO strings
-      if (value && typeof value === 'object' && typeof value.toUTC === 'function') {
+      if (isDateTimeLike(value)) {
         params[key] = value.toUTC().toFormat("yyyy-MM-dd'T'HH:mm:ss");
       } else {
         params[key] = String(value);
@@ -69,57 +81,35 @@ const MECHANISM_TO_TYPE: Record<string, string> = {
   WORDS: 'task/single-simple-words',
 };
 
-// Attributes that are actually relationships
-const RELATIONSHIPS: Record<string, Record<string, { type: string; kind: 'belongsTo' | 'hasMany' }>> = {
-  group: {
-    series: { type: 'series', kind: 'hasMany' },
-  },
-  series: {
-    group: { type: 'group', kind: 'belongsTo' },
-    subGroups: { type: 'subgroup', kind: 'hasMany' },
-    exercises: { type: 'exercise', kind: 'hasMany' },
-  },
-  subgroup: {
-    exercises: { type: 'exercise', kind: 'hasMany' },
-  },
-  exercise: {
-    series: { type: 'series', kind: 'belongsTo' },
-    parent: { type: 'subgroup', kind: 'belongsTo' },
-    tasks: { type: 'task', kind: 'hasMany' },
-    signals: { type: 'signal', kind: 'hasMany' },
-  },
-  task: {
-    exercise: { type: 'exercise', kind: 'belongsTo' },
-  },
-  'task/signal': {
-    exercise: { type: 'exercise', kind: 'belongsTo' },
-    signal: { type: 'signal', kind: 'belongsTo' },
-  },
-  'task/single-simple-words': {
-    exercise: { type: 'exercise', kind: 'belongsTo' },
-  },
-  'task/words-sequences': {
-    exercise: { type: 'exercise', kind: 'belongsTo' },
-  },
-};
+// Derive RELATIONSHIPS and EXCLUDE_FROM_ATTRS from the schema definitions.
+// This eliminates the need to maintain two parallel sources of truth.
+type RelInfo = { type: string; kind: 'belongsTo' | 'hasMany' };
+const RELATIONSHIPS: Record<string, Record<string, RelInfo>> = {};
+const EXCLUDE_FROM_ATTRS: Record<string, Set<string>> = {};
 
-// Fields to exclude from attributes (they're relationships or metadata)
-const EXCLUDE_FROM_ATTRS: Record<string, Set<string>> = {
-  group: new Set(['series']),
-  series: new Set(['group', 'subGroups', 'subgroups', 'exercises']),
-  subgroup: new Set(['exercises']),
-  exercise: new Set(['series', 'parent', 'tasks', 'signals']),
-  task: new Set(['exercise']),
-  'task/signal': new Set(['exercise', 'signal']),
-  'task/single-simple-words': new Set(['exercise']),
-  'task/words-sequences': new Set(['exercise']),
-};
+for (const schema of ALL_SCHEMAS) {
+  const rels: Record<string, RelInfo> = {};
+  const excludes = new Set<string>();
+  for (const field of schema.fields) {
+    if (field.kind === 'belongsTo' || field.kind === 'hasMany') {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      rels[field.name] = { type: field.type!, kind: field.kind };
+      excludes.add(field.name);
+    }
+  }
+  if (Object.keys(rels).length > 0) {
+    RELATIONSHIPS[schema.type] = rels;
+    EXCLUDE_FROM_ATTRS[schema.type] = excludes;
+  }
+}
+// series API sends 'subgroups' (lowercase) which maps to 'subGroups' (camelCase)
+EXCLUDE_FROM_ATTRS['series']?.add('subgroups');
 
 interface JsonApiResource {
   id: string;
   type: string;
-  attributes: Record<string, any>;
-  relationships?: Record<string, any>;
+  attributes: Record<string, unknown>;
+  relationships?: Record<string, unknown>;
 }
 
 interface JsonApiDocument {
@@ -127,7 +117,7 @@ interface JsonApiDocument {
   included?: JsonApiResource[];
 }
 
-function normalizeContributor(raw: any): JsonApiResource {
+function normalizeContributor(raw: Record<string, unknown>): JsonApiResource {
   const {
     id, name, nameEn, description, descriptionEn,
     company, companyEn, pictureUrl, contribution,
@@ -150,7 +140,7 @@ function normalizeContributor(raw: any): JsonApiResource {
   };
 }
 
-function normalizeSignalRecord(raw: any): JsonApiResource {
+function normalizeSignalRecord(raw: Record<string, unknown>): JsonApiResource {
   const { id, ...rest } = raw;
   return {
     id: String(id),
@@ -165,24 +155,24 @@ function normalizeSignalRecord(raw: any): JsonApiResource {
 function normalizeTaskSignalRecord(
   signalPayload: { id: number },
   exerciseId: string,
-  allSignals: any[],
-  store: any,
+  allSignals: Record<string, unknown>[],
+  store: Store,
 ): JsonApiResource {
   const id = `signal-task-${signalPayload.id}`;
   // Create answer options with lazy getters that resolve Signal model instances
   // at access time (after CacheHandler has processed the included signals).
   // The JSON:API cache stores attribute values by reference, so these getters survive.
-  const opts = allSignals.map((_el: any, i: number) => {
+  const opts = allSignals.map((_el, i: number) => {
     const signalId = String(_el.id);
     return {
       get word() {
-        const sig = store.peekRecord('signal', signalId);
+        const sig = store.peekRecord('signal', signalId) as Record<string, unknown> | null;
         return `${i + 1}: [${sig?.duration}ms, ${sig?.frequency}Mhz]`;
       },
       get signal() {
         return store.peekRecord('signal', signalId);
       },
-      get audioFileUrl(): any {
+      get audioFileUrl(): unknown {
         return this.signal;
       },
     };
@@ -202,29 +192,30 @@ function normalizeTaskSignalRecord(
   };
 }
 
-function normalizeTask(raw: any, exerciseId?: string): JsonApiResource {
-  const type = MECHANISM_TO_TYPE[raw.exerciseMechanism] || 'task/signal';
+function normalizeTask(raw: Record<string, unknown>, exerciseId?: string): JsonApiResource {
+  const type = MECHANISM_TO_TYPE[raw.exerciseMechanism as string] || 'task/signal';
   const remap = ATTR_REMAP[type] || {};
   const excludes = EXCLUDE_FROM_ATTRS[type] || new Set();
 
   // Normalize answerOptions
-  let opts: any[] = [];
+  let opts: unknown[] = [];
   if (raw.answerOptions) {
     if (!Array.isArray(raw.answerOptions)) {
-      Object.keys(raw.answerOptions).forEach((key) => {
-        if (Array.isArray(raw.answerOptions[key])) {
-          opts = [...opts, ...raw.answerOptions[key]];
+      const answerOptionsObj = raw.answerOptions as Record<string, unknown>;
+      Object.keys(answerOptionsObj).forEach((key) => {
+        if (Array.isArray(answerOptionsObj[key])) {
+          opts = [...opts, ...(answerOptionsObj[key] as unknown[])];
         }
       });
     } else if (raw.correctAnswer) {
-      opts = [...raw.answerOptions, raw.correctAnswer];
+      opts = [...(raw.answerOptions as unknown[]), raw.correctAnswer];
     } else {
-      opts = [...raw.answerOptions];
+      opts = [...(raw.answerOptions as unknown[])];
     }
   }
-  const normalizedAnswerOptions = opts.map((el: any) => new AnswerOption(el));
+  const normalizedAnswerOptions = opts.map((el) => new AnswerOption(el as ConstructorParameters<typeof AnswerOption>[0]));
 
-  const attributes: Record<string, any> = { normalizedAnswerOptions };
+  const attributes: Record<string, unknown> = { normalizedAnswerOptions };
   for (const [key, value] of Object.entries(raw)) {
     if (key === 'id' || key === 'type' || excludes.has(key)) continue;
     const attrName = remap[key] || key;
@@ -251,7 +242,7 @@ function normalizeTask(raw: any, exerciseId?: string): JsonApiResource {
   return resource;
 }
 
-function normalizeRecord(modelType: string, raw: any, included: JsonApiResource[], store: any): JsonApiResource {
+function normalizeRecord(modelType: string, raw: Record<string, unknown>, included: JsonApiResource[], store: Store): JsonApiResource {
   if (modelType === 'contributor') {
     return normalizeContributor(raw);
   }
@@ -278,8 +269,8 @@ function normalizeRecord(modelType: string, raw: any, included: JsonApiResource[
     raw.duration = raw.length;
   }
 
-  const attributes: Record<string, any> = {};
-  const relationships: Record<string, any> = {};
+  const attributes: Record<string, unknown> = {};
+  const relationships: Record<string, unknown> = {};
 
   // For exercises, process signals BEFORE tasks so that signal-based task/signal
   // records are created first. If signals exist, they define the tasks relationship.
@@ -314,7 +305,7 @@ function normalizeRecord(modelType: string, raw: any, included: JsonApiResource[
       // If signals already set the tasks relationship, skip regular tasks
       if (relationships.tasks) continue;
       const taskRefs: { id: string; type: string }[] = [];
-      for (const taskData of value as any[]) {
+      for (const taskData of value as Record<string, unknown>[]) {
         const taskResource = normalizeTask(taskData, id);
         included.push(taskResource);
         taskRefs.push({ id: taskResource.id, type: taskResource.type });
@@ -333,15 +324,15 @@ function normalizeRecord(modelType: string, raw: any, included: JsonApiResource[
     if (rel) {
       if (rel.kind === 'hasMany' && Array.isArray(value)) {
         relationships[key] = {
-          data: (value as any[]).map((item: any) => ({
-            id: String(typeof item === 'object' ? (item as any).id : item),
+          data: (value as unknown[]).map((item: unknown) => ({
+            id: String(typeof item === 'object' && item !== null ? (item as Record<string, unknown>).id : item),
             type: rel.type,
           })),
         };
       } else if (rel.kind === 'belongsTo') {
         if (value != null) {
           relationships[key] = {
-            data: { id: String(typeof value === 'object' ? (value as any).id : value), type: rel.type },
+            data: { id: String(typeof value === 'object' ? (value as Record<string, unknown>).id : value), type: rel.type },
           };
         } else {
           relationships[key] = { data: null };
@@ -371,6 +362,47 @@ function normalizeRecord(modelType: string, raw: any, included: JsonApiResource[
   return resource;
 }
 
+// ─── Op Resolution ───────────────────────────────────────────────────────────
+
+interface FindRecordData {
+  record: { type: string; id: string };
+  options?: Record<string, unknown>;
+}
+
+interface QueryData {
+  type: string;
+  query: Record<string, unknown>;
+  options?: Record<string, unknown>;
+}
+
+interface FindAllData {
+  type: string;
+  options?: Record<string, unknown>;
+}
+
+type OpData = FindRecordData | QueryData | FindAllData;
+type OpResolver = (data: OpData) => { type: string; url: string };
+
+const OP_RESOLVERS: Record<string, OpResolver> = {
+  findRecord(data) {
+    const { record } = data as FindRecordData;
+    return { type: record.type, url: `/api/${buildPath(record.type, record.id)}` };
+  },
+  query(data) {
+    const { type, query } = data as QueryData;
+    return { type, url: `/api/${buildPath(type)}${buildQueryString(type, query)}` };
+  },
+  findAll(data) {
+    const { type } = data as FindAllData;
+    return { type, url: `/api/${buildPath(type)}` };
+  },
+};
+
+function resolveOp(op: string, data: OpData): { type: string; url: string } | null {
+  const resolver = OP_RESOLVERS[op];
+  return resolver ? resolver(data) : null;
+}
+
 // ─── Handler ─────────────────────────────────────────────────────────────────
 
 /**
@@ -381,62 +413,53 @@ function normalizeRecord(modelType: string, raw: any, included: JsonApiResource[
  *
  * Replaces all adapters and serializers.
  */
-export class BrnApiHandler {
-  private store: any;
+export class BrnApiHandler implements Handler {
+  private store: Store;
 
-  constructor(store: any) {
+  constructor(store: Store) {
     this.store = store;
   }
 
-  async request<T>(context: any, next: (req: any) => Promise<T>): Promise<T> {
-    const { op, data } = context.request;
+  async request<T>(context: RequestContext, next: NextFn<T>): Promise<T | StructuredDataDocument<T>> {
+    const { op, data } = context.request as { op?: string; data?: OpData } & Record<string, unknown>;
 
     // Build URL based on operation type
-    let url: string;
-    let type: string;
-
-    if (op === 'findRecord') {
-      type = data.record.type;
-      url = `/api/${buildPath(type, data.record.id)}`;
-    } else if (op === 'query') {
-      type = data.type;
-      url = `/api/${buildPath(type)}${buildQueryString(type, data.query)}`;
-    } else if (op === 'findAll') {
-      type = data.type;
-      url = `/api/${buildPath(type)}`;
-    } else {
+    const resolved = op && data ? resolveOp(op, data) : null;
+    if (!resolved) {
       // Pass through for ops we don't handle (e.g. saveRecord)
       return next(context.request);
     }
+    const { type, url } = resolved;
 
     // Set the URL on the request and fetch
-    context.request.url = url;
-    context.request.method = context.request.method || 'GET';
+    (context.request as Record<string, unknown>).url = url;
+    (context.request as Record<string, unknown>).method = (context.request as Record<string, unknown>).method || 'GET';
 
     // next() returns a StructuredDocument { request, response, content }
     // where content is the parsed JSON from Fetch
-    const result: any = await next(context.request);
-    const json: any = result?.content ?? result;
+    const result = await next(context.request);
+    const json = (result as StructuredDataDocument<Record<string, unknown>>)?.content ?? result;
 
     if (!json || typeof json !== 'object') {
-      return json;
+      return json as T | StructuredDataDocument<T>;
     }
 
     // Unwrap { data: ... } envelope from the API response
-    const rawData = json.data ?? json;
+    const jsonObj = json as Record<string, unknown>;
+    const rawData = jsonObj.data ?? jsonObj;
 
     // Normalize to JSON:API
     const included: JsonApiResource[] = [];
     let normalized: JsonApiDocument;
 
     if (Array.isArray(rawData)) {
-      const resources = rawData.map((item: any) => normalizeRecord(type, item, included, this.store));
+      const resources = rawData.map((item) => normalizeRecord(type, item as Record<string, unknown>, included, this.store));
       normalized = { data: resources };
     } else if (rawData && typeof rawData === 'object') {
-      const resource = normalizeRecord(type, rawData, included, this.store);
+      const resource = normalizeRecord(type, rawData as Record<string, unknown>, included, this.store);
       normalized = { data: resource };
     } else {
-      return json;
+      return json as T | StructuredDataDocument<T>;
     }
 
     if (included.length > 0) {

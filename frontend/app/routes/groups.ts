@@ -3,10 +3,10 @@ import Route from '@ember/routing/route';
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { inject as service } from '@ember/service';
-import NetworkService from 'brn/services/network';
+import type NetworkService from 'brn/services/network';
 import type Store from 'brn/services/store';
 import type GroupModel from 'brn/models/group';
-import UserDataService from 'brn/services/user-data';
+import type UserDataService from 'brn/services/user-data';
 
 export default class GroupsRoute extends Route.extend(AuthenticatedRouteMixin) {
   @service('network') network!: NetworkService;

@@ -1,4 +1,4 @@
-{{page-title @model.name}}
+{{page-title @model.group.name}}
 {{#unless this.headerAndNavShown}}
   <div class="flex items-center ml-4">
     <Breadcrumbs />
@@ -16,7 +16,7 @@
       {{! template-lint-disable no-inline-styles }}
       style="max-width: 80vw;"
     >
-      <GroupNavigation @group={{@model}} @series={{this.loadedSeries}} />
+      <GroupNavigation @group={{@model.group}} @series={{@model.series}} />
     </aside>
   {{/if}}
   {{#if (is-active "group.series.subgroup.index")}}

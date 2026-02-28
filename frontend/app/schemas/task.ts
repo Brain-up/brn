@@ -2,25 +2,13 @@ import { withDefaults, type WithLegacy } from '@warp-drive/legacy/model/migratio
 import { Type } from '@warp-drive/core/types/symbols';
 import type { LegacyResourceSchema, LegacyModeFieldSchema } from '@warp-drive/core/types/schema/fields';
 import type { CAUTION_MEGA_DANGER_ZONE_Extension } from '@warp-drive/core/reactive';
-import { storeFor } from '@warp-drive/core';
-import { getOwner } from '@ember/application';
 import arrayPreviousItems from 'brn/utils/array-previous-items';
 import arrayNext from 'brn/utils/array-next';
+import { getService } from 'brn/utils/schema-helpers';
 import type TasksManagerService from 'brn/services/tasks-manager';
 import type StudyingTimerService from 'brn/services/studying-timer';
 import type { ExerciseMechanism } from 'brn/utils/exercise-types';
 import type AnswerOption from 'brn/utils/answer-option';
-
-/**
- * Helper to look up a service from a record instance.
- */
-function getService<T>(record: unknown, serviceName: string): T | null {
-  const store = storeFor(record as any, true);
-  if (!store) return null;
-  const owner = getOwner(store);
-  if (!owner) return null;
-  return owner.lookup(`service:${serviceName}`) as T;
-}
 
 interface ExerciseRef {
   audioFileUrlGenerated: boolean;
@@ -93,7 +81,7 @@ export const LOCAL_TASK_FIELDS = [
     type: 'boolean',
     options: { defaultValue: false },
   },
-] as any[];
+] as LegacyModeFieldSchema[];
 
 // Add tracked local fields
 TaskSchema.fields.push(...LOCAL_TASK_FIELDS);
@@ -143,7 +131,7 @@ export const TaskExtension: CAUTION_MEGA_DANGER_ZONE_Extension = {
       const self = this as unknown as Record<string, unknown>;
       const tasksManager = getService<TasksManagerService>(self, 'tasks-manager');
       if (!tasksManager) return false;
-      return tasksManager.isCompleted(self as any);
+      return tasksManager.isCompleted(self);
     },
 
     get completedInCurrentCycle(): boolean {
@@ -151,7 +139,7 @@ export const TaskExtension: CAUTION_MEGA_DANGER_ZONE_Extension = {
       const tasksManager = getService<TasksManagerService>(self, 'tasks-manager');
       return (
         self._completedInCurrentCycle ||
-        (tasksManager?.isCompletedInCurrentCycle(self as any) ?? false)
+        (tasksManager?.isCompletedInCurrentCycle(self) ?? false)
       );
     },
 
@@ -175,7 +163,7 @@ export const TaskExtension: CAUTION_MEGA_DANGER_ZONE_Extension = {
       return () => {
         const tasksManager = getService<TasksManagerService>(self, 'tasks-manager');
         if (!tasksManager) return;
-        return tasksManager.saveAsCompleted(self as any);
+        return tasksManager.saveAsCompleted(self);
       };
     },
 
@@ -211,7 +199,7 @@ export const TaskExtension: CAUTION_MEGA_DANGER_ZONE_Extension = {
       }
       return (
         self.previousSiblings.length === 0 ||
-        self.previousSiblings.every((sibling: any) => sibling.isCompleted)
+        self.previousSiblings.every((sibling: unknown) => (sibling as { isCompleted: boolean }).isCompleted)
       );
     },
 
@@ -225,8 +213,10 @@ export type TaskBase = WithLegacy<{
   order: number;
   repetitionCount: number;
   shouldBeWithPictures: boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   answerOptions: any;
   normalizedAnswerOptions: AnswerOption[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   correctAnswer: any;
   active: boolean;
   exercise: ExerciseRef;

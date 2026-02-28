@@ -72,18 +72,18 @@ export const TaskWordsSequencesExtension: CAUTION_MEGA_DANGER_ZONE_Extension = {
       return shuffleArray(createTasks(taskPartsOptions), 10);
     },
 
-    get doubledTasks(): any[] {
+    get doubledTasks(): string[][] {
       const self = this as unknown as { possibleTasks: Array<string[]> };
-      return ([] as any[]).concat(
+      return ([] as string[][]).concat(
         deepCopy(self.possibleTasks),
         shuffleArray(deepCopy(self.possibleTasks), 3),
       );
     },
 
     get tasksSequence(): { answer: string[]; order: number }[] {
-      const self = this as unknown as { doubledTasks: any[] };
+      const self = this as unknown as { doubledTasks: string[][] };
       return shuffleArray(self.doubledTasks, 10).map(
-        (item: any, index: number) => {
+        (item: string[], index: number) => {
           return {
             answer: [...item],
             order: index,
@@ -92,14 +92,14 @@ export const TaskWordsSequencesExtension: CAUTION_MEGA_DANGER_ZONE_Extension = {
       );
     },
 
-    get tasksToSolve(): any[] {
+    get tasksToSolve(): { answer: string[]; order: number }[] {
       const self = this as unknown as {
-        tasksSequence: any[];
-        wrongAnswers: any[];
+        tasksSequence: { answer: string[]; order: number }[];
+        wrongAnswers: { answer: string[]; order: number }[];
       };
       return shuffleArray(self.tasksSequence, 10)
         .concat(
-          self.wrongAnswers.map((wrongAnswer: any, index: number) => {
+          self.wrongAnswers.map((wrongAnswer, index: number) => {
             return {
               ...wrongAnswer,
               order: self.tasksSequence.length + index,
@@ -118,8 +118,8 @@ export type TaskWordsSequences = TaskBase & WithLegacy<{
   exerciseMechanism: ExerciseMechanism;
   selectedItemsOrder: string[];
   possibleTasks: Array<string[]>;
-  doubledTasks: any[];
+  doubledTasks: string[][];
   tasksSequence: { answer: string[]; order: number }[];
-  tasksToSolve: any[];
+  tasksToSolve: { answer: string[]; order: number }[];
   [Type]: 'task/words-sequences';
 }>;

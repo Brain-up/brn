@@ -3,6 +3,12 @@ import { getOwner } from '@ember/application';
 
 export default class ModelForRoute extends Helper {
   compute([routeName]) {
-    return getOwner(this).lookup(`route:application`).modelFor(routeName);
+    const model = getOwner(this).lookup(`route:application`).modelFor(routeName);
+    // Group route returns a composite { group, series } model;
+    // extract the group record for compatibility.
+    if (routeName === 'group' && model?.group) {
+      return model.group;
+    }
+    return model;
   }
 }

@@ -2,24 +2,10 @@ import { withDefaults, type WithLegacy } from '@warp-drive/legacy/model/migratio
 import { Type } from '@warp-drive/core/types/symbols';
 import type { LegacyResourceSchema } from '@warp-drive/core/types/schema/fields';
 import type { CAUTION_MEGA_DANGER_ZONE_Extension } from '@warp-drive/core/reactive';
-import { storeFor } from '@warp-drive/core';
-import { getOwner } from '@ember/application';
+import { getService } from 'brn/utils/schema-helpers';
 import type UserDataService from 'brn/services/user-data';
 
 type ContributorKind = 'DEVELOPER' | 'SPECIALIST' | 'QA' | 'DESIGNER' | 'OTHER';
-
-/**
- * Look up the active locale from the user-data service.
- * Falls back to 'en-us' if the service is unavailable.
- */
-function getActiveLocale(record: unknown): string {
-  const store = storeFor(record as any, true);
-  if (!store) return 'en-us';
-  const owner = getOwner(store);
-  if (!owner) return 'en-us';
-  const userData = owner.lookup('service:user-data') as UserDataService | undefined;
-  return userData?.activeLocale || 'en-us';
-}
 
 export const ContributorSchema: LegacyResourceSchema = withDefaults({
   type: 'contributor',
@@ -49,7 +35,8 @@ export const ContributorExtension: CAUTION_MEGA_DANGER_ZONE_Extension = {
   name: 'contributor-ext',
   features: {
     get locale(): string {
-      return getActiveLocale(this);
+      const userData = getService<UserDataService>(this, 'user-data');
+      return userData?.activeLocale || 'en-us';
     },
     get name(): string {
       const self = this as unknown as { rawName: Record<string, string>; locale: string };

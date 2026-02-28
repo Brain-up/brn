@@ -2,6 +2,7 @@ import { withDefaults, type WithLegacy } from '@warp-drive/legacy/model/migratio
 import { Type } from '@warp-drive/core/types/symbols';
 import type { LegacyResourceSchema } from '@warp-drive/core/types/schema/fields';
 import type { CAUTION_MEGA_DANGER_ZONE_Extension } from '@warp-drive/core/reactive';
+import { sortByKey } from 'brn/utils/sort-by-key';
 
 export const SeriesSchema: LegacyResourceSchema = withDefaults({
   type: 'series',
@@ -60,9 +61,7 @@ export const SeriesExtension: CAUTION_MEGA_DANGER_ZONE_Extension = {
     },
     get sortedExercises() {
       const self = this as unknown as { exercises: ExerciseLike[] };
-      return Array.from(self.exercises || []).sort(
-        (a: ExerciseLike, b: ExerciseLike) => a.order - b.order,
-      );
+      return sortByKey(Array.from(self.exercises || []), 'order');
     },
     get sortedChildren() {
       const self = this as unknown as { sortedExercises: ExerciseLike[] };
@@ -70,22 +69,19 @@ export const SeriesExtension: CAUTION_MEGA_DANGER_ZONE_Extension = {
     },
     get groupedByNameExercises(): Record<string, ExerciseLike[]> {
       const self = this as unknown as { exercises: ExerciseLike[] };
-      return Array.from(self.exercises || []).reduce(
-        (resultObj, currentExercise) => {
-          const { name } = currentExercise;
-          const targetGroup = resultObj[name];
-          resultObj[name] = targetGroup
-            ? targetGroup
-                .concat([currentExercise])
-                .sort(
-                  (a: ExerciseLike, b: ExerciseLike) => a.order - b.order,
-                )
-            : [currentExercise];
-
-          return resultObj;
-        },
-        {} as Record<string, ExerciseLike[] | undefined>,
-      ) as Record<string, ExerciseLike[]>;
+      // Group exercises by name, then sort each group by order once
+      const groups: Record<string, ExerciseLike[]> = {};
+      for (const exercise of Array.from(self.exercises || [])) {
+        const { name } = exercise;
+        if (!groups[name]) {
+          groups[name] = [];
+        }
+        groups[name].push(exercise);
+      }
+      for (const name of Object.keys(groups)) {
+        groups[name] = sortByKey(groups[name], 'order');
+      }
+      return groups;
     },
   },
 };

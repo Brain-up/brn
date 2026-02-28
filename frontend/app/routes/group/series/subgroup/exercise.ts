@@ -4,12 +4,12 @@ import { inject as service } from '@ember/service';
 import type Exercise from 'brn/models/exercise';
 import type Task from 'brn/models/task';
 import type Transition from '@ember/routing/-private/transition';
-import TasksManagerService from 'brn/services/tasks-manager';
-import NetworkService from 'brn/services/network';
+import type TasksManagerService from 'brn/services/tasks-manager';
+import type NetworkService from 'brn/services/network';
 import Ember from 'ember';
 import type Store from 'brn/services/store';
 import type Router from '@ember/routing/router-service';
-import GroupSeriesSubgroupExerciseController from 'brn/controllers/group/series/subgroup/exercise';
+import type GroupSeriesSubgroupExerciseController from 'brn/controllers/group/series/subgroup/exercise';
 
 export default class GroupSeriesSubgroupExerciseRoute extends Route {
   @service('store') store!: Store;
@@ -26,6 +26,7 @@ export default class GroupSeriesSubgroupExerciseRoute extends Route {
   }
 
   async afterModel(exercise: Exercise) {
+    this.isAvailable = false;
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const testable = await this.network.availableExercises([exercise.id!]);
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -47,7 +48,7 @@ export default class GroupSeriesSubgroupExerciseRoute extends Route {
     }
     const tasks = exercise.tasks || [];
     if (Array.from(tasks).length === 0) {
-      alert(`Unable to find tasks for exercise ${exercise.id}`);
+      console.warn(`Unable to find tasks for exercise ${exercise.id}`);
       // Use paramsFor instead of exercise.series (which may be null)
       const { series_id } = this.paramsFor('group.series') as { series_id: string };
       this.router.transitionTo('group.series', series_id);

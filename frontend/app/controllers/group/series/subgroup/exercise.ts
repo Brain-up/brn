@@ -9,10 +9,11 @@ import customTimeout from 'brn/utils/custom-timeout';
 import { tracked } from '@glimmer/tracking';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { action } from '@ember/object';
-import StatsService, { IStatsExerciseStats } from 'brn/services/stats';
+import type StatsService from 'brn/services/stats';
+import type { IStatsExerciseStats } from 'brn/services/stats';
 import Router from '@ember/routing/router-service';
-import TasksManagerService from 'brn/services/tasks-manager';
-import StudyingTimerService from 'brn/services/studying-timer';
+import type TasksManagerService from 'brn/services/tasks-manager';
+import type StudyingTimerService from 'brn/services/studying-timer';
 import type Exercise from 'brn/models/exercise';
 import { getOwner } from '@ember/application';
 

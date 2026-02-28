@@ -1,10 +1,10 @@
 import { withDefaults, type WithLegacy } from '@warp-drive/legacy/model/migration-support';
 import { Type } from '@warp-drive/core/types/symbols';
-import type { LegacyResourceSchema } from '@warp-drive/core/types/schema/fields';
+import type { LegacyResourceSchema, LegacyModeFieldSchema } from '@warp-drive/core/types/schema/fields';
 import type { CAUTION_MEGA_DANGER_ZONE_Extension } from '@warp-drive/core/reactive';
-import { storeFor } from '@warp-drive/core';
-import { getOwner } from '@ember/application';
 import arrayPreviousItems from 'brn/utils/array-previous-items';
+import { getService } from 'brn/utils/schema-helpers';
+import { sortByKey } from 'brn/utils/sort-by-key';
 import type TasksManagerService from 'brn/services/tasks-manager';
 import type NetworkService from 'brn/services/network';
 import type { IStatsExerciseStats } from 'brn/services/stats';
@@ -72,18 +72,7 @@ ExerciseSchema.fields.push({
   name: 'isManuallyCompleted',
   type: 'boolean',
   options: { defaultValue: false },
-} as any);
-
-/**
- * Helper to look up a service from a record instance.
- */
-function getService<T>(record: unknown, serviceName: string): T | null {
-  const store = storeFor(record as any, true);
-  if (!store) return null;
-  const owner = getOwner(store);
-  if (!owner) return null;
-  return owner.lookup(`service:${serviceName}`) as T;
-}
+} as LegacyModeFieldSchema);
 
 interface TaskLike {
   id?: string | null;
@@ -143,16 +132,7 @@ export const ExerciseExtension: CAUTION_MEGA_DANGER_ZONE_Extension = {
       const self = this as unknown as ExerciseSelf;
       const children = self.tasks;
       if (!children) return null;
-      const key = self.sortChildrenBy;
-      return Array.from(children)
-        .filter(Boolean)
-        .sort((a: any, b: any) => {
-          const aVal = a[key];
-          const bVal = b[key];
-          if (aVal < bVal) return -1;
-          if (aVal > bVal) return 1;
-          return 0;
-        });
+      return sortByKey(Array.from(children).filter(Boolean), self.sortChildrenBy);
     },
 
     get sortedTasks() {
@@ -192,10 +172,9 @@ export const ExerciseExtension: CAUTION_MEGA_DANGER_ZONE_Extension = {
 
     get previousSiblings(): unknown[] {
       const self = this as unknown as ExerciseSelf;
-      return arrayPreviousItems(
-        self,
-        self.series?.groupedByNameExercises?.[self.name],
-      );
+      const siblings = self.series?.groupedByNameExercises?.[self.name];
+      if (!siblings) return [];
+      return arrayPreviousItems(self, siblings);
     },
 
     get siblingExercises(): unknown[] {
@@ -230,7 +209,7 @@ export const ExerciseExtension: CAUTION_MEGA_DANGER_ZONE_Extension = {
       ).previousSiblings;
       return (
         previousSiblings.length === 0 ||
-        previousSiblings.every((sibling: any) => sibling.isCompleted)
+        previousSiblings.every((sibling: unknown) => (sibling as { isCompleted: boolean }).isCompleted)
       );
     },
 
@@ -261,7 +240,7 @@ export const ExerciseExtension: CAUTION_MEGA_DANGER_ZONE_Extension = {
       if (!data) {
         throw new Error('unable calculate exercise stats');
       }
-      const self = this as unknown as { stats: any };
+      const self = this as unknown as { stats: IStatsObject };
       const { stats } = self;
       stats.tasksCount = data.rightAnswersCount - data.repeatsCount;
       stats.rightAnswersCount = data.rightAnswersCount;
