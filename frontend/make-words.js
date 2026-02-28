@@ -50,6 +50,12 @@ function YandexTTS(options, callback) {
       responseData += chunk;
     });
     res.on('end', () => {
+      if (res.statusCode !== 200) {
+        console.error(`HTTP ${res.statusCode}: ${responseData}`);
+        file.end();
+        callback();
+        return;
+      }
       const lines = responseData.split('\n').filter((line) => line.trim());
       for (const line of lines) {
         try {

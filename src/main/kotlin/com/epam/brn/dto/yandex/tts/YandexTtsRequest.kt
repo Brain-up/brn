@@ -20,6 +20,6 @@ data class ContainerAudio(
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class Hint(
     val voice: String? = null,
-    val speed: Double? = null,
+    val speed: String? = null,
     val role: String? = null,
 )
