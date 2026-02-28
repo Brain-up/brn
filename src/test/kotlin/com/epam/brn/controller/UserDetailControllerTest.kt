@@ -30,6 +30,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import kotlin.test.assertEquals
 
@@ -295,7 +296,8 @@ internal class UserDetailControllerTest {
         val role = BrnRole.USER
         val pageable = mockk<Pageable>()
         val userWithAnalyticsResponse = mockk<UserWithAnalyticsResponse>()
-        every { userAnalyticsService.getUsersWithAnalytics(pageable, role) } returns listOf(userWithAnalyticsResponse)
+        val page = PageImpl(listOf(userWithAnalyticsResponse))
+        every { userAnalyticsService.getUsersWithAnalytics(pageable, role) } returns page
 
         // WHEN
         val users = userDetailController.getUsers(withAnalytics, role, pageable)
@@ -303,7 +305,7 @@ internal class UserDetailControllerTest {
         // THEN
         verify(exactly = 1) { userAnalyticsService.getUsersWithAnalytics(pageable, role) }
         users.statusCodeValue shouldBe HttpStatus.SC_OK
-        (users.body as BrnResponse<*>).data shouldBe listOf(userWithAnalyticsResponse)
+        (users.body as BrnResponse<*>).data shouldBe page
     }
 
     @Test
@@ -312,7 +314,8 @@ internal class UserDetailControllerTest {
         val withAnalytics = false
         val role = BrnRole.USER
         val pageable = mockk<Pageable>()
-        every { userAccountService.getUsers(pageable, role) } returns listOf(userAccountDto)
+        val page = PageImpl(listOf(userAccountDto))
+        every { userAccountService.getUsers(pageable, role) } returns page
 
         // WHEN
         val users = userDetailController.getUsers(withAnalytics, role, pageable)
@@ -320,7 +323,7 @@ internal class UserDetailControllerTest {
         // THEN
         verify(exactly = 1) { userAccountService.getUsers(pageable, role) }
         users.statusCodeValue shouldBe HttpStatus.SC_OK
-        (users.body as BrnResponse<*>).data shouldBe listOf(userAccountDto)
+        (users.body as BrnResponse<*>).data shouldBe page
     }
 
     @Test

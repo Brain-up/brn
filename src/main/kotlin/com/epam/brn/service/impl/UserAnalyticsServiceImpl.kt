@@ -17,6 +17,7 @@ import com.epam.brn.service.UserAccountService
 import com.epam.brn.service.UserAnalyticsService
 import com.epam.brn.service.WordsService
 import com.epam.brn.service.statistics.UserPeriodStatisticsService
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import java.io.InputStream
@@ -44,8 +45,8 @@ class UserAnalyticsServiceImpl(
     override fun getUsersWithAnalytics(
         pageable: Pageable,
         role: String,
-    ): List<UserWithAnalyticsResponse> {
-        val users = userAccountRepository.findUsersAccountsByRole(role).map { it.toAnalyticsDto() }
+    ): Page<UserWithAnalyticsResponse> {
+        val usersPage = userAccountRepository.findUsersAccountsByRole(role, pageable)
 
         val now = timeService.now()
         val firstWeekDay = WeekFields.of(Locale.getDefault()).dayOfWeek()
@@ -54,7 +55,8 @@ class UserAnalyticsServiceImpl(
         val to = startDay.plusDays(7L).with(LocalTime.MAX)
         val startOfCurrentMonth = now.withDayOfMonth(1).with(LocalTime.MIN)
 
-        users.onEach { user ->
+        return usersPage.map { userAccount ->
+            val user = userAccount.toAnalyticsDto()
             user.lastWeek = userDayStatisticsService.getStatisticsForPeriod(from, to, user.id)
             user.studyDaysInCurrentMonth =
                 countWorkDaysForMonth(
@@ -69,7 +71,6 @@ class UserAnalyticsServiceImpl(
                 this.doneExercises = userStatistic.doneExercises
             }
         }
-        return users
     }
 
     override fun prepareAudioStreamForUser(

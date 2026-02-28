@@ -18,9 +18,7 @@ class ContributorServiceImpl(
     @Transactional(readOnly = true)
     override fun getAllContributors(): List<ContributorResponse> = contributorRepository
         .findAll()
-        .stream()
         .map { e -> e.toContributorResponse() }
-        .toList()
 
     @Transactional(readOnly = true)
     override fun getContributors(
@@ -28,9 +26,7 @@ class ContributorServiceImpl(
         type: ContributorType,
     ): List<ContributorResponse> = contributorRepository
         .findAllByType(type)
-        .stream()
         .map { e -> e.toContributorResponse(locale) }
-        .toList()
 
     @Transactional
     override fun createContributor(request: ContributorRequest): ContributorResponse =

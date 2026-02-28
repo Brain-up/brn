@@ -341,12 +341,60 @@ class UserDetailsControllerIT : BaseIT() {
                 .response
                 .getContentAsString(StandardCharsets.UTF_8)
 
-        val data = gson.fromJson(response, BrnResponse::class.java).data
+        val responseMap: Map<String, Any> = objectMapper.readValue(response, object : TypeReference<Map<String, Any>>() {})
+        val dataMap = responseMap["data"] as Map<*, *>
+        val content = dataMap["content"]
         val users: List<UserAccountDto> =
-            objectMapper.readValue(gson.toJson(data), object : TypeReference<List<UserAccountDto>>() {})
+            objectMapper.readValue(gson.toJson(content), object : TypeReference<List<UserAccountDto>>() {})
 
         // THEN
         users.size shouldBe 1
+        dataMap["totalElements"] shouldBe 1
+    }
+
+    @Test
+    fun `should get paginated users by role`() {
+        // GIVEN
+        val roleUser = insertRole(BrnRole.USER)
+
+        for (i in 1..5) {
+            val user =
+                UserAccount(
+                    fullName = "testUser$i",
+                    email = "testuser$i@test.test",
+                    gender = BrnGender.MALE.toString(),
+                    bornYear = 2000,
+                    active = true,
+                )
+            user.roleSet = mutableSetOf(roleUser)
+            userAccountRepository.save(user)
+        }
+
+        // WHEN - request page 0 with size 2
+        val response =
+            mockMvc
+                .perform(
+                    MockMvcRequestBuilders
+                        .get(baseUrl)
+                        .param("role", BrnRole.USER)
+                        .param("page", "0")
+                        .param("size", "2"),
+                ).andExpect(status().isOk)
+                .andReturn()
+                .response
+                .getContentAsString(StandardCharsets.UTF_8)
+
+        val responseMap: Map<String, Any> = objectMapper.readValue(response, object : TypeReference<Map<String, Any>>() {})
+        val dataMap = responseMap["data"] as Map<*, *>
+        val content = dataMap["content"]
+        val users: List<UserAccountDto> =
+            objectMapper.readValue(gson.toJson(content), object : TypeReference<List<UserAccountDto>>() {})
+
+        // THEN
+        users.size shouldBe 2
+        dataMap["totalElements"] shouldBe 5
+        dataMap["totalPages"] shouldBe 3
+        dataMap["number"] shouldBe 0
     }
 
     @Test

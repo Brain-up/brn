@@ -24,6 +24,7 @@ import io.mockk.mockk
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import java.io.InputStream
 import java.time.LocalDateTime
@@ -76,40 +77,43 @@ internal class UserAnalyticsServiceTest {
     @Test
     fun `should return all users with analytics`() {
         val usersList = listOf(doctorAccount, doctorAccount)
+        val usersPage = PageImpl(usersList)
         val dayStatisticList = listOf(dayStudyStatistics, dayStudyStatistics)
         every { userStatisticView.firstStudy } returns LocalDateTime.now()
         every { userStatisticView.lastStudy } returns LocalDateTime.now()
         every { userStatisticView.spentTime } returns 10000L
         every { userStatisticView.doneExercises } returns 1
 
-        every { userAccountRepository.findUsersAccountsByRole(BrnRole.ADMIN) } returns usersList
+        every { userAccountRepository.findUsersAccountsByRole(BrnRole.ADMIN, pageable) } returns usersPage
         every { userDayStatisticService.getStatisticsForPeriod(any(), any(), any()) } returns dayStatisticList
         every { timeService.now() } returns LocalDateTime.now()
         every { studyHistoryRepository.getStatisticsByUserAccountId(any()) } returns userStatisticView
 
         val userAnalyticsDtos = userAnalyticsService.getUsersWithAnalytics(pageable, BrnRole.ADMIN)
 
-        userAnalyticsDtos.size shouldBe 2
+        userAnalyticsDtos.totalElements shouldBe 2
+        userAnalyticsDtos.content.size shouldBe 2
     }
 
     @Test
     fun `should not return user with analytics`() {
         val usersList = listOf(doctorAccount)
+        val usersPage = PageImpl(usersList)
         val dayStatisticList = emptyList<DayStudyStatistics>()
         every { userStatisticView.firstStudy } returns LocalDateTime.now()
         every { userStatisticView.lastStudy } returns LocalDateTime.now()
         every { userStatisticView.spentTime } returns 10000L
         every { userStatisticView.doneExercises } returns 1
 
-        every { userAccountRepository.findUsersAccountsByRole(BrnRole.ADMIN) } returns usersList
+        every { userAccountRepository.findUsersAccountsByRole(BrnRole.ADMIN, pageable) } returns usersPage
         every { userDayStatisticService.getStatisticsForPeriod(any(), any(), any()) } returns dayStatisticList
         every { timeService.now() } returns LocalDateTime.now()
         every { studyHistoryRepository.getStatisticsByUserAccountId(any()) } returns userStatisticView
 
         val userAnalyticsDtos = userAnalyticsService.getUsersWithAnalytics(pageable, BrnRole.ADMIN)
 
-        userAnalyticsDtos.size shouldBe 1
-        userAnalyticsDtos[0].lastWeek.size shouldBe 0
+        userAnalyticsDtos.totalElements shouldBe 1
+        userAnalyticsDtos.content[0].lastWeek.size shouldBe 0
     }
 
     private val currentUserId = 1L

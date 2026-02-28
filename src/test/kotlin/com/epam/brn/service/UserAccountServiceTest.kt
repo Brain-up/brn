@@ -31,6 +31,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContext
@@ -499,11 +500,13 @@ internal class UserAccountServiceTest {
         fun `should return all users`() {
             // GIVEN
             val usersList = listOf(userAccount, userAccount, userAccount)
-            every { userAccountRepository.findUsersAccountsByRole(BrnRole.USER) } returns usersList
+            val usersPage = PageImpl(usersList)
+            every { userAccountRepository.findUsersAccountsByRole(BrnRole.USER, pageable) } returns usersPage
             // WHEN
             val userAccountDtos = userAccountService.getUsers(pageable = pageable, BrnRole.USER)
             // THEN
-            userAccountDtos.size shouldBe 3
+            userAccountDtos.totalElements shouldBe 3
+            userAccountDtos.content.size shouldBe 3
         }
     }
 
