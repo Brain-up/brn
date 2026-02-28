@@ -60,30 +60,30 @@ internal class YandexSpeechKitServiceTest {
     // region Helper methods
 
     private fun mockIamTokenWebClient(mono: Mono<YandexIamTokenDto>): WebClient.ResponseSpec {
-        val requestBodySpec = mockk<WebClient.RequestBodySpec>()
+        val requestBodyUriSpec = mockk<WebClient.RequestBodyUriSpec>()
         val requestHeadersSpec = mockk<WebClient.RequestHeadersSpec<*>>()
         val responseSpec = mockk<WebClient.ResponseSpec>()
 
-        every { yandexIamTokenWebClient.post() } returns requestBodySpec
-        every { requestBodySpec.bodyValue(any()) } returns requestHeadersSpec
+        every { yandexIamTokenWebClient.post() } returns requestBodyUriSpec
+        every { requestBodyUriSpec.bodyValue(any()) } returns requestHeadersSpec
         every { requestHeadersSpec.retrieve() } returns responseSpec
         every { responseSpec.onStatus(any(), any()) } returns responseSpec
         every { responseSpec.bodyToMono(YandexIamTokenDto::class.java) } returns mono
         return responseSpec
     }
 
-    private fun mockTtsWebClient(mono: Mono<String>): WebClient.RequestBodySpec {
-        val requestBodySpec = mockk<WebClient.RequestBodySpec>()
+    private fun mockTtsWebClient(mono: Mono<String>): WebClient.RequestBodyUriSpec {
+        val requestBodyUriSpec = mockk<WebClient.RequestBodyUriSpec>()
         val requestHeadersSpec = mockk<WebClient.RequestHeadersSpec<*>>()
         val responseSpec = mockk<WebClient.ResponseSpec>()
 
-        every { yandexTtsWebClient.post() } returns requestBodySpec
-        every { requestBodySpec.header(any(), any()) } returns requestBodySpec
-        every { requestBodySpec.bodyValue(any()) } returns requestHeadersSpec
+        every { yandexTtsWebClient.post() } returns requestBodyUriSpec
+        every { requestBodyUriSpec.header(any(), any()) } returns requestBodyUriSpec
+        every { requestBodyUriSpec.bodyValue(any()) } returns requestHeadersSpec
         every { requestHeadersSpec.retrieve() } returns responseSpec
         every { responseSpec.onStatus(any(), any()) } returns responseSpec
         every { responseSpec.bodyToMono(String::class.java) } returns mono
-        return requestBodySpec
+        return requestBodyUriSpec
     }
 
     private fun setValidToken() {
@@ -154,12 +154,12 @@ internal class YandexSpeechKitServiceTest {
         every { timeService.now() } returns LocalDateTime.now()
 
         val bodySlot = slot<Map<String, String>>()
-        val requestBodySpec = mockk<WebClient.RequestBodySpec>()
+        val requestBodyUriSpec = mockk<WebClient.RequestBodyUriSpec>()
         val requestHeadersSpec = mockk<WebClient.RequestHeadersSpec<*>>()
         val responseSpec = mockk<WebClient.ResponseSpec>()
 
-        every { yandexIamTokenWebClient.post() } returns requestBodySpec
-        every { requestBodySpec.bodyValue(capture(bodySlot)) } returns requestHeadersSpec
+        every { yandexIamTokenWebClient.post() } returns requestBodyUriSpec
+        every { requestBodyUriSpec.bodyValue(capture(bodySlot)) } returns requestHeadersSpec
         every { requestHeadersSpec.retrieve() } returns responseSpec
         every { responseSpec.onStatus(any(), any()) } returns responseSpec
         every { responseSpec.bodyToMono(YandexIamTokenDto::class.java) } returns
@@ -272,7 +272,7 @@ internal class YandexSpeechKitServiceTest {
         val ndjson = buildNdjsonResponse(base64Audio)
         setValidToken()
 
-        val requestBodySpec = mockTtsWebClient(Mono.just(ndjson))
+        val requestBodyUriSpec = mockTtsWebClient(Mono.just(ndjson))
 
         val result =
             yandexSpeechKitService.generateAudioStream(
@@ -280,8 +280,8 @@ internal class YandexSpeechKitServiceTest {
             )
 
         result.readBytes() shouldBe audioContent
-        verify { requestBodySpec.header("Authorization", "Bearer valid-token") }
-        verify { requestBodySpec.header("x-folder-id", "test-folder-id") }
+        verify { requestBodyUriSpec.header("Authorization", "Bearer valid-token") }
+        verify { requestBodyUriSpec.header("x-folder-id", "test-folder-id") }
     }
 
     @Test
@@ -290,14 +290,14 @@ internal class YandexSpeechKitServiceTest {
         val ndjson = buildNdjsonResponse(Base64.getEncoder().encodeToString(audioContent))
         setValidToken()
 
-        val requestBodySpec = mockk<WebClient.RequestBodySpec>()
+        val requestBodyUriSpec = mockk<WebClient.RequestBodyUriSpec>()
         val requestHeadersSpec = mockk<WebClient.RequestHeadersSpec<*>>()
         val responseSpec = mockk<WebClient.ResponseSpec>()
         val bodySlot = slot<YandexTtsRequest>()
 
-        every { yandexTtsWebClient.post() } returns requestBodySpec
-        every { requestBodySpec.header(any(), any()) } returns requestBodySpec
-        every { requestBodySpec.bodyValue(capture(bodySlot)) } returns requestHeadersSpec
+        every { yandexTtsWebClient.post() } returns requestBodyUriSpec
+        every { requestBodyUriSpec.header(any(), any()) } returns requestBodyUriSpec
+        every { requestBodyUriSpec.bodyValue(capture(bodySlot)) } returns requestHeadersSpec
         every { requestHeadersSpec.retrieve() } returns responseSpec
         every { responseSpec.onStatus(any(), any()) } returns responseSpec
         every { responseSpec.bodyToMono(String::class.java) } returns Mono.just(ndjson)
