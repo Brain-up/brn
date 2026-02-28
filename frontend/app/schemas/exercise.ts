@@ -294,6 +294,7 @@ export const ExerciseExtension: CAUTION_MEGA_DANGER_ZONE_Extension = {
         endTime: stats.endTime,
         startTime: stats.startTime,
         executionSeconds: stats.countedSeconds,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         exerciseId: parseInt(self.id!, 10),
         replaysCount: data.repeatsCount,
         wrongAnswers: data.wrongAnswersCount,

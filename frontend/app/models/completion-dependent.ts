@@ -1,8 +1,11 @@
 import Model from '@warp-drive/legacy/model';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { inject as service } from '@ember/service';
 import arrayPreviousItems from 'brn/utils/array-previous-items';
 import TasksManagerService from '../services/tasks-manager';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { cached } from 'tracked-toolbox';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { tracked } from '@glimmer/tracking';
 export default class CompletionDependentModel extends Model {
   declare children: unknown[];

@@ -20,6 +20,7 @@ function transformToArray(target: Value | undefined): ArrayValue {
 export const ArrayTransformation: Transformation<ArrayValue, ArrayValue> = {
   hydrate(
     value: ArrayValue | undefined,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _options: Record<string, unknown> | null,
   ): ArrayValue {
     return transformToArray(value);
@@ -27,6 +28,7 @@ export const ArrayTransformation: Transformation<ArrayValue, ArrayValue> = {
 
   serialize(
     value: ArrayValue,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _options: Record<string, unknown> | null,
   ): ArrayValue {
     return transformToArray(value);

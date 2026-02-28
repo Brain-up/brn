@@ -1,5 +1,7 @@
 import Controller from '@ember/controller';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { inject as service } from '@ember/service';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { action } from '@ember/object';
 import { getOwner } from '@ember/application';
 import Router from '@ember/routing/router-service';

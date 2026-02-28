@@ -14,6 +14,7 @@ import { DateTime } from 'luxon';
 export const FullDateTransformation: Transformation<string | null, DateTime | null> = {
   hydrate(
     value: string | null | undefined,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _options: Record<string, unknown> | null,
   ): DateTime | null {
     if (!value) return null;
@@ -23,6 +24,7 @@ export const FullDateTransformation: Transformation<string | null, DateTime | nu
 
   serialize(
     value: DateTime | Date | null,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _options: Record<string, unknown> | null,
   ): string | null {
     if (!value) return null;

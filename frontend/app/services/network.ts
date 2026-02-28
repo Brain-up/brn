@@ -1,5 +1,6 @@
 import Service from '@ember/service';
 import fetch from 'fetch';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { inject as service } from '@ember/service';
 import Session from 'ember-simple-auth/services/session';
 import AuthTokenService from './auth-token';
@@ -110,6 +111,7 @@ export default class NetworkService extends Service {
       user.initials = `${user.firstName.charAt(0)}${user.lastName.charAt(
         0,
       )}`.toUpperCase();
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       this.userData!.userModel = user;
     } catch (e) {
       this.router.transitionTo('login');

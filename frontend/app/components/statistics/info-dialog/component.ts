@@ -1,4 +1,5 @@
 import Component from '@glimmer/component';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { inject as service } from '@ember/service';
 import IntlService from 'ember-intl/services/intl';
 

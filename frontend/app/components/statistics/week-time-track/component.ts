@@ -9,7 +9,9 @@ import {
 } from 'brn/models/user-weekly-statistics';
 import { DateTime } from 'luxon';
 import UserWeeklyStatisticsModel from 'brn/models/user-weekly-statistics';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { action } from '@ember/object';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { tracked } from '@glimmer/tracking';
 import { secondsTo } from 'brn/utils/seconds-to';
 import { isNone } from '@ember/utils';

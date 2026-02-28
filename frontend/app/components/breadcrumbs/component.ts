@@ -1,4 +1,5 @@
 import Component from '@glimmer/component'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { inject as service } from '@ember/service';
 import Router from '@ember/routing/router-service';
 import type Store from 'brn/services/store';

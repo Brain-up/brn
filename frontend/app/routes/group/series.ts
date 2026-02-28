@@ -1,6 +1,7 @@
 import Route from '@ember/routing/route';
 import type Series from 'brn/models/series';
 import type Subgroup from 'brn/models/subgroup';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { inject as service } from '@ember/service';
 import type Store from 'brn/services/store';
 
@@ -8,6 +9,7 @@ export default class GroupSeriesRoute extends Route {
   @service('store') store!: Store;
   model({ series_id }: { series_id: string }) {
     const seria = this.store.peekRecord<Series>('series', series_id);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return this.store.query<Subgroup>('subgroup', { seriesId: seria!.id });
   }
 

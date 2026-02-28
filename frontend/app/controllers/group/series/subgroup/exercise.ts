@@ -1,8 +1,13 @@
 import Controller from '@ember/controller';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { inject as service } from '@ember/service';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { task, Task } from 'ember-concurrency';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import customTimeout from 'brn/utils/custom-timeout';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { tracked } from '@glimmer/tracking';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { action } from '@ember/object';
 import StatsService, { IStatsExerciseStats } from 'brn/services/stats';
 import Router from '@ember/routing/router-service';

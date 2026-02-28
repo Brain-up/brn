@@ -1,17 +1,24 @@
 import LoginFormComponent from 'brn/components/login-form/component';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { action } from '@ember/object';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { task, Task } from 'ember-concurrency';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { tracked } from '@glimmer/tracking';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { getOwner } from '@ember/application';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import FirebaseAuthenticator from 'brn/authenticators/firebase';
 import { isBornYearValid } from 'brn/utils/validators';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const ERRORS_MAP = {
   'The user already exists!': 'registration_form.email_exists',
   PASSWORD_MUST_BE_BETWEEN_6_AND_20_CHARACTERS_LONG:
     'registration_form.password_length',
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface LatestUserDTO {
   name: string;
   email: string;

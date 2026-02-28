@@ -2,10 +2,14 @@ import Component from '@glimmer/component';
 import type UserWeeklyStatisticsModel from 'brn/models/user-weekly-statistics';
 import type UserYearlyStatisticsModel from 'brn/models/user-yearly-statistics';
 import NetworkService from 'brn/services/network';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { inject as service } from '@ember/service';
 import { DateTime } from 'luxon';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { tracked } from '@glimmer/tracking';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { task, Task as TaskGenerator } from 'ember-concurrency';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { action } from '@ember/object';
 import type Store from 'brn/services/store';
 

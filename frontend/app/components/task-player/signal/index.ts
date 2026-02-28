@@ -1,10 +1,14 @@
 import Component from '@glimmer/component';
 import type TaskSignalModel from 'brn/models/task/signal';
 import { MODES } from 'brn/utils/task-modes';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { action } from '@ember/object';
 import SignalModel from 'brn/models/signal';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { inject as service } from '@ember/service';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import StatsService, { StatEvents } from 'brn/services/stats';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { task, Task as TaskGenerator } from 'ember-concurrency';
 import AudioService from 'brn/services/audio';
 

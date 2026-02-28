@@ -1,5 +1,7 @@
 import Service from '@ember/service';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { tracked } from '@glimmer/tracking';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { action } from '@ember/object';
 import { getOwner } from '@ember/application';
 import type Task from 'brn/models/task';

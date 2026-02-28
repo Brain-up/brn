@@ -2,6 +2,7 @@ import { useLegacyStore } from '@warp-drive/legacy';
 import { JSONAPICache } from '@warp-drive/json-api';
 import { RequestManager, Fetch, CacheHandler } from '@warp-drive/core';
 import { EnableHydration } from '@warp-drive/core/types/request';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { inject as service } from '@ember/service';
 import { AuthHandler } from 'brn/handlers/auth-handler';
 import { BrnApiHandler } from 'brn/handlers/brn-api-handler';

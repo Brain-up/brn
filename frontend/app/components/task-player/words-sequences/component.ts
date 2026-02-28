@@ -1,14 +1,20 @@
 import Component from '@glimmer/component';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { set, action } from '@ember/object';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { inject as service } from '@ember/service';
 import deepCopy from 'brn/utils/deep-copy';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import deepEqual from 'brn/utils/deep-equal';
 import customTimeout from 'brn/utils/custom-timeout';
 import { TaskItem } from 'brn/utils/task-item';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { tracked } from '@glimmer/tracking';
 import { MODES } from 'brn/utils/task-modes';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { task, Task as TaskGenerator } from 'ember-concurrency';
 import type AudioService from 'brn/services/audio';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import StatsService, { StatEvents } from 'brn/services/stats';
 import type WordsSequences from 'brn/models/task/words-sequences';
 import type Task from 'brn/models/task';

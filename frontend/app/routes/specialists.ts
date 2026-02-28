@@ -1,4 +1,5 @@
 import Route from '@ember/routing/route';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { inject as service } from '@ember/service';
 import type Store from 'brn/services/store';
 import type Contributor from 'brn/models/contributor';

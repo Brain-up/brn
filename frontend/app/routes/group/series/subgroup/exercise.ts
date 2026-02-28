@@ -1,4 +1,5 @@
 import Route from '@ember/routing/route';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { inject as service } from '@ember/service';
 import type Exercise from 'brn/models/exercise';
 import type Task from 'brn/models/task';
@@ -25,7 +26,9 @@ export default class GroupSeriesSubgroupExerciseRoute extends Route {
   }
 
   async afterModel(exercise: Exercise) {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const testable = await this.network.availableExercises([exercise.id!]);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.isAvailable = testable.includes(exercise.id!);
     await (exercise as any).hasMany('tasks').load();
   }
@@ -34,12 +37,14 @@ export default class GroupSeriesSubgroupExerciseRoute extends Route {
     if (!Ember.testing && !this.isAvailable) {
       this.router.transitionTo(
         'group.series.subgroup',
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         exercise.parent!.id!,
       );
       return;
     }
     if ((exercise as any).hasMany('tasks').ids().length === 0) {
       alert(`Unable to find tasks for exercise ${exercise.id}`);
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       this.router.transitionTo('group.series', exercise.series!.id!);
       return;
     }
@@ -52,6 +57,7 @@ export default class GroupSeriesSubgroupExerciseRoute extends Route {
     ) {
       this.router.transitionTo(
         'group.series.subgroup.exercise.task',
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         firstTask.id!,
       );
     }

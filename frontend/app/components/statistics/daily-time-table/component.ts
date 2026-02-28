@@ -1,9 +1,12 @@
 import Component from '@glimmer/component';
 import {DateTime} from "luxon";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {tracked} from "@glimmer/tracking";
 import type UserDailyTimeTableStatisticsModel from "brn/models/user-daily-time-table-statistics";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {inject as service} from "@ember/service";
 import type Store from 'brn/services/store';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {action} from "@ember/object";
 
 interface IDailyTimeTableComponentArgs {

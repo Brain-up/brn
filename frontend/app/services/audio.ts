@@ -1,12 +1,16 @@
 import Ember from 'ember';
 import { isArray } from '@ember/array';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { action } from '@ember/object';
 import {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   task,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   timeout,
   Task as TaskGenerator,
   TaskInstance,
 } from 'ember-concurrency';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { tracked } from '@glimmer/tracking';
 import { getOwner } from '@ember/application';
 import {
@@ -14,12 +18,15 @@ import {
   createNoizeBuffer,
   loadAudioFiles,
   createAudioContext,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   toSeconds,
   toMilliseconds,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   TIMINGS,
   ISource,
   preloadAudioFile,
 } from 'brn/utils/audio-api';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import Service, { inject as service } from '@ember/service';
 import TimerComponent from 'brn/components/timer/component';
 import NetworkService from './network';

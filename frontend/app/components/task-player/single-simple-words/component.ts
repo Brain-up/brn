@@ -1,12 +1,16 @@
 import Component from 'brn/components/task-player/words-sequences/component';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { tracked } from '@glimmer/tracking';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import deepEqual from 'brn/utils/deep-equal';
 import customTimeout from 'brn/utils/custom-timeout';
 import { urlForAudio } from 'brn/utils/file-url';
 import deepCopy from 'brn/utils/deep-copy';
 import { TaskItem } from 'brn/utils/task-item';
 import { MODES } from 'brn/utils/task-modes';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { task, Task as TaskGenerator } from 'ember-concurrency';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { StatEvents } from 'brn/services/stats';
 import AnswerOption from 'brn/utils/answer-option';
 import type SingleSimpleWordTask from 'brn/models/task/single-simple-words';

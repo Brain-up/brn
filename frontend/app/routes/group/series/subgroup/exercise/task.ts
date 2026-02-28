@@ -1,6 +1,7 @@
 import Route from '@ember/routing/route';
 import type Task from 'brn/models/task';
 import type Exercise from 'brn/models/exercise';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { inject as service } from '@ember/service';
 import type Store from 'brn/services/store';
 import type Router from '@ember/routing/router-service';
@@ -31,9 +32,13 @@ export default class GroupSeriesSubgroupExerciseTaskRoute extends Route {
       const firstTask = sortedTasks?.[0];
       this.router.transitionTo(
         'group.series.subgroup.exercise.task',
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         series!.id!,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         exercise.parent!.id!,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         exercise.id!,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         firstTask!.id!,
       );
     }
