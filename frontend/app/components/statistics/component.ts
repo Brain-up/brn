@@ -71,9 +71,8 @@ export default class StatisticsComponent extends Component<IStatisticsComponentA
       return;
     }
 
-    const lastMonth: DateTime | null = this.monthTimeTrackData.lastObject
-      ? this.monthTimeTrackData.lastObject?.date
-      : null;
+    const lastItem = this.monthTimeTrackData[this.monthTimeTrackData.length - 1];
+    const lastMonth: DateTime | null = lastItem ? lastItem.date : null;
     if (!lastMonth) {
       return;
     }
