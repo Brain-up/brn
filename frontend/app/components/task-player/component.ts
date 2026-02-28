@@ -53,7 +53,7 @@ export default class TaskPlayerComponent extends Component {
     if (this.mode === MODES.INTERACT) {
       return this.audio.isPlaying;
     }
-    return this.audio.isPlaying || this.disableAudioPlayer;
+    return this.audio.isBusy || this.disableAudioPlayer;
   }
   didReceiveAttrs() {
     super.didReceiveAttrs();

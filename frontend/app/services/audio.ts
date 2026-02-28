@@ -48,6 +48,13 @@ export default class AudioService extends Service {
   @service('intl') declare intl: Intl;
   @service('user-data') declare userData: UserDataService;
   context!: AudioContext;
+
+  willDestroy(): void {
+    super.willDestroy();
+    if (this.context && this.context.state !== 'closed') {
+      this.context.close();
+    }
+  }
   @tracked
   player: null | TimerComponent = null;
   register(player: TimerComponent) {
@@ -60,6 +67,11 @@ export default class AudioService extends Service {
   sources!: ISourceCollection;
   noiseTaskInstance!: TaskInstance<any>;
   @tracked isPlaying = false;
+  @tracked isLoading = false;
+
+  get isBusy() {
+    return this.isPlaying || this.isLoading;
+  }
 
   @tracked audioPlayingProgress = 0;
 
@@ -103,13 +115,19 @@ export default class AudioService extends Service {
   }
 
   @action async startPlayTask(filesToPlay = this.filesToPlay) {
-    if (this.isPlaying) {
+    if (this.isBusy) {
       return;
     }
-    
-    this.stats.addEvent(StatEvents.PlayAudio);
-    await this.setAudioElements(filesToPlay as string[]);
-    await this.playAudio();
+    this.isLoading = true;
+    try {
+      this.stats.addEvent(StatEvents.PlayAudio);
+      await this.setAudioElements(filesToPlay as string[]);
+      await this.playAudio();
+    } finally {
+      if (!this.isDestroyed && !this.isDestroying) {
+        this.isLoading = false;
+      }
+    }
   }
 
   get currentExerciseNoiseUrl() {
@@ -152,7 +170,11 @@ export default class AudioService extends Service {
 
   async setAudioElements(filesToPlay: Array<string | ToneObject>) {
     this.audioElements = filesToPlay;
-    this.context = createAudioContext();
+    if (!this.context || this.context.state === 'closed') {
+      this.context = createAudioContext();
+    } else if (this.context.state === 'suspended' && !Ember.testing) {
+      await this.context.resume();
+    }
     if (Ember.testing) {
       this.buffers = [];
       return;

@@ -38,6 +38,10 @@ export default class SingleSimpleWordsComponent extends Component<SingleSimpleWo
         );
     return url;
   }
+  get audioFiles(): string[] {
+    const url = this.audioFileUrl;
+    return url ? [url] : [];
+  }
   startTask() {
     this.isCorrect = false;
     if (this.mode === MODES.TASK && this.uncompletedTasks.length > 0) {

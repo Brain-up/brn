@@ -74,4 +74,28 @@ module('Integration | Component | audio-player', function (hooks) {
       .dom('[data-test-play-audio-button]')
       .hasAttribute('data-test-playing-progress', '100');
   });
+
+  test('it disables button when audio is loading (isBusy)', async function (assert) {
+    const audioService = this.owner.lookup('service:audio');
+
+    await render(
+      hbs`<AudioPlayer
+        @audioElements={{this.audioElements}}
+      />`,
+    );
+
+    assert.dom('[data-test-play-audio-button]').isNotDisabled('button enabled when idle');
+
+    audioService.isLoading = true;
+
+    await customTimeout();
+
+    assert.dom('[data-test-play-audio-button]').isDisabled('button disabled when isLoading is true');
+
+    audioService.isLoading = false;
+
+    await customTimeout();
+
+    assert.dom('[data-test-play-audio-button]').isNotDisabled('button re-enabled when isLoading clears');
+  });
 });
