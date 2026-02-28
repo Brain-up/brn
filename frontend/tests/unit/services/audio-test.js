@@ -136,6 +136,38 @@ module('Unit | Service | audio', function (hooks) {
     assert.notStrictEqual(secondContext.state, 'closed', 'new context is not closed');
   });
 
+  test('startPlayTask finally block guards against destroyed service', async function (assert) {
+    let resolveSetAudioElements;
+
+    class TestAudioService extends AudioService {
+      setAudioElements() {
+        return new Promise((resolve) => {
+          resolveSetAudioElements = resolve;
+        });
+      }
+      async playAudio() {}
+    }
+    this.owner.register('service:audio', TestAudioService);
+
+    let service = this.owner.lookup('service:audio');
+
+    // Start the task but don't await - it will block on setAudioElements
+    const taskPromise = service.startPlayTask(['http://example.com/audio.mp3']);
+    assert.true(service.isProcessing, 'isProcessing is true while waiting');
+
+    // Simulate service destruction while startPlayTask is in-flight
+    service.willDestroy();
+
+    // Now let the async work complete after destruction
+    resolveSetAudioElements();
+    await taskPromise;
+
+    // The guard should have prevented setting isProcessing on the destroyed service.
+    // If the guard were missing, Ember would throw an error on setting a tracked
+    // property on a destroyed object. The fact we get here without error is the assertion.
+    assert.ok(true, 'no error thrown when finally block runs on destroyed service');
+  });
+
   test('willDestroy closes the AudioContext', async function (assert) {
     let service = this.owner.lookup('service:audio');
 

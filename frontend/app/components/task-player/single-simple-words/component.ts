@@ -14,7 +14,7 @@ export default class SingleSimpleWordsComponent extends Component<SingleSimpleWo
   @tracked currentAnswer: string[] = [];
   willDestroy(): void {
     super.willDestroy();
-    if (this.audio.isPlaying) {
+    if (this.audio.isBusy) {
       this.audio.stop();
     }
     document.body.dataset.correctAnswer = '';
@@ -38,6 +38,7 @@ export default class SingleSimpleWordsComponent extends Component<SingleSimpleWo
         );
     return url;
   }
+  // Overrides parent WordsSequencesComponent.audioFiles to use single audio URL
   get audioFiles(): string[] {
     const url = this.audioFileUrl;
     return url ? [url] : [];

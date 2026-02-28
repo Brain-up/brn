@@ -51,6 +51,9 @@ export default class TaskPlayerComponent extends Component {
   }
   get disableAnswers() {
     if (this.mode === MODES.INTERACT) {
+      // Intentionally using isPlaying (not isBusy) here: in interact mode,
+      // users explore by clicking words to hear them, so they should be able
+      // to click other words while audio is still loading/decoding.
       return this.audio.isPlaying;
     }
     return this.audio.isBusy || this.disableAudioPlayer;
