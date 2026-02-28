@@ -29,21 +29,21 @@ module('Unit | Service | audio', function (hooks) {
     assert.true(service.isBusy, 'isBusy is true when isPlaying');
   });
 
-  test('isBusy is true when isLoading', function (assert) {
+  test('isBusy is true when isProcessing', function (assert) {
     let service = this.owner.lookup('service:audio');
-    service.isLoading = true;
-    assert.true(service.isBusy, 'isBusy is true when isLoading');
+    service.isProcessing = true;
+    assert.true(service.isBusy, 'isBusy is true when isProcessing');
   });
 
-  test('startPlayTask sets isLoading during execution', async function (assert) {
+  test('startPlayTask sets isProcessing during execution', async function (assert) {
     const loadingStates = [];
 
     class TestAudioService extends AudioService {
       async setAudioElements() {
-        loadingStates.push(this.isLoading);
+        loadingStates.push(this.isProcessing);
       }
       async playAudio() {
-        loadingStates.push(this.isLoading);
+        loadingStates.push(this.isProcessing);
       }
     }
     this.owner.register('service:audio', TestAudioService);
@@ -51,12 +51,12 @@ module('Unit | Service | audio', function (hooks) {
     let service = this.owner.lookup('service:audio');
     await service.startPlayTask(['http://example.com/audio.mp3']);
 
-    assert.true(loadingStates[0], 'isLoading is true during setAudioElements');
-    assert.true(loadingStates[1], 'isLoading is true during playAudio');
-    assert.false(service.isLoading, 'isLoading is false after completion');
+    assert.true(loadingStates[0], 'isProcessing is true during setAudioElements');
+    assert.true(loadingStates[1], 'isProcessing is true during playAudio');
+    assert.false(service.isProcessing, 'isProcessing is false after completion');
   });
 
-  test('startPlayTask resets isLoading on error', async function (assert) {
+  test('startPlayTask resets isProcessing on error', async function (assert) {
     class TestAudioService extends AudioService {
       async setAudioElements() {
         throw new Error('network error');
@@ -71,7 +71,7 @@ module('Unit | Service | audio', function (hooks) {
       // expected
     }
 
-    assert.false(service.isLoading, 'isLoading is reset after error');
+    assert.false(service.isProcessing, 'isProcessing is reset after error');
   });
 
   test('startPlayTask is blocked when isBusy', async function (assert) {
@@ -88,12 +88,12 @@ module('Unit | Service | audio', function (hooks) {
     let service = this.owner.lookup('service:audio');
 
     // Simulate already loading
-    service.isLoading = true;
+    service.isProcessing = true;
     await service.startPlayTask(['http://example.com/audio.mp3']);
-    assert.strictEqual(callCount, 0, 'does not proceed when isLoading is true');
+    assert.strictEqual(callCount, 0, 'does not proceed when isProcessing is true');
 
     // Simulate already playing
-    service.isLoading = false;
+    service.isProcessing = false;
     service.isPlaying = true;
     await service.startPlayTask(['http://example.com/audio.mp3']);
     assert.strictEqual(callCount, 0, 'does not proceed when isPlaying is true');

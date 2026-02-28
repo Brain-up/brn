@@ -86,16 +86,16 @@ module('Integration | Component | audio-player', function (hooks) {
 
     assert.dom('[data-test-play-audio-button]').isNotDisabled('button enabled when idle');
 
-    audioService.isLoading = true;
+    audioService.isProcessing = true;
 
     await customTimeout();
 
-    assert.dom('[data-test-play-audio-button]').isDisabled('button disabled when isLoading is true');
+    assert.dom('[data-test-play-audio-button]').isDisabled('button disabled when isProcessing is true');
 
-    audioService.isLoading = false;
+    audioService.isProcessing = false;
 
     await customTimeout();
 
-    assert.dom('[data-test-play-audio-button]').isNotDisabled('button re-enabled when isLoading clears');
+    assert.dom('[data-test-play-audio-button]').isNotDisabled('button re-enabled when isProcessing clears');
   });
 });

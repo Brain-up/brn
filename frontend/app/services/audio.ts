@@ -67,10 +67,10 @@ export default class AudioService extends Service {
   sources!: ISourceCollection;
   noiseTaskInstance!: TaskInstance<any>;
   @tracked isPlaying = false;
-  @tracked isLoading = false;
+  @tracked isProcessing = false;
 
   get isBusy() {
-    return this.isPlaying || this.isLoading;
+    return this.isPlaying || this.isProcessing;
   }
 
   @tracked audioPlayingProgress = 0;
@@ -118,14 +118,14 @@ export default class AudioService extends Service {
     if (this.isBusy) {
       return;
     }
-    this.isLoading = true;
+    this.isProcessing = true;
     try {
       this.stats.addEvent(StatEvents.PlayAudio);
       await this.setAudioElements(filesToPlay as string[]);
       await this.playAudio();
     } finally {
       if (!this.isDestroyed && !this.isDestroying) {
-        this.isLoading = false;
+        this.isProcessing = false;
       }
     }
   }
