@@ -1,7 +1,6 @@
 {{! template-lint-disable no-inline-styles }}
 <section
-  class="header lg:h-screen sm:pt-16 container relative flex flex-wrap items-center mx-auto"
-  style="max-height:860px"
+  class="header lg:h-screen sm:pt-16 container relative flex flex-wrap items-center mx-auto" style="max-height:860px"
 >
   <div
     class="md:w-8/12 lg:w-6/12 xl:w-6/12 container flex flex-wrap items-center w-full px-4 mx-auto"
@@ -15,9 +14,7 @@
       </p>
       <div class="mt-12 mb-4">
         <Ui::Button
-          data-test-registration-form
-          class="flex items-center justify-center w-7/12 p-2 px-32 text-lg"
-          @route="login"
+          data-test-registration-form class="sm:w-7/12 sm:px-32 flex items-center justify-center w-full p-2 px-4 text-lg" @route="login"
           @title={{t "login.title"}}
         />
       </div>
