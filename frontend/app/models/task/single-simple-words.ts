@@ -1,48 +1,8 @@
-import { attr } from '@warp-drive-mirror/legacy/model';
-import { Type } from '@warp-drive-mirror/core/types/symbols';
-import BaseTask from '../task';
-import shuffleArray from 'brn/utils/shuffle-array';
-import { cached } from 'tracked-toolbox';
-import { ExerciseMechanism } from 'brn/utils/exercise-types';
-
-interface IRawAnswerOption {
-  audioFileUrl: string;
-  description: string;
-  id: number;
-  columnNumber: number;
-  pictureFileUrl: string;
-  soundsCount: number;
-  word: string;
-  wordType: 'OBJECT';
-}
-export default class TaskSingleSimpleWordsModel extends BaseTask {
-  declare [Type]: 'task/single-simple-words';
-  @attr() answerOptions!: IRawAnswerOption[];
-  exerciseMechanism = ExerciseMechanism.WORDS;
-  @cached
-  get tasksToSolve() {
-    const playWordsCount = this.exercise.playWordsCount ?? 1;
-    return [
-      ...shuffleArray(this.answerOptions, 1),
-      ...shuffleArray(this.answerOptions, 2),
-      ...shuffleArray(this.answerOptions, 3),
-    ].map((item, index) => {
-      let answers = [];
-      if (playWordsCount === 1) {
-        answers.push(item);
-      } else {
-        const refs = [
-          ...shuffleArray(this.answerOptions, 4),
-          ...shuffleArray(this.answerOptions, 5),
-          ...shuffleArray(this.answerOptions, 6),
-        ];
-        answers = refs.slice(0, playWordsCount);
-      }
-      return {
-        answer: answers,
-        order: index,
-      };
-    });
-  }
-}
-
+/**
+ * TaskSingleSimpleWords model — migrated to SchemaRecord.
+ * Schema definition: app/schemas/task/single-simple-words.ts
+ *
+ * This file re-exports the schema type for backward compatibility
+ * with existing imports.
+ */
+export type { TaskSingleSimpleWords as default } from 'brn/schemas/task/single-simple-words';

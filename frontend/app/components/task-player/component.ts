@@ -10,7 +10,7 @@ import Ember from 'ember';
 import StatsService, { StatEvents } from 'brn/services/stats';
 import AudioService from 'brn/services/audio';
 import StudyingTimerService from 'brn/services/studying-timer';
-import TaskModel from 'brn/models/task';
+import type TaskModel from 'brn/models/task';
 import type WordsSequencesModel from 'brn/models/task/words-sequences';
 import type AnswerOption from 'brn/utils/answer-option';
 import { ExerciseMechanism } from 'brn/utils/exercise-types';

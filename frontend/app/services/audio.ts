@@ -29,7 +29,7 @@ import SignalModel from 'brn/models/signal';
 import Intl from 'ember-intl/services/intl';
 import { PolySynth, Synth, SynthOptions } from 'tone';
 import UserDataService from './user-data';
-import Exercise from 'brn/models/exercise';
+import type Exercise from 'brn/models/exercise';
 
 type ISourceCollection = (ISource | IToneSource | null)[];
 export interface IToneSource {

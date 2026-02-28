@@ -1,9 +1,8 @@
-import BaseTask from '../task';
-import { belongsTo } from '@warp-drive-mirror/legacy/model';
-import { Type } from '@warp-drive-mirror/core/types/symbols';
-import SignalModel from '../signal';
-
-export default class TaskSignalModel extends BaseTask {
-  declare [Type]: 'task/signal';
-  @belongsTo('signal', { async: false, inverse: null }) signal!: SignalModel;
-}
+/**
+ * TaskSignal model — migrated to SchemaRecord.
+ * Schema definition: app/schemas/task/signal.ts
+ *
+ * This file re-exports the schema type for backward compatibility
+ * with existing imports.
+ */
+export type { TaskSignal as default } from 'brn/schemas/task/signal';

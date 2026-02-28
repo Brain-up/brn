@@ -8,7 +8,7 @@ import StatsService, { IStatsExerciseStats } from 'brn/services/stats';
 import Router from '@ember/routing/router-service';
 import TasksManagerService from 'brn/services/tasks-manager';
 import StudyingTimerService from 'brn/services/studying-timer';
-import Exercise from 'brn/models/exercise';
+import type Exercise from 'brn/models/exercise';
 import { getOwner } from '@ember/application';
 
 export default class GroupSeriesSubgroupExerciseController extends Controller {

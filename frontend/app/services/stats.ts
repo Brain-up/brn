@@ -1,5 +1,5 @@
 import Service, { inject as service } from '@ember/service';
-import Exercise from 'brn/models/exercise';
+import type Exercise from 'brn/models/exercise';
 import StudyingTimerService from './studying-timer';
 export enum StatEvents {
   Start = 'start',

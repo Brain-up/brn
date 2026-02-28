@@ -9,7 +9,7 @@ import { MODES } from 'brn/utils/task-modes';
 import { task, Task as TaskGenerator } from 'ember-concurrency';
 import { StatEvents } from 'brn/services/stats';
 import AnswerOption from 'brn/utils/answer-option';
-import SingleSimpleWordTask from 'brn/models/task/single-simple-words';
+import type SingleSimpleWordTask from 'brn/models/task/single-simple-words';
 export default class SingleSimpleWordsComponent extends Component<SingleSimpleWordTask> {
   @tracked currentAnswer: string[] = [];
   willDestroy(): void {
@@ -48,7 +48,7 @@ export default class SingleSimpleWordsComponent extends Component<SingleSimpleWo
     const opts = this.task.answerOptions;
     type Answers = typeof this.task.answerOptions;
     const acc: Record<string, Answers> = {};
-    const groupedOptions = opts.reduce((acc, option) => {
+    const groupedOptions = opts.reduce((acc: Record<string, Answers>, option: AnswerOption) => {
       const colId = (option.columnNumber ?? 0).toString();
       if (!acc[colId]) {
         acc[colId] = [];

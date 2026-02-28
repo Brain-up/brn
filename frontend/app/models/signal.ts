@@ -1,9 +1,8 @@
-import Model, { attr } from '@warp-drive-mirror/legacy/model';
-import { Type } from '@warp-drive-mirror/core/types/symbols';
-
-export default class Signal extends Model {
-  declare [Type]: 'signal';
-  @attr('number') frequency!: number;
-  @attr('number') duration!: number;
-}
-
+/**
+ * Signal model — migrated to SchemaRecord.
+ * Schema definition: app/schemas/signal.ts
+ *
+ * This file re-exports the schema type for backward compatibility
+ * with existing imports.
+ */
+export type { Signal as default } from 'brn/schemas/signal';

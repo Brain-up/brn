@@ -11,9 +11,8 @@ module('Integration | Component | words-seq-task-player', function (hooks) {
 
   hooks.beforeEach(async function () {
     const store = this.owner.lookup('service:store');
-    this.set('model', store.createRecord('task/words-sequences'));
-
-    this.model.setProperties(data.task);
+    const { type: _type, ...taskData } = data.task;
+    this.set('model', store.createRecord('task/words-sequences', taskData));
 
     await render(hbs`<TaskPlayer
       @task={{this.model}}
@@ -46,10 +45,8 @@ module('Integration | Component | words-seq-task-player | per-word correctness',
     this.owner.register('service:audio', MockAudio);
 
     const store = this.owner.lookup('service:store');
-    const model = store.createRecord('task/words-sequences');
-    model.setProperties({
+    const model = store.createRecord('task/words-sequences', {
       exerciseMechanism: 'MATRIX',
-      type: 'task/MATRIX',
       name: '',
       wrongAnswers: [],
       template: '<OBJECT OBJECT_ACTION>',

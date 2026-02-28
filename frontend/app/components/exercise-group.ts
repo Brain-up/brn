@@ -3,7 +3,7 @@ import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
 import NetworkService from 'brn/services/network';
-import SubGroup from 'brn/models/subgroup';
+import type SubGroup from 'brn/models/subgroup';
 
 interface IExerciseGroupArgs {
   group: SubGroup;

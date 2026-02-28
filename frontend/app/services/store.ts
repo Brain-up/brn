@@ -6,11 +6,17 @@ import { inject as service } from '@ember/service';
 import { AuthHandler } from 'brn/handlers/auth-handler';
 import { BrnApiHandler } from 'brn/handlers/brn-api-handler';
 import type AuthTokenService from 'brn/services/auth-token';
+import { ALL_SCHEMAS, ALL_EXTENSIONS } from 'brn/schemas';
+import { FullDateTransformation } from 'brn/transformations/full-date';
+import { ArrayTransformation } from 'brn/transformations/array';
 
 const LegacyStore = useLegacyStore({
   linksMode: false,
   legacyRequests: true,
   cache: JSONAPICache,
+  schemas: ALL_SCHEMAS,
+  transformations: [FullDateTransformation, ArrayTransformation],
+  CAUTION_MEGA_DANGER_ZONE_extensions: ALL_EXTENSIONS,
 });
 
 export default class Store extends LegacyStore {

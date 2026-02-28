@@ -1,5 +1,5 @@
 import Component from '@glimmer/component';
-import Exercise from 'brn/models/exercise';
+import type Exercise from 'brn/models/exercise';
 
 interface UiExerciseButtonComponentArguments {
   title?: string;

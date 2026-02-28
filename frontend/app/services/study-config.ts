@@ -2,7 +2,7 @@ import Service from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { getOwner } from '@ember/application';
-import Task from 'brn/models/task';
+import type Task from 'brn/models/task';
 
 export default class StudyConfigService extends Service {
     @tracked

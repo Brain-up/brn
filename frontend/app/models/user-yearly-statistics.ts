@@ -1,13 +1,8 @@
-import { attr } from '@warp-drive-mirror/legacy/model';
-import { Type } from '@warp-drive-mirror/core/types/symbols';
-import UserWeeklyStatisticsModel from './user-weekly-statistics';
-
-export default class UserYearlyStatisticsModel extends UserWeeklyStatisticsModel {
-  declare [Type]: 'user-yearly-statistics';
-  @attr('number') exercisingDays!: number;
-
-  get days() {
-    return this.exercisingDays;
-  }
-}
-
+/**
+ * UserYearlyStatistics model — migrated to SchemaRecord.
+ * Schema definition: app/schemas/user-yearly-statistics.ts
+ *
+ * This file re-exports the schema type for backward compatibility
+ * with existing imports.
+ */
+export type { UserYearlyStatistics as default } from 'brn/schemas/user-yearly-statistics';

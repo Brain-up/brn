@@ -1,5 +1,5 @@
 import Component from '@glimmer/component';
-import TaskSignalModel from 'brn/models/task/signal';
+import type TaskSignalModel from 'brn/models/task/signal';
 import { MODES } from 'brn/utils/task-modes';
 import { action } from '@ember/object';
 import SignalModel from 'brn/models/signal';

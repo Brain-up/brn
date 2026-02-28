@@ -15,8 +15,9 @@ module(
 
     hooks.beforeEach(async function () {
       const store = this.owner.lookup('service:store');
+      const { type: _type, wrongAnswers: _wrongAnswers, ...taskData } = data.task;
       let model = store.createRecord('task/single-simple-words', {
-        ...data.task,
+        ...taskData,
         exercise: store.createRecord('exercise')
       });
       this.set('model', model);
