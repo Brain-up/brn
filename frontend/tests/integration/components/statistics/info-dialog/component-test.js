@@ -1,16 +1,16 @@
 import { module, test } from 'qunit';
-import { setupIntl } from 'ember-intl/test-support';import { setupRenderingTest } from 'ember-qunit';
+import { setupIntl } from 'ember-intl/test-support';
+import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import sinon from 'sinon';
 import click from '@ember/test-helpers/dom/click';
 
 module('Integration | Component | statistics/info-dialog', function (hooks) {
-  setupRenderingTest(hooks);setupIntl(hooks, 'en-us');
+  setupRenderingTest(hooks);
+  setupIntl(hooks, 'en-us');
 
   test('it renders', async function (assert) {
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.set('myAction', function(val) { ... });
     const closeModalAction = sinon.stub();
     this.set('closeModalAction', closeModalAction);
 
@@ -22,5 +22,33 @@ module('Integration | Component | statistics/info-dialog', function (hooks) {
     assert.ok(closeModalAction.calledOnce);
     await click('[data-test-button-close]');
     assert.ok(closeModalAction.calledTwice);
+  });
+
+  test('it shows English image for en-us locale', async function (assert) {
+    const closeModalAction = sinon.stub();
+    this.set('closeModalAction', closeModalAction);
+
+    await render(
+      hbs`<Statistics::InfoDialog @closeModalAction={{this.closeModalAction}}/>`,
+    );
+    assert
+      .dom('[data-test-info-image]')
+      .hasAttribute('src', '/ui/statistics-info-dialog-en.svg');
+  });
+
+  module('with ru-ru locale', function (hooks) {
+    setupIntl(hooks, 'ru-ru');
+
+    test('it shows Russian image for ru-ru locale', async function (assert) {
+      const closeModalAction = sinon.stub();
+      this.set('closeModalAction', closeModalAction);
+
+      await render(
+        hbs`<Statistics::InfoDialog @closeModalAction={{this.closeModalAction}}/>`,
+      );
+      assert
+        .dom('[data-test-info-image]')
+        .hasAttribute('src', '/ui/statistics-info-dialog.svg');
+    });
   });
 });
