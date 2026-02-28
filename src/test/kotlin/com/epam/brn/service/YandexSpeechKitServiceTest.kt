@@ -1,44 +1,62 @@
 package com.epam.brn.service
 
+import com.epam.brn.dto.AudioFileMetaData
+import com.epam.brn.dto.YandexIamTokenDto
+import com.epam.brn.dto.yandex.tts.AudioChunk
+import com.epam.brn.dto.yandex.tts.YandexTtsResponse
+import com.epam.brn.dto.yandex.tts.YandexTtsResult
 import com.epam.brn.exception.YandexServiceException
+import com.epam.brn.service.yandex.tts.config.YandexTtsProperties
 import io.kotest.matchers.shouldBe
 import io.mockk.every
-import io.mockk.impl.annotations.InjectMockKs
-import io.mockk.impl.annotations.MockK
-import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
-import io.mockk.mockkStatic
-import io.mockk.unmockkStatic
-import org.apache.http.HttpEntity
-import org.apache.http.client.methods.CloseableHttpResponse
-import org.apache.http.impl.client.CloseableHttpClient
-import org.apache.http.impl.client.HttpClientBuilder
-import org.apache.http.util.EntityUtils
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
-import java.io.InputStream
+import org.springframework.web.reactive.function.client.WebClient
+import reactor.core.publisher.Flux
+import reactor.core.publisher.Mono
 import java.time.LocalDateTime
+import java.util.Base64
 
-@ExtendWith(MockKExtension::class)
 internal class YandexSpeechKitServiceTest {
-    @InjectMockKs
-    lateinit var yandexSpeechKitService: YandexSpeechKitService
+    private lateinit var yandexSpeechKitService: YandexSpeechKitService
+    private lateinit var wordsService: WordsService
+    private lateinit var timeService: TimeService
+    private lateinit var yandexTtsProperties: YandexTtsProperties
+    private lateinit var yandexTtsWebClient: WebClient
+    private lateinit var yandexIamTokenWebClient: WebClient
 
-    @MockK
-    lateinit var wordsService: WordsService
+    @BeforeEach
+    fun setUp() {
+        wordsService = mockk()
+        timeService = mockk()
+        yandexTtsProperties = mockk()
+        yandexTtsWebClient = mockk()
+        yandexIamTokenWebClient = mockk()
 
-    @MockK
-    lateinit var timeService: TimeService
+        every { yandexTtsProperties.emotions } returns listOf("friendly")
+        every { yandexTtsProperties.folderId } returns "test-folder-id"
+        every { yandexTtsProperties.authToken } returns "test-auth-token"
+
+        yandexSpeechKitService =
+            YandexSpeechKitService(
+                wordsService = wordsService,
+                timeService = timeService,
+                yandexTtsProperties = yandexTtsProperties,
+                yandexTtsWebClient = yandexTtsWebClient,
+                yandexIamTokenWebClient = yandexIamTokenWebClient,
+            )
+    }
 
     @ParameterizedTest
     @ValueSource(strings = ["ru-ru", "en-us", "tr-tr"])
     fun `should success pass locale validation without Exceptions`(locale: String) {
         every { timeService.now() } returns LocalDateTime.now()
         every { wordsService.getVoicesForLocale(locale) } returns emptyList()
-        // WHENv
+        // WHEN
         yandexSpeechKitService.validateLocaleAndVoice(locale, "")
     }
 
@@ -83,54 +101,141 @@ internal class YandexSpeechKitServiceTest {
     @Test
     fun `should return new token in getYandexIamTokenForAudioGeneration`() {
         yandexSpeechKitService.iamToken = ""
-        yandexSpeechKitService.authToken = "authToken"
-        yandexSpeechKitService.uriGetIamToken = "uriGetIamToken"
 
-        val httpClientBuilder = mockk<HttpClientBuilder>()
-        val httpClient = mockk<CloseableHttpClient>()
-        val httpResponse = mockk<CloseableHttpResponse>()
-        val httpEntity = mockk<HttpEntity>()
-        val inputStream = mockk<InputStream>()
-        mockkStatic(HttpClientBuilder::class)
-        every { HttpClientBuilder.create() } returns httpClientBuilder
-        mockkStatic(EntityUtils::class)
-        every { EntityUtils.toString(any()) } returns "{\n" +
-            " \"iamToken\": \"iamTokenValue\",\n" +
-            " \"expiresAt\": \"2040-11-24T11:48:38.503511+03:00\"\n" +
-            "}"
+        val requestBodySpec = mockk<WebClient.RequestBodySpec>()
+        val requestHeadersSpec = mockk<WebClient.RequestHeadersSpec<*>>()
+        val responseSpec = mockk<WebClient.ResponseSpec>()
 
-        every { httpClientBuilder.build() } returns httpClient
-        every { httpClient.execute(any()) } returns httpResponse
-        every { httpResponse.statusLine.statusCode } returns 200
-        every { httpResponse.entity } returns httpEntity
-        every { httpEntity.content } returns inputStream
+        every { yandexIamTokenWebClient.post() } returns requestBodySpec
+        every { requestBodySpec.bodyValue(any()) } returns requestHeadersSpec
+        every { requestHeadersSpec.retrieve() } returns responseSpec
+        every { responseSpec.bodyToMono(YandexIamTokenDto::class.java) } returns
+            Mono.just(
+                YandexIamTokenDto(
+                    iamToken = "newIamToken",
+                    expiresAt = "2040-11-24T11:48:38.503511+03:00",
+                ),
+            )
         every { timeService.now() } returns LocalDateTime.now()
+
         // WHEN
         val resultToken = yandexSpeechKitService.getYandexIamTokenForAudioGeneration()
-        // THEN
-        resultToken shouldBe "iamTokenValue"
-        httpResponse.statusLine.statusCode shouldBe 200
 
-        unmockkStatic(HttpClientBuilder::class)
-        unmockkStatic(EntityUtils::class)
+        // THEN
+        resultToken shouldBe "newIamToken"
     }
 
     @Test
-    fun `should throw Exception if status code is not 200`() {
+    fun `should throw Exception if token request fails`() {
         yandexSpeechKitService.iamToken = ""
-        yandexSpeechKitService.authToken = "authToken"
-        yandexSpeechKitService.uriGetIamToken = "uriGetIamToken"
 
-        val httpClientBuilder = mockk<HttpClientBuilder>()
-        val httpClient = mockk<CloseableHttpClient>()
-        val httpResponse = mockk<CloseableHttpResponse>()
+        val requestBodySpec = mockk<WebClient.RequestBodySpec>()
+        val requestHeadersSpec = mockk<WebClient.RequestHeadersSpec<*>>()
+        val responseSpec = mockk<WebClient.ResponseSpec>()
 
-        mockkStatic(HttpClientBuilder::class)
-        every { HttpClientBuilder.create() } returns httpClientBuilder
-        every { httpClientBuilder.build() } returns httpClient
-        every { httpClient.execute(any()) } returns httpResponse
-        every { httpResponse.statusLine.statusCode } returns 100
+        every { yandexIamTokenWebClient.post() } returns requestBodySpec
+        every { requestBodySpec.bodyValue(any()) } returns requestHeadersSpec
+        every { requestHeadersSpec.retrieve() } returns responseSpec
+        every { responseSpec.bodyToMono(YandexIamTokenDto::class.java) } returns Mono.empty()
+        every { timeService.now() } returns LocalDateTime.now()
+
         // WHEN & THEN
         assertThrows<YandexServiceException> { yandexSpeechKitService.getYandexIamTokenForAudioGeneration() }
+    }
+
+    @Test
+    fun `should generate audio stream from v3 response`() {
+        val audioContent = "test audio content".toByteArray()
+        val base64Audio = Base64.getEncoder().encodeToString(audioContent)
+
+        yandexSpeechKitService.iamToken = "valid-token"
+        yandexSpeechKitService.iamTokenExpiresTime = LocalDateTime.now().plusHours(1)
+        every { timeService.now() } returns LocalDateTime.now()
+
+        val requestBodySpec = mockk<WebClient.RequestBodySpec>()
+        val requestHeadersSpec = mockk<WebClient.RequestHeadersSpec<*>>()
+        val responseSpec = mockk<WebClient.ResponseSpec>()
+
+        every { yandexTtsWebClient.post() } returns requestBodySpec
+        every { requestBodySpec.header(any(), any()) } returns requestBodySpec
+        every { requestBodySpec.bodyValue(any()) } returns requestHeadersSpec
+        every { requestHeadersSpec.retrieve() } returns responseSpec
+        every { responseSpec.bodyToFlux(YandexTtsResponse::class.java) } returns
+            Flux.just(
+                YandexTtsResponse(
+                    result =
+                        YandexTtsResult(
+                            audioChunk = AudioChunk(data = base64Audio),
+                        ),
+                ),
+            )
+
+        // WHEN
+        val result =
+            yandexSpeechKitService.generateAudioStream(
+                AudioFileMetaData(text = "test", locale = "ru-ru", voice = "filipp", speedFloat = "1.0"),
+            )
+
+        // THEN
+        result.readBytes() shouldBe audioContent
+    }
+
+    @Test
+    fun `should concatenate multiple audio chunks`() {
+        val chunk1 = "chunk1".toByteArray()
+        val chunk2 = "chunk2".toByteArray()
+        val base64Chunk1 = Base64.getEncoder().encodeToString(chunk1)
+        val base64Chunk2 = Base64.getEncoder().encodeToString(chunk2)
+
+        yandexSpeechKitService.iamToken = "valid-token"
+        yandexSpeechKitService.iamTokenExpiresTime = LocalDateTime.now().plusHours(1)
+        every { timeService.now() } returns LocalDateTime.now()
+
+        val requestBodySpec = mockk<WebClient.RequestBodySpec>()
+        val requestHeadersSpec = mockk<WebClient.RequestHeadersSpec<*>>()
+        val responseSpec = mockk<WebClient.ResponseSpec>()
+
+        every { yandexTtsWebClient.post() } returns requestBodySpec
+        every { requestBodySpec.header(any(), any()) } returns requestBodySpec
+        every { requestBodySpec.bodyValue(any()) } returns requestHeadersSpec
+        every { requestHeadersSpec.retrieve() } returns responseSpec
+        every { responseSpec.bodyToFlux(YandexTtsResponse::class.java) } returns
+            Flux.just(
+                YandexTtsResponse(result = YandexTtsResult(audioChunk = AudioChunk(data = base64Chunk1))),
+                YandexTtsResponse(result = YandexTtsResult(audioChunk = AudioChunk(data = base64Chunk2))),
+            )
+
+        // WHEN
+        val result =
+            yandexSpeechKitService.generateAudioStream(
+                AudioFileMetaData(text = "test", locale = "ru-ru", voice = "filipp", speedFloat = "1.0"),
+            )
+
+        // THEN
+        result.readBytes() shouldBe chunk1 + chunk2
+    }
+
+    @Test
+    fun `should throw exception when audio response is empty`() {
+        yandexSpeechKitService.iamToken = "valid-token"
+        yandexSpeechKitService.iamTokenExpiresTime = LocalDateTime.now().plusHours(1)
+        every { timeService.now() } returns LocalDateTime.now()
+
+        val requestBodySpec = mockk<WebClient.RequestBodySpec>()
+        val requestHeadersSpec = mockk<WebClient.RequestHeadersSpec<*>>()
+        val responseSpec = mockk<WebClient.ResponseSpec>()
+
+        every { yandexTtsWebClient.post() } returns requestBodySpec
+        every { requestBodySpec.header(any(), any()) } returns requestBodySpec
+        every { requestBodySpec.bodyValue(any()) } returns requestHeadersSpec
+        every { requestHeadersSpec.retrieve() } returns responseSpec
+        every { responseSpec.bodyToFlux(YandexTtsResponse::class.java) } returns Flux.empty()
+
+        // WHEN & THEN
+        assertThrows<YandexServiceException> {
+            yandexSpeechKitService.generateAudioStream(
+                AudioFileMetaData(text = "test", locale = "ru-ru", voice = "filipp", speedFloat = "1.0"),
+            )
+        }
     }
 }

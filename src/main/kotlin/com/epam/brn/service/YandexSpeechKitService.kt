@@ -1,51 +1,37 @@
 package com.epam.brn.service
 
+import com.epam.brn.config.ExcludeFromJacocoGeneratedReport
 import com.epam.brn.dto.AudioFileMetaData
+import com.epam.brn.dto.YandexIamTokenDto
+import com.epam.brn.dto.yandex.tts.ContainerAudio
+import com.epam.brn.dto.yandex.tts.Hint
+import com.epam.brn.dto.yandex.tts.OutputAudioSpec
+import com.epam.brn.dto.yandex.tts.YandexTtsRequest
+import com.epam.brn.dto.yandex.tts.YandexTtsResponse
 import com.epam.brn.enums.BrnLocale
 import com.epam.brn.exception.YandexServiceException
-import org.apache.http.NameValuePair
-import org.apache.http.client.methods.CloseableHttpResponse
-import org.apache.http.client.methods.HttpPost
-import org.apache.http.client.utils.URIBuilder
-import org.apache.http.impl.client.HttpClientBuilder
-import org.apache.http.message.BasicNameValuePair
-import org.apache.http.util.EntityUtils
+import com.epam.brn.service.yandex.tts.config.YandexTtsProperties
 import org.apache.logging.log4j.kotlin.logger
-import org.json.JSONObject
-import org.springframework.beans.factory.annotation.Value
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
-import org.springframework.context.annotation.Primary
-import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
+import org.springframework.web.reactive.function.client.WebClient
+import java.io.ByteArrayInputStream
 import java.io.InputStream
 import java.time.LocalDateTime
 import java.time.ZoneOffset
+import java.time.ZonedDateTime
+import java.util.Base64
 
 @Service
-@Primary
 @ConditionalOnProperty(name = ["default.tts.provider"], havingValue = "yandex")
 class YandexSpeechKitService(
     private val wordsService: WordsService,
     private val timeService: TimeService,
+    private val yandexTtsProperties: YandexTtsProperties,
+    @Qualifier("yandexTtsWebClient") private val yandexTtsWebClient: WebClient,
+    @Qualifier("yandexIamTokenWebClient") private val yandexIamTokenWebClient: WebClient,
 ) : TextToSpeechService {
-    @Value("\${yandex.getTokenLink}")
-    lateinit var uriGetIamToken: String
-
-    @Value("\${yandex.authToken}")
-    lateinit var authToken: String
-
-    @Value("\${yandex.generationAudioLink}")
-    lateinit var uriGenerationAudioFile: String
-
-    @Value("\${yandex.folderId}")
-    lateinit var folderId: String
-
-    @Value("\${yandex.format}")
-    lateinit var format: String
-
-    @Value("\${yandex.emotions}")
-    lateinit var emotions: List<String>
-
     var iamToken: String = ""
     var iamTokenExpiresTime: LocalDateTime = LocalDateTime.now(ZoneOffset.UTC)
 
@@ -54,69 +40,65 @@ class YandexSpeechKitService(
     fun getYandexIamTokenForAudioGeneration(): String {
         if (iamToken.isNotEmpty() && iamTokenExpiresTime.isAfter(timeService.now()))
             return iamToken
-        val parameters = ArrayList<NameValuePair>()
-        parameters.add(BasicNameValuePair("yandexPassportOauthToken", authToken))
-        val uriBuilder = URIBuilder(uriGetIamToken)
-        uriBuilder.addParameters(parameters)
-        val postRequest = HttpPost(uriBuilder.build())
-        val httpClient = HttpClientBuilder.create().build()
-        val response: CloseableHttpResponse = httpClient.execute(postRequest)
-        val statusCode = response.statusLine.statusCode
-        if (statusCode != HttpStatus.OK.value())
-            throw YandexServiceException("Can't get yandex iam token, httpStatus={$statusCode}")
-        val entity = EntityUtils.toString(response.entity)
-        val jsonObject = JSONObject(entity)
-        iamToken = jsonObject.getString("iamToken")
-        val tokenExpiresTimeValue = jsonObject.getString("expiresAt")
-        iamTokenExpiresTime = timeService.now()
-        log.info("Get iam token from yandex cloud successfully, it will expire at $tokenExpiresTimeValue")
+        val tokenDto = requestIamToken()
+        iamToken = tokenDto.iamToken
+        iamTokenExpiresTime = ZonedDateTime.parse(tokenDto.expiresAt).toLocalDateTime()
+        log.info("Got IAM token from Yandex Cloud, expires at ${tokenDto.expiresAt}")
         return iamToken
     }
 
-    /**
-     * Generate stream of .ogg audio file from yandex cloud speech kit service
-     */
+    @ExcludeFromJacocoGeneratedReport
+    private fun requestIamToken(): YandexIamTokenDto = yandexIamTokenWebClient
+        .post()
+        .bodyValue(mapOf("yandexPassportOauthToken" to yandexTtsProperties.authToken))
+        .retrieve()
+        .bodyToMono(YandexIamTokenDto::class.java)
+        .block() ?: throw YandexServiceException("Failed to get IAM token from Yandex Cloud")
+
     fun generateAudioStream(audioFileMetaData: AudioFileMetaData): InputStream {
         val token = getYandexIamTokenForAudioGeneration()
-        val emotion = emotions.first()
-        val parameters =
-            ArrayList<NameValuePair>().apply {
-                add(BasicNameValuePair("folderId", folderId))
-                add(BasicNameValuePair("lang", audioFileMetaData.locale))
-                add(BasicNameValuePair("format", format))
-                add(BasicNameValuePair("voice", audioFileMetaData.voice.lowercase()))
-                add(BasicNameValuePair("emotion", emotion))
-                add(BasicNameValuePair("speed", audioFileMetaData.speedFloat))
-                add(BasicNameValuePair("text", audioFileMetaData.text))
-            }
+        val emotion = yandexTtsProperties.emotions.first()
 
-        val uriBuilder = URIBuilder(uriGenerationAudioFile)
-        uriBuilder.addParameters(parameters)
-
-        val postRequest = HttpPost(uriBuilder.build())
-        postRequest.setHeader("Authorization", "Bearer $token")
-
-        val httpClient = HttpClientBuilder.create().build()
-        val response = httpClient.execute(postRequest)
-        var count = 10
-        var success = false
-        var statusCode = 0
-        while (!success && count != 0) {
-            count--
-            statusCode = response.statusLine.statusCode
-            if (statusCode != HttpStatus.OK.value())
-                log.error("====== for $audioFileMetaData, httpStatus={$statusCode}, count=$count ======")
-            else
-                success = true
-        }
-        if (statusCode != HttpStatus.OK.value())
-            throw YandexServiceException(
-                "Yandex cloud does not provide audio file for $audioFileMetaData, httpStatus={$statusCode}, content=${response.entity.content}",
+        val request =
+            YandexTtsRequest(
+                text = audioFileMetaData.text,
+                outputAudioSpec = OutputAudioSpec(containerAudio = ContainerAudio()),
+                hints =
+                    listOf(
+                        Hint(voice = audioFileMetaData.voice.lowercase()),
+                        Hint(speed = audioFileMetaData.speedFloat.toDouble()),
+                        Hint(role = emotion),
+                    ),
             )
-        log.info("Ogg audio file for $audioFileMetaData was successfully generated by yandex!")
-        val httpEntity = response.entity
-        return httpEntity.content
+
+        val responses = requestAudioSynthesis(token, request)
+
+        val audioBytes =
+            responses
+                .filter { it.result?.audioChunk?.data != null }
+                .map { Base64.getDecoder().decode(it.result!!.audioChunk!!.data!!) }
+                .fold(byteArrayOf()) { acc, bytes -> acc + bytes }
+
+        if (audioBytes.isEmpty())
+            throw YandexServiceException("Yandex Cloud returned empty audio for $audioFileMetaData")
+
+        log.info("Ogg audio file for $audioFileMetaData was successfully generated by Yandex!")
+        return ByteArrayInputStream(audioBytes)
     }
+
+    @ExcludeFromJacocoGeneratedReport
+    private fun requestAudioSynthesis(
+        token: String,
+        request: YandexTtsRequest,
+    ): List<YandexTtsResponse> = yandexTtsWebClient
+        .post()
+        .header("Authorization", "Bearer $token")
+        .header("x-folder-id", yandexTtsProperties.folderId)
+        .bodyValue(request)
+        .retrieve()
+        .bodyToFlux(YandexTtsResponse::class.java)
+        .collectList()
+        .block() ?: throw YandexServiceException("Yandex Cloud did not return audio response")
 
     fun validateLocaleAndVoice(
         locale: String,

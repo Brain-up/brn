@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* global require */
 const fs = require('fs');
-const request = require('request');
-const qs = require('querystring');
+const https = require('https');
 
 const words = `бам,сам,дам,зал,бум`;
 const token = '';
@@ -12,31 +11,69 @@ const folderId = '';
 // install ffmpeg
 
 // yc iam create-token
-// https://cloud.yandex.ru/docs/speechkit/tts/request
+// https://cloud.yandex.ru/docs/speechkit/tts/v3/api-ref/grpc/
 
-const yandex_tts_url =
-  'https://tts.api.cloud.yandex.net/speech/v1/tts:synthesize?';
+const yandex_tts_url = '/tts/v3/utteranceSynthesis';
 
 function YandexTTS(options, callback) {
-  var params = {};
-
-  params['text'] = options['text'];
-  params['folderId'] = folderId;
-  params['format'] = 'oggopus';
-  params['lang'] = 'ru-RU';
-  params['voice'] = 'filipp';
-  params['emotion'] = 'good';
-
-  var full_url = yandex_tts_url + qs.stringify(params);
-
-  var file = fs.createWriteStream(options['file']);
-  file.on('finish', callback);
-  request({
-    url: full_url,
-    headers: {
-      Authorization: `Bearer ${token}`,
+  const body = JSON.stringify({
+    text: options['text'],
+    outputAudioSpec: {
+      containerAudio: {
+        containerAudioType: 'OGG_OPUS',
+      },
     },
-  }).pipe(file);
+    hints: [
+      { voice: 'filipp' },
+      { role: 'friendly' },
+    ],
+    loudnessNormalizationType: 'LUFS',
+  });
+
+  const reqOptions = {
+    hostname: 'tts.api.cloud.yandex.net',
+    port: 443,
+    path: yandex_tts_url,
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'x-folder-id': folderId,
+      'Content-Type': 'application/json',
+      'Content-Length': Buffer.byteLength(body),
+    },
+  };
+
+  const file = fs.createWriteStream(options['file']);
+  const req = https.request(reqOptions, (res) => {
+    let responseData = '';
+    res.on('data', (chunk) => {
+      responseData += chunk;
+    });
+    res.on('end', () => {
+      const lines = responseData.split('\n').filter((line) => line.trim());
+      for (const line of lines) {
+        try {
+          const parsed = JSON.parse(line);
+          if (parsed.result && parsed.result.audioChunk && parsed.result.audioChunk.data) {
+            const audioBuffer = Buffer.from(parsed.result.audioChunk.data, 'base64');
+            file.write(audioBuffer);
+          }
+        } catch (e) {
+          // skip non-JSON lines
+        }
+      }
+      file.end(callback);
+    });
+  });
+
+  req.on('error', (e) => {
+    console.error(`Request error: ${e.message}`);
+    file.end();
+    callback();
+  });
+
+  req.write(body);
+  req.end();
 }
 
 const execSync = require('child_process').execSync;
@@ -72,8 +109,3 @@ async function makeFiles() {
 }
 
 makeFiles();
-// stack.forEach((word)=>{
-//     let file = word.trim();
-//     execSync(`gtts-cli "${word}." -lang_check --lang ru --output ${file}.mp3`);
-//     execSync(`ffmpeg-normalize ${file}.mp3 --normalization-type peak --target-level 0 -c:a libmp3lame -b:a 320k -o ${file}_n.mp3`)
-// });
