@@ -15,6 +15,7 @@ import com.epam.brn.service.TimeService
 import com.epam.brn.service.UserAccountService
 import com.google.firebase.auth.UserRecord
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
@@ -90,8 +91,8 @@ class UserAccountServiceImpl(
     override fun getUsers(
         pageable: Pageable,
         role: String,
-    ): List<UserAccountDto> = userAccountRepository
-        .findUsersAccountsByRole(role)
+    ): Page<UserAccountDto> = userAccountRepository
+        .findUsersAccountsByRole(role, pageable)
         .map { it.toDto() }
 
     override fun updateAvatarForCurrentUser(avatarUrl: String): UserAccountDto {

@@ -48,10 +48,21 @@ interface UserAccountRepository : JpaRepository<UserAccount, Long> {
     fun findAllByUserIdIsNullAndIsFirebaseErrorIsFalse(pageable: Pageable): Page<UserAccount>
 
     @Query(
-        """select DISTINCT u FROM UserAccount u left JOIN FETCH u.roleSet roles 
+        """select DISTINCT u FROM UserAccount u left JOIN FETCH u.roleSet roles
             left JOIN FETCH u.headphones where roles.name = :roleName""",
     )
     fun findUsersAccountsByRole(roleName: String): List<UserAccount>
+
+    @Query(
+        value = """select DISTINCT u FROM UserAccount u left JOIN FETCH u.roleSet roles
+            left JOIN FETCH u.headphones where roles.name = :roleName""",
+        countQuery = """select count(DISTINCT u) FROM UserAccount u left JOIN u.roleSet roles
+            where roles.name = :roleName""",
+    )
+    fun findUsersAccountsByRole(
+        roleName: String,
+        pageable: Pageable,
+    ): Page<UserAccount>
 
     @Transactional
     @Modifying

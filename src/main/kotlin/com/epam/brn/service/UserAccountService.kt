@@ -5,6 +5,7 @@ import com.epam.brn.dto.UserAccountDto
 import com.epam.brn.dto.request.UserAccountChangeRequest
 import com.epam.brn.model.UserAccount
 import com.google.firebase.auth.UserRecord
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 
 interface UserAccountService {
@@ -22,7 +23,7 @@ interface UserAccountService {
     fun getUsers(
         pageable: Pageable,
         role: String,
-    ): List<UserAccountDto>
+    ): Page<UserAccountDto>
     fun updateAvatarForCurrentUser(avatarUrl: String): UserAccountDto
     fun updateCurrentUser(userChangeRequest: UserAccountChangeRequest): UserAccountDto
 
