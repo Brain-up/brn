@@ -32,11 +32,11 @@ import TimerComponent from 'brn/components/timer/component';
 import NetworkService from './network';
 import StatsService, { StatEvents } from './stats';
 import { ToneObject } from 'brn/components/audio-player/component';
-import SignalModel from 'brn/models/signal';
+import type { Signal as SignalModel } from 'brn/schemas/signal';
 import Intl from 'ember-intl/services/intl';
 import { PolySynth, Synth, SynthOptions } from 'tone';
 import UserDataService from './user-data';
-import type Exercise from 'brn/models/exercise';
+import type { Exercise } from 'brn/schemas/exercise';
 
 type ISourceCollection = (ISource | IToneSource | null)[];
 export interface IToneSource {

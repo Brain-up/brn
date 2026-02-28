@@ -14,8 +14,8 @@ import Ember from 'ember';
 import StatsService, { StatEvents } from 'brn/services/stats';
 import AudioService from 'brn/services/audio';
 import StudyingTimerService from 'brn/services/studying-timer';
-import type TaskModel from 'brn/models/task';
-import type WordsSequencesModel from 'brn/models/task/words-sequences';
+import type { TaskBase as TaskModel } from 'brn/schemas/task';
+import type { TaskWordsSequences as WordsSequencesModel } from 'brn/schemas/task/words-sequences';
 import type AnswerOption from 'brn/utils/answer-option';
 import { ExerciseMechanism } from 'brn/utils/exercise-types';
 

@@ -5,7 +5,7 @@ import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-rout
 import { inject as service } from '@ember/service';
 import type NetworkService from 'brn/services/network';
 import type Store from 'brn/services/store';
-import type GroupModel from 'brn/models/group';
+import type { Group as GroupModel } from 'brn/schemas/group';
 import type UserDataService from 'brn/services/user-data';
 
 export default class GroupsRoute extends Route.extend(AuthenticatedRouteMixin) {

@@ -1,5 +1,5 @@
 import Component from '@glimmer/component';
-import UserYearlyStatisticsModel from 'brn/models/user-yearly-statistics';
+import type { UserYearlyStatistics as UserYearlyStatisticsModel } from 'brn/schemas/user-yearly-statistics';
 import { DateTime } from 'luxon';
 import { action } from '@ember/object';
 import { isNone } from '@ember/utils';

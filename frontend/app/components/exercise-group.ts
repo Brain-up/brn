@@ -6,7 +6,7 @@ import { tracked } from '@glimmer/tracking';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { inject as service } from '@ember/service';
 import NetworkService from 'brn/services/network';
-import type SubGroup from 'brn/models/subgroup';
+import type { Subgroup as SubGroup } from 'brn/schemas/subgroup';
 
 interface IExerciseGroupArgs {
   group: SubGroup;

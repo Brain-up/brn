@@ -1,9 +1,9 @@
 import Component from '@glimmer/component';
-import type TaskSignalModel from 'brn/models/task/signal';
+import type { TaskSignal as TaskSignalModel } from 'brn/schemas/task/signal';
 import { MODES } from 'brn/utils/task-modes';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { action } from '@ember/object';
-import SignalModel from 'brn/models/signal';
+import type { Signal as SignalModel } from 'brn/schemas/signal';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { inject as service } from '@ember/service';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

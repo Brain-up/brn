@@ -16,8 +16,8 @@ import { task, Task as TaskGenerator } from 'ember-concurrency';
 import type AudioService from 'brn/services/audio';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import StatsService, { StatEvents } from 'brn/services/stats';
-import type WordsSequences from 'brn/models/task/words-sequences';
-import type Task from 'brn/models/task';
+import type { TaskWordsSequences as WordsSequences } from 'brn/schemas/task/words-sequences';
+import type { TaskBase as Task } from 'brn/schemas/task';
 import type AnswerOption from 'brn/utils/answer-option';
 
 function getEmptyTemplate(

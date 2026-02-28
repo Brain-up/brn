@@ -4,7 +4,7 @@ import { setupIntl } from 'ember-intl/test-support';import { setupRenderingTest 
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import { DateTime } from 'luxon';
-import { PROGRESS } from 'brn/models/user-weekly-statistics';
+import { PROGRESS } from 'brn/schemas/user-weekly-statistics-types';
 import sinon from 'sinon';
 import click from '@ember/test-helpers/dom/click';
 import { type Store } from '@warp-drive/core';

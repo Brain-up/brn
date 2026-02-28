@@ -1,6 +1,6 @@
 import Component from '@glimmer/component';
-import type UserWeeklyStatisticsModel from 'brn/models/user-weekly-statistics';
-import type UserYearlyStatisticsModel from 'brn/models/user-yearly-statistics';
+import type { UserWeeklyStatistics as UserWeeklyStatisticsModel } from 'brn/schemas/user-weekly-statistics';
+import type { UserYearlyStatistics as UserYearlyStatisticsModel } from 'brn/schemas/user-yearly-statistics';
 import NetworkService from 'brn/services/network';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { inject as service } from '@ember/service';

@@ -13,7 +13,7 @@ import { task, Task as TaskGenerator } from 'ember-concurrency';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { StatEvents } from 'brn/services/stats';
 import AnswerOption from 'brn/utils/answer-option';
-import type SingleSimpleWordTask from 'brn/models/task/single-simple-words';
+import type { TaskSingleSimpleWords as SingleSimpleWordTask } from 'brn/schemas/task/single-simple-words';
 export default class SingleSimpleWordsComponent extends Component<SingleSimpleWordTask> {
   @tracked currentAnswer: string[] = [];
   willDestroy(): void {

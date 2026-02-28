@@ -1,8 +1,8 @@
 import Route from '@ember/routing/route';
 // eslint-disable-next-line ember/no-mixins
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
-import type GroupModel from 'brn/models/group';
-import type SeriesModel from 'brn/models/series';
+import type { Group as GroupModel } from 'brn/schemas/group';
+import type { Series as SeriesModel } from 'brn/schemas/series';
 import type Transition from '@ember/routing/-private/transition';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { inject as service } from '@ember/service';

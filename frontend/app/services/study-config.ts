@@ -4,7 +4,7 @@ import { tracked } from '@glimmer/tracking';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { action } from '@ember/object';
 import { getOwner } from '@ember/application';
-import type Task from 'brn/models/task';
+import type { TaskBase as Task } from 'brn/schemas/task';
 
 export default class StudyConfigService extends Service {
     @tracked

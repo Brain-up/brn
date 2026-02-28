@@ -1,8 +1,8 @@
 import Route from '@ember/routing/route';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { inject as service } from '@ember/service';
-import type Exercise from 'brn/models/exercise';
-import type Task from 'brn/models/task';
+import type { Exercise } from 'brn/schemas/exercise';
+import type { TaskBase as Task } from 'brn/schemas/task';
 import type Transition from '@ember/routing/-private/transition';
 import type TasksManagerService from 'brn/services/tasks-manager';
 import type NetworkService from 'brn/services/network';

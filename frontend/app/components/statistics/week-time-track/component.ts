@@ -5,10 +5,10 @@ import {
 } from 'brn/components/statistics/bar-chart/component';
 import {
   PROGRESS,
-  UserExercisingProgressStatusType,
-} from 'brn/models/user-weekly-statistics';
+  type UserExercisingProgressStatusType,
+} from 'brn/schemas/user-weekly-statistics-types';
 import { DateTime } from 'luxon';
-import UserWeeklyStatisticsModel from 'brn/models/user-weekly-statistics';
+import type { UserWeeklyStatistics as UserWeeklyStatisticsModel } from 'brn/schemas/user-weekly-statistics';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { action } from '@ember/object';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
