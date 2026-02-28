@@ -48,6 +48,13 @@ export default class AudioService extends Service {
   @service('intl') declare intl: Intl;
   @service('user-data') declare userData: UserDataService;
   context!: AudioContext;
+
+  willDestroy(): void {
+    super.willDestroy();
+    if (this.context && this.context.state !== 'closed') {
+      this.context.close();
+    }
+  }
   @tracked
   player: null | TimerComponent = null;
   register(player: TimerComponent) {
@@ -60,6 +67,11 @@ export default class AudioService extends Service {
   sources!: ISourceCollection;
   noiseTaskInstance!: TaskInstance<any>;
   @tracked isPlaying = false;
+  @tracked isProcessing = false;
+
+  get isBusy() {
+    return this.isPlaying || this.isProcessing;
+  }
 
   @tracked audioPlayingProgress = 0;
 
@@ -103,13 +115,23 @@ export default class AudioService extends Service {
   }
 
   @action async startPlayTask(filesToPlay = this.filesToPlay) {
-    if (this.isPlaying) {
+    if (this.isBusy) {
       return;
     }
-    
-    this.stats.addEvent(StatEvents.PlayAudio);
-    await this.setAudioElements(filesToPlay as string[]);
-    await this.playAudio();
+    this.isProcessing = true;
+    try {
+      this.stats.addEvent(StatEvents.PlayAudio);
+      await this.setAudioElements(filesToPlay as string[]);
+      await this.playAudio();
+    } catch (e) {
+      // Log and swallow errors: callers invoke startPlayTask fire-and-forget
+      // without awaiting, matching the pattern used in playAudio().
+      console.error(e);
+    } finally {
+      if (!this.isDestroyed && !this.isDestroying) {
+        this.isProcessing = false;
+      }
+    }
   }
 
   get currentExerciseNoiseUrl() {
@@ -152,7 +174,11 @@ export default class AudioService extends Service {
 
   async setAudioElements(filesToPlay: Array<string | ToneObject>) {
     this.audioElements = filesToPlay;
-    this.context = createAudioContext();
+    if (!this.context || this.context.state === 'closed') {
+      this.context = createAudioContext();
+    } else if (this.context.state === 'suspended' && !Ember.testing) {
+      await this.context.resume();
+    }
     if (Ember.testing) {
       this.buffers = [];
       return;
@@ -219,9 +245,13 @@ export default class AudioService extends Service {
 
   async getNoise(duration: number, level: number, url: null | string = null) {
     if (url !== null) {
-      const noiseContext = createAudioContext();
+      // Reuse this.context instead of creating a separate AudioContext
+      // to avoid leaking an unclosed context.
+      if (!this.context || this.context.state === 'closed') {
+        this.context = createAudioContext();
+      }
       const noiseBuffers = await loadAudioFiles(
-        noiseContext,
+        this.context,
         [url],
         () => this.network.token ?? '',
       );
@@ -229,7 +259,7 @@ export default class AudioService extends Service {
         throw new Error('Unable to resolve noise');
       }
       const source = await createSource(
-        noiseContext,
+        this.context,
         noiseBuffers[0] as AudioBuffer,
       );
       source.source.loop = true;

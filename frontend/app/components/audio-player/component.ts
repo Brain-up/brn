@@ -27,7 +27,7 @@ export default class AudioPlayerComponent extends Component<IAudioPlayerArgument
   }
 
   get isPlaying() {
-    return this.audio.isPlaying;
+    return this.audio.isBusy;
   }
 
   get audioPlayingProgress() {
