@@ -105,9 +105,6 @@ class StudyHistoryService(
                 val uniqueDoneExercisesCount =
                     studyHistoryByExercise
                         .count()
-                val doneExercisesSuccessfullyFromFirstTime =
-                    studyHistoryByExercise
-                        .count { it.value.size == 1 }
                 val listenWordsCount = histories.sumOf { it.tasksCount.toInt() }
                 val seconds = histories.sumOf { it.spentTimeInSeconds ?: 0L }
                 val userDailyDetailStatisticsDto =
@@ -115,8 +112,8 @@ class StudyHistoryService(
                         seriesName = seriesName,
                         allDoneExercises = allDoneExercisesCount,
                         uniqueDoneExercises = uniqueDoneExercisesCount,
-                        doneExercisesSuccessfullyFromFirstTime = doneExercisesSuccessfullyFromFirstTime,
-                        repeatedExercises = allDoneExercisesCount - doneExercisesSuccessfullyFromFirstTime,
+                        doneExercisesSuccessfullyFromFirstTime = uniqueDoneExercisesCount,
+                        repeatedExercises = allDoneExercisesCount - uniqueDoneExercisesCount,
                         listenWordsCount = listenWordsCount,
                         duration = (seconds.toDouble() / 60).toDuration(DurationUnit.MINUTES),
                     )

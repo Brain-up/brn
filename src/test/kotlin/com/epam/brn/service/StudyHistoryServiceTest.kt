@@ -324,8 +324,8 @@ internal class StudyHistoryServiceTest {
                 seriesName = seriesName,
                 allDoneExercises = userDailyDetailStatistics.size,
                 uniqueDoneExercises = 1,
-                repeatedExercises = userDailyDetailStatistics.size,
-                doneExercisesSuccessfullyFromFirstTime = 0,
+                repeatedExercises = 1,
+                doneExercisesSuccessfullyFromFirstTime = 1,
                 listenWordsCount = userDailyDetailStatistics.size * listenWordsCount,
                 duration = 120.toDuration(DurationUnit.MINUTES),
             )
@@ -419,8 +419,8 @@ internal class StudyHistoryServiceTest {
                 seriesName = seriesName2,
                 allDoneExercises = 3,
                 uniqueDoneExercises = 2,
-                repeatedExercises = 2,
-                doneExercisesSuccessfullyFromFirstTime = 1,
+                repeatedExercises = 1,
+                doneExercisesSuccessfullyFromFirstTime = 2,
                 listenWordsCount = 2 * listenWordsCount2 + listenWordsCount3,
                 duration = Duration.parse("152m 11s"),
             )
