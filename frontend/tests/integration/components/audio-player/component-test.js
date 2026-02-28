@@ -110,7 +110,9 @@ module('Integration | Component | audio-player', function (hooks) {
       get isBusy() {
         return this.isPlaying || this.isProcessing;
       }
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
       register() {}
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
       stop() {}
       startPlayTask() {
         if (this.isBusy) {

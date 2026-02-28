@@ -81,6 +81,7 @@ module('Unit | Service | audio', function (hooks) {
       async setAudioElements() {
         callCount++;
       }
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
       async playAudio() {}
     }
     this.owner.register('service:audio', TestAudioService);
@@ -145,6 +146,7 @@ module('Unit | Service | audio', function (hooks) {
           resolveSetAudioElements = resolve;
         });
       }
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
       async playAudio() {}
     }
     this.owner.register('service:audio', TestAudioService);
