@@ -1,8 +1,8 @@
-import { withDefaults, type WithLegacy } from '@warp-drive-mirror/legacy/model/migration-support';
-import { Type } from '@warp-drive-mirror/core/types/symbols';
-import type { LegacyResourceSchema } from '@warp-drive-mirror/core/types/schema/fields';
-import type { CAUTION_MEGA_DANGER_ZONE_Extension } from '@warp-drive-mirror/core/reactive';
-import { storeFor } from '@warp-drive-mirror/core';
+import { withDefaults, type WithLegacy } from '@warp-drive/legacy/model/migration-support';
+import { Type } from '@warp-drive/core/types/symbols';
+import type { LegacyResourceSchema } from '@warp-drive/core/types/schema/fields';
+import type { CAUTION_MEGA_DANGER_ZONE_Extension } from '@warp-drive/core/reactive';
+import { storeFor } from '@warp-drive/core';
 
 /**
  * Minimal interface for Exercise properties accessed through Subgroup.
@@ -54,8 +54,8 @@ export const SubgroupExtension: CAUTION_MEGA_DANGER_ZONE_Extension = {
       return self.exercisesIds.length;
     },
     get exercisesIds(): string[] {
-      const self = this as unknown as { hasMany: (name: string) => { ids: () => string[] } };
-      return self.hasMany('exercises').ids();
+      const self = this as unknown as { exercises: ExerciseRef[] };
+      return (self.exercises || []).map((e: ExerciseRef) => e.id).filter(Boolean) as string[];
     },
   },
 };

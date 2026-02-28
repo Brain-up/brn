@@ -1,4 +1,4 @@
-import { Transform } from '@warp-drive-mirror/legacy/serializer/transform';
+import { Transform } from '@warp-drive/legacy/serializer/transform';
 import { DateTime } from 'luxon';
 
 export default class FullDateTransform extends Transform {

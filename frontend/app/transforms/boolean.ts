@@ -1,1 +1,1 @@
-export { BooleanTransform as default } from '@warp-drive-mirror/legacy/serializer/transform';
+export { BooleanTransform as default } from '@warp-drive/legacy/serializer/transform';

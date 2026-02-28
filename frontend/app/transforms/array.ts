@@ -1,4 +1,4 @@
-import { Transform } from '@warp-drive-mirror/legacy/serializer/transform';
+import { Transform } from '@warp-drive/legacy/serializer/transform';
 
 function transformToArray(target: unknown): unknown[] {
   if (target == null || (Array.isArray(target) && target.length === 0)) {

@@ -29,7 +29,7 @@ const purgeCSS = {
 
 
 module.exports = async function (defaults) {
-  const { setConfig } = await import('@warp-drive-mirror/build-config');
+  const { setConfig } = await import('@warp-drive/build-config');
 
   let app = new EmberApp(defaults, {
     babel: {

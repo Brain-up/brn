@@ -1,8 +1,8 @@
-import { withDefaults, type WithLegacy } from '@warp-drive-mirror/legacy/model/migration-support';
-import { Type } from '@warp-drive-mirror/core/types/symbols';
-import type { LegacyResourceSchema } from '@warp-drive-mirror/core/types/schema/fields';
-import type { CAUTION_MEGA_DANGER_ZONE_Extension } from '@warp-drive-mirror/core/reactive';
-import { storeFor } from '@warp-drive-mirror/core';
+import { withDefaults, type WithLegacy } from '@warp-drive/legacy/model/migration-support';
+import { Type } from '@warp-drive/core/types/symbols';
+import type { LegacyResourceSchema } from '@warp-drive/core/types/schema/fields';
+import type { CAUTION_MEGA_DANGER_ZONE_Extension } from '@warp-drive/core/reactive';
+import { storeFor } from '@warp-drive/core';
 import { getOwner } from '@ember/application';
 import arrayPreviousItems from 'brn/utils/array-previous-items';
 import type TasksManagerService from 'brn/services/tasks-manager';
@@ -122,7 +122,6 @@ interface ExerciseSelf {
   isFirst: boolean;
   canInteract: boolean;
   sortChildrenBy: string;
-  hasMany: (name: string) => { ids: () => string[] };
   [key: string]: unknown;
 }
 
@@ -177,7 +176,7 @@ export const ExerciseExtension: CAUTION_MEGA_DANGER_ZONE_Extension = {
       }
       const tasksManager = getService<TasksManagerService>(self, 'tasks-manager');
       if (!tasksManager) return false;
-      const tasksIds: string[] = self.hasMany('tasks').ids();
+      const tasksIds: string[] = (self.tasks || []).map((t: TaskLike) => t.id).filter(Boolean) as string[];
       const completedTaskIds = tasksManager.completedTasks.map(
         (t: { id: string }) => t.id,
       );

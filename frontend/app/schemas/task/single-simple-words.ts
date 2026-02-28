@@ -1,7 +1,7 @@
-import { withDefaults, type WithLegacy } from '@warp-drive-mirror/legacy/model/migration-support';
-import { Type } from '@warp-drive-mirror/core/types/symbols';
-import type { LegacyResourceSchema } from '@warp-drive-mirror/core/types/schema/fields';
-import type { CAUTION_MEGA_DANGER_ZONE_Extension } from '@warp-drive-mirror/core/reactive';
+import { withDefaults, type WithLegacy } from '@warp-drive/legacy/model/migration-support';
+import { Type } from '@warp-drive/core/types/symbols';
+import type { LegacyResourceSchema } from '@warp-drive/core/types/schema/fields';
+import type { CAUTION_MEGA_DANGER_ZONE_Extension } from '@warp-drive/core/reactive';
 import { BASE_TASK_FIELDS, LOCAL_TASK_FIELDS, type TaskBase } from '../task';
 import shuffleArray from 'brn/utils/shuffle-array';
 import { ExerciseMechanism } from 'brn/utils/exercise-types';

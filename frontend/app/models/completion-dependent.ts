@@ -1,4 +1,4 @@
-import Model from '@warp-drive-mirror/legacy/model';
+import Model from '@warp-drive/legacy/model';
 import { inject as service } from '@ember/service';
 import arrayPreviousItems from 'brn/utils/array-previous-items';
 import TasksManagerService from '../services/tasks-manager';

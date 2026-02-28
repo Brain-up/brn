@@ -9,8 +9,8 @@
  * types without schemas continue using Model classes via the DelegatingSchemaService.
  */
 
-import type { LegacyResourceSchema } from '@warp-drive-mirror/core/types/schema/fields';
-import type { CAUTION_MEGA_DANGER_ZONE_Extension } from '@warp-drive-mirror/core/reactive';
+import type { LegacyResourceSchema } from '@warp-drive/core/types/schema/fields';
+import type { CAUTION_MEGA_DANGER_ZONE_Extension } from '@warp-drive/core/reactive';
 import { SignalSchema } from './signal';
 import { HeadphoneSchema } from './headphone';
 import { UserDailyTimeTableStatisticsSchema } from './user-daily-time-table-statistics';

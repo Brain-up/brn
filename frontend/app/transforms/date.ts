@@ -1,1 +1,1 @@
-export { DateTransform as default } from '@warp-drive-mirror/legacy/serializer/transform';
+export { DateTransform as default } from '@warp-drive/legacy/serializer/transform';

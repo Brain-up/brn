@@ -1,6 +1,6 @@
-import { withDefaults, type WithLegacy } from '@warp-drive-mirror/legacy/model/migration-support';
-import { Type } from '@warp-drive-mirror/core/types/symbols';
-import type { LegacyResourceSchema } from '@warp-drive-mirror/core/types/schema/fields';
+import { withDefaults, type WithLegacy } from '@warp-drive/legacy/model/migration-support';
+import { Type } from '@warp-drive/core/types/symbols';
+import type { LegacyResourceSchema } from '@warp-drive/core/types/schema/fields';
 import { BASE_TASK_FIELDS, LOCAL_TASK_FIELDS, type TaskBase } from '../task';
 
 export const TaskSignalSchema: LegacyResourceSchema = withDefaults({

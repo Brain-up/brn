@@ -6,9 +6,9 @@
  * hydrate: raw value -> array (used on get)
  * serialize: array -> array (used on set)
  */
-import { Type } from '@warp-drive-mirror/core/types/symbols';
-import type { Transformation } from '@warp-drive-mirror/core/reactive';
-import type { ArrayValue, Value } from '@warp-drive-mirror/core/types/json/raw';
+import { Type } from '@warp-drive/core/types/symbols';
+import type { Transformation } from '@warp-drive/core/reactive';
+import type { ArrayValue, Value } from '@warp-drive/core/types/json/raw';
 
 function transformToArray(target: Value | undefined): ArrayValue {
   if (target == null || (Array.isArray(target) && target.length === 0)) {

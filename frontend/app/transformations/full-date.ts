@@ -7,8 +7,8 @@
  * hydrate: raw string -> DateTime (used on get)
  * serialize: DateTime -> raw string (used on set)
  */
-import { Type } from '@warp-drive-mirror/core/types/symbols';
-import type { Transformation } from '@warp-drive-mirror/core/reactive';
+import { Type } from '@warp-drive/core/types/symbols';
+import type { Transformation } from '@warp-drive/core/reactive';
 import { DateTime } from 'luxon';
 
 export const FullDateTransformation: Transformation<string | null, DateTime | null> = {
