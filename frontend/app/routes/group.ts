@@ -32,7 +32,20 @@ export default class GroupRoute extends Route.extend(AuthenticatedRouteMixin) {
     return { group, series: sortedSeries };
   }
 
-  redirect({ group, series }: GroupRouteModel, { to }: Transition) {
+  async redirect(model: GroupRouteModel | GroupModel, { to }: Transition) {
+    // When navigating via <LinkTo @route="group" @model={{record}}>, Ember
+    // passes the raw group record directly (bypassing model()), so we need
+    // to handle both the composite { group, series } and a bare GroupModel.
+    let group: GroupModel;
+    let series: SeriesModel[];
+    if ('group' in model && 'series' in model) {
+      group = (model as GroupRouteModel).group;
+      series = (model as GroupRouteModel).series;
+    } else {
+      group = model as GroupModel;
+      series = await this.store.query<SeriesModel>('series', { groupId: group.id! });
+    }
+
     if (!series.length) {
       this.router.transitionTo('groups');
       return;
