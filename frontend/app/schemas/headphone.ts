@@ -7,11 +7,17 @@ export const HeadphoneSchema: LegacyResourceSchema = withDefaults({
   fields: [
     { kind: 'attribute', name: 'description', type: 'string' },
     { kind: 'attribute', name: 'name', type: 'string' },
+    { kind: 'attribute', name: 'active', type: 'boolean' },
+    { kind: 'attribute', name: 'type', type: 'string' },
+    { kind: 'attribute', name: 'userAccount' },
   ],
 });
 
 export type Headphone = WithLegacy<{
   description: string;
   name: string;
+  active: boolean;
+  type: string;
+  userAccount: unknown;
   [Type]: 'headphone';
 }>;

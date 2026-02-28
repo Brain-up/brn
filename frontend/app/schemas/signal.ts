@@ -7,11 +7,13 @@ export const SignalSchema: LegacyResourceSchema = withDefaults({
   fields: [
     { kind: 'attribute', name: 'frequency', type: 'number' },
     { kind: 'attribute', name: 'duration', type: 'number' },
+    { kind: 'attribute', name: 'length', type: 'number' },
   ],
 });
 
 export type Signal = WithLegacy<{
   frequency: number;
   duration: number;
+  length: number;
   [Type]: 'signal';
 }>;

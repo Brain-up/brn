@@ -10,6 +10,10 @@ export const SeriesSchema: LegacyResourceSchema = withDefaults({
     { kind: 'attribute', name: 'description', type: 'string' },
     { kind: 'attribute', name: 'level', type: 'number' },
     { kind: 'attribute', name: 'kind', type: 'string' },
+    { kind: 'attribute', name: 'type', type: 'string' },
+    { kind: 'attribute', name: 'active', type: 'boolean' },
+    { kind: 'attribute', name: 'exerciseGroupId', type: 'number' },
+    { kind: 'attribute', name: 'order', type: 'number' },
     {
       kind: 'belongsTo',
       name: 'group',
@@ -91,6 +95,10 @@ export type Series = WithLegacy<{
   description: string;
   level: number;
   kind: string;
+  type: string;
+  active: boolean;
+  exerciseGroupId: number;
+  order: number;
   group: unknown;
   subGroups: unknown[];
   exercises: ExerciseLike[];

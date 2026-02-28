@@ -37,6 +37,7 @@ export const ExerciseSchema: LegacyResourceSchema = withDefaults({
     { kind: 'attribute', name: 'endTime' },
     { kind: 'attribute', name: 'noise' },
     { kind: 'attribute', name: 'audioFileUrlGenerated', type: 'boolean' },
+    { kind: 'attribute', name: 'exerciseMechanism', type: 'string' },
     {
       kind: 'belongsTo',
       name: 'series',
@@ -319,6 +320,7 @@ export type Exercise = WithLegacy<{
   endTime: Date;
   noise: { level?: number; url?: string };
   audioFileUrlGenerated: boolean;
+  exerciseMechanism: string;
   series: SeriesLike;
   signals: unknown[];
   tasks: TaskLike[];

@@ -13,6 +13,7 @@ export const GroupSchema: LegacyResourceSchema = withDefaults({
     { kind: 'attribute', name: 'name', type: 'string' },
     { kind: 'attribute', name: 'description', type: 'string' },
     { kind: 'attribute', name: 'locale', type: 'string' },
+    { kind: 'attribute', name: 'order', type: 'number' },
     {
       kind: 'hasMany',
       name: 'series',
@@ -192,6 +193,7 @@ export type Group = WithLegacy<{
   name: string;
   description: string;
   locale: string;
+  order: number;
   series: SeriesLike[];
   parent: null;
   sortChildrenBy: string;

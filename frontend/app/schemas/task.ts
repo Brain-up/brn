@@ -47,6 +47,7 @@ export const BASE_TASK_FIELDS: LegacyModeFieldSchema[] = [
   { kind: 'attribute', name: 'answerOptions' },
   { kind: 'attribute', name: 'normalizedAnswerOptions' },
   { kind: 'attribute', name: 'correctAnswer' },
+  { kind: 'attribute', name: 'active', type: 'boolean' },
   {
     kind: 'belongsTo',
     name: 'exercise',
@@ -226,6 +227,8 @@ export type TaskBase = WithLegacy<{
   shouldBeWithPictures: boolean;
   answerOptions: any;
   normalizedAnswerOptions: AnswerOption[];
+  correctAnswer: any;
+  active: boolean;
   exercise: ExerciseRef;
   isManuallyCompleted: boolean;
   _completedInCurrentCycle: boolean;
