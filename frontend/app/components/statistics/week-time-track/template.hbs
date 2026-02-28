@@ -7,7 +7,7 @@
   <div class="text-xs font-semibold leading-3 uppercase">
     {{t "profile.statistics.week_time_track.title_weeks"}}
   </div>
-  <div class="h-200px box-content flex items-center justify-center px-5 py-6">
+  <div class="h-200px sm:px-5 box-content flex items-center justify-center px-2 py-6 overflow-x-auto">
     {{#if @isLoading}}
       <LoadingSpinner />
     {{else if this.barData.length}}
@@ -19,8 +19,7 @@
       />
     {{else}}
       <div
-        data-test-empty-data
-        class="w-full text-xs font-semibold leading-3 text-center uppercase"
+        data-test-empty-data class="w-full text-xs font-semibold leading-3 text-center uppercase"
       >
         {{t "profile.statistics.week_time_track.empty_data" period=""}}
       </div>

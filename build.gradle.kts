@@ -51,8 +51,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-cache")
-    implementation("org.springframework.security:spring-security-test")
-    implementation("org.springframework.boot:spring-boot-devtools")
+    implementation("com.github.ben-manes.caffeine:caffeine:3.1.8")
+    testImplementation("org.springframework.security:spring-security-test")
+    developmentOnly("org.springframework.boot:spring-boot-devtools")
 
     implementation("org.postgresql:postgresql")
     implementation("org.flywaydb:flyway-core:$flywayVersion")

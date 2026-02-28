@@ -93,6 +93,19 @@ a[disabled] {
   position: relative;
 }
 
+@media (max-width: 640px) {
+  .exercise-container {
+    overflow: auto;
+  }
+}
+
+@media (max-width: 640px) and (orientation: landscape) {
+  .exercise-container {
+    overflow: auto;
+    min-height: 0;
+  }
+}
+
 .modal-fixed {
   position: fixed;
 }
@@ -107,6 +120,19 @@ a[disabled] {
   padding: 25px 40px 40px;
 }
 
+@media (max-width: 640px) {
+  .custom-modal-overlay {
+    min-height: 0;
+  }
+
+  .modal-body {
+    width: 95vw;
+    height: auto;
+    min-height: 80vh;
+    padding: 16px;
+  }
+}
+
 /* Bugfix: #2399 */
 #exercise-timer-slot {
   margin-right: 100px;
@@ -114,5 +140,17 @@ a[disabled] {
 #modal-close-button {
   top: 20px;
   right: 45px;
+  z-index: 10;
+}
+
+@media (max-width: 640px) {
+  #exercise-timer-slot {
+    margin-right: 40px;
+  }
+
+  #modal-close-button {
+    top: 10px;
+    right: 10px;
+  }
 }
 /*! purgecss end ignore */

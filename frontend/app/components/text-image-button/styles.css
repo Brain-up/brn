@@ -21,6 +21,18 @@ button {
   transition: 0.1s;
 }
 
+@media (max-width: 640px) {
+  button {
+    min-height: 60px;
+  }
+}
+
+@media (max-width: 640px) and (orientation: landscape) {
+  button {
+    min-height: 40px;
+  }
+}
+
 .word {
   background: #fff;
   padding: 2px 3px;
@@ -34,6 +46,13 @@ button {
   line-height: 18px;
   font-size: 18px;
   display: inline-block;
+}
+
+@media (max-width: 640px) {
+  .word {
+    font-size: 14px;
+    line-height: 16px;
+  }
 }
 
 button:disabled {
@@ -59,6 +78,22 @@ button:disabled {
 
 .correctness-indicator.wrong {
   color: #ff0100;
+}
+
+&.text-mode button {
+  background-image: none;
+  min-height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+}
+
+&.text-mode .word {
+  position: static;
+  box-shadow: none;
+  background: transparent;
+  width: auto;
 }
 
 /*! purgecss end ignore */

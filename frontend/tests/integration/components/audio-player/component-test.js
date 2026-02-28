@@ -7,6 +7,7 @@ import pageObject from './page-object';
 import { TIMINGS } from 'brn/utils/audio-api';
 import customTimeout from 'brn/utils/custom-timeout';
 import Service from '@ember/service';
+import { tracked } from '@glimmer/tracking';
 
 module('Integration | Component | audio-player', function (hooks) {
   setupRenderingTest(hooks);setupIntl(hooks, 'en-us');
@@ -73,5 +74,75 @@ module('Integration | Component | audio-player', function (hooks) {
     assert
       .dom('[data-test-play-audio-button]')
       .hasAttribute('data-test-playing-progress', '100');
+  });
+
+  test('it disables button when audio is loading (isBusy)', async function (assert) {
+    const audioService = this.owner.lookup('service:audio');
+
+    await render(
+      hbs`<AudioPlayer
+        @audioElements={{this.audioElements}}
+      />`,
+    );
+
+    assert.dom('[data-test-play-audio-button]').isNotDisabled('button enabled when idle');
+
+    audioService.isProcessing = true;
+
+    await customTimeout();
+
+    assert.dom('[data-test-play-audio-button]').isDisabled('button disabled when isProcessing is true');
+
+    audioService.isProcessing = false;
+
+    await customTimeout();
+
+    assert.dom('[data-test-play-audio-button]').isNotDisabled('button re-enabled when isProcessing clears');
+  });
+
+  test('clicking play button while isProcessing does not trigger startPlayTask', async function (assert) {
+    let setAudioElementsCalled = false;
+
+    class MockAudio extends Service {
+      @tracked isPlaying = false;
+      @tracked isProcessing = false;
+      @tracked audioPlayingProgress = 0;
+      get isBusy() {
+        return this.isPlaying || this.isProcessing;
+      }
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      register() {}
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      stop() {}
+      startPlayTask() {
+        if (this.isBusy) {
+          return;
+        }
+        setAudioElementsCalled = true;
+      }
+    }
+    this.owner.register('service:audio', MockAudio);
+    const audioService = this.owner.lookup('service:audio');
+
+    await render(
+      hbs`<AudioPlayer
+        @audioElements={{this.audioElements}}
+      />`,
+    );
+
+    // Set isProcessing to simulate audio loading in progress
+    audioService.isProcessing = true;
+
+    await customTimeout();
+
+    // Button should be disabled (component's isPlaying getter returns isBusy)
+    assert.dom('[data-test-play-audio-button]').isDisabled('button is disabled during processing');
+
+    // Even if someone managed to call startPlayTask directly, isBusy guard prevents execution
+    audioService.startPlayTask();
+    assert.false(setAudioElementsCalled, 'startPlayTask does not proceed when isBusy is true');
+
+    // Clean up
+    audioService.isProcessing = false;
   });
 });

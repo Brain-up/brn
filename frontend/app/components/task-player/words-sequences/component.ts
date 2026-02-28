@@ -178,7 +178,6 @@ export default class WordsSequencesComponent<
     const wsTask = this.task as unknown as WordsSequences;
     wsTask.wrongAnswers.push(this.firstUncompletedTask?.serialize());
     this.markNextAttempt(this.firstUncompletedTask as TaskItem);
-    this.updateLocalTasks();
     await customTimeout(300);
     this.startTask();
     this.onWrongAnswer({ skipRetry: true });

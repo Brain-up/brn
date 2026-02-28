@@ -12,8 +12,6 @@
          as spring-boot-2.1.3.RELEASE.jar!/org/springframework/boot/logging/logback/base.xml,
          see org.springframework.boot:spring-boot:2.1.3.RELEASE -->
     <include resource="org/springframework/boot/logging/logback/defaults.xml" />
-    <property name="LOG_FILE" value="${LOG_FILE:-${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}}/spring.log}"/>
-    <include resource="org/springframework/boot/logging/logback/file-appender.xml" />
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
@@ -22,10 +20,24 @@
         </encoder>
     </appender>
 
-    <root level="INFO">
-        <appender-ref ref="CONSOLE" />
-        <appender-ref ref="FILE" />
-    </root>
+    <!-- Dev profile: console + file logging -->
+    <springProfile name="!prod">
+        <property name="LOG_FILE" value="${LOG_FILE:-${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}}/spring.log}"/>
+        <include resource="org/springframework/boot/logging/logback/file-appender.xml" />
+
+        <root level="INFO">
+            <appender-ref ref="CONSOLE" />
+            <appender-ref ref="FILE" />
+        </root>
+    </springProfile>
+
+    <!-- Prod profile: console only (stdout via Docker log driver) -->
+    <springProfile name="prod">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE" />
+        </root>
+    </springProfile>
+
     <!-- start of custom settings besides root appenders -->
     <logger name="com.epam.brn" level="INFO"/>
 

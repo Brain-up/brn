@@ -3,9 +3,17 @@ import { module, test } from 'qunit';
 import { setupIntl } from 'ember-intl/test-support';import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
-import data from './test-support/data-storage';
+import { task, taskWithPreGeneratedAudio } from './test-support/data-storage';
 import AudioService from 'brn/services/audio';
 import { chooseAnswer } from './test-support/helper';
+
+// Strip fields that SchemaRecord rejects (reserved 'type', non-schema 'wrongAnswers')
+function schemaData(obj) {
+  const copy = Object.assign({}, obj);
+  delete copy.type;
+  delete copy.wrongAnswers;
+  return copy;
+}
 
 module(
   'Integration | Component | task-player/single-simple-words',
@@ -15,9 +23,8 @@ module(
 
     hooks.beforeEach(async function () {
       const store = this.owner.lookup('service:store');
-      const { type: _type, wrongAnswers: _wrongAnswers, ...taskData } = data.task;
       let model = store.createRecord('task/single-simple-words', {
-        ...taskData,
+        ...schemaData(task),
         exercise: store.createRecord('exercise')
       });
       this.set('model', model);
@@ -72,6 +79,93 @@ module(
       await chooseAnswer(this.model.correctAnswer);
 
       assert.equal(counter, 3);
+    });
+  },
+);
+
+module(
+  'Integration | Component | task-player/single-simple-words | audio source unification',
+  function (hooks) {
+    setupRenderingTest(hooks);setupIntl(hooks, 'en-us');
+
+    test('startPlayTask receives the pre-generated audio URL when available', async function (assert) {
+      const receivedUrls = [];
+
+      class MockAudio extends AudioService {
+        startPlayTask(files) {
+          receivedUrls.push(...(files || []));
+        }
+      }
+
+      this.owner.register('service:audio', MockAudio);
+
+      const store = this.owner.lookup('service:store');
+      let model = store.createRecord('task/single-simple-words', {
+        ...schemaData(taskWithPreGeneratedAudio),
+        exercise: store.createRecord('exercise', {
+          audioFileUrlGenerated: true,
+        }),
+      });
+      this.set('model', model);
+      this.set('onRightAnswer', function () {});
+      this.set('onWrongAnswer', function () {});
+
+      await render(hbs`
+        <TaskPlayer::SingleSimpleWords
+          @onWrongAnswer={{this.onWrongAnswer}}
+          @onRightAnswer={{this.onRightAnswer}}
+          @task={{this.model}}
+          @mode="task"
+        />
+      `);
+
+      assert.ok(receivedUrls.length > 0, 'startPlayTask was called');
+      assert.ok(
+        receivedUrls[0].includes('/audio/no_noise/'),
+        `autoplay uses pre-generated URL "${receivedUrls[0]}" instead of /api/audio?text=`,
+      );
+      assert.notOk(
+        receivedUrls[0].includes('/api/audio?text='),
+        'autoplay does not use the TTS API URL',
+      );
+    });
+
+    test('startPlayTask falls back to TTS URL when no pre-generated audio', async function (assert) {
+      const receivedUrls = [];
+
+      class MockAudio extends AudioService {
+        startPlayTask(files) {
+          receivedUrls.push(...(files || []));
+        }
+      }
+
+      this.owner.register('service:audio', MockAudio);
+
+      const store = this.owner.lookup('service:store');
+      let model = store.createRecord('task/single-simple-words', {
+        ...schemaData(task),
+        exercise: store.createRecord('exercise', {
+          audioFileUrlGenerated: false,
+        }),
+      });
+      this.set('model', model);
+      this.set('onRightAnswer', function () {});
+      this.set('onWrongAnswer', function () {});
+
+      await render(hbs`
+        <TaskPlayer::SingleSimpleWords
+          @onWrongAnswer={{this.onWrongAnswer}}
+          @onRightAnswer={{this.onRightAnswer}}
+          @task={{this.model}}
+          @mode="task"
+        />
+      `);
+
+      assert.ok(receivedUrls.length > 0, 'startPlayTask was called');
+      assert.ok(
+        receivedUrls[0].includes('/api/audio?text='),
+        `autoplay falls back to TTS URL "${receivedUrls[0]}"`,
+      );
     });
   },
 );
