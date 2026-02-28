@@ -4,7 +4,6 @@ import io.netty.handler.logging.LogLevel.DEBUG
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.Profile
 import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.web.reactive.function.client.ExchangeStrategies
 import org.springframework.web.reactive.function.client.WebClient
@@ -13,7 +12,6 @@ import reactor.netty.transport.logging.AdvancedByteBufFormat.TEXTUAL
 import java.time.Duration
 
 @Configuration
-@Profile("!integration-tests")
 @ConditionalOnProperty(name = ["default.tts.provider"], havingValue = "yandex")
 class YandexTtsWebClientConfig(
     private val yandexTtsProperties: YandexTtsProperties,
