@@ -140,6 +140,7 @@ a[disabled] {
 #modal-close-button {
   top: 20px;
   right: 45px;
+  z-index: 10;
 }
 
 @media (max-width: 640px) {
@@ -150,7 +151,6 @@ a[disabled] {
   #modal-close-button {
     top: 10px;
     right: 10px;
-    z-index: 10;
   }
 }
 /*! purgecss end ignore */
