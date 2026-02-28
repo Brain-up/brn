@@ -16,7 +16,7 @@
       {{! template-lint-disable no-inline-styles }}
       style="max-width: 80vw;"
     >
-      <GroupNavigation @group={{@model}} />
+      <GroupNavigation @group={{@model}} @series={{this.loadedSeries}} />
     </aside>
   {{/if}}
   {{#if (is-active "group.series.subgroup.index")}}

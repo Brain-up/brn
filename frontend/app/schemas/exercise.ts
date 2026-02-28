@@ -136,7 +136,7 @@ export const ExerciseExtension: CAUTION_MEGA_DANGER_ZONE_Extension = {
 
     get children() {
       const self = this as unknown as ExerciseSelf;
-      return self.tasks;
+      return self.tasks || [];
     },
 
     get sortedChildren(): unknown[] | null {

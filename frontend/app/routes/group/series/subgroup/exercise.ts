@@ -30,22 +30,27 @@ export default class GroupSeriesSubgroupExerciseRoute extends Route {
     const testable = await this.network.availableExercises([exercise.id!]);
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.isAvailable = testable.includes(exercise.id!);
-    await (exercise as any).hasMany('tasks').load();
+    // Tasks are loaded as included resources in the exercise findRecord response,
+    // so no explicit hasMany('tasks').load() is needed.
   }
 
   redirect(exercise: Exercise, { to }: Transition): void {
     if (!Ember.testing && !this.isAvailable) {
+      // Use paramsFor instead of exercise.parent (which may be null if the
+      // inverse relationship wasn't populated by the cache)
+      const { subgroup_id } = this.paramsFor('group.series.subgroup') as { subgroup_id: string };
       this.router.transitionTo(
         'group.series.subgroup',
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        exercise.parent!.id!,
+        subgroup_id,
       );
       return;
     }
-    if ((exercise as any).hasMany('tasks').ids().length === 0) {
+    const tasks = exercise.tasks || [];
+    if (Array.from(tasks).length === 0) {
       alert(`Unable to find tasks for exercise ${exercise.id}`);
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      this.router.transitionTo('group.series', exercise.series!.id!);
+      // Use paramsFor instead of exercise.series (which may be null)
+      const { series_id } = this.paramsFor('group.series') as { series_id: string };
+      this.router.transitionTo('group.series', series_id);
       return;
     }
     const sortedTasks = exercise.sortedTasks as Task[] | null;

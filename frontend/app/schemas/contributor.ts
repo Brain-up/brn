@@ -2,8 +2,24 @@ import { withDefaults, type WithLegacy } from '@warp-drive/legacy/model/migratio
 import { Type } from '@warp-drive/core/types/symbols';
 import type { LegacyResourceSchema } from '@warp-drive/core/types/schema/fields';
 import type { CAUTION_MEGA_DANGER_ZONE_Extension } from '@warp-drive/core/reactive';
+import { storeFor } from '@warp-drive/core';
+import { getOwner } from '@ember/application';
+import type UserDataService from 'brn/services/user-data';
 
 type ContributorKind = 'DEVELOPER' | 'SPECIALIST' | 'QA' | 'DESIGNER' | 'OTHER';
+
+/**
+ * Look up the active locale from the user-data service.
+ * Falls back to 'en-us' if the service is unavailable.
+ */
+function getActiveLocale(record: unknown): string {
+  const store = storeFor(record as any, true);
+  if (!store) return 'en-us';
+  const owner = getOwner(store);
+  if (!owner) return 'en-us';
+  const userData = owner.lookup('service:user-data') as UserDataService | undefined;
+  return userData?.activeLocale || 'en-us';
+}
 
 export const ContributorSchema: LegacyResourceSchema = withDefaults({
   type: 'contributor',
@@ -25,16 +41,15 @@ export const ContributorSchema: LegacyResourceSchema = withDefaults({
  * Extension that adds locale-dependent computed getters (name, description, company)
  * to Contributor schema records.
  *
- * The old Model injected the user-data service for activeLocale. Since extensions
- * don't support DI, we approximate using navigator.language. The intl service
- * should be used at the component/template level for full locale correctness.
+ * Uses storeFor/getOwner to look up the user-data service for activeLocale,
+ * matching the original Model's behavior of respecting the app's locale switcher.
  */
 export const ContributorExtension: CAUTION_MEGA_DANGER_ZONE_Extension = {
   kind: 'object',
   name: 'contributor-ext',
   features: {
     get locale(): string {
-      return (typeof navigator !== 'undefined' && navigator.language) || 'en';
+      return getActiveLocale(this);
     },
     get name(): string {
       const self = this as unknown as { rawName: Record<string, string>; locale: string };

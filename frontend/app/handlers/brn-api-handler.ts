@@ -106,7 +106,7 @@ const RELATIONSHIPS: Record<string, Record<string, { type: string; kind: 'belong
 // Fields to exclude from attributes (they're relationships or metadata)
 const EXCLUDE_FROM_ATTRS: Record<string, Set<string>> = {
   group: new Set(['series']),
-  series: new Set(['group', 'subGroups', 'exercises']),
+  series: new Set(['group', 'subGroups', 'subgroups', 'exercises']),
   subgroup: new Set(['exercises']),
   exercise: new Set(['series', 'parent', 'tasks', 'signals']),
   task: new Set(['exercise']),
@@ -263,9 +263,14 @@ function normalizeRecord(modelType: string, raw: any, included: JsonApiResource[
   const rels = RELATIONSHIPS[modelType] || {};
   const excludes = EXCLUDE_FROM_ATTRS[modelType] || new Set();
 
-  // Series: remap 'type' → 'kind'
+  // Series: remap 'type' → 'kind', 'subgroups' → 'subGroups'
   if (modelType === 'series') {
     raw.kind = raw.type;
+    // API sends 'subgroups' (lowercase) but schema uses 'subGroups' (camelCase)
+    if ('subgroups' in raw && !('subGroups' in raw)) {
+      raw.subGroups = raw.subgroups;
+      delete raw.subgroups;
+    }
   }
 
   // Signal: remap 'length' → 'duration'

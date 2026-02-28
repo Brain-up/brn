@@ -12,9 +12,21 @@ export default class GroupSeriesSubgroupExerciseTaskRoute extends Route {
 
   model({ task_id }: { task_id: string }) {
     const exercise = this.modelFor('group.series.subgroup.exercise') as Exercise;
-    return Array.from(exercise.tasks).find((task) => task_id === task.id);
+    const tasks = exercise.tasks || [];
+    const task = Array.from(tasks).find((t) => task_id === t.id);
+    if (!task) {
+      // Task not found — redirect to the exercise route which will
+      // pick the first available task via its own redirect logic.
+      const { exercise_id } = this.paramsFor('group.series.subgroup.exercise') as { exercise_id: string };
+      this.router.transitionTo('group.series.subgroup.exercise', exercise_id);
+      return;
+    }
+    return task;
   }
-  async afterModel(task: Task, { to }: any) {
+
+  async afterModel(task: Task | undefined, { to }: any) {
+    if (!task) return;
+
     if (
       !task.canInteract ||
       (to.parent.params.exercise_id &&
@@ -25,22 +37,27 @@ export default class GroupSeriesSubgroupExerciseTaskRoute extends Route {
         'exercise',
         to.parent.params.exercise_id,
       );
-      await (exercise as any).hasMany('tasks').load();
+      // Tasks are loaded as included resources in the exercise findRecord response,
+      // so no explicit hasMany('tasks').load() is needed.
 
-      const series = exercise.series;
+      // Use paramsFor instead of exercise.series / exercise.parent which may be null
+      // if the cache hasn't populated inverse relationships
+      const { series_id } = this.paramsFor('group.series') as { series_id: string };
+      const { subgroup_id } = this.paramsFor('group.series.subgroup') as { subgroup_id: string };
       const sortedTasks = exercise.sortedTasks as Task[] | null;
       const firstTask = sortedTasks?.[0];
-      this.router.transitionTo(
-        'group.series.subgroup.exercise.task',
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        series!.id!,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        exercise.parent!.id!,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        exercise.id!,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        firstTask!.id!,
-      );
+      if (firstTask) {
+        this.router.transitionTo(
+          'group.series.subgroup.exercise.task',
+          series_id,
+          subgroup_id,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          exercise.id!,
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          firstTask.id!,
+        );
+      }
+      return;
     }
 
     task.repetitionCount = 0;

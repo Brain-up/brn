@@ -48,7 +48,7 @@ export const SeriesExtension: CAUTION_MEGA_DANGER_ZONE_Extension = {
   features: {
     get children() {
       const self = this as unknown as { exercises: ExerciseLike[] };
-      return self.exercises;
+      return self.exercises || [];
     },
     get parent() {
       const self = this as unknown as { group: unknown };
@@ -60,7 +60,7 @@ export const SeriesExtension: CAUTION_MEGA_DANGER_ZONE_Extension = {
     },
     get sortedExercises() {
       const self = this as unknown as { exercises: ExerciseLike[] };
-      return Array.from(self.exercises).sort(
+      return Array.from(self.exercises || []).sort(
         (a: ExerciseLike, b: ExerciseLike) => a.order - b.order,
       );
     },
@@ -70,7 +70,7 @@ export const SeriesExtension: CAUTION_MEGA_DANGER_ZONE_Extension = {
     },
     get groupedByNameExercises(): Record<string, ExerciseLike[]> {
       const self = this as unknown as { exercises: ExerciseLike[] };
-      return Array.from(self.exercises).reduce(
+      return Array.from(self.exercises || []).reduce(
         (resultObj, currentExercise) => {
           const { name } = currentExercise;
           const targetGroup = resultObj[name];

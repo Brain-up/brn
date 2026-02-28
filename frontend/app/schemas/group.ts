@@ -81,7 +81,7 @@ export const GroupExtension: CAUTION_MEGA_DANGER_ZONE_Extension = {
      */
     get children(): SeriesLike[] {
       const self = this as unknown as { series: SeriesLike[] };
-      return Array.from(self.series);
+      return Array.from(self.series || []);
     },
 
     /**

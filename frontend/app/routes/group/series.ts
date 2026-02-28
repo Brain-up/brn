@@ -1,5 +1,4 @@
 import Route from '@ember/routing/route';
-import type Series from 'brn/models/series';
 import type Subgroup from 'brn/models/subgroup';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { inject as service } from '@ember/service';
@@ -7,23 +6,11 @@ import type Store from 'brn/services/store';
 
 export default class GroupSeriesRoute extends Route {
   @service('store') store!: Store;
-  model({ series_id }: { series_id: string }) {
-    const seria = this.store.peekRecord<Series>('series', series_id);
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return this.store.query<Subgroup>('subgroup', { seriesId: seria!.id });
+  async model({ series_id }: { series_id: string }) {
+    // Use the series_id directly for the subgroup query.
+    // peekRecord('series', series_id) is cache-only and returns null on hard
+    // reload / deep link when the series hasn't been fetched yet.
+    // The series_id from the URL is all we need for the query.
+    return this.store.query<Subgroup>('subgroup', { seriesId: series_id });
   }
-
-  // redirect(series, { to }) {
-  // to-do fixit to `group.series.index`
-  // if (
-  //   to.name === 'series.index' &&
-  //   series.get('sortedExercises.firstObject')
-  // ) {
-  //   this.transitionTo(
-  //     'group.series.subgroup.exercise',
-  //     series.id,
-  //     series.get('sortedExercises.firstObject.id'),
-  //   );
-  // }
-  // }
 }

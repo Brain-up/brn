@@ -55,7 +55,12 @@ export default class Store extends LegacyStore {
       data: { type, query, options: options || {} },
       [EnableHydration]: true,
     });
-    return promise.then((doc: any) => doc.content?.data ?? doc.content);
+    // Convert WarpDrive's ReactiveResourceArray to a native Array so that
+    // Ember's prototype extensions (firstObject, lastObject, etc.) work in templates.
+    return promise.then((doc: any) => {
+      const data = doc.content?.data ?? doc.content;
+      return Array.from(data ?? []);
+    });
   }
 
   // @ts-expect-error - return type differs from base (we unwrap the reactive document)
@@ -65,7 +70,11 @@ export default class Store extends LegacyStore {
       data: { type, options: options || {} },
       [EnableHydration]: true,
     });
-    return promise.then((doc: any) => doc.content?.data ?? doc.content);
+    // Convert to native Array for Ember prototype extension compatibility
+    return promise.then((doc: any) => {
+      const data = doc.content?.data ?? doc.content;
+      return Array.from(data ?? []);
+    });
   }
 }
 
