@@ -51,10 +51,12 @@ brn/
 git clone https://github.com/Brain-up/brn.git
 cd brn
 docker compose up --build
+# Or in daemon mode (no console output):
+docker compose up --build -d
 ```
 
 - **API + Swagger:** http://localhost:8081/api/swagger-ui.html
-- **Public Swagger:** https://brainup.site/admin/swagger
+- **Public Swagger:** https://brainup.site/admin/swagger (login with ADMIN role user)
 
 ### Run Frontend Only
 
@@ -79,6 +81,10 @@ docker run --name postgres_dev -d -p 5432:5432 \
 # Run Application.kt from your IDE
 ```
 
+**API testing:** Use the [Postman collection](https://brnteam.postman.co/workspace/My-Workspace~d7a4e69a-0ba8-4c56-8fc0-4e27e1998f7c/collection/2464717-96455e8c-ba11-49ed-a299-5c1b77b31db8?action=share&creator=2464717). Login on brainup.site, then use the Bearer token from your session in Postman's Authorization tab. Endpoint specification: [`api-contract/api.raml`](./api-contract/api.raml).
+
+Useful Postman scripts: [generate month task statistics](./postman_scripts/generate_month_history.js) (use with `brnlogin` request in the `Test` tab).
+
 ### Run Admin Panel
 
 See [frontend-angular/README.md](./frontend-angular/README.md).
@@ -95,6 +101,8 @@ See [frontend-angular/README.md](./frontend-angular/README.md).
 | Roadmap | [roadmap.md](./roadmap.md) |
 | Issues | https://github.com/Brain-up/brn/issues |
 | Coding Standards | [Coding Standards](https://github.com/Brain-up/brn/wiki/Coding-Standards) |
+| Kotlin DTO Validation | [Request DTO validation with annotations](https://github.com/Brain-up/brn/wiki/Kotlin-request-dto-validation-with-annotations) |
+| API Contract | [`api-contract/api.raml`](./api-contract/api.raml) |
 | Sonar | https://sonarcloud.io/code?id=Brain-up_brn |
 
 ### Scientific Background
@@ -111,7 +119,7 @@ See [frontend-angular/README.md](./frontend-angular/README.md).
 
 ## Contributing
 
-We welcome contributors of all skill levels!
+We welcome contributors of all skill levels! Join us — learn something new, try your skills, get experience and get ahead!
 
 ### How to Join
 
@@ -140,9 +148,12 @@ We welcome contributors of all skill levels!
 
 ### Code Style
 
-- **Backend:** Run `./gradlew ktlintCheck` before committing. Auto-fix with `./gradlew ktlintFormat`
+- **Backend:** Run `./gradlew ktlintCheck` before committing (if it fails, the build fails too — check `build/reports/ktlint` for details). Auto-fix with `./gradlew ktlintFormat`
 - **Frontend:** Pre-commit hooks handle formatting automatically (Husky + lint-staged)
 - **Flyway migrations:** Name as `V2yearmonthday_taskNumber` (e.g. `V220210804_899`)
+- **Content files:** Validate Russian text with [orfogrammka.ru](https://orfogrammka.ru/) before committing
+- **Integration tests** don't run in the default build — run them locally with `./gradlew integrationTest`
+- **Local test coverage:** Run `./gradlew jacocoTestReport` (note: local metrics may differ slightly from [Sonar](https://sonarcloud.io/code?id=Brain-up_brn))
 
 ---
 
