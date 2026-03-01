@@ -15,7 +15,7 @@ This directory contains the **frontend** application — an Ember.js Octane SPA 
 | Layer | Technology |
 |-------|------------|
 | **Framework** | [Ember.js](https://emberjs.com/) 4.12 (Octane) |
-| **Language** | TypeScript 5.9 (strict mode) |
+| **Language** | TypeScript 5.9 (strict checks enabled) |
 | **Data** | [WarpDrive](https://github.com/emberjs/data) 5.8.1 — schema-driven, replaces ember-data |
 | **Styling** | Tailwind CSS + PostCSS + PurgeCSS |
 | **Auth** | Firebase + ember-simple-auth |
@@ -30,7 +30,7 @@ This directory contains the **frontend** application — an Ember.js Octane SPA 
 ```
 app/
 ├── authenticators/       # Firebase & OAuth2 auth strategies
-├── components/           # 36+ Glimmer components (task-player, audio-player, skeleton, ui/...)
+├── components/           # 30+ Glimmer components (task-player, audio-player, skeleton, ui/...)
 ├── controllers/          # Route-specific state
 ├── handlers/             # WarpDrive request pipeline handlers
 │   ├── auth-handler      #   → injects Firebase auth tokens
@@ -38,7 +38,7 @@ app/
 ├── helpers/              # Template helpers
 ├── modifiers/            # Glimmer element modifiers
 ├── routes/               # Route definitions & model hooks
-├── schemas/              # WarpDrive model schemas (16 types)
+├── schemas/              # WarpDrive model schemas (15 types)
 ├── services/             # Singletons (store, audio, network, stats, timers, ...)
 ├── styles/               # Tailwind config & app CSS
 ├── templates/            # Handlebars templates (incl. skeleton loading states)
@@ -81,7 +81,7 @@ yarn install
 | Command | Description |
 |---------|-------------|
 | `yarn local` | Dev server with local API (`localhost:8081`) |
-| `yarn remote` | Dev server with production API (`brainup.site`) |
+| `yarn remote` | Dev server with production API (`www.brainup.site`) |
 | `yarn mirage` | Dev server with mocked API (no backend needed) |
 | `yarn develop` | Dev server with Firebase dev environment |
 
@@ -125,7 +125,7 @@ yarn build             # Production build (minified, fingerprinted, PurgeCSS)
 | Path | Description |
 |------|-------------|
 | `/groups` | Exercise category listing |
-| `/groups/:id/series/:id/subgroup/:id/exercise/:id/task/:id` | Full exercise flow |
+| `/groups/:group_id/series/:series_id/subgroup/:subgroup_id/exercise/:exercise_id/task/:task_id` | Full exercise flow |
 | `/login` | Authentication |
 | `/registration` | User sign-up |
 | `/profile` | Account settings |
