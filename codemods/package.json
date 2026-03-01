@@ -1,0 +1,32 @@
+{
+  "name": "ember-data-to-warp-drive-codemods",
+  "version": "1.0.0",
+  "description": "jscodeshift codemod suite for migrating ember-data to @warp-drive/*",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "phase-0": "jscodeshift -t src/phase-0-deprecation-cleanup.ts --parser=ts --extensions=ts,gts",
+    "phase-1": "jscodeshift -t src/phase-1-import-migration.ts --parser=ts --extensions=ts,gts",
+    "phase-2a": "jscodeshift -t src/phase-2a-consumer-migration.ts --parser=ts --extensions=ts,gts",
+    "phase-3a": "jscodeshift -t src/phase-3a-model-to-schema.ts --parser=ts --extensions=ts,gts",
+    "phase-3b": "tsx src/phase-3b-schema-index.ts",
+    "phase-4": "jscodeshift -t src/phase-4-mirror-to-official.ts --parser=ts --extensions=ts,gts",
+    "migrate": "tsx src/cli.ts",
+    "post-check": "tsx src/post-check.ts"
+  },
+  "dependencies": {
+    "content-tag": "^4.1.0",
+    "content-tag-utils": "^0.6.0",
+    "jscodeshift": "^17.1.2"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.14",
+    "@types/jscodeshift": "^0.12.0",
+    "@types/node": "^22.0.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  }
+}
