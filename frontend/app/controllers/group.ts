@@ -31,4 +31,9 @@ export default class GroupController extends Controller {
     const name = this.router.currentRouteName ?? '';
     return name.includes('task') || name === 'group.loading';
   }
+
+  get isInSubgroupView() {
+    const name = this.router.currentRouteName ?? '';
+    return name.includes('subgroup') && !name.includes('exercise');
+  }
 }
