@@ -5,7 +5,7 @@ import type { CAUTION_MEGA_DANGER_ZONE_Extension } from '@warp-drive/core/reacti
 import { getService } from 'brn/utils/schema-helpers';
 import type UserDataService from 'brn/services/user-data';
 
-type ContributorKind = 'DEVELOPER' | 'SPECIALIST' | 'QA' | 'DESIGNER' | 'OTHER';
+type ContributorKind = 'DEVELOPER' | 'SPECIALIST' | 'QA' | 'AUTOTESTER' | 'DESIGNER' | 'OTHER';
 
 export const ContributorSchema: LegacyResourceSchema = withDefaults({
   type: 'contributor',
@@ -19,6 +19,7 @@ export const ContributorSchema: LegacyResourceSchema = withDefaults({
     { kind: 'attribute', name: 'login', type: 'string' },
     { kind: 'attribute', name: 'kind', type: 'string' },
     { kind: 'attribute', name: 'contacts' },
+    { kind: 'attribute', name: 'repositoryName', type: 'string' },
   ],
   objectExtensions: ['contributor-ext'],
 });
@@ -63,6 +64,7 @@ export type Contributor = WithLegacy<{
   login: string;
   kind: ContributorKind;
   contacts: { type: string; value: string }[];
+  repositoryName: string;
   locale: string;
   name: string;
   description: string;

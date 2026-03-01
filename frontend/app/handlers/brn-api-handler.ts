@@ -121,7 +121,7 @@ function normalizeContributor(raw: Record<string, unknown>): JsonApiResource {
   const {
     id, name, nameEn, description, descriptionEn,
     company, companyEn, pictureUrl, contribution,
-    active, type, contacts, gitHubLogin,
+    active, type, contacts, gitHubLogin, repositoryName,
   } = raw;
   return {
     id: String(id),
@@ -136,6 +136,7 @@ function normalizeContributor(raw: Record<string, unknown>): JsonApiResource {
       isActive: active,
       kind: type,
       contacts,
+      repositoryName,
     },
   };
 }

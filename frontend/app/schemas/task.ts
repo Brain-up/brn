@@ -30,6 +30,7 @@ export const BASE_TASK_FIELDS: LegacyModeFieldSchema[] = [
   { kind: 'attribute', name: 'exerciseType', type: 'string' },
   { kind: 'attribute', name: 'exerciseMechanism', type: 'string' },
   { kind: 'attribute', name: 'order', type: 'number' },
+  { kind: 'attribute', name: 'level', type: 'number' },
   { kind: 'attribute', name: 'repetitionCount', type: 'number' },
   { kind: 'attribute', name: 'shouldBeWithPictures', type: 'boolean' },
   { kind: 'attribute', name: 'answerOptions' },
@@ -211,6 +212,7 @@ export type TaskBase = WithLegacy<{
   exerciseType: string;
   exerciseMechanism: ExerciseMechanism;
   order: number;
+  level: number;
   repetitionCount: number;
   shouldBeWithPictures: boolean;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

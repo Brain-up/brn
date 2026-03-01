@@ -11,6 +11,7 @@ export const UserDailyTimeTableStatisticsSchema: LegacyResourceSchema = withDefa
     { kind: 'attribute', name: 'repeatedExercises', type: 'number' },
     { kind: 'attribute', name: 'doneExercisesSuccessfullyFromFirstTime', type: 'number' },
     { kind: 'attribute', name: 'listenWordsCount', type: 'number' },
+    { kind: 'attribute', name: 'duration', type: 'string' },
   ],
 });
 
@@ -21,5 +22,6 @@ export type UserDailyTimeTableStatistics = WithLegacy<{
   repeatedExercises: number;
   doneExercisesSuccessfullyFromFirstTime: number;
   listenWordsCount: number;
+  duration: string;
   [Type]: 'user-daily-time-table-statistics';
 }>;
