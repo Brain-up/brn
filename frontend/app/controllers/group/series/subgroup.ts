@@ -1,8 +1,11 @@
 import Controller from '@ember/controller';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { tracked } from '@glimmer/tracking';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { task, Task } from 'ember-concurrency';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { inject as service } from '@ember/service';
-import NetworkService from 'brn/services/network';
+import type NetworkService from 'brn/services/network';
 
 export default class GroupSeriesSubgroupController extends Controller {
   @service('network') network!: NetworkService;
@@ -23,8 +26,8 @@ export default class GroupSeriesSubgroupController extends Controller {
       return;
     }
     // @todo - fix;
-    const exercises = this.model.toArray();
-    const targets = exercises.mapBy('id');
+    const exercises = Array.from(this.model);
+    const targets = exercises.map((e: { id: string }) => e.id);
     const results = yield this.network.availableExercises(targets);
     this.availableExercises = results as string[];
   }).keepLatest())

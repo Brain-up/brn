@@ -1,15 +1,19 @@
 import Route from '@ember/routing/route';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { inject as service } from '@ember/service';
-import Exercise from 'brn/models/exercise';
+import type { Exercise } from 'brn/schemas/exercise';
+import type { TaskBase as Task } from 'brn/schemas/task';
 import type Transition from '@ember/routing/-private/transition';
-import TasksManagerService from 'brn/services/tasks-manager';
-import NetworkService from 'brn/services/network';
+import type TasksManagerService from 'brn/services/tasks-manager';
+import type NetworkService from 'brn/services/network';
 import Ember from 'ember';
-import type Store from '@ember-data/store';
-import GroupSeriesSubgroupExerciseController from 'brn/controllers/group/series/subgroup/exercise';
+import type Store from 'brn/services/store';
+import type Router from '@ember/routing/router-service';
+import type GroupSeriesSubgroupExerciseController from 'brn/controllers/group/series/subgroup/exercise';
 
 export default class GroupSeriesSubgroupExerciseRoute extends Route {
   @service('store') store!: Store;
+  @service('router') declare router: Router;
   @service('tasks-manager')
   tasksManager!: TasksManagerService;
   @service('network')
@@ -18,39 +22,49 @@ export default class GroupSeriesSubgroupExerciseRoute extends Route {
   isAvailable = false;
 
   model({ exercise_id }: { exercise_id: string }) {
-    return this.store.findRecord('exercise', exercise_id);
+    return this.store.findRecord<Exercise>('exercise', exercise_id);
   }
 
   async afterModel(exercise: Exercise) {
-    const testable = await this.network.availableExercises([exercise.id]);
-    this.isAvailable = testable.includes(exercise.id);
-    await exercise.hasMany('tasks').load();
+    this.isAvailable = false;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const testable = await this.network.availableExercises([exercise.id!]);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    this.isAvailable = testable.includes(exercise.id!);
+    // Tasks are loaded as included resources in the exercise findRecord response,
+    // so no explicit hasMany('tasks').load() is needed.
   }
 
-  redirect(exercise: Exercise, { to }: Transition) {
+  redirect(exercise: Exercise, { to }: Transition): void {
     if (!Ember.testing && !this.isAvailable) {
-      return this.transitionTo(
+      // Use paramsFor instead of exercise.parent (which may be null if the
+      // inverse relationship wasn't populated by the cache)
+      const { subgroup_id } = this.paramsFor('group.series.subgroup') as { subgroup_id: string };
+      this.router.transitionTo(
         'group.series.subgroup',
-        exercise.get('parent.id'),
+        subgroup_id,
       );
-    }
-    if (exercise.hasMany('tasks').ids().length === 0) {
-      alert(`Unable to find tasks for exercise ${exercise.get('id')}`);
-      this.transitionTo('group.series', exercise.get('series.id'));
       return;
     }
-    // if (!exercise.canInteract) {
-    //   this.transitionTo('group.series.subgroup.exercise', exercise.get('series.id'));
-    //   return;
-    // }
+    const tasks = exercise.tasks || [];
+    if (Array.from(tasks).length === 0) {
+      console.warn(`Unable to find tasks for exercise ${exercise.id}`);
+      // Use paramsFor instead of exercise.series (which may be null)
+      const { series_id } = this.paramsFor('group.series') as { series_id: string };
+      this.router.transitionTo('group.series', series_id);
+      return;
+    }
+    const sortedTasks = exercise.sortedTasks as Task[] | null;
+    const firstTask = sortedTasks?.[0];
     if (
       to.name.endsWith('exercise.index') &&
-      exercise.get('sortedTasks.firstObject') &&
+      firstTask &&
       !to.paramNames.includes('task_id')
     ) {
-      this.transitionTo(
+      this.router.transitionTo(
         'group.series.subgroup.exercise.task',
-        exercise.get('sortedTasks.firstObject.id'),
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        firstTask.id!,
       );
     }
   }

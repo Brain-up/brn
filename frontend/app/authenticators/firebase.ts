@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { inject as service } from '@ember/service';
 
 import BaseAuthenticator from 'ember-simple-auth/authenticators/base';
@@ -51,66 +52,50 @@ export default class FirebaseAuthenticator extends BaseAuthenticator {
         user: this.applyTimersToUser(result.user.toJSON() as SerializedUser),
       };
     } catch (e) {
+      const firebaseError = e as { code?: string; message: string; errors?: unknown[]; status?: string };
       // https://firebase.google.com/docs/reference/js/v8/firebase.auth.Auth#signinandretrievedatawithcredential
-      if (e.code === 'auth/internal-error') {
-        const { error }: any = JSON.parse(e.message);
+      if (firebaseError.code === 'auth/internal-error') {
+        const { error }: any = JSON.parse(firebaseError.message);
         const errorObj: any = new Error(error.message);
         errorObj.errors = error.errors;
         errorObj.code = error.code;
         errorObj.status = error.status;
         errorObj.message = error.message;
         throw errorObj;
-      } else if (e.code === 'auth/user-not-found') {
-        const { error }: any = e.message;
+      } else if (firebaseError.code === 'auth/user-not-found') {
+        const { error }: any = firebaseError.message;
         const errorObj: any = new Error(error);
-        errorObj.errors = e.errors;
-        errorObj.code = e.code;
-        errorObj.status = e.status;
-        errorObj.message = e.message;
+        errorObj.errors = firebaseError.errors;
+        errorObj.code = firebaseError.code;
+        errorObj.status = firebaseError.status;
+        errorObj.message = firebaseError.message;
         throw errorObj;
-
-        // try {
-        //   const newUser = await this.registerUser(login, password);
-        //   if (newUser.user === null) {
-        //     throw new Error('No user');
-        //   }
-        //   return {
-        //     user: this.applyTimersToUser(newUser.user.toJSON() as SerializedUser)
-        //   };
-        // } catch(e) {
-        //   const { error }: any = e.message;
-        //   const errorObj: any = new Error(error);
-        //   errorObj.errors = e.errors;
-        //   errorObj.code = e.code;
-        //   errorObj.status = e.status;
-        //   errorObj.message = e.message;
-        //   throw errorObj;
-        // }
-      } else if (e.code === 'auth/wrong-password') {
-        const { error }: any = e.message;
+      } else if (firebaseError.code === 'auth/wrong-password') {
+        const { error }: any = firebaseError.message;
         const errorObj: any = new Error(error);
-        errorObj.errors = e.errors;
-        errorObj.code = e.code;
-        errorObj.status = e.status;
-        errorObj.message = e.message;
+        errorObj.errors = firebaseError.errors;
+        errorObj.code = firebaseError.code;
+        errorObj.status = firebaseError.status;
+        errorObj.message = firebaseError.message;
         throw errorObj;
-      } else if (e.code === 'auth/invalid-credential') {
-        const { error }: any = e.message;
+      } else if (firebaseError.code === 'auth/invalid-credential') {
+        const { error }: any = firebaseError.message;
         const errorObj: any = new Error(error);
-        errorObj.errors = e.errors;
-        errorObj.code = e.code;
-        errorObj.status = e.status;
-        errorObj.message = e.message;
+        errorObj.errors = firebaseError.errors;
+        errorObj.code = firebaseError.code;
+        errorObj.status = firebaseError.status;
+        errorObj.message = firebaseError.message;
         throw errorObj;
-      } else if (e.code === 'auth/user-disabled') {
-        const { error }: any = e.message;
+      } else if (firebaseError.code === 'auth/user-disabled') {
+        const { error }: any = firebaseError.message;
         const errorObj: any = new Error(error);
-        errorObj.errors = e.errors;
-        errorObj.code = e.code;
-        errorObj.status = e.status;
-        errorObj.message = e.message;
+        errorObj.errors = firebaseError.errors;
+        errorObj.code = firebaseError.code;
+        errorObj.status = firebaseError.status;
+        errorObj.message = firebaseError.message;
         throw errorObj;
       }
+      throw e;
     }
   }
 

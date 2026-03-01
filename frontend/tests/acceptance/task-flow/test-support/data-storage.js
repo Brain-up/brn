@@ -160,17 +160,14 @@ export function getData() {
       id: 1,
       exerciseMechanism: 'WORDS',
       name: 'default',
-      tasks: [
-        { id: 1, exerciseMechanism: 'WORDS' },
-        { id: 2, exerciseMechanism: 'WORDS' },
-      ],
+      tasks: tasks.filter((t) => [1, 2].includes(t.id)),
     },
     {
       order: 2,
       id: 2,
       exerciseMechanism: 'WORDS',
       name: 'default',
-      tasks: [{ id: 3, exerciseMechanism: 'WORDS' }],
+      tasks: tasks.filter((t) => [3].includes(t.id)),
     },
   ];
   const series = [

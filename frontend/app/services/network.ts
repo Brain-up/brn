@@ -1,8 +1,9 @@
 import Service from '@ember/service';
 import fetch from 'fetch';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { inject as service } from '@ember/service';
 import Session from 'ember-simple-auth/services/session';
-import Store from '@ember-data/store';
+import AuthTokenService from './auth-token';
 import UserDataService from './user-data';
 
 export interface UserDTO {
@@ -46,18 +47,18 @@ function fromLatestUserDto(user: LatestUserDTO): UserDTO {
 export default class NetworkService extends Service {
   @service('session') session!: Session;
   @service('user-data') userData?: UserDataService;
-  @service('store') store!: Store;
+  @service('auth-token') authToken!: AuthTokenService;
   @service('router') router!: any;
   prefix = '/api';
   get token() {
-    return this.store.adapterFor('application').token;
+    return this.authToken.token;
   }
   get _headers() {
     return Object.assign(
       {
         'Content-Type': 'application/json',
       },
-      this.store.adapterFor('application').headers,
+      this.authToken.headers,
     );
   }
   postRequest(entry: string, data: unknown) {
@@ -110,10 +111,11 @@ export default class NetworkService extends Service {
       user.initials = `${user.firstName.charAt(0)}${user.lastName.charAt(
         0,
       )}`.toUpperCase();
-      this.userData.userModel = user;
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      this.userData!.userModel = user;
     } catch (e) {
       this.router.transitionTo('login');
-      const error = new Error('Unable to login');
+      const error: Error & { code?: number } = new Error('Unable to login');
       error.message = 'Unable to login';
       error.name = 'Unauthorized';
       error.code = 401;

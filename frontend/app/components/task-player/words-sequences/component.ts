@@ -1,16 +1,23 @@
 import Component from '@glimmer/component';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { set, action } from '@ember/object';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { inject as service } from '@ember/service';
 import deepCopy from 'brn/utils/deep-copy';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import deepEqual from 'brn/utils/deep-equal';
 import customTimeout from 'brn/utils/custom-timeout';
 import { TaskItem } from 'brn/utils/task-item';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { tracked } from '@glimmer/tracking';
 import { MODES } from 'brn/utils/task-modes';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { task, Task as TaskGenerator } from 'ember-concurrency';
 import type AudioService from 'brn/services/audio';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import StatsService, { StatEvents } from 'brn/services/stats';
-import type WordsSequences from 'brn/models/task/words-sequences';
+import type { TaskWordsSequences as WordsSequences } from 'brn/schemas/task/words-sequences';
+import type { TaskBase as Task } from 'brn/schemas/task';
 import type AnswerOption from 'brn/utils/answer-option';
 
 function getEmptyTemplate(
@@ -34,7 +41,7 @@ export interface IWordsSequencesComponentArgs<T> {
 }
 
 export default class WordsSequencesComponent<
-  T extends WordsSequences = WordsSequences,
+  T extends Task = WordsSequences,
 > extends Component<IWordsSequencesComponentArgs<T>> {
   @action onInsert() {
     this.updateLocalTasks();
@@ -64,13 +71,13 @@ export default class WordsSequencesComponent<
     );
   }
   willDestroy(): void {
-    super.willDestroy(...arguments);
+    super.willDestroy();
     document.body.dataset.correctAnswer = '';
   }
   get firstUncompletedTask() {
-    const item = this.uncompletedTasks.firstObject;
-    const words = item?.answer.mapBy('word');
-    document.body.dataset.correctAnswer = words?.join(',');
+    const item = this.uncompletedTasks[0];
+    const words = item?.answer.map((a: { word: string }) => a.word);
+    document.body.dataset.correctAnswer = words?.join(',') ?? '';
     return item;
   }
   get audioFiles() {
@@ -106,19 +113,21 @@ export default class WordsSequencesComponent<
   startTask() {
     this.isCorrect = false;
     this.correctnessPerType = {};
-    this.currentAnswerObject = getEmptyTemplate(this.task.selectedItemsOrder);
+    const wsTask = this.task as unknown as WordsSequences;
+    this.currentAnswerObject = getEmptyTemplate(wsTask.selectedItemsOrder);
     if (this.mode === MODES.TASK) {
       this.audio.startPlayTask(this.audioFiles);
     }
   }
   updateLocalTasks() {
     const completedOrders = this.tasksCopy
-      .filterBy('completedInCurrentCycle', true)
-      .mapBy('order');
-    const tasksCopy: TaskItem[] = deepCopy(this.task.tasksToSolve).map(
+      .filter((t) => t.completedInCurrentCycle)
+      .map((t) => t.order);
+    const wsTask = this.task as unknown as WordsSequences;
+    const tasksCopy: TaskItem[] = deepCopy(wsTask.tasksToSolve).map(
       (copy: { order: number }) => {
         const completedInCurrentCycle = completedOrders.includes(copy.order);
-        const copyEquivalent = this.tasksCopy.findBy('order', copy.order);
+        const copyEquivalent = this.tasksCopy.find((t) => t.order === copy.order);
         return new TaskItem({
           ...copy,
           completedInCurrentCycle,
@@ -139,15 +148,16 @@ export default class WordsSequencesComponent<
       [selected.wordType]: selected.word,
     };
     if (this.answerCompleted) {
-      const correctAnswerWords = this.firstUncompletedTask?.answer.mapBy('word') || [];
-      const userAnswerWords = this.task.selectedItemsOrder.map(
+      const correctAnswerWords = this.firstUncompletedTask?.answer.map((a: { word: string }) => a.word) || [];
+      const wsTask = this.task as unknown as WordsSequences;
+      const userAnswerWords = wsTask.selectedItemsOrder.map(
         (orderName: string) =>
           (this.currentAnswerObject as any)[orderName] as string,
       );
       const isCorrect = deepEqual(userAnswerWords, correctAnswerWords);
 
       const correctnessPerType: Record<string, boolean> = {};
-      this.task.selectedItemsOrder.forEach((orderName: string, index: number) => {
+      wsTask.selectedItemsOrder.forEach((orderName: string, index: number) => {
         correctnessPerType[orderName] = userAnswerWords[index] === correctAnswerWords[index];
       });
       this.correctnessPerType = correctnessPerType;
@@ -171,7 +181,8 @@ export default class WordsSequencesComponent<
   }
 
   async handleWrongAnswer() {
-    this.task.wrongAnswers.pushObject(this.firstUncompletedTask?.serialize());
+    const wsTask = this.task as unknown as WordsSequences;
+    wsTask.wrongAnswers.push(this.firstUncompletedTask?.serialize());
     this.markNextAttempt(this.firstUncompletedTask as TaskItem);
     await customTimeout(300);
     this.startTask();

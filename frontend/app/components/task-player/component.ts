@@ -1,18 +1,23 @@
 /* eslint-disable ember/no-component-lifecycle-hooks */
 // eslint-disable-next-line ember/no-classic-components
 import Component from '@ember/component';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { inject as service } from '@ember/service';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { tracked } from '@glimmer/tracking';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { action } from '@ember/object';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { timeout, task, TaskInstance } from 'ember-concurrency';
 import { MODES } from 'brn/utils/task-modes';
 import Ember from 'ember';
 import StatsService, { StatEvents } from 'brn/services/stats';
 import AudioService from 'brn/services/audio';
 import StudyingTimerService from 'brn/services/studying-timer';
-import TaskModel from 'brn/models/task';
+import type { TaskBase as TaskModel } from 'brn/schemas/task';
+import type { TaskWordsSequences as WordsSequencesModel } from 'brn/schemas/task/words-sequences';
 import type AnswerOption from 'brn/utils/answer-option';
-import { ExerciseMechanism } from 'brn/serializers/application';
+import { ExerciseMechanism } from 'brn/utils/exercise-types';
 
 export default class TaskPlayerComponent extends Component {
   @service('audio') audio!: AudioService;
@@ -28,7 +33,7 @@ export default class TaskPlayerComponent extends Component {
   tagName = '';
   activeTask: null | TaskInstance<any> = null;
   willDestroyElement() {
-    super.willDestroyElement(...arguments);
+    super.willDestroyElement();
     this.audio.stopNoise();
   }
 
@@ -99,13 +104,13 @@ export default class TaskPlayerComponent extends Component {
     const sortedWords = this.task.normalizedAnswerOptions.sort((a, b) => {
       return words.indexOf(a.word) - words.indexOf(b.word);
     });
-    this.task.set('normalizedAnswerOptions', sortedWords);
+    this.task.normalizedAnswerOptions = sortedWords;
   }
   get taskModelName() {
     return this.task.exerciseMechanism;
   }
   get orderedPlaylist(): AnswerOption[] {
-    const { answerOptions, selectedItemsOrder, normalizedAnswerOptions } =
+    const { answerOptions, normalizedAnswerOptions } =
       this.task;
     // for ordered tasks we need to align audio stream with object order;
 
@@ -118,10 +123,12 @@ export default class TaskPlayerComponent extends Component {
     }
 
     if (this.task.exerciseMechanism === ExerciseMechanism.MATRIX) {
+      const matrixTask = this.task as WordsSequencesModel;
+      const { selectedItemsOrder: itemsOrder } = matrixTask;
       const sortedItems: any[] = [];
-      const length = answerOptions[selectedItemsOrder[0]].length;
+      const length = answerOptions[itemsOrder[0]].length;
       for (let i = 0; i < length; i++) {
-        selectedItemsOrder.forEach((key: string) => {
+        itemsOrder.forEach((key: string) => {
           sortedItems.push(
             this.task.normalizedAnswerOptions.find(
               ({ word }: any) => word === answerOptions[key][i].word,
@@ -168,7 +175,7 @@ export default class TaskPlayerComponent extends Component {
   listenModeTask!: any;
 
   maybeStartExercise() {
-    if (!this.task.get('exercise.isStarted')) {
+    if (!this.task.exercise?.isStarted) {
       this.stats.addEvent(StatEvents.Start);
       this.task.exercise.trackTime('start');
     }

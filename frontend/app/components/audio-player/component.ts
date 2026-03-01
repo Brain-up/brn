@@ -1,8 +1,11 @@
 import Component from '@glimmer/component';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { action } from '@ember/object';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { inject as service } from '@ember/service';
 import AudioService from 'brn/services/audio';
 import StatsService, { StatEvents } from '../../services/stats';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { ref } from 'ember-ref-bucket';
 
 export interface ToneObject {

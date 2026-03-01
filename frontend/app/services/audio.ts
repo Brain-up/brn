@@ -1,12 +1,15 @@
 import Ember from 'ember';
-import { isArray } from '@ember/array';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { action } from '@ember/object';
 import {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   task,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   timeout,
   Task as TaskGenerator,
   TaskInstance,
 } from 'ember-concurrency';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { tracked } from '@glimmer/tracking';
 import { getOwner } from '@ember/application';
 import {
@@ -14,22 +17,25 @@ import {
   createNoizeBuffer,
   loadAudioFiles,
   createAudioContext,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   toSeconds,
   toMilliseconds,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   TIMINGS,
   ISource,
   preloadAudioFile,
 } from 'brn/utils/audio-api';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import Service, { inject as service } from '@ember/service';
 import TimerComponent from 'brn/components/timer/component';
 import NetworkService from './network';
 import StatsService, { StatEvents } from './stats';
 import { ToneObject } from 'brn/components/audio-player/component';
-import SignalModel from 'brn/models/signal';
+import type { Signal as SignalModel } from 'brn/schemas/signal';
 import Intl from 'ember-intl/services/intl';
 import { PolySynth, Synth, SynthOptions } from 'tone';
 import UserDataService from './user-data';
-import Exercise from 'brn/models/exercise';
+import type { Exercise } from 'brn/schemas/exercise';
 
 type ISourceCollection = (ISource | IToneSource | null)[];
 export interface IToneSource {
@@ -110,7 +116,7 @@ export default class AudioService extends Service {
       window.location.host +
       `/api/audio?text=${encodeURIComponent(text)}&locale=${encodeURIComponent(
         this.intl.primaryLocale,
-      )}&exerciseId=${encodeURIComponent(exercise?.get('id') ?? '0')}`
+      )}&exerciseId=${encodeURIComponent(exercise?.id ?? '0')}`
     );
   }
 
@@ -167,7 +173,7 @@ export default class AudioService extends Service {
   }
 
   get filesToPlay() {
-    return isArray(this.audioFileUrl) ? this.audioFileUrl : [this.audioFileUrl];
+    return Array.isArray(this.audioFileUrl) ? this.audioFileUrl : [this.audioFileUrl];
   }
 
   @tracked audioElements: (string | ToneObject)[] = [];

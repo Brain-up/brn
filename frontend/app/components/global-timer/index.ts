@@ -1,9 +1,14 @@
 import Component from '@glimmer/component';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { inject as service } from '@ember/service';
 import NetworkService from '../../services/network';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { task, timeout, Task as TaskGenerator } from 'ember-concurrency';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { tracked } from '@glimmer/tracking';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import Ember from 'ember';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { action } from '@ember/object';
 import Session from 'ember-simple-auth/services/session';
 
@@ -49,7 +54,7 @@ export default class GlobalTimerComponent extends Component<IGlobalTimerArgs> {
       return 'bg-pink-secondary';
     }
   }
-  @(task(function* (this: GlobalTimerComponent) {
+  @(task(function* (this: GlobalTimerComponent): Generator<unknown, void, any> {
     do {
       try {
         if (!Ember.testing) {

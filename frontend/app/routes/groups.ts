@@ -1,10 +1,12 @@
 import Route from '@ember/routing/route';
 // eslint-disable-next-line ember/no-mixins
 import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { inject as service } from '@ember/service';
-import NetworkService from 'brn/services/network';
-import type Store from '@ember-data/store';
-import UserDataService from 'brn/services/user-data';
+import type NetworkService from 'brn/services/network';
+import type Store from 'brn/services/store';
+import type { Group as GroupModel } from 'brn/schemas/group';
+import type UserDataService from 'brn/services/user-data';
 
 export default class GroupsRoute extends Route.extend(AuthenticatedRouteMixin) {
   @service('network') network!: NetworkService;
@@ -18,7 +20,7 @@ export default class GroupsRoute extends Route.extend(AuthenticatedRouteMixin) {
   };
   async model() {
     await this.network.loadCurrentUser();
-    return await this.store.query('group', {
+    return await this.store.query<GroupModel>('group', {
       locale: this.userData.activeLocale,
     });
   }

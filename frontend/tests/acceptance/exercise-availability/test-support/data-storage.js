@@ -46,28 +46,28 @@ export function getTestData() {
       id: 1,
       name: 'exercise 1',
       level: 1,
-      tasks: [{ id: 1, exerciseMechanism: 'WORDS' }],
+      tasks: tasks.filter((t) => [1].includes(t.id)),
     },
     {
       order: 2,
       id: 2,
       name: 'exercise 1',
       level: 2,
-      tasks: [{ id: 2, exerciseMechanism: 'WORDS'  }],
+      tasks: tasks.filter((t) => [2].includes(t.id)),
     },
     {
       order: 3,
       id: 3,
       name: 'exercise 2',
       level: 1,
-      tasks: [{ id: 3, exerciseMechanism: 'WORDS'  }],
+      tasks: tasks.filter((t) => [3].includes(t.id)),
     },
     {
       order: 4,
       id: 4,
       name: 'exercise 2',
       level: 2,
-      tasks: [{ id: 4, exerciseMechanism: 'WORDS'  }],
+      tasks: tasks.filter((t) => [4].includes(t.id)),
     },
   ];
   const series = [

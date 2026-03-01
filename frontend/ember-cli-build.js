@@ -28,7 +28,10 @@ const purgeCSS = {
 }
 
 
-module.exports = function (defaults) {
+module.exports = async function (defaults) {
+  // eslint-disable-next-line node/no-unsupported-features/es-syntax, node/no-missing-import
+  const { setConfig } = await import('@warp-drive/build-config');
+
   let app = new EmberApp(defaults, {
     babel: {
       plugins: [ require.resolve('ember-auto-import/babel-plugin') ]
@@ -92,6 +95,10 @@ module.exports = function (defaults) {
     destDir: 'assets',
     type: 'vendor',
     outputFile: 'assets/ffmpeg-core.worker.js'
+  });
+
+  setConfig(app, __dirname, {
+    compatWith: '4.12',
   });
 
   return app.toTree();

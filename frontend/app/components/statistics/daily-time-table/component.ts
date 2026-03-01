@@ -1,9 +1,12 @@
 import Component from '@glimmer/component';
 import {DateTime} from "luxon";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {tracked} from "@glimmer/tracking";
-import UserDailyTimeTableStatisticsModel from "brn/models/user-daily-time-table-statistics";
+import type { UserDailyTimeTableStatistics as UserDailyTimeTableStatisticsModel } from "brn/schemas/user-daily-time-table-statistics";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {inject as service} from "@ember/service";
-import Store from "@ember-data/store";
+import type Store from 'brn/services/store';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {action} from "@ember/object";
 
 interface IDailyTimeTableComponentArgs {
@@ -24,13 +27,13 @@ export default class DailyTimeTableComponent extends Component<IDailyTimeTableCo
   async loadData() {
     this.isLoading = true;
     try {
-      const data = await this.store.query(
+      const data = await this.store.query<UserDailyTimeTableStatisticsModel>(
         'user-daily-time-table-statistics',
         {
           day: this.args.day,
         },
       );
-      this.userDailyDetailsData = data.toArray();
+      this.userDailyDetailsData = data.slice();
     } catch (error) {
       console.error(error);
     }
