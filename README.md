@@ -34,7 +34,7 @@ brn/
 | **Database** | PostgreSQL 13 |
 | **Auth** | Firebase |
 | **CI/CD** | GitHub Actions, Docker |
-| **Testing** | JUnit + TestContainers (BE), QUnit + Mirage (FE) |
+| **Testing** | JUnit + TestContainers (BE), QUnit + Mirage (Ember FE), Jasmine + Karma (Angular admin) |
 
 ## Quick Start
 
@@ -140,7 +140,7 @@ We welcome contributors of all skill levels!
 
 ### Code Style
 
-- **Backend:** Run `./gradlew ktlint` before committing. Auto-fix with `./gradlew ktlintFormat`
+- **Backend:** Run `./gradlew ktlintCheck` before committing. Auto-fix with `./gradlew ktlintFormat`
 - **Frontend:** Pre-commit hooks handle formatting automatically (Husky + lint-staged)
 - **Flyway migrations:** Name as `V2yearmonthday_taskNumber` (e.g. `V220210804_899`)
 
