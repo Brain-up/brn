@@ -12,22 +12,26 @@
         (and (not (is-active "group.series.subgroup.index")) (is-active "group"))
       )
     }}
-      <aside
-        class="bg-gradient-to-b from-white sticky top-0 z-10 rounded-bl rounded-br"
-        {{! template-lint-disable no-inline-styles }}
-        style="max-width: 80vw;"
-      >
-        <GroupNavigation @group={{this.group}} @series={{this.series}} />
-      </aside>
+      <div class="flex justify-center w-full">
+        <aside
+          class="bg-gradient-to-b from-white sticky top-0 z-10 w-full rounded-bl rounded-br"
+          {{! template-lint-disable no-inline-styles }}
+          style="max-width: 80vw;"
+        >
+          <GroupNavigation @group={{this.group}} @series={{this.series}} />
+        </aside>
+      </div>
     {{/if}}
     {{#if (is-active "group.series.subgroup.index")}}
-      <aside
-        class="bg-gradient-to-b from-white sticky top-0 z-10 rounded-bl rounded-br"
-        {{! template-lint-disable no-inline-styles }}
-        style="max-width: 80vw;"
-      >
-        <SubgroupNavigation @group={{model-for-route "group.series"}} />
-      </aside>
+      <div class="flex justify-center w-full">
+        <aside
+          class="bg-gradient-to-b from-white sticky top-0 z-10 w-full rounded-bl rounded-br"
+          {{! template-lint-disable no-inline-styles }}
+          style="max-width: 80vw;"
+        >
+          <SubgroupNavigation @group={{model-for-route "group.series"}} />
+        </aside>
+      </div>
     {{/if}}
   {{/unless}}
   <div

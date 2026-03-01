@@ -28,9 +28,7 @@ export default class GroupController extends Controller {
   }
 
   get headerAndNavShown() {
-    return (
-      this.router.currentURL.includes('task') ||
-      this.router.currentURL.includes('loading')
-    );
+    const name = this.router.currentRouteName ?? '';
+    return name.includes('task') || name === 'group.loading';
   }
 }

@@ -11,7 +11,7 @@ interface UiTabButtonComponentArguments {
 export default class UiTabButtonComponent extends Component<UiTabButtonComponentArguments> {
   get classes() {
     const items = [
-      'focus:outline-none rounded-lg w-full uppercase h-12 overflow-hidden flex items-center justify-center text-center',
+      'btn-press focus:outline-none rounded-lg w-full uppercase h-12 overflow-hidden flex items-center justify-center text-center',
     ];
     if (this.args.small) {
       items.push('text-xs');

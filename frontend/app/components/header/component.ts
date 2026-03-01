@@ -1,12 +1,15 @@
 import Component from '@glimmer/component';
 import { inject as service } from '@ember/service';
 import { action } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
 import Session from 'ember-simple-auth/services/session';
 import UserDataService from 'brn/services/user-data';
 
 export default class HeaderComponent extends Component {
   @service('session') session!: Session;
   @service('user-data') userData!: UserDataService;
+
+  @tracked isLoggingOut = false;
 
   get activeLocale() {
     return this.userData.activeLocale;
@@ -20,10 +23,14 @@ export default class HeaderComponent extends Component {
     return this.userData.userModel;
   }
 
-  @action logout() {
-    this.session.invalidate().then(() => {
+  @action async logout() {
+    this.isLoggingOut = true;
+    try {
+      await this.session.invalidate();
       window.location.reload();
-    });
+    } finally {
+      this.isLoggingOut = false;
+    }
   }
 
   @action setLocale(localeName: string) {
