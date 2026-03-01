@@ -161,6 +161,7 @@ a[disabled] {
   animation: skeleton-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   background-color: #e2e8f0;
   border-radius: 0.25rem;
+  max-width: 100%;
 }
 .skeleton-circle {
   animation: skeleton-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
@@ -219,15 +220,27 @@ a[disabled] {
 .skeleton-page * {
   cursor: progress;
 }
+.skeleton-exercise-card {
+  width: 410px;
+  height: 280px;
+}
+@media (max-width: 640px) {
+  .skeleton-exercise-card {
+    width: 220px;
+    height: 150px;
+  }
+}
 .skeleton-exercise-btn {
   width: 168px;
   height: 168px;
-  border: double 3px transparent;
+  background: #ffffff;
+  border: 3px solid #f4f4f4;
   border-radius: 12px;
-  background-image: linear-gradient(white, white),
-    radial-gradient(circle at top left, #428dfc, #ba75f1);
-  background-origin: border-box;
-  background-clip: content-box, border-box;
-  animation: skeleton-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  box-sizing: border-box;
+  position: relative;
+}
+.skeleton-exercise-btn .skeleton-pulse {
+  background-color: #f4f4f4;
+  animation: none;
 }
 /*! purgecss end ignore */

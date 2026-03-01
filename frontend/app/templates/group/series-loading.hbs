@@ -1,11 +1,13 @@
-<div class="skeleton-page sm:grid-cols-4 gap-y-2 sm:gap-y-3 grid w-full grid-cols-3 mx-2 mb-4">
-  {{! template-lint-disable no-unused-block-params }}
-  {{#each (array 1 2 3 4 5 6) as |_|}}
-    <div class="sm:m-2 m-1 overflow-hidden border-2 border-gray-200 rounded-lg shadow-lg">
-      <Skeleton::Block @class="sm:h-40 h-16 rounded-none" />
-      <div class="sm:px-2 sm:py-2 flex items-center justify-center px-1 py-1 bg-gray-200">
-        <Skeleton::Line @class="w-20 h-4" />
+<div class="skeleton-page w-full">
+  <div class="sm:grid-cols-4 gap-y-2 sm:gap-y-3 grid w-full grid-cols-3 mx-2 mb-4">
+    {{! template-lint-disable no-unused-block-params }}
+    {{#each (array 1 2 3 4 5 6) as |_|}}
+      <div class="sm:m-2 m-1 overflow-hidden border-2 border-gray-200 rounded-lg shadow-lg">
+        <Skeleton::Block @class="sm:h-40 h-16 rounded-none" />
+        <div class="sm:px-2 sm:py-2 flex items-center justify-center px-1 py-1 bg-gray-200">
+          <Skeleton::Line @class="w-20 h-4" />
+        </div>
       </div>
-    </div>
-  {{/each}}
+    {{/each}}
+  </div>
 </div>
