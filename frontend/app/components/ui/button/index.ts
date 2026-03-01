@@ -18,11 +18,16 @@ interface IUiButtonComponentArguments {
   route?: string;
   model?: unknown;
   models?: unknown[];
+  isLoading?: boolean;
 }
 
 export default class UiButtonComponent extends Component<IUiButtonComponentArguments> {
+  get isLoading() {
+    return this.args.isLoading ?? false;
+  }
+
   optionsForEveryButton =
-    'focus:outline-none rounded-md font-semibold m-1 py-2';
+    'btn-press focus:outline-none rounded-md font-semibold m-1 py-2';
   optionsPrimarySize = 'w-1/4 h-12';
   optionsSmallSize = 'w-1/4 h-10 text-sm';
   primaryHoverOptions = 'hover:from-blue-500 hover:to-purple-500';

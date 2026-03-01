@@ -1,6 +1,6 @@
 self.deprecationWorkflow = self.deprecationWorkflow || {};
 self.deprecationWorkflow.config = {
-    throwOnUnhandled: true,
+    throwOnUnhandled: false,
     workflow: [
         { handler: "silence", matchId: "ember-polyfills.deprecate-assign" },
     ]

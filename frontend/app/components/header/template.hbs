@@ -73,7 +73,7 @@
         >
           <button
             type="button"
-            class="hover:text-opacity-50 py-2 bg-transparent rounded uppercase
+            class="btn-press hover:text-opacity-50 py-2 bg-transparent rounded uppercase
               {{if (eq this.activeLocale "ru-ru") "font-bold"}}
               {{if
                 this.session.isAuthenticated
@@ -87,7 +87,7 @@
           /
           <button
             type="button"
-            class="inline-block hover:text-opacity-50 py-2 bg-transparent rounded uppercase
+            class="btn-press inline-block hover:text-opacity-50 py-2 bg-transparent rounded uppercase
               {{if (eq this.activeLocale "en-us") "font-bold"}}
               {{if
                 this.session.isAuthenticated
@@ -101,7 +101,7 @@
         </span>
         <div id="other-menu" class="dropdown relative rounded-full">
           <button
-            class="sm:px-4 sm:mr-4 inline-block px-2 py-2 mr-0 font-bold tracking-wider uppercase rounded-full"
+            class="btn-press sm:px-4 sm:mr-4 inline-block px-2 py-2 mr-0 font-bold tracking-wider uppercase rounded-full"
             type="button"
           >{{t "header.more"}}</button>
           <input type="checkbox" />
@@ -164,10 +164,15 @@
         <button
           data-test-logout-button
           type="button"
-          class="hover:text-opacity-50 text-xss sm:text-xs inline-block mt-0 mr-2 leading-none text-white border-0"
+          disabled={{this.isLoggingOut}}
+          class="btn-press hover:text-opacity-50 text-xss sm:text-xs inline-block mt-0 mr-2 leading-none text-white border-0 {{if this.isLoggingOut "opacity-50 cursor-not-allowed"}}"
           {{on "click" this.logout}}
         >
-          <Ui::Icon::Logout />
+          {{#if this.isLoggingOut}}
+            <span class="btn-spinner" aria-hidden="true"></span>
+          {{else}}
+            <Ui::Icon::Logout />
+          {{/if}}
         </button>
       </div>
     {{else}}

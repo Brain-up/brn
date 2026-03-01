@@ -35,7 +35,8 @@
     </LinkTo>
   {{/if}}
 {{else}}
-  <button type={{or @type "submit"}} class={{this.classes}} ...attributes>
+  <button type={{or @type "submit"}} class={{this.classes}} disabled={{this.isLoading}} ...attributes>
+    {{#if this.isLoading}}<span class="btn-spinner mr-2" aria-hidden="true"></span>{{/if}}
     {{#if (has-block)}}
       {{yield}}
     {{else}}

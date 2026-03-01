@@ -5,7 +5,7 @@
     disabled={{this.isDisabled}}
     type="button"
     {{did-update this.handleAnswer @isCorrect}}
-    class="task-player__option-button bg-transparent py-1 sm:px-2 rounded
+    class="btn-press task-player__option-button bg-transparent py-1 sm:px-2 rounded
       {{if
         (eq @activeWord @answerOption.word)
         "border-2 text-white bg-purple-primary"

@@ -13,7 +13,7 @@
           title="Select Avatar"
           type="button"
           {{on "click" (fn this.onSelect avatar)}}
-          class="{{if (eq avatar this.preferredAvatar) "activeTab"}}
+          class="btn-press {{if (eq avatar this.preferredAvatar) "activeTab"}}
             focus:outline-none"
             data-test-avatar-btn={{avatar}}
         >
