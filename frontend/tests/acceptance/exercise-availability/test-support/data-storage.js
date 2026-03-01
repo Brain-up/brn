@@ -2,7 +2,7 @@ export function getTestData() {
   const tasks = [
     {
       serialNumber: 1,
-      id: 1,
+      id: '1',
       name: 'default',
       exerciseMechanism: 'WORDS',
       type: 'WORDS',
@@ -11,7 +11,7 @@ export function getTestData() {
     },
     {
       serialNumber: 2,
-      id: 2,
+      id: '2',
       name: 'default',
       type: 'WORDS',
 
@@ -21,7 +21,7 @@ export function getTestData() {
     },
     {
       serialNumber: 3,
-      id: 3,
+      id: '3',
       name: 'default',
       type: 'WORDS',
 
@@ -31,7 +31,7 @@ export function getTestData() {
     },
     {
       serialNumber: 4,
-      id: 4,
+      id: '4',
       name: 'default',
       type: 'WORDS',
 
@@ -43,59 +43,59 @@ export function getTestData() {
   const exercises = [
     {
       order: 1,
-      id: 1,
+      id: '1',
       name: 'exercise 1',
       level: 1,
-      tasks: tasks.filter((t) => [1].includes(t.id)),
+      tasks: tasks.filter((t) => ['1'].includes(t.id)),
     },
     {
       order: 2,
-      id: 2,
+      id: '2',
       name: 'exercise 1',
       level: 2,
-      tasks: tasks.filter((t) => [2].includes(t.id)),
+      tasks: tasks.filter((t) => ['2'].includes(t.id)),
     },
     {
       order: 3,
-      id: 3,
+      id: '3',
       name: 'exercise 2',
       level: 1,
-      tasks: tasks.filter((t) => [3].includes(t.id)),
+      tasks: tasks.filter((t) => ['3'].includes(t.id)),
     },
     {
       order: 4,
-      id: 4,
+      id: '4',
       name: 'exercise 2',
       level: 2,
-      tasks: tasks.filter((t) => [4].includes(t.id)),
+      tasks: tasks.filter((t) => ['4'].includes(t.id)),
     },
   ];
   const series = [
     {
       order: 1,
-      id: 1,
+      id: '1',
       name: 'default',
-      exerciseGroupId: 1,
-      subgroups: [1, 2],
+      exerciseGroupId: '1',
+      subgroups: ['1', '2'],
     },
   ];
   const groups = [
-    { order: 1, id: 1, name: 'default', description: '123', series: [1] },
+    { order: 1, id: '1', name: 'default', description: '123', series: ['1'] },
   ];
 
   const subgroups = [
     {
-      seriesId: 1,
-      id: 1,
+      seriesId: '1',
+      id: '1',
       level: 1,
       name: 'Семья',
       pictureUrl: 'pictures/theme/family.svg',
       description: 'Слова про семью',
-      exercises: [1, 2, 3, 4],
+      exercises: ['1', '2', '3', '4'],
     },
     {
-      seriesId: 1,
-      id: 2,
+      seriesId: '1',
+      id: '2',
       level: 2,
       name: 'Любимый дом',
       pictureUrl: 'pictures/theme/home.svg',

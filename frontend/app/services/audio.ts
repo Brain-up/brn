@@ -1,4 +1,4 @@
-import Ember from 'ember';
+import { isTesting } from '@embroider/macros';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { action } from '@ember/object';
 import {
@@ -141,13 +141,13 @@ export default class AudioService extends Service {
   }
 
   get currentExerciseNoiseUrl() {
-    if (Ember.testing) {
+    if (isTesting()) {
       return null;
     }
     return this.currentExercise?.noiseUrl ?? null;
   }
   get currentExercise(): Exercise | null {
-    if (Ember.testing) {
+    if (isTesting()) {
       return null;
     }
     const owner = getOwner(this);
@@ -160,7 +160,7 @@ export default class AudioService extends Service {
     return model as Exercise;
   }
   get currentExerciseNoiseLevel() {
-    if (Ember.testing) {
+    if (isTesting()) {
       return 0;
     }
     return this.currentExercise?.noiseLevel ?? 0;
@@ -182,10 +182,10 @@ export default class AudioService extends Service {
     this.audioElements = filesToPlay;
     if (!this.context || this.context.state === 'closed') {
       this.context = createAudioContext();
-    } else if (this.context.state === 'suspended' && !Ember.testing) {
+    } else if (this.context.state === 'suspended' && !isTesting()) {
       await this.context.resume();
     }
-    if (Ember.testing) {
+    if (isTesting()) {
       this.buffers = [];
       return;
     }
@@ -222,7 +222,7 @@ export default class AudioService extends Service {
   @action
   async playAudio() {
     try {
-      if (!Ember.testing) {
+      if (!isTesting()) {
         await this.playTask.perform();
       } else {
         await this.fakePlayTask.perform();
@@ -234,7 +234,7 @@ export default class AudioService extends Service {
 
   @action
   async stop() {
-    if (!Ember.testing) {
+    if (!isTesting()) {
       await this.playTask.cancelAll();
     } else {
       await this.fakePlayTask.cancelAll();
@@ -484,7 +484,7 @@ export default class AudioService extends Service {
 
   setProgress(progress: number) {
     this.audioPlayingProgress = progress;
-    if (progress !== 100 && (progress >= 99 || Ember.testing)) {
+    if (progress !== 100 && (progress >= 99 || isTesting())) {
       this.setProgress(100);
       return;
     }

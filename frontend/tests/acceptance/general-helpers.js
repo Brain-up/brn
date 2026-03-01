@@ -18,13 +18,13 @@ export function getServerResponses({
   });
 
   server.get('series', (schema, request) => {
-    const targetGroup = Number(request.queryParams.groupId);
+    const targetGroup = request.queryParams.groupId;
     const seriesIds = groups.findBy('id', targetGroup).series;
     return { data: series.filter((s) => seriesIds.includes(s.id)) };
   });
 
   server.get('exercises', (schema, request) => {
-    const targetSeries = Number(request.queryParams.subGroupId);
+    const targetSeries = request.queryParams.subGroupId;
     const exercisesIds = subgroups.findBy('id', targetSeries).exercises;
     return { data: exercises.filter((e) => exercisesIds.includes(e.id)) };
   });
@@ -34,19 +34,19 @@ export function getServerResponses({
   });
 
   server.get('tasks/:id', (schema, request) => {
-    return { data: tasks.findBy('id', Number(request.params.id)) };
+    return { data: tasks.findBy('id', request.params.id) };
   });
 
   server.get('groups/:id', (schema, request) => {
-    return { data: groups.findBy('id', Number(request.params.id)) };
+    return { data: groups.findBy('id', request.params.id) };
   });
 
   server.get('series/:id', (schema, request) => {
-    return { data: series.findBy('id', Number(request.params.id)) };
+    return { data: series.findBy('id', request.params.id) };
   });
 
   server.get('exercises/:id', (schema, request) => {
-    return { data: exercises.findBy('id', Number(request.params.id)) };
+    return { data: exercises.findBy('id', request.params.id) };
   });
 
   server.post('exercises/byIds', () => {
@@ -54,14 +54,14 @@ export function getServerResponses({
   });
 
   server.post('study-history', () => {
-    return { id: 1 };
+    return { id: '1' };
   });
 
   server.get('users/current', () => {
     return {"data":[
         {
           "roles":["ADMIN"],
-          "id":1,
+          "id":"1",
           "userId":"f89e5760-0caf-4a95-9810-cd6aa4a8261e",
           "name":"admin",
           "email":"admin@admin.com",
@@ -72,7 +72,7 @@ export function getServerResponses({
           "changed":"2021-12-01T12:04:10.65",
           "avatar":"18",
           "headphones":[
-              {"id":1,"name":"first","active":true,"type":"ON_EAR_BLUETOOTH","description":"first","userAccount":1}
+              {"id":"1","name":"first","active":true,"type":"ON_EAR_BLUETOOTH","description":"first","userAccount":"1"}
           ]
         }
       ],

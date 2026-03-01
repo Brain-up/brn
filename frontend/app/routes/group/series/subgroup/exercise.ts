@@ -6,7 +6,7 @@ import type { TaskBase as Task } from 'brn/schemas/task';
 import type Transition from '@ember/routing/-private/transition';
 import type TasksManagerService from 'brn/services/tasks-manager';
 import type NetworkService from 'brn/services/network';
-import Ember from 'ember';
+import { isTesting } from '@embroider/macros';
 import type Store from 'brn/services/store';
 import type Router from '@ember/routing/router-service';
 import type GroupSeriesSubgroupExerciseController from 'brn/controllers/group/series/subgroup/exercise';
@@ -36,7 +36,7 @@ export default class GroupSeriesSubgroupExerciseRoute extends Route {
   }
 
   redirect(exercise: Exercise, { to }: Transition): void {
-    if (!Ember.testing && !this.isAvailable) {
+    if (!isTesting() && !this.isAvailable) {
       // Use paramsFor instead of exercise.parent (which may be null if the
       // inverse relationship wasn't populated by the cache)
       const { subgroup_id } = this.paramsFor('group.series.subgroup') as { subgroup_id: string };
