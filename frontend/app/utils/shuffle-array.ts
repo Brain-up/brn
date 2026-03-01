@@ -1,4 +1,4 @@
-export default function shuffleArray(a, complexity = 1) {
+export default function shuffleArray<T>(a: T[], complexity = 1): T[] {
   const shuffled = [...a];
   for (let i = a.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));

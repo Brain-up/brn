@@ -10,7 +10,7 @@ import customTimeout from 'brn/utils/custom-timeout';
 import { TaskItem } from 'brn/utils/task-item';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { tracked } from '@glimmer/tracking';
-import { MODES } from 'brn/utils/task-modes';
+import { MODES, type Mode } from 'brn/utils/task-modes';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { task, Task as TaskGenerator } from 'ember-concurrency';
 import type AudioService from 'brn/services/audio';
@@ -31,7 +31,7 @@ function getEmptyTemplate(
 
 export interface IWordsSequencesComponentArgs<T> {
   task: T;
-  mode: keyof typeof MODES;
+  mode: Mode;
   disableAnswers: boolean;
   activeWord: string;
   disableAudioPlayer: boolean;
