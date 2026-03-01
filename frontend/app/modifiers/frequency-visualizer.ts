@@ -1,48 +1,43 @@
 import { modifier } from 'ember-modifier';
 
-function draw(canvas, frequency, duration, amplitude, width, height, text) {
+interface IFrequencyOption {
+  signal: { duration: number; frequency: number };
+  word: string;
+}
+
+function draw(canvas: HTMLCanvasElement, frequency: number, duration: number, amplitude: number, width: number, height: number, text: string) {
   canvas.width = width * window.devicePixelRatio;
   canvas.height = height * window.devicePixelRatio;
-  const ctx = canvas.getContext('2d');
+  const ctx = canvas.getContext('2d')!;
 
   canvas.style.width = width + 'px';
   canvas.style.height = height + 'px';
 
   ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
 
-  // const audioCtx = new AudioContext();
-  // let oscillator;
-  let startTime;
-  let cancelFrame;
+  let startTime: number;
+  let cancelFrame: number;
 
   const render = () => {
     ctx.fillStyle = 'white';
-
-    // white text on the top of canvas
 
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     ctx.font = '10px Arial';
     ctx.fillStyle = 'grey';
     ctx.textAlign = 'center';
-    // fill text in the bottom of canvas
     ctx.fillText(text, 100, window.devicePixelRatio * 6, 300);
-
-    // ctx.fillText(text, canvas.width / 2, canvas.height - 40, 300);
 
     ctx.lineWidth = 1;
 
-    // Draw horizontal wave for frequency representation
-    // ctx.beginPath();
-    // Draw duration gradient
     const tick = Date.now();
     const timePassed = tick - startTime;
     const progress = timePassed / duration;
     const fullWidth = canvas.width / window.devicePixelRatio;
     const start = Math.round(progress * fullWidth);
     const center = canvas.height / window.devicePixelRatio / 2;
-    const width = duration / 100;
-    const end = start + width; // canvas.width
+    const waveWidth = duration / 100;
+    const end = start + waveWidth;
     const leftPad = end - fullWidth;
 
     const speed = 0;
@@ -109,23 +104,21 @@ function draw(canvas, frequency, duration, amplitude, width, height, text) {
   cancelFrame = requestAnimationFrame(render);
 
   return () => {
-    // oscillator.stop();
     cancelAnimationFrame(cancelFrame);
   };
 }
 
-// Example usage:
-
-export default modifier(function frequencyVisualizer(element, [option]) {
+export default modifier(function frequencyVisualizer(element: HTMLCanvasElement, [option]: [IFrequencyOption]) {
   const { duration, frequency } = option.signal;
+  const parentNode = element.parentNode as HTMLElement;
   const cancel = draw(
     element,
     frequency * 1000,
     duration * 100,
     60,
-    element.parentNode.clientWidth - 40,
-    element.parentNode.clientHeight,
-    option.word.split(':').pop(),
+    parentNode.clientWidth - 40,
+    parentNode.clientHeight,
+    option.word.split(':').pop()!,
   );
 
   return () => {

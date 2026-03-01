@@ -8,6 +8,14 @@ declare module 'brn/templates/*' {
 declare module 'ember-inflector' {
   export function pluralize(word: string): string;
   export function singularize(word: string): string;
+  interface InflectorInstance {
+    uncountable(word: string): void;
+    irregular(singular: string, plural: string): void;
+  }
+  const Inflector: {
+    inflector: InflectorInstance;
+  };
+  export default Inflector;
 }
 
 declare module 'tracked-toolbox' {
@@ -54,6 +62,25 @@ declare module 'ember-simple-auth/mixins/unauthenticated-route-mixin' {
   import Mixin from '@ember/object/mixin';
   const UnauthenticatedRouteMixin: Mixin;
   export default UnauthenticatedRouteMixin;
+}
+
+declare module 'ember-simple-auth/authenticators/oauth2-password-grant' {
+  import BaseAuthenticator from 'ember-simple-auth/authenticators/base';
+  export default class OAuth2PasswordGrant extends BaseAuthenticator {
+    serverTokenEndpoint: string;
+    clientId: string | null;
+    refreshAccessTokens: boolean;
+    makeRequest(url: string, data: Record<string, string>, headers?: Record<string, string>): Promise<Record<string, unknown>>;
+  }
+}
+
+declare module 'ember-component-css/pod-names' {
+  const podNames: Record<string, string>;
+  export default podNames;
+}
+
+declare module 'ember-macro-helpers/computed' {
+  export default function computed(...args: [...deps: string[], fn: (...values: unknown[]) => unknown]): unknown;
 }
 
 declare module 'fetch' {

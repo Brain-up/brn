@@ -1,4 +1,4 @@
-export function urlForImage(fileUrl) {
+export function urlForImage(fileUrl: string | null | undefined): string | null {
   if (fileUrl === null) {
     return null;
   }
@@ -10,7 +10,7 @@ export function urlForImage(fileUrl) {
   }
   return `/${fileUrl}`;
 }
-export function urlForAudio(fileUrl) {
+export function urlForAudio(fileUrl: string | null): string | null {
   if (fileUrl === null) {
     return null;
   }
