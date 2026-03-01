@@ -29,6 +29,7 @@ const purgeCSS = {
 
 
 module.exports = async function (defaults) {
+  // eslint-disable-next-line node/no-unsupported-features/es-syntax, node/no-missing-import
   const { setConfig } = await import('@warp-drive/build-config');
 
   let app = new EmberApp(defaults, {

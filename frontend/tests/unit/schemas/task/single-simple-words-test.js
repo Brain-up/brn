@@ -1,6 +1,7 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import { ExerciseMechanism } from 'brn/utils/exercise-types';
+import { TaskSingleSimpleWordsExtension } from 'brn/schemas/task/single-simple-words';
 
 module('Unit | Schema | task/single-simple-words', function (hooks) {
   setupTest(hooks);
@@ -21,7 +22,6 @@ module('Unit | Schema | task/single-simple-words', function (hooks) {
   test('exerciseMechanism extension getter returns WORDS', function (assert) {
     // The extension getter is defined on the extension object directly.
     // When the attribute is not set by the API, the extension provides the default.
-    const { TaskSingleSimpleWordsExtension } = require('brn/schemas/task/single-simple-words');
     const getter = Object.getOwnPropertyDescriptor(
       TaskSingleSimpleWordsExtension.features,
       'exerciseMechanism',

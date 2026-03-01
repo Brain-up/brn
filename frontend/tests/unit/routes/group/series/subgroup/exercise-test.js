@@ -195,7 +195,7 @@ module('Unit | Route | group/series/subgroup/exercise', function (hooks) {
     const route = this.owner.lookup('route:group/series/subgroup/exercise');
     route.isAvailable = true;
     // Mock tasksManager to avoid depending on real service internals
-    route.tasksManager = { clearCurrentCycleTaks() {} };
+    route.tasksManager = { clearCurrentCycleTaks() { /* noop */ } };
     route.deactivate();
     assert.false(route.isAvailable, 'isAvailable reset');
   });

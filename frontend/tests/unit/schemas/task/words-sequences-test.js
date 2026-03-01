@@ -1,6 +1,7 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import { ExerciseMechanism } from 'brn/utils/exercise-types';
+import { TaskWordsSequencesExtension } from 'brn/schemas/task/words-sequences';
 
 module('Unit | Schema | task/words-sequences', function (hooks) {
   setupTest(hooks);
@@ -19,7 +20,6 @@ module('Unit | Schema | task/words-sequences', function (hooks) {
   });
 
   test('exerciseMechanism extension getter returns MATRIX', function (assert) {
-    const { TaskWordsSequencesExtension } = require('brn/schemas/task/words-sequences');
     const getter = Object.getOwnPropertyDescriptor(
       TaskWordsSequencesExtension.features,
       'exerciseMechanism',

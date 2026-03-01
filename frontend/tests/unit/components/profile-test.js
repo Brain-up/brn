@@ -1,7 +1,7 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { setupIntl } from 'ember-intl/test-support';
-import { render, click, triggerKeyEvent } from '@ember/test-helpers';
+import { render, click } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import Service from '@ember/service';
 
@@ -12,9 +12,9 @@ function registerUserData(owner, userModel) {
     activeLocale = 'en-us';
     userModel = userModel;
     network = {
-      patchUserInfo() {},
+      patchUserInfo() { /* noop */ },
     };
-    setLocale() {}
+    setLocale() { /* noop */ }
   }
   owner.register('service:user-data', MockUserData);
 }

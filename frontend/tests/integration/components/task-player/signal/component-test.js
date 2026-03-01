@@ -19,11 +19,11 @@ module('Integration | Component | task-player/signal', function (hooks) {
 
   hooks.beforeEach(function () {
     class MockAudio extends AudioService {
-      startPlayTask() {}
+      startPlayTask() { /* noop */ }
     }
     this.owner.register('service:audio', MockAudio);
 
-    this.set('noop', function () {});
+    this.set('noop', function () { /* noop */ });
   });
 
   test('it renders with answer options', async function (assert) {

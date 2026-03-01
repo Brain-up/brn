@@ -1,7 +1,7 @@
 import { module, test } from 'qunit';
 import { setupIntl } from 'ember-intl/test-support';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, settled } from '@ember/test-helpers';
+import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import Service from '@ember/service';
 
@@ -23,7 +23,7 @@ module('Integration | Component | statistics/daily-time-table', function (hooks)
     this.set('day', '2024-01-15');
 
     await render(hbs`<Statistics::DailyTimeTable @day={{this.day}} />`);
-    await settled();
+
 
     assert.dom('table').exists('renders a table element');
     assert.dom('thead').exists('table has a header');
@@ -33,7 +33,7 @@ module('Integration | Component | statistics/daily-time-table', function (hooks)
     this.set('day', '2024-01-15');
 
     await render(hbs`<Statistics::DailyTimeTable @day={{this.day}} />`);
-    await settled();
+
 
     assert.dom('th').exists({ count: 6 }, 'renders 6 column headers');
   });
@@ -42,7 +42,7 @@ module('Integration | Component | statistics/daily-time-table', function (hooks)
     this.set('day', '2024-01-15');
 
     await render(hbs`<Statistics::DailyTimeTable @day={{this.day}} />`);
-    await settled();
+
 
     assert.dom('tbody tr').doesNotExist('no data rows when result is empty');
   });
@@ -75,7 +75,7 @@ module('Integration | Component | statistics/daily-time-table', function (hooks)
     this.set('day', '2024-01-15');
 
     await render(hbs`<Statistics::DailyTimeTable @day={{this.day}} />`);
-    await settled();
+
 
     assert.dom('tbody tr').exists({ count: 2 }, 'renders 2 data rows');
   });
