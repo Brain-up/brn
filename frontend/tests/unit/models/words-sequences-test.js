@@ -7,7 +7,7 @@ const TASK_DATA = {
   answerOptions: {
     OBJECT_ACTION: [
       {
-        id: 345,
+        id: '345',
         audioFileUrl: '',
         word: 'линь',
         wordType: 'OBJECT_ACTION',
@@ -15,7 +15,7 @@ const TASK_DATA = {
         soundsCount: 0,
       },
       {
-        id: 346,
+        id: '346',
         audioFileUrl: '',
         word: 'бал',
         wordType: 'OBJECT_ACTION',
@@ -25,7 +25,7 @@ const TASK_DATA = {
     ],
     OBJECT: [
       {
-        id: 344,
+        id: '344',
         audioFileUrl: '',
         word: 'вить',
         wordType: 'OBJECT',
@@ -33,7 +33,7 @@ const TASK_DATA = {
         soundsCount: 0,
       },
       {
-        id: 343,
+        id: '343',
         audioFileUrl: '',
         word: 'быль',
         wordType: 'OBJECT',

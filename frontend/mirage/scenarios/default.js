@@ -1,7 +1,7 @@
 export default function(server) {
 
   const series = server.create('series',{
-    id: 1,
+    id: '1',
     name: 'распознавание слов',
     // description: 'A series of audio exercises',
   });
@@ -13,19 +13,19 @@ export default function(server) {
   series.save();
 
   const exercise1 = server.create('exercise',{
-    id: 1,
+    id: '1',
     series,
     name: 'однослоговые слова',
   });
 
   const exercise2 = server.create('exercise',{
-    id: 2,
+    id: '2',
     series,
     name: 'двуслоговые слова',
   });
 
   const exercise3 = server.create('exercise',{
-    id: 3,
+    id: '3',
     series,
     name: 'сложные слова',
   });

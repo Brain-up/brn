@@ -1,5 +1,5 @@
 import type { FFmpeg } from '@ffmpeg/ffmpeg';
-import Ember from 'ember';
+import { isTesting } from '@embroider/macros';
 
 let ffmpeg: FFmpeg | null = null;
 let hasFFmpegError = false;
@@ -58,7 +58,7 @@ export const TIMINGS = {
   },
 
   get SUCCESS_ANSWER_NOTIFICATION() {
-    return Ember.testing ? 200 : 3000;
+    return isTesting() ? 200 : 3000;
   },
   get SUCCESS_ANSWER_NOTIFICATION_STARTED() {
     return this.SUCCESS_ANSWER_NOTIFICATION - this._step;

@@ -2,40 +2,40 @@ export function getData() {
   const tasks = [
     {
       serialNumber: 1,
-      id: 1,
+      id: '1',
       name: 'default',
       exerciseMechanism: 'WORDS',
       answerOptions: [
         {
-          id: 4,
+          id: '4',
           audioFileUrl: '',
           word: 'вить',
           pictureFileUrl: '',
           soundsCount: 1,
         },
         {
-          id: 6,
+          id: '6',
           audioFileUrl: '',
           word: 'сад',
           pictureFileUrl: '',
           soundsCount: 1,
         },
         {
-          id: 2,
+          id: '2',
           audioFileUrl: '',
           word: 'быль',
           pictureFileUrl: '',
           soundsCount: 1,
         },
         {
-          id: 5,
+          id: '5',
           audioFileUrl: '',
           word: 'бум',
           pictureFileUrl: '',
           soundsCount: 1,
         },
         {
-          id: 3,
+          id: '3',
           audioFileUrl: '',
           word: 'гад',
           pictureFileUrl: '',
@@ -43,7 +43,7 @@ export function getData() {
         },
       ],
       correctAnswer: {
-        id: 4,
+        id: '4',
         audioFileUrl: '',
         word: 'вить',
         pictureFileUrl:
@@ -53,40 +53,40 @@ export function getData() {
     },
     {
       serialNumber: 2,
-      id: 2,
+      id: '2',
       name: 'default',
       exerciseMechanism: 'WORDS',
       answerOptions: [
         {
-          id: 4,
+          id: '4',
           audioFileUrl: '',
           word: 'вить',
           pictureFileUrl: '',
           soundsCount: 1,
         },
         {
-          id: 6,
+          id: '6',
           audioFileUrl: '',
           word: 'сад',
           pictureFileUrl: '',
           soundsCount: 1,
         },
         {
-          id: 2,
+          id: '2',
           audioFileUrl: '',
           word: 'быль',
           pictureFileUrl: '',
           soundsCount: 1,
         },
         {
-          id: 5,
+          id: '5',
           audioFileUrl: '',
           word: 'бум',
           pictureFileUrl: '',
           soundsCount: 1,
         },
         {
-          id: 3,
+          id: '3',
           audioFileUrl: '',
           word: 'гад',
           pictureFileUrl: '',
@@ -94,7 +94,7 @@ export function getData() {
         },
       ],
       correctAnswer: {
-        id: 4,
+        id: '4',
         audioFileUrl: '',
         word: 'вить',
         pictureFileUrl:
@@ -104,40 +104,40 @@ export function getData() {
     },
     {
       serialNumber: 3,
-      id: 3,
+      id: '3',
       name: 'default',
       exerciseMechanism: 'WORDS',
       answerOptions: [
         {
-          id: 4,
+          id: '4',
           audioFileUrl: '',
           word: 'вить',
           pictureFileUrl: '',
           soundsCount: 1,
         },
         {
-          id: 6,
+          id: '6',
           audioFileUrl: '',
           word: 'сад',
           pictureFileUrl: '',
           soundsCount: 1,
         },
         {
-          id: 2,
+          id: '2',
           audioFileUrl: '',
           word: 'быль',
           pictureFileUrl: '',
           soundsCount: 1,
         },
         {
-          id: 5,
+          id: '5',
           audioFileUrl: '',
           word: 'бум',
           pictureFileUrl: '',
           soundsCount: 1,
         },
         {
-          id: 3,
+          id: '3',
           audioFileUrl: '',
           word: 'гад',
           pictureFileUrl: '',
@@ -145,7 +145,7 @@ export function getData() {
         },
       ],
       correctAnswer: {
-        id: 4,
+        id: '4',
         audioFileUrl: '',
         word: 'вить',
         pictureFileUrl:
@@ -157,44 +157,44 @@ export function getData() {
   const exercises = [
     {
       order: 1,
-      id: 1,
+      id: '1',
       exerciseMechanism: 'WORDS',
       name: 'default',
-      tasks: tasks.filter((t) => [1, 2].includes(t.id)),
+      tasks: tasks.filter((t) => ['1', '2'].includes(t.id)),
     },
     {
       order: 2,
-      id: 2,
+      id: '2',
       exerciseMechanism: 'WORDS',
       name: 'default',
-      tasks: tasks.filter((t) => [3].includes(t.id)),
+      tasks: tasks.filter((t) => ['3'].includes(t.id)),
     },
   ];
   const series = [
     {
       order: 1,
-      id: 1,
+      id: '1',
       name: 'default',
-      exerciseGroupId: 1,
+      exerciseGroupId: '1',
     },
   ];
   const groups = [
-    { order: 1, id: 1, name: 'default', description: '123', series: [1] },
+    { order: 1, id: '1', name: 'default', description: '123', series: ['1'] },
   ];
 
   const subgroups = [
     {
-      seriesId: 1,
-      id: 1,
+      seriesId: '1',
+      id: '1',
       level: 1,
       name: 'Семья',
       pictureUrl: 'pictures/theme/family.svg',
       description: 'Слова про семью',
-      exercises: [1, 2],
+      exercises: ['1', '2'],
     },
     {
-      seriesId: 1,
-      id: 2,
+      seriesId: '1',
+      id: '2',
       level: 2,
       name: 'Любимый дом',
       pictureUrl: 'pictures/theme/home.svg',

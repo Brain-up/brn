@@ -6,8 +6,7 @@ import NetworkService from '../../services/network';
 import { task, timeout, Task as TaskGenerator } from 'ember-concurrency';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { tracked } from '@glimmer/tracking';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import Ember from 'ember';
+import { isTesting } from '@embroider/macros';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { action } from '@ember/object';
 import Session from 'ember-simple-auth/services/session';
@@ -57,7 +56,7 @@ export default class GlobalTimerComponent extends Component<IGlobalTimerArgs> {
   @(task(function* (this: GlobalTimerComponent): Generator<unknown, void, any> {
     do {
       try {
-        if (!Ember.testing) {
+        if (!isTesting()) {
           if (this.session.isAuthenticated && this.isEnabled) {
             if (!this.network.userData?.userModel) {
               return;

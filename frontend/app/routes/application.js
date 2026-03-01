@@ -1,6 +1,6 @@
 import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
-import Ember from 'ember';
+import { isTesting } from '@embroider/macros';
 
 export default class ApplicationRoute extends Route {
   @service('session') session;
@@ -16,7 +16,7 @@ export default class ApplicationRoute extends Route {
   }
 
   redirect(_/* : unknown */, { to }/*: Transition*/) {
-    if (Ember.testing) {
+    if (isTesting()) {
       // skip testing behaviour for now
       return;
     }

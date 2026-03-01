@@ -1,4 +1,4 @@
-import Ember from 'ember';
+import { isTesting } from '@embroider/macros';
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import { inject as service } from '@ember/service';
@@ -65,7 +65,7 @@ export default class TimerComponent extends Component<ITimerComponentArgs> {
   startTimer() {
     this.setStartTime();
     this.isStarted = true;
-    if (!Ember.testing) {
+    if (!isTesting()) {
       this.timerId = later(this, this.updateSecondsCount, 1000);
     }
   }

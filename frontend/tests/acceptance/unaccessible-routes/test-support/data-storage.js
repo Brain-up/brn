@@ -2,7 +2,7 @@ export function getTaskScenarioData() {
   const tasks = [
     {
       serialNumber: 1,
-      id: 1,
+      id: '1',
       name: 'default',
       exerciseMechanism: 'WORDS',
       answerOptions: [],
@@ -10,7 +10,7 @@ export function getTaskScenarioData() {
     },
     {
       serialNumber: 2,
-      id: 2,
+      id: '2',
       name: 'default',
       exerciseMechanism: 'WORDS',
       answerOptions: [],
@@ -20,19 +20,19 @@ export function getTaskScenarioData() {
   const exercises = [
     {
       order: 1,
-      id: 1,
+      id: '1',
       name: 'default',
       tasks: [
-        { id: 1, type: 'task/single-simple-words' },
-        { id: 2, type: 'task/single-simple-words' },
+        { id: '1', type: 'task/single-simple-words' },
+        { id: '2', type: 'task/single-simple-words' },
       ],
     },
   ];
   const series = [
-    { order: 1, id: 1, name: 'default', exerciseGroupId: 1, exercises: [1] },
+    { order: 1, id: '1', name: 'default', exerciseGroupId: '1', exercises: ['1'] },
   ];
   const groups = [
-    { order: 1, id: 1, name: 'default', description: '123', series: [1] },
+    { order: 1, id: '1', name: 'default', description: '123', series: ['1'] },
   ];
 
   return { tasks, exercises, series, groups };
@@ -42,7 +42,7 @@ export function getExerciseScenarioData() {
   const tasks = [
     {
       serialNumber: 1,
-      id: 1,
+      id: '1',
       name: 'default',
       exerciseMechanism: 'WORDS',
       answerOptions: [],
@@ -50,7 +50,7 @@ export function getExerciseScenarioData() {
     },
     {
       serialNumber: 2,
-      id: 2,
+      id: '2',
       name: 'default',
       exerciseMechanism: 'WORDS',
       answerOptions: [],
@@ -58,7 +58,7 @@ export function getExerciseScenarioData() {
     },
     {
       serialNumber: 3,
-      id: 3,
+      id: '3',
       name: 'default',
       exerciseMechanism: 'WORDS',
       answerOptions: [],
@@ -68,25 +68,25 @@ export function getExerciseScenarioData() {
   const exercises = [
     {
       order: 1,
-      id: 1,
+      id: '1',
       name: 'default',
       tasks: [
-        { id: 1, type: 'task/SINGLE_WORDS' },
-        { id: 2, type: 'task/SINGLE_WORDS' },
+        { id: '1', type: 'task/SINGLE_WORDS' },
+        { id: '2', type: 'task/SINGLE_WORDS' },
       ],
     },
     {
       order: 2,
-      id: 2,
+      id: '2',
       name: 'default',
-      tasks: [{ id: 3, type: 'task/SINGLE_WORDS' }],
+      tasks: [{ id: '3', type: 'task/SINGLE_WORDS' }],
     },
   ];
   const series = [
-    { order: 1, id: 1, name: 'default', exerciseGroupId: 1, exercises: [1, 2] },
+    { order: 1, id: '1', name: 'default', exerciseGroupId: '1', exercises: ['1', '2'] },
   ];
   const groups = [
-    { order: 1, id: 1, name: 'default', description: '123', series: [1] },
+    { order: 1, id: '1', name: 'default', description: '123', series: ['1'] },
   ];
 
   return { tasks, exercises, series, groups };
@@ -96,7 +96,7 @@ export function getSeriesScenarioData() {
   const tasks = [
     {
       serialNumber: 1,
-      id: 1,
+      id: '1',
       name: 'default',
       exerciseMechanism: 'WORDS',
       answerOptions: [],
@@ -104,7 +104,7 @@ export function getSeriesScenarioData() {
     },
     {
       serialNumber: 2,
-      id: 2,
+      id: '2',
       name: 'default',
       exerciseMechanism: 'WORDS',
       answerOptions: [],
@@ -112,7 +112,7 @@ export function getSeriesScenarioData() {
     },
     {
       serialNumber: 3,
-      id: 3,
+      id: '3',
       name: 'default',
       exerciseMechanism: 'WORDS',
       answerOptions: [],
@@ -122,37 +122,37 @@ export function getSeriesScenarioData() {
   const exercises = [
     {
       order: 1,
-      id: 1,
+      id: '1',
       name: 'default',
-      tasks: [{ id: 1 }, { id: 2 }],
+      tasks: [{ id: '1' }, { id: '2' }],
     },
     {
       order: 2,
-      id: 2,
+      id: '2',
       name: 'default',
-      tasks: [{ id: 3 }],
+      tasks: [{ id: '3' }],
     },
   ];
   const series = [
     {
       order: 1,
-      id: 1,
+      id: '1',
       name: 'default',
       type: 'WORDS',
-      exerciseGroupId: 1,
-      exercises: [1],
+      exerciseGroupId: '1',
+      exercises: ['1'],
     },
     {
       order: 2,
-      id: 2,
+      id: '2',
       name: 'default',
       type: 'WORDS',
-      exerciseGroupId: 1,
-      exercises: [2],
+      exerciseGroupId: '1',
+      exercises: ['2'],
     },
   ];
   const groups = [
-    { order: 1, id: 1, name: 'default', description: '123', series: [1, 2] },
+    { order: 1, id: '1', name: 'default', description: '123', series: ['1', '2'] },
   ];
 
   return { tasks, exercises, series, groups };

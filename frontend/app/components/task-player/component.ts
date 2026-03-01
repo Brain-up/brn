@@ -10,7 +10,7 @@ import { action } from '@ember/object';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { timeout, task, TaskInstance } from 'ember-concurrency';
 import { MODES } from 'brn/utils/task-modes';
-import Ember from 'ember';
+import { isTesting } from '@embroider/macros';
 import StatsService, { StatEvents } from 'brn/services/stats';
 import AudioService from 'brn/services/audio';
 import StudyingTimerService from 'brn/services/studying-timer';
@@ -66,7 +66,7 @@ export default class TaskPlayerComponent extends Component {
   didReceiveAttrs() {
     super.didReceiveAttrs();
     if (this.justEnteredTask === false && this._task !== this.task) {
-      if (Ember.testing) {
+      if (isTesting()) {
         this.setMode(MODES.TASK);
       } else {
         if (
@@ -290,7 +290,7 @@ export default class TaskPlayerComponent extends Component {
     this.justEnteredTask = false;
     this.maybeStartExercise();
     this.studyingTimer.runTimer();
-    if (Ember.testing) {
+    if (isTesting()) {
       await this.setMode(MODES.TASK);
     } else {
       try {

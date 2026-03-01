@@ -1,7 +1,12 @@
 import Route from '@ember/routing/route';
-// eslint-disable-next-line ember/no-mixins
-import UnauthenticatedRouteMixin from 'ember-simple-auth/mixins/unauthenticated-route-mixin';
+import { inject as service } from '@ember/service';
+import type Session from 'ember-simple-auth/services/session';
+import type Transition from '@ember/routing/-private/transition';
 
-export default class LoginRoute extends Route.extend(
-  UnauthenticatedRouteMixin,
-) {}
+export default class LoginRoute extends Route {
+  @service('session') declare session: Session;
+
+  beforeModel(transition: Transition) {
+    this.session.prohibitAuthentication('index');
+  }
+}

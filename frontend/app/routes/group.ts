@@ -1,6 +1,4 @@
 import Route from '@ember/routing/route';
-// eslint-disable-next-line ember/no-mixins
-import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
 import type { Group as GroupModel } from 'brn/schemas/group';
 import type { Series as SeriesModel } from 'brn/schemas/series';
 import type Transition from '@ember/routing/-private/transition';
@@ -9,6 +7,7 @@ import { inject as service } from '@ember/service';
 import type NetworkService from 'brn/services/network';
 import type Store from 'brn/services/store';
 import type Router from '@ember/routing/router-service';
+import type Session from 'ember-simple-auth/services/session';
 import { sortByKey } from 'brn/utils/sort-by-key';
 
 export interface GroupRouteModel {
@@ -16,10 +15,15 @@ export interface GroupRouteModel {
   series: SeriesModel[];
 }
 
-export default class GroupRoute extends Route.extend(AuthenticatedRouteMixin) {
+export default class GroupRoute extends Route {
   @service('network') network!: NetworkService;
   @service('store') store!: Store;
   @service('router') declare router: Router;
+  @service('session') declare session: Session;
+
+  beforeModel(transition: Transition) {
+    this.session.requireAuthentication(transition, 'login');
+  }
 
   async model({ group_id }: { group_id: string }): Promise<GroupRouteModel> {
     await this.network.loadCurrentUser();
