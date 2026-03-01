@@ -164,18 +164,28 @@ function normalizeTaskSignalRecord(
   // The JSON:API cache stores attribute values by reference, so these getters survive.
   const opts = allSignals.map((_el, i: number) => {
     const signalId = String(_el.id);
-    return {
-      get word() {
-        const sig = store.peekRecord('signal', signalId) as Record<string, unknown> | null;
-        return `${i + 1}: [${sig?.duration}ms, ${sig?.frequency}Mhz]`;
-      },
-      get signal() {
-        return store.peekRecord('signal', signalId);
-      },
-      get audioFileUrl(): unknown {
-        return this.signal;
-      },
+    // Store plain serializable data in attributes to avoid circular references
+    // when the JSON:API cache validates via JSON.stringify.
+    // signal/audioFileUrl are non-enumerable so JSON.stringify skips them,
+    // but they're accessible at runtime for component logic.
+    const signalData = _el as Record<string, unknown>;
+    const opt = {
+      word: `${i + 1}: [${signalData.duration ?? signalData.length}ms, ${signalData.frequency}Mhz]`,
+      signalId,
     };
+    Object.defineProperties(opt, {
+      signal: {
+        get() { return store.peekRecord('signal', signalId); },
+        enumerable: false,
+        configurable: true,
+      },
+      audioFileUrl: {
+        get() { return store.peekRecord('signal', signalId); },
+        enumerable: false,
+        configurable: true,
+      },
+    });
+    return opt;
   });
   return {
     id,

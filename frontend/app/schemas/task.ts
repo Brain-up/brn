@@ -11,7 +11,7 @@ import type { ExerciseMechanism } from 'brn/utils/exercise-types';
 import type AnswerOption from 'brn/utils/answer-option';
 
 interface ExerciseRef {
-  audioFileUrlGenerated: boolean;
+  isAudioFileUrlGenerated: boolean;
   sortedChildren: unknown[] | null;
   wordsColumns: number;
   playWordsCount?: number;
@@ -100,7 +100,7 @@ export const TaskExtension: CAUTION_MEGA_DANGER_ZONE_Extension = {
 
     get usePreGeneratedAudio(): boolean {
       const self = this as unknown as { exercise: ExerciseRef };
-      return self.exercise.audioFileUrlGenerated;
+      return self.exercise.isAudioFileUrlGenerated;
     },
 
     get children(): unknown[] {

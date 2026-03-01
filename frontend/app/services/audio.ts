@@ -1,5 +1,4 @@
 import Ember from 'ember';
-import { isArray } from '@ember/array';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { action } from '@ember/object';
 import {
@@ -174,7 +173,7 @@ export default class AudioService extends Service {
   }
 
   get filesToPlay() {
-    return isArray(this.audioFileUrl) ? this.audioFileUrl : [this.audioFileUrl];
+    return Array.isArray(this.audioFileUrl) ? this.audioFileUrl : [this.audioFileUrl];
   }
 
   @tracked audioElements: (string | ToneObject)[] = [];

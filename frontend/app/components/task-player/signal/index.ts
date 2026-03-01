@@ -74,8 +74,8 @@ export default class TaskPlayerSignalComponent extends Component<ISignalComponen
 
   startTask() {
     if (this.args.mode === MODES.TASK) {
-      // @ts-expect-error SignalModel
-      this.audio.startPlayTask(this.audioFileUrl);
+      // @ts-expect-error SignalModel — audioFileUrl is a signal record, not a string
+      this.audio.startPlayTask([this.audioFileUrl]);
     }
   }
 

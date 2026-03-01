@@ -103,7 +103,7 @@ module(
       let model = store.createRecord('task/single-simple-words', {
         ...schemaData(taskWithPreGeneratedAudio),
         exercise: store.createRecord('exercise', {
-          audioFileUrlGenerated: true,
+          isAudioFileUrlGenerated: true,
         }),
       });
       this.set('model', model);
@@ -145,7 +145,7 @@ module(
       let model = store.createRecord('task/single-simple-words', {
         ...schemaData(task),
         exercise: store.createRecord('exercise', {
-          audioFileUrlGenerated: false,
+          isAudioFileUrlGenerated: false,
         }),
       });
       this.set('model', model);

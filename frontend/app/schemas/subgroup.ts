@@ -26,6 +26,7 @@ export const SubgroupSchema: LegacyResourceSchema = withDefaults({
     { kind: 'attribute', name: 'pictureUrl', type: 'string' },
     { kind: 'attribute', name: 'description', type: 'string' },
     { kind: 'attribute', name: 'order', type: 'number' },
+    { kind: 'attribute', name: 'withPictures', type: 'boolean' },
     {
       kind: 'hasMany',
       name: 'exercises',
@@ -68,6 +69,7 @@ export type Subgroup = WithLegacy<{
   pictureUrl: string;
   description: string;
   order: number;
+  withPictures: boolean;
   exercises: ExerciseRef[];
   picture: string;
   parent: unknown;
