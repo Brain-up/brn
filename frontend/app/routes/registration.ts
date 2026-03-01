@@ -6,7 +6,7 @@ import type Transition from '@ember/routing/-private/transition';
 export default class RegistrationRoute extends Route {
   @service('session') declare session: Session;
 
-  beforeModel(transition: Transition) {
+  beforeModel(_transition: Transition) {
     this.session.prohibitAuthentication('index');
   }
 }

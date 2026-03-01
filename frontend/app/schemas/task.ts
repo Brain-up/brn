@@ -151,7 +151,7 @@ export const TaskExtension: CAUTION_MEGA_DANGER_ZONE_Extension = {
 
     get nextTask(): unknown {
       const self = this as unknown as { exercise: ExerciseRef };
-      return arrayNext(self, self.exercise.sortedChildren);
+      return arrayNext(self, self.exercise.sortedChildren ?? []);
     },
 
     get isLastTask(): boolean {

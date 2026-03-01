@@ -1,6 +1,6 @@
 import Component from '@glimmer/component';
 import type { TaskSignal as TaskSignalModel } from 'brn/schemas/task/signal';
-import { MODES } from 'brn/utils/task-modes';
+import { MODES, type Mode } from 'brn/utils/task-modes';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { action } from '@ember/object';
 import type { Signal as SignalModel } from 'brn/schemas/signal';
@@ -14,7 +14,7 @@ import AudioService from 'brn/services/audio';
 
 interface ISignalComponentArgs {
   task: TaskSignalModel;
-  mode: keyof typeof MODES;
+  mode: Mode;
   disableAnswers: boolean;
   activeWord: string;
   disableAudioPlayer: boolean;

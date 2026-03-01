@@ -1,6 +1,6 @@
 import { helper } from '@ember/component/helper';
 
-export function arrayFirst([arr]) {
+export function arrayFirst([arr]: [unknown[]]): unknown {
   if (!arr || !arr.length) return undefined;
   return arr[0];
 }
