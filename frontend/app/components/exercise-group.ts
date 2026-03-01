@@ -21,6 +21,7 @@ export default class ExerciseGroup extends Component<IExerciseGroupArgs> {
   } = null;
   @tracked isFlipped = false;
   @tracked inFocus = false;
+  private _loadingStats = false;
   get group() {
     return this.args.group.id;
   }
@@ -28,11 +29,16 @@ export default class ExerciseGroup extends Component<IExerciseGroupArgs> {
     this.inFocus = true;
     if (this.stats) {
       this.isFlipped = true;
-    } else {
-      const stats = await this.loadStats();
-      this.stats = stats;
-      if (this.inFocus && !this.isFlipped) {
-        this.isFlipped = true;
+    } else if (!this._loadingStats) {
+      this._loadingStats = true;
+      try {
+        const stats = await this.loadStats();
+        this.stats = stats;
+        if (this.inFocus && !this.isFlipped) {
+          this.isFlipped = true;
+        }
+      } finally {
+        this._loadingStats = false;
       }
     }
   }

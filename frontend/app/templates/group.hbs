@@ -1,38 +1,40 @@
 {{page-title this.group.name}}
-{{#unless this.headerAndNavShown}}
-  <div class="flex items-center ml-4">
-    <Breadcrumbs />
-  </div>
-{{/unless}}
-{{#unless this.headerAndNavShown}}
-  {{#if
-    (or
-      (is-active "group.series.index")
-      (and (not (is-active "group.series.subgroup.index")) (is-active "group"))
-    )
-  }}
-    <aside
-      class="bg-gradient-to-b from-white sticky top-0 rounded-bl rounded-br"
-      {{! template-lint-disable no-inline-styles }}
-      style="max-width: 80vw;"
-    >
-      <GroupNavigation @group={{this.group}} @series={{this.series}} />
-    </aside>
-  {{/if}}
-  {{#if (is-active "group.series.subgroup.index")}}
-    <aside
-      class="bg-gradient-to-b from-white rounded-bl rounded-br"
-      {{! template-lint-disable no-inline-styles }}
-      style="max-width: 80vw;"
-    >
-      <SubgroupNavigation @group={{model-for-route "group.series"}} />
-    </aside>
-  {{/if}}
-{{/unless}}
-<div
-  class="series-container w-7/8 md:w-5/6 lg:w-3/4 xl:w-3/4 container flex mx-auto"
->
-  <div class="series-page--canvas flex justify-center flex-grow">
-    {{outlet}}
+<div class="flex flex-col flex-grow">
+  {{#unless this.headerAndNavShown}}
+    <div class="flex items-center ml-4">
+      <Breadcrumbs />
+    </div>
+  {{/unless}}
+  {{#unless this.headerAndNavShown}}
+    {{#if
+      (or
+        (is-active "group.series.index")
+        (and (not (is-active "group.series.subgroup.index")) (is-active "group"))
+      )
+    }}
+      <aside
+        class="bg-gradient-to-b from-white sticky top-0 z-10 rounded-bl rounded-br"
+        {{! template-lint-disable no-inline-styles }}
+        style="max-width: 80vw;"
+      >
+        <GroupNavigation @group={{this.group}} @series={{this.series}} />
+      </aside>
+    {{/if}}
+    {{#if (is-active "group.series.subgroup.index")}}
+      <aside
+        class="bg-gradient-to-b from-white sticky top-0 z-10 rounded-bl rounded-br"
+        {{! template-lint-disable no-inline-styles }}
+        style="max-width: 80vw;"
+      >
+        <SubgroupNavigation @group={{model-for-route "group.series"}} />
+      </aside>
+    {{/if}}
+  {{/unless}}
+  <div
+    class="series-container w-7/8 md:w-5/6 lg:w-3/4 xl:w-3/4 container flex mx-auto"
+  >
+    <div class="series-page--canvas flex justify-center flex-grow">
+      {{outlet}}
+    </div>
   </div>
 </div>

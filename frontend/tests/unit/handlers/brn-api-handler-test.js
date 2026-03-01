@@ -738,4 +738,176 @@ module('Unit | Handler | brn-api-handler', function (hooks) {
       assert.strictEqual(result.data[1].id, '2');
     });
   });
+
+  // ─── BELONGS_TO_ID_MAP: "{relName}Id" → belongsTo relationship ───────────
+
+  module('belongsTo ID mapping', function () {
+    test('exercise seriesId becomes series belongsTo relationship', async function (assert) {
+      const handler = new BrnApiHandler({ peekRecord: () => null });
+      const ctx = {
+        request: {
+          op: 'query',
+          data: { type: 'exercise', query: { subGroupId: '5' }, options: {} },
+        },
+      };
+      const result = await handler.request(ctx, async () => ({
+        content: {
+          data: [
+            {
+              id: 10,
+              seriesId: 42,
+              signals: [],
+              tasks: [],
+            },
+          ],
+        },
+      }));
+      assert.deepEqual(
+        result.data[0].relationships.series.data,
+        { id: '42', type: 'series' },
+        'seriesId mapped to series belongsTo',
+      );
+      assert.strictEqual(
+        result.data[0].attributes.seriesId,
+        undefined,
+        'seriesId excluded from attributes',
+      );
+    });
+
+    test('seriesId does not overwrite explicit series relationship', async function (assert) {
+      const handler = new BrnApiHandler({ peekRecord: () => null });
+      const ctx = {
+        request: {
+          op: 'findRecord',
+          data: { record: { type: 'exercise', id: '10' }, options: {} },
+        },
+      };
+      const result = await handler.request(ctx, async () => ({
+        content: {
+          data: {
+            id: 10,
+            series: 99,
+            seriesId: 42,
+            signals: [],
+            tasks: [],
+          },
+        },
+      }));
+      // series key is processed as a relationship directly; seriesId should not overwrite
+      assert.deepEqual(
+        result.data.relationships.series.data,
+        { id: '99', type: 'series' },
+        'explicit series relationship takes precedence over seriesId',
+      );
+    });
+  });
+
+  // ─── MATRIX answerOptions grouping by wordType ─────────────────────────────
+
+  module('MATRIX answerOptions grouping', function () {
+    test('groups flat answerOptions by wordType for words-sequences tasks', async function (assert) {
+      const handler = new BrnApiHandler({ peekRecord: () => null });
+      const ctx = {
+        request: {
+          op: 'findRecord',
+          data: { record: { type: 'exercise', id: '50' }, options: {} },
+        },
+      };
+      const result = await handler.request(ctx, async () => ({
+        content: {
+          data: {
+            id: 50,
+            signals: [],
+            tasks: [
+              {
+                id: 300,
+                exerciseMechanism: 'MATRIX',
+                answerOptions: [
+                  { id: 1, word: 'мама', wordType: 'OBJECT' },
+                  { id: 2, word: 'бабушка', wordType: 'OBJECT' },
+                  { id: 3, word: 'танцует', wordType: 'OBJECT_ACTION' },
+                  { id: 4, word: 'вяжет', wordType: 'OBJECT_ACTION' },
+                ],
+              },
+            ],
+          },
+        },
+      }));
+      const task = result.included[0];
+      assert.strictEqual(task.type, 'task/words-sequences');
+
+      const opts = task.attributes.answerOptions;
+      assert.ok(!Array.isArray(opts), 'answerOptions is grouped object, not array');
+      assert.strictEqual(Object.keys(opts).length, 2, 'two word type groups');
+      assert.strictEqual(opts.OBJECT.length, 2, 'OBJECT has 2 entries');
+      assert.strictEqual(opts.OBJECT_ACTION.length, 2, 'OBJECT_ACTION has 2 entries');
+      assert.strictEqual(opts.OBJECT[0].word, 'мама');
+      assert.strictEqual(opts.OBJECT_ACTION[0].word, 'танцует');
+    });
+
+    test('keeps already-grouped object answerOptions for MATRIX tasks', async function (assert) {
+      const handler = new BrnApiHandler({ peekRecord: () => null });
+      const ctx = {
+        request: {
+          op: 'findRecord',
+          data: { record: { type: 'exercise', id: '50' }, options: {} },
+        },
+      };
+      const result = await handler.request(ctx, async () => ({
+        content: {
+          data: {
+            id: 50,
+            signals: [],
+            tasks: [
+              {
+                id: 400,
+                exerciseMechanism: 'MATRIX',
+                answerOptions: {
+                  SUBJECT: ['cat', 'dog'],
+                  VERB: ['runs', 'sits'],
+                },
+              },
+            ],
+          },
+        },
+      }));
+      const task = result.included[0];
+      const opts = task.attributes.answerOptions;
+      assert.ok(!Array.isArray(opts), 'remains as object');
+      assert.deepEqual(opts.SUBJECT, ['cat', 'dog']);
+      assert.deepEqual(opts.VERB, ['runs', 'sits']);
+    });
+
+    test('WORDS tasks keep answerOptions as flat array', async function (assert) {
+      const handler = new BrnApiHandler({ peekRecord: () => null });
+      const ctx = {
+        request: {
+          op: 'findRecord',
+          data: { record: { type: 'exercise', id: '50' }, options: {} },
+        },
+      };
+      const result = await handler.request(ctx, async () => ({
+        content: {
+          data: {
+            id: 50,
+            signals: [],
+            tasks: [
+              {
+                id: 500,
+                exerciseMechanism: 'WORDS',
+                answerOptions: [
+                  { id: 1, word: 'мама', wordType: 'OBJECT' },
+                  { id: 2, word: 'папа', wordType: 'OBJECT' },
+                ],
+              },
+            ],
+          },
+        },
+      }));
+      const task = result.included[0];
+      assert.strictEqual(task.type, 'task/single-simple-words');
+      assert.ok(Array.isArray(task.attributes.answerOptions), 'WORDS keeps flat array');
+      assert.strictEqual(task.attributes.answerOptions.length, 2);
+    });
+  });
 });

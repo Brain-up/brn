@@ -77,4 +77,33 @@ module('Unit | Schema | task/words-sequences', function (hooks) {
     assert.strictEqual(tasks.length, 1);
     assert.deepEqual(tasks[0], ['x', 'y']);
   });
+
+  test('selectedItemsOrder falls back to exercise.template when task template is empty', function (assert) {
+    const store = this.owner.lookup('service:store');
+    const exercise = store.createRecord('exercise', {
+      template: '<OBJECT OBJECT_ACTION>',
+    });
+    const record = store.createRecord('task/words-sequences', {
+      exercise,
+      // no template on the task itself
+    });
+    assert.deepEqual(
+      record.selectedItemsOrder,
+      ['OBJECT', 'OBJECT_ACTION'],
+      'reads template from exercise when task template is empty',
+    );
+  });
+
+  test('selectedItemsOrder returns empty array when no template anywhere', function (assert) {
+    const store = this.owner.lookup('service:store');
+    const exercise = store.createRecord('exercise', {});
+    const record = store.createRecord('task/words-sequences', {
+      exercise,
+    });
+    assert.deepEqual(
+      record.selectedItemsOrder,
+      [],
+      'returns empty array when no template found',
+    );
+  });
 });

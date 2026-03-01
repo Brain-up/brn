@@ -55,6 +55,10 @@ export default class SingleSimpleWordsComponent extends Component<SingleSimpleWo
   }
   get sortedAnswerOptions() {
     const opts = this.task.answerOptions;
+    // If all options have unassigned columns (-1), skip column sorting entirely
+    if (opts.every((o: AnswerOption) => (o.columnNumber ?? 0) < 0)) {
+      return opts;
+    }
     type Answers = typeof this.task.answerOptions;
     const acc: Record<string, Answers> = {};
     const groupedOptions = opts.reduce((acc: Record<string, Answers>, option: AnswerOption) => {
@@ -95,7 +99,10 @@ export default class SingleSimpleWordsComponent extends Component<SingleSimpleWo
     return results;
   }
   get amountOfColumns() {
-    return this.task.exercise.wordsColumns;
+    const cols = this.task.exercise.wordsColumns;
+    const optCount = this.task.answerOptions?.length ?? 0;
+    // Don't use more columns than there are options
+    return optCount > 0 ? Math.min(cols, optCount) : cols;
   }
   get showTip() {
     if (!this.firstUncompletedTask) {

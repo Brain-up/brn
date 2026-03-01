@@ -84,6 +84,84 @@ module(
 );
 
 module(
+  'Integration | Component | task-player/single-simple-words | column layout',
+  function (hooks) {
+    setupRenderingTest(hooks);
+    setupIntl(hooks, 'en-us');
+
+    test('data-cols matches option count when fewer options than wordsColumns', async function (assert) {
+      const store = this.owner.lookup('service:store');
+      const model = store.createRecord('task/single-simple-words', {
+        ...schemaData(task),
+        answerOptions: [
+          { id: 1, word: 'кот', columnNumber: -1 },
+          { id: 2, word: 'пёс', columnNumber: -1 },
+        ],
+        exercise: store.createRecord('exercise', { wordsColumns: 3 }),
+      });
+      this.set('model', model);
+
+      await render(hbs`
+        <TaskPlayer::SingleSimpleWords @task={{this.model}} @mode="task" />
+      `);
+
+      const option = this.element.querySelector('[data-cols]');
+      assert.strictEqual(
+        option.getAttribute('data-cols'),
+        '2',
+        'data-cols is 2 (min of wordsColumns=3 and 2 options)',
+      );
+    });
+
+    test('data-cols uses wordsColumns when options count is equal or greater', async function (assert) {
+      const store = this.owner.lookup('service:store');
+      const model = store.createRecord('task/single-simple-words', {
+        ...schemaData(task),
+        answerOptions: [
+          { id: 1, word: 'a', columnNumber: -1 },
+          { id: 2, word: 'b', columnNumber: -1 },
+          { id: 3, word: 'c', columnNumber: -1 },
+        ],
+        exercise: store.createRecord('exercise', { wordsColumns: 3 }),
+      });
+      this.set('model', model);
+
+      await render(hbs`
+        <TaskPlayer::SingleSimpleWords @task={{this.model}} @mode="task" />
+      `);
+
+      const option = this.element.querySelector('[data-cols]');
+      assert.strictEqual(
+        option.getAttribute('data-cols'),
+        '3',
+        'data-cols matches wordsColumns when enough options exist',
+      );
+    });
+
+    test('sortedAnswerOptions returns flat array when all columnNumbers are -1', async function (assert) {
+      const store = this.owner.lookup('service:store');
+      const model = store.createRecord('task/single-simple-words', {
+        ...schemaData(task),
+        answerOptions: [
+          { id: 1, word: 'x', columnNumber: -1 },
+          { id: 2, word: 'y', columnNumber: -1 },
+        ],
+        exercise: store.createRecord('exercise', { wordsColumns: 5 }),
+      });
+      this.set('model', model);
+
+      await render(hbs`
+        <TaskPlayer::SingleSimpleWords @task={{this.model}} @mode="task" />
+      `);
+
+      // Both options should render — no console.warn about column mismatch
+      const options = this.element.querySelectorAll('[data-test-task-answer-option]');
+      assert.strictEqual(options.length, 2, 'all options rendered');
+    });
+  },
+);
+
+module(
   'Integration | Component | task-player/single-simple-words | audio source unification',
   function (hooks) {
     setupRenderingTest(hooks);setupIntl(hooks, 'en-us');

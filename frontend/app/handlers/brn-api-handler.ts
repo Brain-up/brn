@@ -81,25 +81,38 @@ const MECHANISM_TO_TYPE: Record<string, string> = {
   WORDS: 'task/single-simple-words',
 };
 
-// Derive RELATIONSHIPS and EXCLUDE_FROM_ATTRS from the schema definitions.
+// Derive RELATIONSHIPS, EXCLUDE_FROM_ATTRS, and BELONGS_TO_ID_MAP from the schema definitions.
 // This eliminates the need to maintain two parallel sources of truth.
 type RelInfo = { type: string; kind: 'belongsTo' | 'hasMany' };
 const RELATIONSHIPS: Record<string, Record<string, RelInfo>> = {};
 const EXCLUDE_FROM_ATTRS: Record<string, Set<string>> = {};
+// Maps "{relName}Id" keys in API payloads to their belongsTo relationship name.
+// e.g. for exercise: { seriesId: 'series' } — so `seriesId: 1` becomes `series: { data: { id: "1", type: "series" } }`
+const BELONGS_TO_ID_MAP: Record<string, Record<string, string>> = {};
 
 for (const schema of ALL_SCHEMAS) {
   const rels: Record<string, RelInfo> = {};
   const excludes = new Set<string>();
+  const idMap: Record<string, string> = {};
   for (const field of schema.fields) {
     if (field.kind === 'belongsTo' || field.kind === 'hasMany') {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       rels[field.name] = { type: field.type!, kind: field.kind };
       excludes.add(field.name);
+      // For belongsTo, also exclude and map the "{name}Id" key
+      if (field.kind === 'belongsTo') {
+        const idKey = `${field.name}Id`;
+        excludes.add(idKey);
+        idMap[idKey] = field.name;
+      }
     }
   }
   if (Object.keys(rels).length > 0) {
     RELATIONSHIPS[schema.type] = rels;
     EXCLUDE_FROM_ATTRS[schema.type] = excludes;
+  }
+  if (Object.keys(idMap).length > 0) {
+    BELONGS_TO_ID_MAP[schema.type] = idMap;
   }
 }
 // series API sends 'subgroups' (lowercase) which maps to 'subGroups' (camelCase)
@@ -233,9 +246,23 @@ function normalizeTask(raw: Record<string, unknown>, exerciseId?: string): JsonA
     attributes[attrName] = value;
   }
 
-  // words-sequences always init wrongAnswers
-  if (type === 'task/words-sequences' && !attributes.wrongAnswers) {
-    attributes.wrongAnswers = [];
+  // words-sequences (MATRIX) tasks need answerOptions grouped by wordType
+  if (type === 'task/words-sequences') {
+    if (!attributes.wrongAnswers) {
+      attributes.wrongAnswers = [];
+    }
+    // If answerOptions is a flat array, group by wordType for the MATRIX component
+    if (Array.isArray(attributes.answerOptions)) {
+      const grouped: Record<string, unknown[]> = {};
+      for (const opt of attributes.answerOptions as { wordType?: string }[]) {
+        const wordType = opt.wordType || 'unknown';
+        if (!grouped[wordType]) {
+          grouped[wordType] = [];
+        }
+        grouped[wordType].push(opt);
+      }
+      attributes.answerOptions = grouped;
+    }
   }
 
   const resource: JsonApiResource = {
@@ -352,7 +379,20 @@ function normalizeRecord(modelType: string, raw: Record<string, unknown>, includ
       continue;
     }
 
-    if (excludes.has(key)) continue;
+    if (excludes.has(key)) {
+      // Check if this is a "{relName}Id" key that should become a belongsTo relationship
+      const idMap = BELONGS_TO_ID_MAP[modelType];
+      if (idMap && key in idMap) {
+        const relName = idMap[key];
+        const relInfo = rels[relName];
+        if (relInfo && relInfo.kind === 'belongsTo' && value != null && !relationships[relName]) {
+          relationships[relName] = {
+            data: { id: String(value), type: relInfo.type },
+          };
+        }
+      }
+      continue;
+    }
 
     // Regular attribute — apply remapping
     const attrName = remap[key] || key;

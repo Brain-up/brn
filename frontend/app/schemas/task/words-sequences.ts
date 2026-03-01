@@ -56,8 +56,12 @@ export const TaskWordsSequencesExtension: CAUTION_MEGA_DANGER_ZONE_Extension = {
     },
 
     get selectedItemsOrder(): string[] {
-      const self = this as unknown as { template: string };
-      return self.template.split('<')[1].split('>')[0].split(' ');
+      const self = this as unknown as { template: string; exercise: { template: string } };
+      // template lives on the exercise, not the task
+      const template = self.template || self.exercise?.template || '';
+      const inner = template.split('<')[1];
+      if (!inner) return [];
+      return inner.split('>')[0].split(' ');
     },
 
     get possibleTasks(): Array<string[]> {
