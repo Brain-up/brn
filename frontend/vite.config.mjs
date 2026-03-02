@@ -51,7 +51,7 @@ export default defineConfig(({ mode: _mode }) => ({
     postcss: {
       plugins: [
         postcssImport({ path: ['node_modules'] }),
-        tailwindcss('./app/styles/tailwind.js'),
+        tailwindcss('./tailwind.config.js'),
       ],
     },
   },
