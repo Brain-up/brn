@@ -2,7 +2,7 @@ import Component from '@glimmer/component';
 import { service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
-import { timeout, task, TaskInstance } from 'ember-concurrency';
+import { timeout, keepLatestTask, TaskInstance } from 'ember-concurrency';
 import { MODES, type Mode } from 'brn/utils/task-modes';
 import { isTesting } from '@embroider/macros';
 import StatsService, { StatEvents } from 'brn/services/stats';
@@ -159,18 +159,18 @@ export default class TaskPlayerComponent extends Component<TaskPlayerSignature> 
     throw new Error(`Unknown task type - ${this.args.task.exerciseMechanism}`);
   }
 
-  @(task(function* (this: TaskPlayerComponent) {
+  listenModeTask = keepLatestTask(async () => {
     try {
       this.mode = MODES.LISTEN;
       for (const option of this.orderedPlaylist) {
         this.activeWord = option.word;
         // tone object case
         if (typeof option.audioFileUrl === 'object' && option.audioFileUrl !== null) {
-          yield this.audio.setAudioElements([option.audioFileUrl]);
+          await this.audio.setAudioElements([option.audioFileUrl]);
         } else {
           const useGeneratedUrl =
             option.audioFileUrl && this.args.task.usePreGeneratedAudio;
-          yield this.audio.setAudioElements([
+          await this.audio.setAudioElements([
             useGeneratedUrl
               // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
               ? option.audioFileUrl!
@@ -178,8 +178,8 @@ export default class TaskPlayerComponent extends Component<TaskPlayerSignature> 
           ]);
         }
 
-        yield this.audio.playAudio();
-        yield timeout(1500);
+        await this.audio.playAudio();
+        await timeout(1500);
         this.activeWord = null;
       }
     } catch (_e) {
@@ -188,8 +188,7 @@ export default class TaskPlayerComponent extends Component<TaskPlayerSignature> 
       this.activeWord = null;
       this.audio.stop();
     }
-  }).keepLatest())
-  listenModeTask!: any;
+  });
 
   maybeStartExercise() {
     if (!this.args.task.exercise?.isStarted) {
@@ -199,19 +198,18 @@ export default class TaskPlayerComponent extends Component<TaskPlayerSignature> 
     this.audio.startNoise();
   }
 
-  @(task(function* (this: TaskPlayerComponent) {
+  taskModeTask = keepLatestTask(async () => {
     try {
       this.mode = MODES.TASK;
-      yield this.audio.startPlayTask();
+      await this.audio.startPlayTask();
     } catch (_e) {
       // EOL
     } finally {
       // EOL
     }
-  }).keepLatest())
-  taskModeTask!: any;
+  });
 
-  @(task(function* (this: TaskPlayerComponent) {
+  interactModeTask = keepLatestTask(async () => {
     try {
       this.mode = MODES.INTERACT;
       while (this.mode === MODES.INTERACT) {
@@ -225,22 +223,22 @@ export default class TaskPlayerComponent extends Component<TaskPlayerSignature> 
           if (option) {
 
             if (typeof option.audioFileUrl === 'object' && option.audioFileUrl !== null) {
-              yield this.audio.setAudioElements([option.audioFileUrl]);
+              await this.audio.setAudioElements([option.audioFileUrl]);
             } else {
               const useGeneratedUrl =
               option.audioFileUrl && this.args.task.usePreGeneratedAudio;
 
-              yield this.audio.setAudioElements([
+              await this.audio.setAudioElements([
                 useGeneratedUrl
                   ? (option.audioFileUrl as string)
                   : this.audio.audioUrlForText(option.wordPronounce),
               ]);
             }
 
-            yield this.audio.playAudio();
+            await this.audio.playAudio();
           }
         }
-        yield timeout(250);
+        await timeout(250);
         this.activeWord = null;
       }
     } catch (_e) {
@@ -250,8 +248,7 @@ export default class TaskPlayerComponent extends Component<TaskPlayerSignature> 
       this.activeWord = null;
       this.textToPlay = null;
     }
-  }).keepLatest())
-  interactModeTask!: any;
+  });
 
   get isProgressBarVisible() {
     return this.mode === 'task';

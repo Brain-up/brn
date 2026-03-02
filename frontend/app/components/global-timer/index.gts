@@ -2,8 +2,7 @@ import Component from '@glimmer/component';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { service } from '@ember/service';
 import NetworkService from '../../services/network';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { task, timeout, type Task } from 'ember-concurrency';
+import { keepLatestTask, timeout } from 'ember-concurrency';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { tracked } from '@glimmer/tracking';
 import { isTesting } from '@embroider/macros';
@@ -57,7 +56,7 @@ export default class GlobalTimerComponent extends Component<GlobalTimerSignature
       return 'bg-pink-secondary';
     }
   }
-  @(task(function* (this: GlobalTimerComponent): Generator<unknown, void, any> {
+  syncTask = keepLatestTask(async () => {
     do {
       try {
         if (!isTesting()) {
@@ -65,10 +64,10 @@ export default class GlobalTimerComponent extends Component<GlobalTimerSignature
             if (!this.network.userData?.userModel) {
               return;
             }
-            const response = yield this.network.request(
+            const response = await this.network.request(
               'study-history/todayTimer',
             );
-            const { data } = yield response.json();
+            const { data } = await response.json();
             this.seconds = data;
           }
         } else {
@@ -77,10 +76,9 @@ export default class GlobalTimerComponent extends Component<GlobalTimerSignature
       } catch {
         // ok
       }
-      yield timeout(10000);
+      await timeout(10000);
     } while (true);
-  }).keepLatest())
-  syncTask!: Task<any, any[]>;
+  });
 
   <template>
     <div class="sm:mr-3 md:mr-4 lg:mr-6 mr-1">

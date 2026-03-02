@@ -8,8 +8,7 @@ import type { Signal as SignalModel } from 'brn/schemas/signal';
 import { service } from '@ember/service';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import StatsService, { StatEvents } from 'brn/services/stats';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { task, Task as TaskGenerator } from 'ember-concurrency';
+import { dropTask } from 'ember-concurrency';
 import AudioService from 'brn/services/audio';
 import didInsert from '@ember/render-modifiers/modifiers/did-insert';
 import { hash } from '@ember/helper';
@@ -62,16 +61,15 @@ export default class TaskPlayerSignalComponent extends Component<TaskPlayerSigna
     // }
   }
 
-  @(task(function* (this: TaskPlayerSignalComponent, isCorrect: boolean) {
+  showTaskResult = dropTask(async (isCorrect: boolean) => {
     if (isCorrect) {
       this.stats.addEvent(StatEvents.RightAnswer);
-      yield this.handleCorrectAnswer();
+      await this.handleCorrectAnswer();
     } else {
       this.stats.addEvent(StatEvents.WrongAnswer);
-      yield this.handleWrongAnswer();
+      await this.handleWrongAnswer();
     }
-  }).drop())
-  showTaskResult!: TaskGenerator<any, any>;
+  });
 
   async handleCorrectAnswer() {
     // await customTimeout(1000);

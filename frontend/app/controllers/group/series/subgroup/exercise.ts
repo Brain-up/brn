@@ -1,9 +1,7 @@
 import Controller from '@ember/controller';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { service } from '@ember/service';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { task, Task } from 'ember-concurrency';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { dropTask } from 'ember-concurrency';
 import customTimeout from 'brn/utils/custom-timeout';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { tracked } from '@glimmer/tracking';
@@ -51,16 +49,12 @@ export default class GroupSeriesSubgroupExerciseController extends Controller {
     return this.modelStats;
   }
 
-  @(task(function* (
-    this: GroupSeriesSubgroupExerciseController,
-    isCorrect = false,
-  ) {
+  runCorrectnessWidgetTimer = dropTask(async (isCorrect = false) => {
     const waitingTime = isCorrect ? 3000 : 2000;
     this.correctnessWidgetIsShown = true;
-    yield customTimeout(waitingTime);
+    await customTimeout(waitingTime);
     this.correctnessWidgetIsShown = false;
-  }).drop())
-  runCorrectnessWidgetTimer!: Task<void, [boolean?]>;
+  });
 
   @action
   async greedOnCompletedExercise() {

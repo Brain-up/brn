@@ -8,7 +8,7 @@ import customTimeout from 'brn/utils/custom-timeout';
 import { urlForAudio } from 'brn/utils/file-url';
 import { TaskItem } from 'brn/utils/task-item';
 import { MODES, type Mode } from 'brn/utils/task-modes';
-import { task, Task as TaskGenerator } from 'ember-concurrency';
+import { dropTask } from 'ember-concurrency';
 import type AudioService from 'brn/services/audio';
 import StatsService, { StatEvents } from 'brn/services/stats';
 import AnswerOption from 'brn/utils/answer-option';
@@ -223,7 +223,7 @@ export default class SingleSimpleWordsComponent extends Component<WordsSequences
     this.tasksCopy = tasksCopy;
   }
 
-  @(task(function* (this: SingleSimpleWordsComponent, selected: string) {
+  showTaskResult = dropTask(async (selected: string) => {
     this.currentAnswer = [...this.currentAnswer, selected].filter(
       (e) => e.length,
     );
@@ -243,15 +243,14 @@ export default class SingleSimpleWordsComponent extends Component<WordsSequences
 
     if (isCorrect) {
       this.stats.addEvent(StatEvents.RightAnswer);
-      yield this.handleCorrectAnswer();
+      await this.handleCorrectAnswer();
     } else {
       this.stats.addEvent(StatEvents.WrongAnswer);
-      yield this.handleWrongAnswer();
+      await this.handleWrongAnswer();
     }
 
     this.currentAnswer = [];
-  }).drop())
-  showTaskResult!: TaskGenerator<any, any>;
+  });
 
   async handleWrongAnswer() {
     this.markNextAttempt(this.firstUncompletedTask as TaskItem);

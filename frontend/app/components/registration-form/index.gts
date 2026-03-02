@@ -1,7 +1,7 @@
 import Component from '@glimmer/component';
 import { service } from '@ember/service';
 import { action } from '@ember/object';
-import { task, Task, timeout } from 'ember-concurrency';
+import { dropTask, timeout } from 'ember-concurrency';
 import { tracked } from '@glimmer/tracking';
 import { getOwner } from '@ember/application';
 import type Router from '@ember/routing/router-service';
@@ -84,16 +84,16 @@ export default class RegistrationFormComponent extends Component {
   }
 
   // loginTask (from LoginFormComponent)
-  @(task(function* (this: RegistrationFormComponent) {
+  loginTask = dropTask(async () => {
     const { login, password } = this;
     try {
-      yield this.session.authenticate(
+      await this.session.authenticate(
         'authenticator:firebase',
         login,
         password,
       );
-      yield timeout(500);
-      yield this.network.loadCurrentUser();
+      await timeout(500);
+      await this.network.loadCurrentUser();
     } catch (error) {
       let key = '';
       if (error.responseJSON) {
@@ -108,14 +108,13 @@ export default class RegistrationFormComponent extends Component {
         this.errorMessage = key;
       }
 
-      yield this.loginTask.cancelAll();
+      await this.loginTask.cancelAll();
     }
 
     if (this.session.isAuthenticated) {
       this.router.transitionTo('index');
     }
-  }).drop())
-  loginTask!: Task<any, any>;
+  });
 
   // --- Own getters ---
   // login getter/setter (overrides parent's tracked `login` property)
@@ -183,7 +182,7 @@ export default class RegistrationFormComponent extends Component {
     );
   }
 
-  @(task(function* (this: RegistrationFormComponent): Generator<unknown, void, any> {
+  registrationTask = dropTask(async () => {
     const user: LatestUserDTO = {
       name: this.firstName.trim(),
       email: this.email,
@@ -196,21 +195,21 @@ export default class RegistrationFormComponent extends Component {
       const auth = getOwner(this)!.lookup(
         'authenticator:firebase',
       ) as FirebaseAuthenticator;
-      yield auth.registerUser(user.email, user.password);
+      await auth.registerUser(user.email, user.password);
     } catch (e) {
       const error = e as Error;
       this.serverErrorMessage = error.message;
-      yield this.registrationTask.cancelAll();
+      await this.registrationTask.cancelAll();
       return;
     }
 
-    yield this.loginTask.perform();
+    await this.loginTask.perform();
 
-    const result = yield this.network.patchUserInfo(user);
+    const result: any = await this.network.patchUserInfo(user);
     if (result.ok) {
       return;
     } else {
-      const error = yield result.json();
+      const error = await result.json();
       const key = error.errors.pop();
       if (this.intl.exists(`msg.validation.${key}`)) {
         this.errorMessage = this.intl.t(`msg.validation.${key}`);
@@ -220,10 +219,9 @@ export default class RegistrationFormComponent extends Component {
             ? this.intl.t(ERRORS_MAP[key as keyof typeof ERRORS_MAP])
             : key;
       }
-      yield this.registrationTask.cancelAll();
+      await this.registrationTask.cancelAll();
     }
-  }).drop())
-  registrationTask!: Task<any, any>;
+  });
 
   @action
   onSubmit(e: SubmitEvent & any) {

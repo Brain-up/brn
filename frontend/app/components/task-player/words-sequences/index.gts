@@ -11,8 +11,7 @@ import { TaskItem } from 'brn/utils/task-item';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { tracked } from '@glimmer/tracking';
 import { MODES, type Mode } from 'brn/utils/task-modes';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { task, Task as TaskGenerator } from 'ember-concurrency';
+import { dropTask } from 'ember-concurrency';
 import type AudioService from 'brn/services/audio';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import StatsService, { StatEvents } from 'brn/services/stats';
@@ -155,10 +154,7 @@ export default class WordsSequencesComponent<
     this.tasksCopy = tasksCopy;
   }
 
-  @(task(function* (
-    this: WordsSequencesComponent,
-    selected: { wordType: string; word: string },
-  ) {
+  showTaskResult = dropTask(async (selected: { wordType: string; word: string }) => {
     this.currentAnswerObject = {
       ...(this.currentAnswerObject || {}),
       [selected.wordType]: selected.word,
@@ -182,14 +178,13 @@ export default class WordsSequencesComponent<
 
       if (isCorrect) {
         this.stats.addEvent(StatEvents.RightAnswer);
-        yield this.handleCorrectAnswer();
+        await this.handleCorrectAnswer();
       } else {
         this.stats.addEvent(StatEvents.WrongAnswer);
-        yield this.handleWrongAnswer();
+        await this.handleWrongAnswer();
       }
     }
-  }).drop())
-  showTaskResult!: TaskGenerator<any, any>;
+  });
 
   @action
   async checkMaybe(selectedData: AnswerOption) {

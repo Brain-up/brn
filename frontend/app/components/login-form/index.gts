@@ -2,7 +2,7 @@ import Component from '@glimmer/component';
 import { service } from '@ember/service';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
-import { Task, task, timeout } from 'ember-concurrency';
+import { dropTask, timeout } from 'ember-concurrency';
 import Router from '@ember/routing/router-service';
 import Session from 'ember-simple-auth/services/session';
 import IntlService from 'ember-intl/services/intl';
@@ -66,16 +66,16 @@ export default class LoginFormComponent extends Component {
     return (value || '').trim();
   }
 
-  @(task(function* (this: LoginFormComponent) {
+  loginTask = dropTask(async () => {
     const { login, password } = this;
     try {
-      yield this.session.authenticate(
+      await this.session.authenticate(
         'authenticator:firebase',
         login,
         password,
       );
-      yield timeout(500);
-      yield this.network.loadCurrentUser();
+      await timeout(500);
+      await this.network.loadCurrentUser();
     } catch (error) {
       let key = '';
       if (error.responseJSON) {
@@ -90,15 +90,14 @@ export default class LoginFormComponent extends Component {
         this.errorMessage = key;
       }
 
-      yield this.loginTask.cancelAll();
+      await this.loginTask.cancelAll();
     }
 
     if (this.session.isAuthenticated) {
       this.router.transitionTo('index');
       // What to do with all this success?
     }
-  }).drop())
-  loginTask!: Task<any, any>;
+  });
 
   @action
   onSubmit(e: Event) {

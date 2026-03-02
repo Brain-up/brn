@@ -7,8 +7,7 @@ import { service } from '@ember/service';
 import { DateTime } from 'luxon';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { tracked } from '@glimmer/tracking';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { task, type Task } from 'ember-concurrency';
+import { dropTask } from 'ember-concurrency';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { action } from '@ember/object';
 import type Store from 'brn/services/store';
@@ -39,14 +38,13 @@ export default class StatisticsComponent extends Component<StatisticsSignature> 
   @tracked monthTimeTrackData: UserYearlyStatisticsModel[] | null = null;
   @tracked isShownStatisticsInfoDialog = false;
 
-  //eslint-disable-next-line
-  @(task(function* (this: StatisticsComponent) {
+  getWeekTimeTrackData = dropTask(async () => {
     const fromMonth: DateTime = this.selectedMonth.startOf('month');
     const toMonth: DateTime = this.selectedMonth.endOf('month');
     this.isLoadingWeekTimeTrackData = true;
 
     try {
-      this.weekTimeTrackData = yield this.store.query<UserWeeklyStatisticsModel>(
+      this.weekTimeTrackData = await this.store.query<UserWeeklyStatisticsModel>(
         'user-weekly-statistics',
         {
           from: fromMonth,
@@ -57,17 +55,15 @@ export default class StatisticsComponent extends Component<StatisticsSignature> 
       console.error(error);
     }
     this.isLoadingWeekTimeTrackData = false;
-  }).drop())
-  getWeekTimeTrackData!: Task<any, any[]>;
+  });
 
-  //eslint-disable-next-line
-  @(task(function* (this: StatisticsComponent) {
+  getMonthTimeTrackData = dropTask(async () => {
     const fromYear: DateTime = this.selectedMonth.startOf('year');
     const toYear: DateTime = this.selectedMonth.endOf('year');
     this.isLoadingMonthTimeTrackData = true;
 
     try {
-      this.monthTimeTrackData = yield this.store.query<UserYearlyStatisticsModel>(
+      this.monthTimeTrackData = await this.store.query<UserYearlyStatisticsModel>(
         'user-yearly-statistics',
         {
           from: fromYear,
@@ -89,8 +85,7 @@ export default class StatisticsComponent extends Component<StatisticsSignature> 
     }
     this.selectedMonth = lastMonth;
     this.getWeekTimeTrackData.perform();
-  }).drop())
-  getMonthTimeTrackData!: Task<any, any[]>;
+  });
 
   @action
   onInit(): void {
