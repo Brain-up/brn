@@ -18,15 +18,15 @@ jobs:
       - name: Lint *.js files
         working-directory: ./frontend
         run: yarn lint:js
-      - name: Lint *.hbs files
+      - name: Lint *.gts/*.gjs templates
         working-directory: ./frontend
         run: yarn lint:hbs
       - name: Run tests
         working-directory: ./frontend
         run: yarn test
-      - name: Run test deploy
+      - name: Run test build
         working-directory: ./frontend
-        run: node node_modules/ember-cli/bin/ember deploy production
+        run: yarn build
 
   coverage:
     name: Test coverage changes

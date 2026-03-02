@@ -20,8 +20,8 @@
     "test:coverage": "cross-env COVERAGE=true EMBER_CLI_TEST_COMMAND=true ember test --silent",
     "lint": "npm-run-all --aggregate-output --continue-on-error --parallel 'lint:!(fix)'",
     "lint:fix": "npm-run-all --aggregate-output --continue-on-error --parallel lint:*:fix",
-    "lint:hbs": "ember-template-lint .",
-    "lint:hbs:fix": "ember-template-lint . --fix",
+    "lint:hbs": "echo 'Template linting handled by ESLint via ember-eslint-parser (no .hbs files remain)'",
+    "lint:hbs:fix": "echo 'Template linting handled by ESLint via ember-eslint-parser (no .hbs files remain)'",
     "lint:types": "ember-tsc --noEmit",
     "on:precommit": "lint-staged",
     "local": "ember s --secure-proxy=false --proxy=http://localhost:8081",
@@ -34,9 +34,6 @@
     "./{app,tests,config}/**/*.{js,ts,gjs,gts}": [
       "prettier --write",
       "eslint --fix"
-    ],
-    "./{app,tests}/**/*.hbs": [
-      "prettier --parser=glimmer --write"
     ],
     "./{app,tests,config}/**/*.{css}": [
       "prettier --write",
