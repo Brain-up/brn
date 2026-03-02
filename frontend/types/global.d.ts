@@ -75,6 +75,38 @@ declare module 'ember-simple-auth/authenticators/oauth2-password-grant' {
 }
 
 
+declare module 'ember-ref-bucket/modifiers/create-ref' {
+  import type { ModifierLike } from '@glint/template';
+  const createRef: ModifierLike<{
+    Args: {
+      Named: Record<string, unknown>;
+      Positional: [string];
+    };
+    Element: Element;
+  }>;
+  export default createRef;
+}
+
+declare module 'ember-modal-dialog/components/modal-dialog' {
+  import Component from '@glimmer/component';
+  interface ModalDialogSignature {
+    Args: {
+      onClose?: () => void;
+      overlayClass?: string;
+      containerClass?: string;
+      wrapperClass?: string;
+      targetAttachment?: string;
+      translucentOverlay?: boolean;
+      [key: string]: unknown;
+    };
+    Blocks: {
+      default: [];
+    };
+    Element: HTMLDivElement;
+  }
+  export default class ModalDialog extends Component<ModalDialogSignature> {}
+}
+
 declare module 'sinon' {
   const sinon: any;
   export default sinon;

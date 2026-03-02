@@ -3,7 +3,7 @@ import Route from '@ember/routing/route';
 import { service } from '@ember/service';
 import type { Exercise } from 'brn/schemas/exercise';
 import type { TaskBase as Task } from 'brn/schemas/task';
-import type Transition from '@ember/routing/-private/transition';
+import type Transition from '@ember/routing/transition';
 import type TasksManagerService from 'brn/services/tasks-manager';
 import type NetworkService from 'brn/services/network';
 import { isTesting } from '@embroider/macros';

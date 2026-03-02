@@ -1,7 +1,7 @@
 import Route from '@ember/routing/route';
 import type { Group as GroupModel } from 'brn/schemas/group';
 import type { Series as SeriesModel } from 'brn/schemas/series';
-import type Transition from '@ember/routing/-private/transition';
+import type Transition from '@ember/routing/transition';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { service } from '@ember/service';
 import type NetworkService from 'brn/services/network';
