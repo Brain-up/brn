@@ -44,6 +44,12 @@ export default defineConfig(({ mode: _mode }) => ({
   },
   build: {
     rollupOptions: {
+      // v1 addons that use require() or have broken ESM exports.
+      // These only run in tests and are handled by Embroider's compat layer at runtime.
+      external: [
+        /node_modules\/ember-cli-mirage\//,
+        /node_modules\/ember-cli-page-object\//,
+      ],
       output: {
         // Exclude ffmpeg assets from fingerprinting
         assetFileNames(assetInfo) {
