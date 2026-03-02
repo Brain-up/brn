@@ -1,6 +1,7 @@
 import { module, test } from 'qunit';
 import { setupIntl } from 'ember-intl/test-support';import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
+import UiTaskContent from 'brn/components/ui/task-content';
 
 module('Integration | Component | ui/task-content', function (hooks) {
   setupRenderingTest(hooks);setupIntl(hooks, 'en-us');
@@ -9,14 +10,14 @@ module('Integration | Component | ui/task-content', function (hooks) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
 
-    await render(<template><Ui::TaskContent /></template>);
+    await render(<template><UiTaskContent /></template>);
 
     assert.equal(this.element.textContent.trim(), '');
 
     // Template block usage:
-    await render(<template><Ui::TaskContent>
+    await render(<template><UiTaskContent>
     template block text
-    </Ui::TaskContent></template>);
+    </UiTaskContent></template>);
 
     assert.equal(this.element.textContent.trim(), 'template block text');
   });

@@ -1,6 +1,7 @@
 import { module, test } from 'qunit';
 import { setupIntl } from 'ember-intl/test-support';import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
+import LegalUserAgreement from 'brn/components/legal/user-agreement';
 
 module('Integration | Component | legal/user-agreement', function (hooks) {
   setupRenderingTest(hooks);setupIntl(hooks, 'en-us');
@@ -9,7 +10,7 @@ module('Integration | Component | legal/user-agreement', function (hooks) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
 
-    await render(<template><Legal::UserAgreement /></template>);
+    await render(<template><LegalUserAgreement /></template>);
 
     assert.dom('div').exists();
   });

@@ -4,6 +4,7 @@ import { setupIntl } from 'ember-intl/test-support';import { setupRenderingTest 
 import { render } from '@ember/test-helpers';
 import { PROGRESS } from 'brn/schemas/user-weekly-statistics-types';
 import { DateTime } from 'luxon';
+import StatisticsMonthTimeTrackItem from 'brn/components/statistics/month-time-track-item';
 
 module(
   'Integration | Component | statistics/month-time-track-item',
@@ -32,7 +33,7 @@ module(
 
 
       await render(
-        <template><Statistics::MonthTimeTrackItem @data={{self.itemData}} /></template>
+        <template><StatisticsMonthTimeTrackItem @data={{self.itemData}} /></template>
       );
 
       assert
@@ -69,7 +70,7 @@ module(
 
 
 
-      await render(<template><Statistics::MonthTimeTrackItem @data={{self.itemData}}
+      await render(<template><StatisticsMonthTimeTrackItem @data={{self.itemData}}
       @isSelected={{self.isSelected}} /></template>);
 
       assert

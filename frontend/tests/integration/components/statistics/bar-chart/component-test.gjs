@@ -1,6 +1,7 @@
 import { module, test } from 'qunit';
 import { setupIntl } from 'ember-intl/test-support';import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
+import StatisticsBarChart from 'brn/components/statistics/bar-chart';
 
 module('Integration | Component | statistics/bar-chart', function (hooks) {
   setupRenderingTest(hooks);setupIntl(hooks, 'en-us');
@@ -18,7 +19,7 @@ module('Integration | Component | statistics/bar-chart', function (hooks) {
 
 
     await render(
-      <template><Statistics::BarChart @data={{self.data}} @options={{self.options}} /></template>
+      <template><StatisticsBarChart @data={{self.data}} @options={{self.options}} /></template>
     );
 
     assert.dom('#chart').exists();

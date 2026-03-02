@@ -8,6 +8,7 @@ import { PROGRESS } from 'brn/schemas/user-weekly-statistics-types';
 import sinon from 'sinon';
 import click from '@ember/test-helpers/dom/click';
 import { type Store } from '@warp-drive/core';
+import StatisticsMonthTimeTrack from 'brn/components/statistics/month-time-track';
 
 const generateTrackData = (
   store: Store,
@@ -68,7 +69,7 @@ module(
 
 
 
-      await render(<template><Statistics::MonthTimeTrack
+      await render(<template><StatisticsMonthTimeTrack
       @isLoading={{self.isLoadingMonthTimeTrackData}}
       @selectedMonth={{self.selectedMonth}}
       @data={{self.rawMonthTimeTrackData}}
@@ -121,7 +122,7 @@ module(
 
 
 
-      await render(<template><Statistics::MonthTimeTrack
+      await render(<template><StatisticsMonthTimeTrack
       @isLoading={{self.isLoadingMonthTimeTrackData}}
       @selectedMonth={{self.selectedMonth}}
       @data={{self.rawMonthTimeTrackData}}
@@ -168,7 +169,7 @@ module(
 
 
 
-      await render(<template><Statistics::MonthTimeTrack
+      await render(<template><StatisticsMonthTimeTrack
       @isLoading={{self.isLoadingMonthTimeTrackData}}
       @selectedMonth={{self.selectedMonth}}
       @data={{self.rawMonthTimeTrackData}}
@@ -212,7 +213,7 @@ module(
 
 
 
-      await render(<template><Statistics::MonthTimeTrack
+      await render(<template><StatisticsMonthTimeTrack
       @isLoading={{self.isLoadingMonthTimeTrackData}}
       @selectedMonth={{self.selectedMonth}}
       @data={{self.rawMonthTimeTrackData}}
@@ -243,7 +244,7 @@ module(
 
 
 
-      await render(<template><Statistics::MonthTimeTrack
+      await render(<template><StatisticsMonthTimeTrack
       @isLoading={{self.isLoadingMonthTimeTrackData}}
       @selectedMonth={{self.selectedMonth}}
       @data={{self.rawMonthTimeTrackData}}

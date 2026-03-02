@@ -2,6 +2,7 @@ import { module, test } from 'qunit';
 import { setupIntl } from 'ember-intl/test-support';import { setupRenderingTest } from 'ember-qunit';
 import { render, typeIn } from '@ember/test-helpers';
 import { tracked } from '@glimmer/tracking';
+import LoginFormInput from 'brn/components/login-form/input';
 
 function getNumSymbols(num) {
   num = num - 1;
@@ -20,7 +21,7 @@ module('Integration | Component | login-form/input', function (hooks) {
 
 
     await render(
-        <template>{{!-- @ts-nocheck --}}<LoginForm::Input @model={{self.model}} @name={{self.name}} @type="text" @label="Foo" /></template>
+        <template>{{!-- @ts-nocheck --}}<LoginFormInput @model={{self.model}} @name={{self.name}} @type="text" @label="Foo" /></template>
     );
 
     assert.dom('input').exists();
@@ -36,7 +37,7 @@ module('Integration | Component | login-form/input', function (hooks) {
 
 
     await render(
-        <template>{{!-- @ts-nocheck --}}<LoginForm::Input @model={{self.model}} @name={{self.name}} @type="text" /></template>
+        <template>{{!-- @ts-nocheck --}}<LoginFormInput @model={{self.model}} @name={{self.name}} @type="text" /></template>
     );
 
     assert.dom('input').exists();
@@ -52,7 +53,7 @@ module('Integration | Component | login-form/input', function (hooks) {
 
 
     await render(
-        <template>{{!-- @ts-nocheck --}}<LoginForm::Input @model={{self.model}} @name={{self.name}} @type="text" @label="Foo" /></template>
+        <template>{{!-- @ts-nocheck --}}<LoginFormInput @model={{self.model}} @name={{self.name}} @type="text" @label="Foo" /></template>
     );
 
     assert.dom('.border-red-500').exists();
@@ -67,7 +68,7 @@ module('Integration | Component | login-form/input', function (hooks) {
 
 
     await render(
-        <template>{{!-- @ts-nocheck --}}<LoginForm::Input @model={{self.model}} @name={{self.name}} @type="text" @label="Foo" /></template>
+        <template>{{!-- @ts-nocheck --}}<LoginFormInput @model={{self.model}} @name={{self.name}} @type="text" @label="Foo" /></template>
     );
 
     await typeIn('input', ' hello ');
@@ -83,7 +84,7 @@ module('Integration | Component | login-form/input', function (hooks) {
 
 
     await render(
-        <template>{{!-- @ts-nocheck --}}<LoginForm::Input @model={{self.model}} @name={{self.name}} @type="text" @label="Foo" /></template>
+        <template>{{!-- @ts-nocheck --}}<LoginFormInput @model={{self.model}} @name={{self.name}} @type="text" @label="Foo" /></template>
     );
 
     await typeIn('input', getNumSymbols(50));
@@ -103,7 +104,7 @@ module('Integration | Component | login-form/input', function (hooks) {
 
 
     await render(
-        <template>{{!-- @ts-nocheck --}}<LoginForm::Input @model={{self.model}} @name={{self.name}} @type="text" @label="Foo" /></template>
+        <template>{{!-- @ts-nocheck --}}<LoginFormInput @model={{self.model}} @name={{self.name}} @type="text" @label="Foo" /></template>
     );
 
     await typeIn('input', getNumSymbols(51));
@@ -123,7 +124,7 @@ module('Integration | Component | login-form/input', function (hooks) {
 
 
     await render(
-        <template>{{!-- @ts-nocheck --}}<LoginForm::Input @model={{self.model}} @name={{self.name}} @type="text" @label="Foo" /></template>
+        <template>{{!-- @ts-nocheck --}}<LoginFormInput @model={{self.model}} @name={{self.name}} @type="text" @label="Foo" /></template>
     );
 
     await typeIn('input', getNumSymbols(50));
@@ -143,7 +144,7 @@ module('Integration | Component | login-form/input', function (hooks) {
 
 
     await render(
-        <template>{{!-- @ts-nocheck --}}<LoginForm::Input @model={{self.model}} @name={{self.name}} @type="text" @label="Foo" /></template>
+        <template>{{!-- @ts-nocheck --}}<LoginFormInput @model={{self.model}} @name={{self.name}} @type="text" @label="Foo" /></template>
     );
 
     assert.dom('[data-test-warning-message]').doesNotExist();
@@ -158,7 +159,7 @@ module('Integration | Component | login-form/input', function (hooks) {
 
 
     await render(
-        <template>{{!-- @ts-nocheck --}}<LoginForm::Input @model={{self.model}} @name={{self.name}} @type="text" @label="Foo" /></template>
+        <template>{{!-- @ts-nocheck --}}<LoginFormInput @model={{self.model}} @name={{self.name}} @type="text" @label="Foo" /></template>
     );
 
     assert.dom('[data-test-warning-message]').exists();
@@ -173,7 +174,7 @@ module('Integration | Component | login-form/input', function (hooks) {
 
 
     await render(
-        <template>{{!-- @ts-nocheck --}}<LoginForm::Input @model={{self.model}} @name={{self.name}} @type="text" @label="Foo" /></template>
+        <template>{{!-- @ts-nocheck --}}<LoginFormInput @model={{self.model}} @name={{self.name}} @type="text" @label="Foo" /></template>
     );
 
     assert.dom('[data-test-warning-message]').exists();
@@ -188,7 +189,7 @@ module('Integration | Component | login-form/input', function (hooks) {
 
 
     await render(
-        <template>{{!-- @ts-nocheck --}}<LoginForm::Input @model={{self.model}} @name={{self.name}} @type="text" @label="Foo" /></template>
+        <template>{{!-- @ts-nocheck --}}<LoginFormInput @model={{self.model}} @name={{self.name}} @type="text" @label="Foo" /></template>
     );
 
     assert.dom('[data-test-warning-message]').doesNotExist();
@@ -196,7 +197,7 @@ module('Integration | Component | login-form/input', function (hooks) {
 
   test('if the attribute warning`s exists show warning', async function (assert) {
     await render(
-        <template>{{!-- @ts-nocheck --}}<LoginForm::Input @name="warning" @warning="Foo" @type="text" @label="Foo" /></template>
+        <template>{{!-- @ts-nocheck --}}<LoginFormInput @name="warning" @warning="Foo" @type="text" @label="Foo" /></template>
     );
 
     assert.dom('[data-test-warning-message="warning"]').hasText('Foo');

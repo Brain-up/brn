@@ -5,6 +5,8 @@ import hbs from 'htmlbars-inline-precompile';
 import data from './test-support/data-storage';
 import pageObject from './test-support/page-object';
 import AudioService from 'brn/services/audio';
+import TaskPlayer from 'brn/components/task-player';
+import TaskPlayerWordsSequences from 'brn/components/task-player/words-sequences';
 
 module('Integration | Component | words-seq-task-player', function (hooks) {
   setupRenderingTest(hooks);setupIntl(hooks, 'en-us');
@@ -80,7 +82,7 @@ module('Integration | Component | words-seq-task-player | per-word correctness',
 
 
 
-    await render(<template><TaskPlayer::WordsSequences
+    await render(<template><TaskPlayerWordsSequences
     @task={{self.model}}
     @mode="task"
     @onRightAnswer={{self.onRightAnswer}}
@@ -168,7 +170,7 @@ module('Integration | Component | words-seq-task-player | progress stability on 
 
 
 
-    await render(<template><TaskPlayer::WordsSequences
+    await render(<template><TaskPlayerWordsSequences
     @task={{self.model}}
     @mode="task"
     @onRightAnswer={{self.onRightAnswer}}
@@ -178,7 +180,7 @@ module('Integration | Component | words-seq-task-player | progress stability on 
     <:header as |data|>
     <span data-test-tasks-count>{{data.tasks.length}}</span>
     </:header>
-    </TaskPlayer::WordsSequences></template>);
+    </TaskPlayerWordsSequences></template>);
 
     // Record initial state
     const initialTasksCount = document.querySelector('[data-test-tasks-count]').textContent.trim();

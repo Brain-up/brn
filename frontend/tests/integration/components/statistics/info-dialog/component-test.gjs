@@ -4,6 +4,7 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import sinon from 'sinon';
 import click from '@ember/test-helpers/dom/click';
+import StatisticsInfoDialog from 'brn/components/statistics/info-dialog';
 
 module('Integration | Component | statistics/info-dialog', function (hooks) {
   setupRenderingTest(hooks);
@@ -19,7 +20,7 @@ module('Integration | Component | statistics/info-dialog', function (hooks) {
 
 
     await render(
-        <template><Statistics::InfoDialog @closeModalAction={{self.closeModalAction}} /></template>
+        <template><StatisticsInfoDialog @closeModalAction={{self.closeModalAction}} /></template>
     );
     assert.dom('[data-test-info-dialog]').exists();
     await click('[data-test-button-ok]');
@@ -38,7 +39,7 @@ module('Integration | Component | statistics/info-dialog', function (hooks) {
 
 
     await render(
-        <template><Statistics::InfoDialog @closeModalAction={{self.closeModalAction}} /></template>
+        <template><StatisticsInfoDialog @closeModalAction={{self.closeModalAction}} /></template>
     );
     assert
       .dom('[data-test-info-image]')
@@ -58,7 +59,7 @@ module('Integration | Component | statistics/info-dialog', function (hooks) {
 
 
       await render(
-          <template><Statistics::InfoDialog @closeModalAction={{self.closeModalAction}} /></template>
+          <template><StatisticsInfoDialog @closeModalAction={{self.closeModalAction}} /></template>
       );
       assert
         .dom('[data-test-info-image]')

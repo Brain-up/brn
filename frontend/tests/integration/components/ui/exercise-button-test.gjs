@@ -1,6 +1,7 @@
 import { module, test } from 'qunit';
 import { setupIntl } from 'ember-intl/test-support';import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
+import UiExerciseButton from 'brn/components/ui/exercise-button';
 
 module('Integration | Component | ui/exercise-button', function (hooks) {
   setupRenderingTest(hooks);setupIntl(hooks, 'en-us');
@@ -18,7 +19,7 @@ module('Integration | Component | ui/exercise-button', function (hooks) {
 
 
 
-    await render(<template><Ui::ExerciseButton @exercise={{self.exercise}} /></template>);
+    await render(<template><UiExerciseButton @exercise={{self.exercise}} /></template>);
 
     assert.dom('.completed').exists();
   });

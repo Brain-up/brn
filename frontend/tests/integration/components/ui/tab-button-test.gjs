@@ -1,6 +1,7 @@
 import { module, test } from 'qunit';
 import { setupIntl } from 'ember-intl/test-support';import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
+import UiTabButton from 'brn/components/ui/tab-button';
 
 module('Integration | Component | ui/tab-button', function (hooks) {
   setupRenderingTest(hooks);setupIntl(hooks, 'en-us');
@@ -9,14 +10,14 @@ module('Integration | Component | ui/tab-button', function (hooks) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
 
-    await render(<template><Ui::Tab-Button @title="foo"/></template>);
+    await render(<template><UiTabButton @title="foo"/></template>);
 
     assert.equal(this.element.textContent.trim(), 'foo');
 
     // Template block usage:
-    await render(<template><Ui::Tab-Button @title="foo">
+    await render(<template><UiTabButton @title="foo">
     template block text
-    </Ui::Tab-Button></template>);
+    </UiTabButton></template>);
 
     assert.equal(this.element.textContent.trim(), 'template block text');
   });

@@ -3,6 +3,7 @@ import { setupIntl } from 'ember-intl/test-support';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import AudioService from 'brn/services/audio';
+import TaskPlayerSignal from 'brn/components/task-player/signal';
 
 function makeAnswerOption(word, signalId, duration, frequency) {
   return {
@@ -42,7 +43,7 @@ module('Integration | Component | task-player/signal', function (hooks) {
 
 
 
-    await render(<template><TaskPlayer::Signal
+    await render(<template><TaskPlayerSignal
     @task={{self.task}}
     @mode="task"
     @onPlayText={{self.noop}}
@@ -72,7 +73,7 @@ module('Integration | Component | task-player/signal', function (hooks) {
 
 
 
-    await render(<template><TaskPlayer::Signal
+    await render(<template><TaskPlayerSignal
     @task={{self.task}}
     @mode="task"
     @disableAnswers={{true}}
@@ -104,7 +105,7 @@ module('Integration | Component | task-player/signal', function (hooks) {
 
 
 
-    await render(<template><TaskPlayer::Signal
+    await render(<template><TaskPlayerSignal
     @task={{self.task}}
     @mode="task"
     @onPlayText={{self.noop}}

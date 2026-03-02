@@ -4,6 +4,7 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render, find, findAll } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import AudioService from 'brn/services/audio';
+import TaskPlayerWordsSequences from 'brn/components/task-player/words-sequences';
 
 module(
   'Integration | Component | words-sequences | mobile layout (#2717)',
@@ -78,7 +79,7 @@ module(
 
 
 
-      await render(<template><TaskPlayer::WordsSequences
+      await render(<template><TaskPlayerWordsSequences
       @task={{self.model}}
       @mode="task"
       @onRightAnswer={{self.onRightAnswer}}
@@ -99,7 +100,7 @@ module(
 
 
 
-      await render(<template><TaskPlayer::WordsSequences
+      await render(<template><TaskPlayerWordsSequences
       @task={{self.model}}
       @mode="task"
       @onRightAnswer={{self.onRightAnswer}}
@@ -129,7 +130,7 @@ module(
 
 
 
-      await render(<template><TaskPlayer::WordsSequences
+      await render(<template><TaskPlayerWordsSequences
       @task={{self.model}}
       @mode="task"
       @onRightAnswer={{self.onRightAnswer}}
@@ -159,7 +160,7 @@ module(
 
 
 
-      await render(<template><TaskPlayer::WordsSequences
+      await render(<template><TaskPlayerWordsSequences
       @task={{self.model}}
       @mode="task"
       @onRightAnswer={{self.onRightAnswer}}
@@ -259,7 +260,7 @@ module(
 
 
 
-      await render(<template><TaskPlayer::WordsSequences
+      await render(<template><TaskPlayerWordsSequences
       @task={{self.model}}
       @mode="task"
       @onRightAnswer={{self.onRightAnswer}}

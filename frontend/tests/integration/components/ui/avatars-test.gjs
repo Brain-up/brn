@@ -1,6 +1,7 @@
 import { module, test } from 'qunit';
 import { setupIntl } from 'ember-intl/test-support';import { setupRenderingTest } from 'ember-qunit';
 import { render, click } from '@ember/test-helpers';
+import UiAvatars from 'brn/components/ui/avatars';
 
 module('Integration | Component | ui/avatars', function (hooks) {
   setupRenderingTest(hooks);setupIntl(hooks, 'en-us');
@@ -17,7 +18,7 @@ module('Integration | Component | ui/avatars', function (hooks) {
 
 
     await render(
-      <template><Ui::Avatars @selectedAvatar={{self.selectedAvatar}} @onCancel={{self.onCancel}} @onSubmit={{self.onAvatarSubmit}} /></template>
+      <template><UiAvatars @selectedAvatar={{self.selectedAvatar}} @onCancel={{self.onCancel}} @onSubmit={{self.onAvatarSubmit}} /></template>
     );
 
     assert.dom('img').exists({ count: 20 });

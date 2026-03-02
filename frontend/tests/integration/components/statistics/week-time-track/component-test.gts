@@ -3,6 +3,7 @@ import { module, test } from 'qunit';
 import { setupIntl } from 'ember-intl/test-support';import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import { DateTime } from 'luxon';
+import StatisticsWeekTimeTrack from 'brn/components/statistics/week-time-track';
 
 module(
   'Integration | Component | statistics/week-time-track',
@@ -35,7 +36,7 @@ module(
 
 
 
-      await render(<template><Statistics::WeekTimeTrack
+      await render(<template><StatisticsWeekTimeTrack
       @isLoading={{self.isLoadingWeekTimeTrackData}}
       @selectedMonth={{self.selectedMonth}}
       @data={{self.rawWeekTimeTrackData}}
@@ -62,7 +63,7 @@ module(
 
 
 
-      await render(<template><Statistics::WeekTimeTrack
+      await render(<template><StatisticsWeekTimeTrack
       @isLoading={{self.isLoadingWeekTimeTrackData}}
       @selectedMonth={{self.selectedMonth}}
       @data={{self.rawWeekTimeTrackData}}

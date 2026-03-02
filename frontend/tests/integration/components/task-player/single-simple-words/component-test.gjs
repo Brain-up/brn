@@ -5,6 +5,7 @@ import { render } from '@ember/test-helpers';
 import { task, taskWithPreGeneratedAudio } from './test-support/data-storage';
 import AudioService from 'brn/services/audio';
 import { chooseAnswer } from './test-support/helper';
+import TaskPlayerSingleSimpleWords from 'brn/components/task-player/single-simple-words';
 
 // Strip fields that SchemaRecord rejects (reserved 'type', non-schema 'wrongAnswers')
 function schemaData(obj) {
@@ -43,7 +44,7 @@ module(
 
 
       await render(
-        <template><TaskPlayer::SingleSimpleWords @task={{self.model}} @mode="task" /></template>
+        <template><TaskPlayerSingleSimpleWords @task={{self.model}} @mode="task" /></template>
       );
 
       assert.dom('[data-test-task-answer-option="вить"]').exists();
@@ -72,7 +73,7 @@ module(
 
 
       await render(
-        <template><TaskPlayer::SingleSimpleWords @onWrongAnswer={{self.onWrongAnswer}} @onRightAnswer={{self.onRightAnswer}} @task={{self.model}} @mode="task" @studyingTimer={{self.mockTimerService}} /></template>
+        <template><TaskPlayerSingleSimpleWords @onWrongAnswer={{self.onWrongAnswer}} @onRightAnswer={{self.onRightAnswer}} @task={{self.model}} @mode="task" @studyingTimer={{self.mockTimerService}} /></template>
       );
 
       assert.equal(counter, 1);
@@ -116,7 +117,7 @@ module(
 
 
       await render(
-        <template><TaskPlayer::SingleSimpleWords @task={{self.model}} @mode="task" /></template>
+        <template><TaskPlayerSingleSimpleWords @task={{self.model}} @mode="task" /></template>
       );
 
       const option = this.element.querySelector('[data-cols]');
@@ -146,7 +147,7 @@ module(
 
 
       await render(
-        <template><TaskPlayer::SingleSimpleWords @task={{self.model}} @mode="task" /></template>
+        <template><TaskPlayerSingleSimpleWords @task={{self.model}} @mode="task" /></template>
       );
 
       const option = this.element.querySelector('[data-cols]');
@@ -175,7 +176,7 @@ module(
 
 
       await render(
-        <template><TaskPlayer::SingleSimpleWords @task={{self.model}} @mode="task" /></template>
+        <template><TaskPlayerSingleSimpleWords @task={{self.model}} @mode="task" /></template>
       );
 
       // Both options should render — no console.warn about column mismatch
@@ -217,7 +218,7 @@ module(
 
 
 
-      await render(<template><TaskPlayer::SingleSimpleWords
+      await render(<template><TaskPlayerSingleSimpleWords
       @onWrongAnswer={{self.onWrongAnswer}}
       @onRightAnswer={{self.onRightAnswer}}
       @task={{self.model}}
@@ -262,7 +263,7 @@ module(
 
 
 
-      await render(<template><TaskPlayer::SingleSimpleWords
+      await render(<template><TaskPlayerSingleSimpleWords
       @onWrongAnswer={{self.onWrongAnswer}}
       @onRightAnswer={{self.onRightAnswer}}
       @task={{self.model}}

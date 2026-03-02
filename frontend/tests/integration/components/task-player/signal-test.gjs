@@ -1,6 +1,7 @@
 import { module, test } from 'qunit';
 import { setupIntl } from 'ember-intl/test-support';import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
+import TaskPlayerSignal from 'brn/components/task-player/signal';
 
 module('Integration | Component | task-player/signal', function (hooks) {
   setupRenderingTest(hooks);setupIntl(hooks, 'en-us');
@@ -9,7 +10,7 @@ module('Integration | Component | task-player/signal', function (hooks) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
 
-    await render(<template><TaskPlayer::Signal /></template>);
+    await render(<template><TaskPlayerSignal /></template>);
 
     assert.dom('div').exists();
   });

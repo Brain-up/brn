@@ -3,6 +3,7 @@ import { setupIntl } from 'ember-intl/test-support';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import Service from '@ember/service';
+import StatisticsDailyTimeTable from 'brn/components/statistics/daily-time-table';
 
 module('Integration | Component | statistics/daily-time-table', function (hooks) {
   setupRenderingTest(hooks);
@@ -26,7 +27,7 @@ module('Integration | Component | statistics/daily-time-table', function (hooks)
 
 
 
-    await render(<template><Statistics::DailyTimeTable @day={{self.day}} /></template>);
+    await render(<template><StatisticsDailyTimeTable @day={{self.day}} /></template>);
 
 
     assert.dom('table').exists('renders a table element');
@@ -41,7 +42,7 @@ module('Integration | Component | statistics/daily-time-table', function (hooks)
 
 
 
-    await render(<template><Statistics::DailyTimeTable @day={{self.day}} /></template>);
+    await render(<template><StatisticsDailyTimeTable @day={{self.day}} /></template>);
 
 
     assert.dom('th').exists({ count: 6 }, 'renders 6 column headers');
@@ -55,7 +56,7 @@ module('Integration | Component | statistics/daily-time-table', function (hooks)
 
 
 
-    await render(<template><Statistics::DailyTimeTable @day={{self.day}} /></template>);
+    await render(<template><StatisticsDailyTimeTable @day={{self.day}} /></template>);
 
 
     assert.dom('tbody tr').doesNotExist('no data rows when result is empty');
@@ -93,7 +94,7 @@ module('Integration | Component | statistics/daily-time-table', function (hooks)
 
 
 
-    await render(<template><Statistics::DailyTimeTable @day={{self.day}} /></template>);
+    await render(<template><StatisticsDailyTimeTable @day={{self.day}} /></template>);
 
 
     assert.dom('tbody tr').exists({ count: 2 }, 'renders 2 data rows');
