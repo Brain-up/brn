@@ -1,3 +1,4 @@
+import type { TOC } from '@ember/component/template-only';
 import RouteTemplate from 'ember-route-template';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import pageTitle from 'ember-page-title/helpers/page-title';
@@ -5,9 +6,17 @@ import pageTitle from 'ember-page-title/helpers/page-title';
 import isActive from 'brn/helpers/is-active';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import ExerciseGroup from 'brn/components/exercise-group';
+import type GroupSeriesController from 'brn/controllers/group/series';
+import type { Subgroup } from 'brn/schemas/subgroup';
 
-export default RouteTemplate(
-  <template>
+interface Signature {
+  Args: {
+    model: Subgroup[] & { name?: string };
+    controller: GroupSeriesController;
+  };
+}
+
+const tpl: TOC<Signature> = <template>
     <div class="w-full">
       {{#if (isActive "group.series.index")}}
         {{pageTitle @model.name}}
@@ -19,5 +28,6 @@ export default RouteTemplate(
       {{/if}}
       {{outlet}}
     </div>
-  </template>
-);
+  </template>;
+
+export default RouteTemplate(tpl);

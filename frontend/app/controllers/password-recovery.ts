@@ -22,7 +22,7 @@ export default class PasswordRecoveryController extends Controller {
   enableRecoveryCodeProcessing = false;
 
   get firebase(): FirebaseAuthenticator {
-    return getOwner(this).lookup(
+    return getOwner(this)!.lookup(
       'authenticator:firebase',
     ) as FirebaseAuthenticator;
   }

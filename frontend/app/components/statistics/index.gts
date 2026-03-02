@@ -8,7 +8,7 @@ import { DateTime } from 'luxon';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { tracked } from '@glimmer/tracking';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { task, Task as TaskGenerator } from 'ember-concurrency';
+import { task, type Task } from 'ember-concurrency';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { action } from '@ember/object';
 import type Store from 'brn/services/store';
@@ -58,7 +58,7 @@ export default class StatisticsComponent extends Component<StatisticsSignature> 
     }
     this.isLoadingWeekTimeTrackData = false;
   }).drop())
-  getWeekTimeTrackData!: TaskGenerator<any, any>;
+  getWeekTimeTrackData!: Task<any, any[]>;
 
   //eslint-disable-next-line
   @(task(function* (this: StatisticsComponent) {
@@ -90,7 +90,7 @@ export default class StatisticsComponent extends Component<StatisticsSignature> 
     this.selectedMonth = lastMonth;
     this.getWeekTimeTrackData.perform();
   }).drop())
-  getMonthTimeTrackData!: TaskGenerator<any, any>;
+  getMonthTimeTrackData!: Task<any, any[]>;
 
   @action
   onInit(): void {

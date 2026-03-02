@@ -13,13 +13,11 @@ import type AudioService from 'brn/services/audio';
 import StatsService, { StatEvents } from 'brn/services/stats';
 import AnswerOption from 'brn/utils/answer-option';
 import type { TaskSingleSimpleWords as SingleSimpleWordTask } from 'brn/schemas/task/single-simple-words';
-import type { TaskBase as Task } from 'brn/schemas/task';
 import didInsert from '@ember/render-modifiers/modifiers/did-insert';
 import { hash } from '@ember/helper';
 import { t } from 'ember-intl';
 import UiTaskContent from 'brn/components/ui/task-content';
 import TaskPlayerSingleSimpleWordsOption from 'brn/components/task-player/single-simple-words/option';
-import optional from 'brn/helpers/optional';
 
 export interface WordsSequencesSignature<T> {
   Args: {
@@ -28,7 +26,7 @@ export interface WordsSequencesSignature<T> {
   disableAnswers: boolean;
   activeWord: string;
   disableAudioPlayer: boolean;
-  onPlayText(): void;
+  onPlayText(word: string): void;
   onRightAnswer(): void;
   onWrongAnswer(params?: { skipRetry: true }): void;
   };
@@ -101,7 +99,7 @@ export default class SingleSimpleWordsComponent extends Component<WordsSequences
   }
 
   @action
-  async checkMaybe(selectedData: AnswerOption) {
+  async checkMaybe(selectedData: string) {
     this.showTaskResult.perform(selectedData);
   }
 
@@ -221,7 +219,7 @@ export default class SingleSimpleWordsComponent extends Component<WordsSequences
     this.tasksCopy = tasksCopy;
   }
 
-  @(task(function* (this: SingleSimpleWordsComponent, selected) {
+  @(task(function* (this: SingleSimpleWordsComponent, selected: string) {
     this.currentAnswer = [...this.currentAnswer, selected].filter(
       (e) => e.length,
     );
@@ -281,7 +279,7 @@ export default class SingleSimpleWordsComponent extends Component<WordsSequences
                 @disableAnswers={{@disableAnswers}}
                 @mode={{@mode}}
                 @isCorrect={{this.isCorrect}}
-                @onPlayText={{optional @onPlayText}}
+                @onPlayText={{@onPlayText}}
               />
             {{/each}}
           </ul>

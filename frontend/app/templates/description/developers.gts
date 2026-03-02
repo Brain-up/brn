@@ -1,11 +1,18 @@
+import type { TOC } from '@ember/component/template-only';
 import RouteTemplate from 'ember-route-template';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { t } from 'ember-intl';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { array, concat } from '@ember/helper';
+import type DescriptionDevelopersController from 'brn/controllers/description/developers';
 
-export default RouteTemplate(
-  <template>
+interface Signature {
+  Args: {
+    controller: DescriptionDevelopersController;
+  };
+}
+
+const tpl: TOC<Signature> = <template>
     <section class="space-y-5">
       <h1 class="text-3xl font-semibold">
         {{t "description.dev.header" htmlSafe=true}}
@@ -204,5 +211,6 @@ export default RouteTemplate(
     </section>
 
     <hr class="my-10" />
-  </template>
-);
+  </template>;
+
+export default RouteTemplate(tpl);

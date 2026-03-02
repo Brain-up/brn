@@ -17,7 +17,6 @@ import type AudioService from 'brn/services/audio';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import StatsService, { StatEvents } from 'brn/services/stats';
 import type { TaskWordsSequences as WordsSequences } from 'brn/schemas/task/words-sequences';
-import type { TaskBase as Task } from 'brn/schemas/task';
 import type AnswerOption from 'brn/utils/answer-option';
 import didInsert from '@ember/render-modifiers/modifiers/did-insert';
 import { hash } from '@ember/helper';
@@ -46,7 +45,7 @@ export interface WordsSequencesSignature<T> {
   disableAnswers: boolean;
   activeWord: string;
   disableAudioPlayer: boolean;
-  onPlayText(): void;
+  onPlayText(word: string): void;
   onRightAnswer(): void;
   onWrongAnswer(params?: { skipRetry: true }): void;
   };
@@ -54,7 +53,7 @@ export interface WordsSequencesSignature<T> {
 }
 
 export default class WordsSequencesComponent<
-  T extends Task = WordsSequences,
+  T extends WordsSequences = WordsSequences,
 > extends Component<WordsSequencesSignature<T>> {
   @action onInsert() {
     this.updateLocalTasks();
@@ -103,14 +102,13 @@ export default class WordsSequencesComponent<
       .join(' ');
     return [this.audio.audioUrlForText(text)];
   }
-  get answerCompleted() {
+  get answerCompleted(): boolean {
     return Object.values(this.currentAnswerObject as any).reduce(
-      (isCompleted, currentValue) => {
-        isCompleted = isCompleted && !!currentValue;
-        return isCompleted;
+      (isCompleted: boolean, currentValue: unknown) => {
+        return isCompleted && !!currentValue;
       },
       true,
-    );
+    ) as boolean;
   }
   startNewTask() {
     this.markCompleted(this.firstUncompletedTask as TaskItem);

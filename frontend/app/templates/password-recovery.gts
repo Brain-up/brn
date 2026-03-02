@@ -1,3 +1,4 @@
+import type { TOC } from '@ember/component/template-only';
 import RouteTemplate from 'ember-route-template';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { t } from 'ember-intl';
@@ -7,9 +8,17 @@ import { hash } from '@ember/helper';
 import { on } from '@ember/modifier';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import UiButton from 'brn/components/ui/button';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { Input } from '@ember/component';
+import type PasswordRecoveryController from 'brn/controllers/password-recovery';
 
-export default RouteTemplate(
-  <template>
+interface Signature {
+  Args: {
+    controller: PasswordRecoveryController;
+  };
+}
+
+const tpl: TOC<Signature> = <template>
     {{outlet}}
 
     {{#let
@@ -95,5 +104,6 @@ export default RouteTemplate(
       </div>
 
     {{/let}}
-  </template>
-);
+  </template>;
+
+export default RouteTemplate(tpl);

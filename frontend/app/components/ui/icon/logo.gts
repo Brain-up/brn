@@ -1,6 +1,14 @@
 import { or } from 'ember-truth-helpers';
+import type { TOC } from '@ember/component/template-only';
 
-<template>
+interface UiIconLogoSignature {
+  Args: {
+    fill?: string;
+  };
+  Element: SVGElement;
+}
+
+const UiIconLogo: TOC<UiIconLogoSignature> = <template>
   <svg
     width="112"
     height="31"
@@ -13,4 +21,6 @@ import { or } from 'ember-truth-helpers';
       fill={{or @fill "white"}}
     ></path>
   </svg>
-</template>
+</template>;
+
+export default UiIconLogo;

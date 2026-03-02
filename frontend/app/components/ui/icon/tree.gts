@@ -1,7 +1,15 @@
+import type { TOC } from '@ember/component/template-only';
 import { and, eq, gte, or, not } from 'ember-truth-helpers';
 import { hash } from '@ember/helper';
 
-<template>
+interface TreeIconSignature {
+  Args: {
+    enabled: boolean;
+    level: number;
+  };
+}
+
+const TreeIcon: TOC<TreeIconSignature> = <template>
   {{#if (and (eq @enabled true) (gte @level 2))}}
     {{! 3lvl enabled icon }}
     {{#let (hash one="#11CDEF" two="#5E72E4" three="#FF6373") as |levelColors|}}
@@ -97,4 +105,6 @@ import { hash } from '@ember/helper';
       </svg>
     {{/let}}
   {{/if}}
-</template>
+</template>;
+
+export default TreeIcon;

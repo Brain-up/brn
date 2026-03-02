@@ -1,6 +1,23 @@
+import type { TOC } from '@ember/component/template-only';
 import { t } from 'ember-intl';
 
-<template>
+interface MonthTimeTrackData {
+  progress: string;
+  time: string;
+  days: number;
+  month: string;
+  year: number;
+}
+
+interface Signature {
+  Args: {
+    isSelected: boolean;
+    data: MonthTimeTrackData;
+  };
+  Element: HTMLDivElement;
+}
+
+const StatisticsMonthTimeTrackItem: TOC<Signature> = <template>
   <div
     class="
       {{if @isSelected "selected" ""}}
@@ -35,4 +52,6 @@ import { t } from 'ember-intl';
       </div>
     </div>
   </div>
-</template>
+</template>;
+
+export default StatisticsMonthTimeTrackItem;

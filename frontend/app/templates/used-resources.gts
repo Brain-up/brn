@@ -1,11 +1,17 @@
+import type { TOC } from '@ember/component/template-only';
 import RouteTemplate from 'ember-route-template';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import pageTitle from 'ember-page-title/helpers/page-title';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { t } from 'ember-intl';
 
-export default RouteTemplate(
-  <template>
+interface Signature {
+  Args: {
+    model: { resources: { title: string; href: string }[] };
+  };
+}
+
+const tpl: TOC<Signature> = <template>
     {{pageTitle (t "header.used_resources")}}
     <section class="container">
       <h1 class="mb-5 text-3xl font-bold">{{t "header.used_resources"}}</h1>
@@ -39,5 +45,6 @@ export default RouteTemplate(
         {{/each}}
       </ul>
     </section>
-  </template>
-);
+  </template>;
+
+export default RouteTemplate(tpl);

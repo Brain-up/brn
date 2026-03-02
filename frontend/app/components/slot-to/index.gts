@@ -1,6 +1,16 @@
+import type { TOC } from '@ember/component/template-only';
 import queryNode from 'brn/helpers/query-node';
 
-<template>
+interface Signature {
+  Args: {
+    selector: string;
+  };
+  Blocks: {
+    default: [];
+  };
+}
+
+const SlotTo: TOC<Signature> = <template>
   {{#let (queryNode @selector) as |node|}}
     {{#if node}}
       {{#in-element node}}
@@ -8,4 +18,6 @@ import queryNode from 'brn/helpers/query-node';
       {{/in-element}}
     {{/if}}
   {{/let}}
-</template>
+</template>;
+
+export default SlotTo;

@@ -1,8 +1,16 @@
+import type { TOC } from '@ember/component/template-only';
 import { t } from 'ember-intl';
 import { on } from '@ember/modifier';
 import FaIcon from '@fortawesome/ember-fontawesome/components/fa-icon';
 
-<template>
+interface Signature {
+  Args: {
+    startTask: () => void;
+  };
+  Element: HTMLDivElement;
+}
+
+const StartTaskButton: TOC<Signature> = <template>
   <div ...attributes>
     <button
       data-test-start-task-button
@@ -14,4 +22,6 @@ import FaIcon from '@fortawesome/ember-fontawesome/components/fa-icon';
       <FaIcon class="play-button-icon" @icon="play" />
     </button>
   </div>
-</template>
+</template>;
+
+export default StartTaskButton;

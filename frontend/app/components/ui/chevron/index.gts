@@ -1,4 +1,10 @@
-<template>
+import type { TOC } from '@ember/component/template-only';
+
+interface UiChevronSignature {
+  Element: SVGElement;
+}
+
+const UiChevron: TOC<UiChevronSignature> = <template>
   <svg
     width="10"
     height="20"
@@ -14,4 +20,6 @@
       stroke-linejoin="round"
     ></path>
   </svg>
-</template>
+</template>;
+
+export default UiChevron;

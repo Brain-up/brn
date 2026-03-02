@@ -108,11 +108,13 @@ export default class FirebaseAuthenticator extends BaseAuthenticator {
   private async refreshToken() {
     const auth = await this.firebase.auth();
     await auth.currentUser?.getIdToken(true);
-    const userSnapshot: SerializedUser =
-      getOwner(this).lookup('service:session').data?.authenticated.user;
-    const user = auth.currentUser?.toJSON() as SerializedUser;
-    userSnapshot.stsTokenManager = user.stsTokenManager;
-    this.applyTimersToUser(user);
+    const session = getOwner(this)!.lookup('service:session') as { data?: { authenticated: { user: SerializedUser } } } | undefined;
+    const userSnapshot = session?.data?.authenticated.user;
+    const user = auth.currentUser?.toJSON() as SerializedUser | undefined;
+    if (userSnapshot && user) {
+      userSnapshot.stsTokenManager = user.stsTokenManager;
+      this.applyTimersToUser(user);
+    }
   }
 
   private applyTimersToUser(user: SerializedUser) {

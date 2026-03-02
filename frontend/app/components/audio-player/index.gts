@@ -83,7 +83,7 @@ export default class AudioPlayerComponent extends Component<AudioPlayerSignature
             w-full leading-none"
           data-test-play-audio-button
           data-test-playing-progress={{this.audioPlayingProgress}}
-          disabled={{disablePlayButton}}
+          @disabled={{disablePlayButton}}
           {{on "click" this.playAudio}}
           {{createRef "buttonElement"}}
         >

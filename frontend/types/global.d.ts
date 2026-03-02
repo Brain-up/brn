@@ -1,3 +1,15 @@
+// QUnit module declaration for ES module imports.
+// The @types/qunit package (v2.9.x) only declares global types; this ambient
+// module lets `import { module, test } from 'qunit'` resolve correctly.
+declare module 'qunit' {
+  export const module: typeof QUnit.module;
+  export const test: typeof QUnit.test;
+  export const skip: typeof QUnit.skip;
+  export const only: typeof QUnit.only;
+  export const todo: typeof QUnit.todo;
+  export default QUnit;
+}
+
 // Types for compiled templates
 declare module 'brn/templates/*' {
   import { TemplateFactory } from 'htmlbars-inline-precompile';

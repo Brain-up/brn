@@ -150,9 +150,8 @@ export default class AudioService extends Service {
     if (isTesting()) {
       return null;
     }
-    const owner = getOwner(this);
-    const model = owner
-      .lookup('route:application')
+    const owner = getOwner(this)!;
+    const model = (owner.lookup('route:application') as any)
       .modelFor('group.series.subgroup.exercise');
     if (!model) {
       return null;
@@ -353,7 +352,7 @@ export default class AudioService extends Service {
     }, 0);
   }
 
-  @task(function* playNoise(this: AudioService) {
+  @task(function* playNoise(this: AudioService): Generator<unknown, void, any> {
     let noise = null;
     const timeInSeconds = 10;
     try {
@@ -399,7 +398,7 @@ export default class AudioService extends Service {
     return p;
   }
 
-  @(task(function* playAudio(this: AudioService, noizeSeconds = 0) {
+  @(task(function* playAudio(this: AudioService, noizeSeconds = 0): Generator<unknown, void, any> {
     const startedSources = [];
     const hasNoize = false;
     if (hasNoize) {

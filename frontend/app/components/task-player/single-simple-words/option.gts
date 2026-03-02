@@ -16,6 +16,9 @@ interface TaskPlayerSingleWordsOptionSignature {
   disableAnswers: boolean;
   isCorrect: boolean;
   activeWord: string;
+  answerOption: import('brn/utils/answer-option').default;
+  onPlayText: (word: string) => void;
+  checkMaybe: (word: string) => void;
   };
   Element: HTMLElement;
 }
@@ -31,7 +34,7 @@ export default class TaskPlayerSingleWordsOptionComponent extends Component<Task
 
     return word.trim().split(' ').length === 1;
   }
-  @action async setDefaultImage(e: Error & { target: HTMLImageElement }) {
+  @action async setDefaultImage(e: ErrorEvent & { target: HTMLImageElement }) {
     if (e.target.dataset.hasError === '1') {
       e.target.src =
         'data:image/gif;base64,R0lGODlhAQABAPAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==';

@@ -57,7 +57,7 @@ export default class GroupSeriesSubgroupExerciseRoute extends Route {
     const sortedTasks = exercise.sortedTasks as Task[] | null;
     const firstTask = sortedTasks?.[0];
     if (
-      to.name.endsWith('exercise.index') &&
+      to?.name.endsWith('exercise.index') &&
       firstTask &&
       !to.paramNames.includes('task_id')
     ) {

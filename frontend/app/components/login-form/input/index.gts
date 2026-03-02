@@ -4,21 +4,18 @@ import IntlService from 'ember-intl/services/intl';
 import { or } from 'ember-truth-helpers';
 import { Input } from '@ember/component';
 
-interface FormModel {
-  [field: string]: string;
-}
-
 interface LoginFormInputSignature {
   Args: {
-  model: FormModel;
-  name: keyof FormModel;
-  warning: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  model: any;
+  name: string;
+  warning?: string | boolean;
   type?: string;
-  label?: string;
+  label?: string | boolean;
   placeholder?: string;
   trimRight?: boolean;
   };
-  Element: HTMLElement;
+  Element: HTMLInputElement;
 }
 
 export default class LoginFormInputComponent extends Component<LoginFormInputSignature> {
@@ -48,15 +45,15 @@ export default class LoginFormInputComponent extends Component<LoginFormInputSig
     return 50;
   }
 
-  get value() {
+  get value(): string | undefined {
     const { model, name } = this.args;
     if (!model) {
       return undefined;
     }
-    return model[name];
+    return model[name] as string | undefined;
   }
 
-  set value(value) {
+  set value(value: string | undefined) {
     const { model, name } = this.args;
     const safeValue = value || '';
     let normalizedValue = '';
@@ -89,7 +86,6 @@ export default class LoginFormInputComponent extends Component<LoginFormInputSig
     {{#if this.warning}}
       <p
         data-test-warning-message={{@name}}
-        warningMessage={{@warning}}
         class="mt-2 text-xs text-red-500"
       >
         {{this.warning}}

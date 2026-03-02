@@ -38,9 +38,9 @@ export interface IWeekChartDataItem {
 
 interface WeekTimeTrackSignature {
   Args: {
-  isLoading: boolean;
-  selectedMonth: DateTime;
-  data: UserWeeklyStatisticsModel[];
+    isLoading: boolean;
+    selectedMonth: DateTime;
+    data: UserWeeklyStatisticsModel[] | null;
   };
   Element: HTMLElement;
 }

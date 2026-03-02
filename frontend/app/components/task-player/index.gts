@@ -3,7 +3,7 @@ import { service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { timeout, task, TaskInstance } from 'ember-concurrency';
-import { MODES } from 'brn/utils/task-modes';
+import { MODES, type Mode } from 'brn/utils/task-modes';
 import { isTesting } from '@embroider/macros';
 import StatsService, { StatEvents } from 'brn/services/stats';
 import AudioService from 'brn/services/audio';
@@ -14,12 +14,9 @@ import type AnswerOption from 'brn/utils/answer-option';
 import { ExerciseMechanism } from 'brn/utils/exercise-types';
 import didInsert from '@ember/render-modifiers/modifiers/did-insert';
 import didUpdate from '@ember/render-modifiers/modifiers/did-update';
-import { on } from '@ember/modifier';
-import { hash } from '@ember/helper';
 import { concat } from '@ember/helper';
 import { not } from 'ember-truth-helpers';
 import { notEq } from 'ember-truth-helpers';
-import { t } from 'ember-intl';
 import htmlSafe from 'brn/helpers/html-safe';
 import SlotTo from 'brn/components/slot-to';
 import Timer from 'brn/components/timer';
@@ -29,6 +26,9 @@ import ExerciseSteps from 'brn/components/exercise-steps';
 import AudioPlayer from 'brn/components/audio-player';
 import UiBottomContainer from 'brn/components/ui/bottom-container';
 import StartTaskButton from 'brn/components/start-task-button';
+import TaskPlayerSignal from 'brn/components/task-player/signal';
+import TaskPlayerSingleSimpleWords from 'brn/components/task-player/single-simple-words';
+import TaskPlayerWordsSequences from 'brn/components/task-player/words-sequences';
 
 interface TaskPlayerSignature {
   Args: {
@@ -55,22 +55,20 @@ export default class TaskPlayerComponent extends Component<TaskPlayerSignature> 
     this.audio.stopNoise();
   }
 
-  @tracked mode = ''; // listen, interact, task
-  get componentType() {
+  @tracked mode = '' as Mode; // listen, interact, task
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  get componentType(): any {
     const mechanism = this.args.task.exerciseMechanism;
-    let postfix = '';
 
     if (mechanism === ExerciseMechanism.SIGNALS) {
-      postfix = 'signal';
+      return TaskPlayerSignal;
     } else if (mechanism === ExerciseMechanism.MATRIX) {
-      postfix = 'words-sequences';
+      return TaskPlayerWordsSequences;
     } else if (mechanism === ExerciseMechanism.WORDS) {
-      postfix = 'single-simple-words';
+      return TaskPlayerSingleSimpleWords;
     } else {
       throw new Error('Unknown mechanism: ' + mechanism);
     }
-
-    return `task-player/${postfix}`;
   }
   get disableAnswers() {
     if (this.mode === MODES.INTERACT) {
@@ -384,7 +382,6 @@ export default class TaskPlayerComponent extends Component<TaskPlayerSignature> 
               />
               <AudioPlayer
                 @audioFileUrl={{content.audioFileUrl}}
-                @disabled={{this.disableAudioPlayer}}
                 @transparent={{notEq this.mode "task"}}
               />
             </UiBottomContainer>

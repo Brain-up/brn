@@ -6,7 +6,13 @@ import { t } from 'ember-intl';
 import { on } from '@ember/modifier';
 import ModalDialog from 'ember-modal-dialog/components/modal-dialog';
 
-export default class StatisticsInfoDialogComponent extends Component {
+interface StatisticsInfoDialogSignature {
+  Args: {
+    closeModalAction: () => void;
+  };
+}
+
+export default class StatisticsInfoDialogComponent extends Component<StatisticsInfoDialogSignature> {
   @service declare intl: IntlService;
 
   get infoDialogImage(): string {

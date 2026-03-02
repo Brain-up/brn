@@ -54,7 +54,7 @@ export default class GroupRoute extends Route {
       this.router.transitionTo('groups');
       return;
     }
-    if (to.name === 'group.index') {
+    if (to?.name === 'group.index') {
       this.router.transitionTo(
         'group.series.index',
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

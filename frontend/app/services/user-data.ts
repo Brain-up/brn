@@ -38,7 +38,7 @@ export default class UserDataService extends Service {
   }
 
   shouldUpdateRoute() {
-    const prefix = this.router.currentRouteName.split('.')[0];
+    const prefix = this.router.currentRouteName?.split('.')[0];
 
     return prefix === 'groups' || prefix === 'group';
   }

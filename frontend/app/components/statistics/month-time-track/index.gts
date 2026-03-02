@@ -15,20 +15,20 @@ import LoadingSpinner from 'brn/components/loading-spinner';
 import StatisticsMonthTimeTrackItem from 'brn/components/statistics/month-time-track-item';
 interface MonthTimeTrackSignature {
   Args: {
-  isLoading: boolean;
-  selectedMonth: DateTime;
-  data: UserYearlyStatisticsModel[];
-  onSelectMonth(): void;
-  onLoadPrevYear(): void;
-  onLoadNextYear(): void;
+    isLoading: boolean;
+    selectedMonth: DateTime;
+    data: UserYearlyStatisticsModel[] | null;
+    onSelectMonth: (date: DateTime) => void;
+    onLoadPrevYear: () => void;
+    onLoadNextYear: () => void;
   };
   Element: HTMLElement;
 }
 
 export default class MonthTimeTrackComponent extends Component<MonthTimeTrackSignature> {
 
-  get monthTimeTrackItemsData(): UserYearlyStatisticsModel[] | null {
-    return this.args.data;
+  get monthTimeTrackItemsData(): UserYearlyStatisticsModel[] {
+    return this.args.data ?? [];
   }
 
   @action

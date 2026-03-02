@@ -13,9 +13,9 @@ import ExerciseStepsStep from 'brn/components/exercise-steps/step';
 import UiChevron from 'brn/components/ui/chevron';
 
 const BUTTONS = {
-  ACTIVE: 'active',
-  ENABLED: 'enabled',
-  DISABLED: 'disabled',
+  ACTIVE: 'active' as const,
+  ENABLED: 'enabled' as const,
+  DISABLED: 'disabled' as const,
 };
 
 interface ExerciseStepsSignature {

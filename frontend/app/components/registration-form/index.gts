@@ -193,7 +193,7 @@ export default class RegistrationFormComponent extends Component {
       password: this.password,
     };
     try {
-      const auth = getOwner(this).lookup(
+      const auth = getOwner(this)!.lookup(
         'authenticator:firebase',
       ) as FirebaseAuthenticator;
       yield auth.registerUser(user.email, user.password);
@@ -432,7 +432,6 @@ export default class RegistrationFormComponent extends Component {
             <UiButton
               @type="submit"
               class="w-full"
-              disabled={{false}}
               data-test-submit-form
               @title={{t "registration_form.registration"}}
             />

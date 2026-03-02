@@ -1,4 +1,10 @@
-<template>
+import type { TOC } from '@ember/component/template-only';
+
+interface UiStatsIconSignature {
+  Element: SVGElement;
+}
+
+const UiStatsIcon: TOC<UiStatsIconSignature> = <template>
   <svg
     width="414"
     height="311"
@@ -185,4 +191,6 @@
       </clipPath>
     </defs>
   </svg>
-</template>
+</template>;
+
+export default UiStatsIcon;

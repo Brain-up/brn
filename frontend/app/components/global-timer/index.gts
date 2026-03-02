@@ -3,7 +3,7 @@ import Component from '@glimmer/component';
 import { service } from '@ember/service';
 import NetworkService from '../../services/network';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { task, timeout, Task as TaskGenerator } from 'ember-concurrency';
+import { task, timeout, type Task } from 'ember-concurrency';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { tracked } from '@glimmer/tracking';
 import { isTesting } from '@embroider/macros';
@@ -80,7 +80,7 @@ export default class GlobalTimerComponent extends Component<GlobalTimerSignature
       yield timeout(10000);
     } while (true);
   }).keepLatest())
-  syncTask!: TaskGenerator<any, any>;
+  syncTask!: Task<any, any[]>;
 
   <template>
     <div class="sm:mr-3 md:mr-4 lg:mr-6 mr-1">

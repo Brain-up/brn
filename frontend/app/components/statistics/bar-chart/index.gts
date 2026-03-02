@@ -20,7 +20,7 @@ interface BarChartSignature {
   Args: {
   data: BarDataType;
   options: BarOptionsType;
-  lastBarIndex: number | null;
+  lastBarIndex?: number | null;
   onClickItem(index: number): void;
   };
   Element: HTMLElement;

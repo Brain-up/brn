@@ -1,3 +1,4 @@
+import type { TOC } from '@ember/component/template-only';
 import RouteTemplate from 'ember-route-template';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { t } from 'ember-intl';
@@ -17,9 +18,17 @@ import ModalDialog from 'ember-modal-dialog/components/modal-dialog';
 import AnswerCorrectnessWidget from 'brn/components/answer-correctness-widget';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import ExerciseStats from 'brn/components/exercise-stats';
+import type GroupSeriesSubgroupExerciseController from 'brn/controllers/group/series/subgroup/exercise';
+import type { Exercise } from 'brn/schemas/exercise';
 
-export default RouteTemplate(
-  <template>
+interface Signature {
+  Args: {
+    model: Exercise;
+    controller: GroupSeriesSubgroupExerciseController & { target: { currentRouteName: string } };
+  };
+}
+
+const tpl: TOC<Signature> = <template>
     <ModalDialog
       @overlayClass="z-50 min-h-full w-full fixed bg-blue-400 flex"
       @containerClass="w-full flex bg-white sm:p-2 p-2 rounded-lg text-2xl justify-center"
@@ -86,5 +95,6 @@ export default RouteTemplate(
         </div>
       </div>
     </ModalDialog>
-  </template>
-);
+  </template>;
+
+export default RouteTemplate(tpl);

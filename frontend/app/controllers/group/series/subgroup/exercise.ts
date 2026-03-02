@@ -16,8 +16,11 @@ import type TasksManagerService from 'brn/services/tasks-manager';
 import type StudyingTimerService from 'brn/services/studying-timer';
 import type { Exercise } from 'brn/schemas/exercise';
 import { getOwner } from '@ember/application';
+import type GroupSeriesSubgroupController from 'brn/controllers/group/series/subgroup';
 
 export default class GroupSeriesSubgroupExerciseController extends Controller {
+  declare model: Exercise;
+
   @service('router') router!: Router;
   @service('tasks-manager') tasksManager!: TasksManagerService;
   @service('studying-timer') studyingTimer!: StudyingTimerService;
@@ -78,7 +81,7 @@ export default class GroupSeriesSubgroupExerciseController extends Controller {
   enableNextExercise(model: Exercise) {
     // to-do add integration test for it
     const children = Array.from(model.parent.exercises);
-    const index = children.indexOf(this.model);
+    const index = children.indexOf(this.model as unknown as typeof children[number]);
     const nextIndex = index + 1;
     model.isManuallyCompleted = true;
 
@@ -91,9 +94,8 @@ export default class GroupSeriesSubgroupExerciseController extends Controller {
   async afterCompleted() {
     this.enableNextExercise(this.model as Exercise);
 
-    await getOwner(this)
-      .lookup(`controller:group.series.subgroup`)
-      .exerciseAvailabilityCalculationTask.perform();
+    const subgroupController = getOwner(this)!.lookup(`controller:group.series.subgroup`) as GroupSeriesSubgroupController;
+    await subgroupController.exerciseAvailabilityCalculationTask.perform();
     this.showExerciseStats = false;
     this.exerciseStats = {};
     this.goToSeries();

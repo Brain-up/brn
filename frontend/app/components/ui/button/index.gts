@@ -14,14 +14,18 @@ enum ButtonSize {
 
 interface UiButtonSignature {
   Args: {
-  kind?: ButtonKind;
-  size?: ButtonSize;
-  title?: string;
-  type?: 'submit' | 'button';
-  route?: string;
-  model?: unknown;
-  models?: unknown[];
-  isLoading?: boolean;
+    kind?: `${ButtonKind}`;
+    size?: `${ButtonSize}`;
+    title?: string;
+    type?: 'submit' | 'button';
+    route?: string;
+    model?: unknown;
+    models?: unknown[];
+    isLoading?: boolean;
+    disabled?: boolean;
+  };
+  Blocks: {
+    default: [];
   };
   Element: HTMLElement;
 }
@@ -113,7 +117,7 @@ export default class UiButtonComponent extends Component<UiButtonSignature> {
         </LinkTo>
       {{/if}}
     {{else}}
-      <button type={{or @type "submit"}} class={{this.classes}} disabled={{this.isLoading}} ...attributes>
+      <button type={{or @type "submit"}} class={{this.classes}} disabled={{or @disabled this.isLoading}} ...attributes>
         {{#if this.isLoading}}<span class="btn-spinner mr-2" aria-hidden="true"></span>{{/if}}
         {{#if (has-block)}}
           {{yield}}

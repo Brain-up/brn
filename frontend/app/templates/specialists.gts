@@ -1,3 +1,4 @@
+import type { TOC } from '@ember/component/template-only';
 import RouteTemplate from 'ember-route-template';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import pageTitle from 'ember-page-title/helpers/page-title';
@@ -7,9 +8,15 @@ import { t } from 'ember-intl';
 import { concat } from '@ember/helper';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { or } from 'ember-truth-helpers';
+import type { Contributor } from 'brn/schemas/contributor';
 
-export default RouteTemplate(
-  <template>
+interface Signature {
+  Args: {
+    model: Contributor[];
+  };
+}
+
+const tpl: TOC<Signature> = <template>
     {{pageTitle (t "header.specialists")}}
     <section class="sm:py-16 py-8">
       <h2 class="sm:mb-6 sm:text-4xl mb-4 text-2xl font-semibold text-center">
@@ -72,5 +79,6 @@ export default RouteTemplate(
         </a>
       </div>
     </section>
-  </template>
-);
+  </template>;
+
+export default RouteTemplate(tpl);

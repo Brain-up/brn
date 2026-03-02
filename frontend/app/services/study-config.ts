@@ -11,7 +11,7 @@ export default class StudyConfigService extends Service {
     _showImages = true;
 
     get task(): Task | undefined {
-      return getOwner(this).lookup('controller:group.series.subgroup.exercise.task').model;
+      return (getOwner(this)!.lookup('controller:group.series.subgroup.exercise.task') as { model?: Task } | undefined)?.model;
     }
 
     get allowImagesInTask() {

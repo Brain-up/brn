@@ -13,9 +13,13 @@ import { and } from 'ember-truth-helpers';
 
 interface TextImageButtonSignature {
   Args: {
-  pictureFileUrl: string;
-  word: string;
-  disabled: boolean;
+    pictureFileUrl: string;
+    word: string;
+    disabled: boolean;
+    clickAction: () => void;
+    isSelected: boolean;
+    checked: boolean;
+    isCorrect: boolean;
   };
   Element: HTMLElement;
 }

@@ -1,4 +1,15 @@
-<template>
+import type { TOC } from '@ember/component/template-only';
+
+interface UiIconCheckSignature {
+  Args: {
+    isCompleted?: boolean;
+    isActive?: boolean;
+    isLocked?: boolean;
+    isDisabled?: boolean;
+  };
+}
+
+const UiIconCheck: TOC<UiIconCheckSignature> = <template>
   {{#if @isCompleted}}
     {{! completed }}
     <svg
@@ -103,4 +114,6 @@
       ></path>
     </svg>
   {{/if}}
-</template>
+</template>;
+
+export default UiIconCheck;

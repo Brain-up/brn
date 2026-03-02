@@ -10,8 +10,6 @@ import { fn } from '@ember/helper';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { array } from '@ember/helper';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import sortBy from 'brn/helpers/sort-by';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import htmlSafe from 'brn/helpers/html-safe';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import createRef from 'ember-ref-bucket/modifiers/create-ref';
@@ -20,10 +18,35 @@ import UiTabButton from 'brn/components/ui/tab-button';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import autofitText from 'brn/modifiers/autofit-text';
 
-export default class SubgroupNavigation extends Component {
+interface SubgroupItem {
+  id?: string | number | null;
+  name?: string;
+  description?: string;
+  order?: number;
+}
+
+interface SubgroupNavigationSignature {
+  Args: {
+    group: unknown;
+  };
+  Element: HTMLDivElement;
+}
+
+export default class SubgroupNavigation extends Component<SubgroupNavigationSignature> {
   @trackedRef('container') container!: HTMLUListElement;
   @tracked scrollIteration = 0;
   debounceTimer: any = 0;
+
+  get sortedExercises(): SubgroupItem[] {
+    const group = this.args.group as SubgroupItem[] | undefined;
+    if (!group || !Array.isArray(group)) return [];
+    return [...group].sort((a, b) => {
+      const aOrder = a.order ?? 0;
+      const bOrder = b.order ?? 0;
+      return aOrder - bOrder;
+    });
+  }
+
   get showLeftScrollButton() {
     return this.hasScrollAtAll && this.container?.scrollLeft > 0;
   }
@@ -77,7 +100,7 @@ export default class SubgroupNavigation extends Component {
           <button
             type="button"
             class="scroll-btn bg-purple-primary hover:opacity-75 focus:outline-none absolute left-0 z-20 flex items-center justify-center w-8 h-8 text-white rounded-full shadow-md"
-    
+
             {{on "click" (fn this.scroll "left")}}
             aria-label="Scroll left"
           >
@@ -92,7 +115,7 @@ export default class SubgroupNavigation extends Component {
           {{createRef "container"}}
           {{on "scroll" this.onScroll}}
         >
-          {{#each (sortBy "order" @group) as |exercise|}}
+          {{#each this.sortedExercises as |exercise|}}
             <li class="item">
               <UiTabButton
                 data-test-active-link={{exercise.name}}
@@ -112,7 +135,7 @@ export default class SubgroupNavigation extends Component {
           <button
             type="button"
             class="scroll-btn bg-purple-primary hover:opacity-75 focus:outline-none absolute right-0 z-20 flex items-center justify-center w-8 h-8 text-white rounded-full shadow-md"
-    
+
             {{on "click" (fn this.scroll "right")}}
             aria-label="Scroll right"
           >

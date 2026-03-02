@@ -1,15 +1,22 @@
 import Component from '@glimmer/component';
 import { LinkTo } from '@ember/routing';
 
-interface UiTabButtonComponentArguments {
-  title?: string;
-  mode?: 'enabled' | 'disabled' | 'active';
-  route?: string;
-  small?: boolean;
-  models?: ArrayLike<any>;
+interface UiTabButtonSignature {
+  Args: {
+    title?: string;
+    mode?: 'enabled' | 'disabled' | 'active';
+    route?: string;
+    small?: boolean;
+    models?: unknown[];
+    tooltip?: string;
+  };
+  Blocks: {
+    default: [];
+  };
+  Element: HTMLElement;
 }
 
-export default class UiTabButtonComponent extends Component<UiTabButtonComponentArguments> {
+export default class UiTabButtonComponent extends Component<UiTabButtonSignature> {
   get classes() {
     const items = [
       'btn-press focus:outline-none rounded-lg w-full uppercase h-12 overflow-hidden flex items-center justify-center text-center',

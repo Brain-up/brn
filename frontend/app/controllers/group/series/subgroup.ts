@@ -21,7 +21,7 @@ export default class GroupSeriesSubgroupController extends Controller {
     this.exerciseAvailabilityCalculationTask.perform();
   }
   // eslint-disable-next-line no-unused-vars
-  @(task(function* (this: GroupSeriesSubgroupController) {
+  @(task(function* (this: GroupSeriesSubgroupController): Generator<unknown, void, any> {
     if (!this.model) {
       return;
     }

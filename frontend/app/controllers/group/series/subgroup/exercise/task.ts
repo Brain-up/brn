@@ -5,19 +5,23 @@ import { service } from '@ember/service';
 import { action } from '@ember/object';
 import { getOwner } from '@ember/application';
 import Router from '@ember/routing/router-service';
+import type GroupSeriesSubgroupController from 'brn/controllers/group/series/subgroup';
+import type { TaskBase } from 'brn/schemas/task';
 
 export default class GroupSeriesSubgroupExerciseTaskController extends Controller {
+  declare model: TaskBase;
+
   @service router!: Router;
   @action nextTaskTransition() {
-    getOwner(this)
-      .lookup(`controller:group.series.subgroup`)
-      .exerciseAvailabilityCalculationTask.perform();
+    const subgroupController = getOwner(this)!.lookup(`controller:group.series.subgroup`) as GroupSeriesSubgroupController;
+    subgroupController.exerciseAvailabilityCalculationTask.perform();
 
     if (!this.model.isLastTask) {
+      const nextTask = this.model.nextTask as { exercise?: { id?: string }; id?: string } | null;
       this.router.transitionTo(
         'group.series.subgroup.exercise.task',
-        this.model.nextTask?.exercise?.id,
-        this.model.nextTask?.id,
+        nextTask?.exercise?.id,
+        nextTask?.id,
       );
     }
   }

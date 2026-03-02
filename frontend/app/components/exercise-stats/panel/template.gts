@@ -2,8 +2,21 @@ import { or } from 'ember-truth-helpers';
 import { eq } from 'ember-truth-helpers';
 import { hash } from '@ember/helper';
 import { get } from '@ember/helper';
+import type { TOC } from '@ember/component/template-only';
 
-<template>
+interface ExerciseStatsPanelSignature {
+  Args: {
+    type: 'negative' | 'positive' | 'neutral';
+    label?: string;
+    value?: string | number;
+  };
+  Blocks: {
+    default: [];
+  };
+  Element: HTMLDivElement;
+}
+
+const ExerciseStatsPanel: TOC<ExerciseStatsPanelSignature> = <template>
   {{!
     <script @typedef>
       interface Args {
@@ -22,7 +35,7 @@ import { get } from '@ember/helper';
       negative="M20 9a1 1 0 012 0v8a1 1 0 01-1 1h-8a1 1 0 010-2h5.59L13 10.41l-3.3 3.3a1 1 0 01-1.4 0l-6-6a1 1 0 011.4-1.42L9 11.6l3.3-3.3a1 1 0 011.4 0l6.3 6.3V9z"
       neutral="M17 11a1 1 0 010 2H7a1 1 0 010-2h10z"
     )
-    as |textColorClass svgPathForType|
+    as |_textColorClass svgPathForType|
   }}
     <div
       data-test-type={{@type}}
@@ -57,4 +70,6 @@ import { get } from '@ember/helper';
       </div>
     </div>
   {{/let}}
-</template>
+</template>;
+
+export default ExerciseStatsPanel;

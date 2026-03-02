@@ -1,3 +1,4 @@
+import type { TOC } from '@ember/component/template-only';
 import RouteTemplate from 'ember-route-template';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import pageTitle from 'ember-page-title/helpers/page-title';
@@ -9,9 +10,15 @@ import Breadcrumbs from 'brn/components/breadcrumbs';
 import SubgroupNavigation from 'brn/components/subgroup-navigation';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import GroupNavigation from 'brn/components/group-navigation';
+import type GroupController from 'brn/controllers/group';
 
-export default RouteTemplate(
-  <template>
+interface Signature {
+  Args: {
+    controller: GroupController;
+  };
+}
+
+const tpl: TOC<Signature> = <template>
     {{pageTitle @controller.group.name}}
     <div class="flex flex-col flex-grow">
       {{#unless @controller.headerAndNavShown}}
@@ -48,5 +55,6 @@ export default RouteTemplate(
         </div>
       </div>
     </div>
-  </template>
-);
+  </template>;
+
+export default RouteTemplate(tpl);

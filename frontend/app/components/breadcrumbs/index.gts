@@ -23,12 +23,16 @@ export default class BreadcrumbsComponent extends Component {
   @service('router') router!: Router;
   @service('store') store!: Store;
   modelFor(routeName: string) {
-    const model = getOwner(this).lookup(`route:application`).modelFor(routeName);
+    const owner = getOwner(this);
+    if (!owner) return undefined;
+    const appRoute = owner.lookup(`route:application`) as { modelFor(name: string): unknown } | undefined;
+    if (!appRoute) return undefined;
+    const model = appRoute.modelFor(routeName);
     // Group route returns a composite { group, series } model;
     // extract the group record for LinkTo compatibility.
     // Use 'in' check to avoid triggering WarpDrive's strict proxy on a bare record.
-    if (routeName === 'group' && model && 'group' in model && 'series' in model) {
-      return model.group;
+    if (routeName === 'group' && model && typeof model === 'object' && 'group' in model && 'series' in model) {
+      return (model as Record<string, unknown>).group;
     }
     return model;
   }

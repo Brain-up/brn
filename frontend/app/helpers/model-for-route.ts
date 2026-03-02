@@ -2,7 +2,14 @@ import Helper from '@ember/component/helper';
 import { getOwner } from '@ember/application';
 import type Route from '@ember/routing/route';
 
-export default class ModelForRoute extends Helper {
+interface ModelForRouteSignature {
+  Args: {
+    Positional: [string];
+  };
+  Return: unknown;
+}
+
+export default class ModelForRoute extends Helper<ModelForRouteSignature> {
   compute([routeName]: [string]): unknown {
     const appRoute = getOwner(this)!.lookup('route:application') as Route;
     const model = appRoute.modelFor(routeName) as Record<string, unknown>;

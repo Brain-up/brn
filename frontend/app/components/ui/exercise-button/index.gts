@@ -6,13 +6,16 @@ import { concat } from '@ember/helper';
 import { t } from 'ember-intl';
 import UiIconCheck from 'brn/components/ui/icon/check';
 
-interface UiExerciseButtonComponentArguments {
-  title?: string;
-  exercise: Exercise;
-  isAvailable: boolean;
+interface UiExerciseButtonSignature {
+  Args: {
+    title?: string | number;
+    exercise: Exercise;
+    isAvailable: boolean;
+  };
+  Element: HTMLAnchorElement;
 }
 
-export default class UiExerciseButtonComponent extends Component<UiExerciseButtonComponentArguments> {
+export default class UiExerciseButtonComponent extends Component<UiExerciseButtonSignature> {
   get classes() {
     const items = ['focus:outline-none'];
     if (this.mode) {
@@ -66,7 +69,7 @@ export default class UiExerciseButtonComponent extends Component<UiExerciseButto
   <template>
     <LinkTo
       class="{{this.classes}}"
-      disabled={{not @isAvailable}}
+      aria-disabled={{if (not @isAvailable) "true"}}
       @route="group.series.subgroup.exercise"
       @model={{@exercise.id}}
       title={{concat (t "task_link.exercise") " " @exercise.level}}

@@ -1,61 +1,63 @@
 import Component from '@glimmer/component';
 import type { Exercise } from 'brn/schemas/exercise';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import sortBy from 'brn/helpers/sort-by';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import filterBy from 'brn/helpers/filter-by';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import contains from 'brn/helpers/contains';
+import { array } from '@ember/helper';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { or } from 'ember-truth-helpers';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { array } from '@ember/helper';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { get } from '@ember/helper';
+import contains from 'brn/helpers/contains';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import UiExerciseButton from 'brn/components/ui/exercise-button';
 
 interface SeriesNavigationSignature {
   Args: {
-  exercises: Exercise[];
+    exercises: Exercise[];
+    available?: (string | number)[];
   };
   Element: HTMLElement;
 }
 
+interface ExerciseGroup {
+  name: string;
+  exercises: Exercise[];
+}
+
 export default class SeriesNavigationComponent extends Component<SeriesNavigationSignature> {
-  get sortedExercises() {
+  get sortedExercises(): Exercise[] {
     return Array.from(this.args.exercises).sort((a, b) => a.level - b.level);
   }
 
-  get exerciseHeaders() {
-    return [...new Set(this.sortedExercises.map((e) => e.name))];
+  get exerciseGroups(): ExerciseGroup[] {
+    const headers = [...new Set(this.sortedExercises.map((e) => e.name))];
+    return headers.map((name) => ({
+      name,
+      exercises: this.sortedExercises
+        .filter((e) => e.name === name)
+        .sort((a, b) => a.level - b.level),
+    }));
   }
 
   <template>
     <div ...attributes>
-      {{#each this.exerciseHeaders as |header|}}
+      {{#each this.exerciseGroups as |group|}}
         <div class="mx-auto mb-10">
           <div class="max-w-none mx-auto">
             <div class="sm:rounded-lg pb-4 overflow-hidden">
               <div class="sm:px-6 hidden px-4 py-5">
-                //remove hidden when "Noise filter will be implemented"
+                {{!-- remove hidden when "Noise filter will be implemented" --}}
                 <h3
                   data-test-series-navigation-header
                   class="navigation-block__header text-lg font-bold leading-3"
                 >
-                  {{header}}
+                  {{group.name}}
                 </h3>
               </div>
-              {{#let
-                (sortBy "level" (filterBy "name" header this.sortedExercises))
-                as |slices|
-              }}
-                <div
-                  data-test-exercises-name-group
-                >
-                  <h3 class="sm:pl-4 pl-2">{{get (get slices '0') 'name'}}</h3>
-                  <div class="sm:grid-cols-4 md:grid-cols-5 sm:gap-3 grid justify-center grid-cols-3 gap-2 mx-2">
-                    {{#each slices as |exercise|}}
+              <div
+                data-test-exercises-name-group
+              >
+                <h3 class="sm:pl-4 pl-2">{{group.name}}</h3>
+                <div class="sm:grid-cols-4 md:grid-cols-5 sm:gap-3 grid justify-center grid-cols-3 gap-2 mx-2">
+                  {{#each group.exercises as |exercise|}}
                     {{#let
                       (contains exercise.id (or @available (array)))
                       as |isAvailable|
@@ -73,10 +75,8 @@ export default class SeriesNavigationComponent extends Component<SeriesNavigatio
                       </div>
                     {{/let}}
                   {{/each}}
-                
-                  </div>
-                  </div>
-              {{/let}}
+                </div>
+              </div>
             </div>
           </div>
         </div>
