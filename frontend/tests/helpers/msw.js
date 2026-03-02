@@ -1,104 +1,125 @@
 /**
- * MSW v2 test helper with @ember/test-waiters integration.
+ * MSW test helper with @ember/test-waiters integration.
  *
- * Uses setupWorker (Service Worker) for proper network-level interception.
+ * Uses @mswjs/interceptors/fetch for reliable fetch interception (no Service Worker).
  * Wraps fetch with a test-waiter so settled() waits for all pending requests.
- * Provides a mirage-compatible server.get/post/put/delete API via worker.use().
+ * Provides a mirage-compatible server.get/post/put/delete API.
  */
-import { http, HttpResponse } from 'msw';
-import { setupWorker } from 'msw/browser';
-import { buildWaiter, waitForPromise } from '@ember/test-waiters';
+import { FetchInterceptor } from '@mswjs/interceptors/fetch';
+import { buildWaiter } from '@ember/test-waiters';
 
 // ─── Test waiter for fetch tracking ──────────────────────────────────────────
 
 const fetchWaiter = buildWaiter('fetch-waiter');
 
-// ─── Default handlers ────────────────────────────────────────────────────────
+// ─── Path matching ───────────────────────────────────────────────────────────
+
+function compilePath(pattern) {
+  const paramNames = [];
+  const regexStr = pattern.replace(/:([^/]+)/g, (_match, name) => {
+    paramNames.push(name);
+    return '([^/]+)';
+  });
+  return { regex: new RegExp(`^${regexStr}$`), paramNames };
+}
+
+function matchPath(pattern, pathname) {
+  const { regex, paramNames } = compilePath(pattern);
+  const match = pathname.match(regex);
+  if (!match) return null;
+  const params = {};
+  paramNames.forEach((name, i) => {
+    params[name] = match[i + 1];
+  });
+  return params;
+}
+
+// ─── Handler registry ────────────────────────────────────────────────────────
+
+let runtimeHandlers = [];
 
 const defaultHandlers = [
-  http.get('/api/users/current', () =>
-    HttpResponse.json({
+  {
+    method: 'GET',
+    path: '/api/users/current',
+    handler: () => ({
       data: {
         firstName: 'First-Name',
         lastName: 'Last-Name',
         email: 'em@il',
       },
     }),
-  ),
-  http.get('/api/v2/statistics/study/week', () =>
-    HttpResponse.json({ data: [] }),
-  ),
-  http.get('/api/v2/statistics/study/year', () =>
-    HttpResponse.json({ data: [] }),
-  ),
-  http.get('/api/groups', () => HttpResponse.json({ data: [] })),
-  http.get('/api/groups/:id', () => HttpResponse.json({ data: {} })),
-  http.get('/api/subgroups', () => HttpResponse.json({ data: [] })),
-  http.get('/api/series', () => HttpResponse.json({ data: [] })),
-  http.get('/api/series/:id', () => HttpResponse.json({ data: {} })),
-  http.get('/api/exercises', () => HttpResponse.json({ data: [] })),
-  http.get('/api/exercises/:id', () => HttpResponse.json({ data: {} })),
-  http.get('/api/tasks', () => HttpResponse.json({ data: [] })),
-  http.get('/api/tasks/:id', () => HttpResponse.json({ data: {} })),
-  http.post('/api/study-history', () => HttpResponse.json({ id: '1' })),
-  http.post('/api/exercises/byIds', () => HttpResponse.json({ data: [] })),
+  },
+  {
+    method: 'GET',
+    path: '/api/v2/statistics/study/week',
+    handler: () => ({ data: [] }),
+  },
+  {
+    method: 'GET',
+    path: '/api/v2/statistics/study/year',
+    handler: () => ({ data: [] }),
+  },
+  { method: 'GET', path: '/api/groups', handler: () => ({ data: [] }) },
+  { method: 'GET', path: '/api/groups/:id', handler: () => ({ data: {} }) },
+  { method: 'GET', path: '/api/subgroups', handler: () => ({ data: [] }) },
+  { method: 'GET', path: '/api/series', handler: () => ({ data: [] }) },
+  { method: 'GET', path: '/api/series/:id', handler: () => ({ data: {} }) },
+  { method: 'GET', path: '/api/exercises', handler: () => ({ data: [] }) },
+  {
+    method: 'GET',
+    path: '/api/exercises/:id',
+    handler: () => ({ data: {} }),
+  },
+  { method: 'GET', path: '/api/tasks', handler: () => ({ data: [] }) },
+  { method: 'GET', path: '/api/tasks/:id', handler: () => ({ data: {} }) },
+  {
+    method: 'POST',
+    path: '/api/study-history',
+    handler: () => ({ id: '1' }),
+  },
+  {
+    method: 'POST',
+    path: '/api/exercises/byIds',
+    handler: () => ({ data: [] }),
+  },
 ];
 
-// ─── Worker singleton ────────────────────────────────────────────────────────
+// ─── Interceptor singleton ───────────────────────────────────────────────────
 
-let worker;
-let workerStarted = false;
+let interceptor;
+let interceptorApplied = false;
 
-async function ensureWorker() {
-  if (!worker) {
-    worker = setupWorker(...defaultHandlers);
+function findHandler(method, pathname) {
+  for (const entry of runtimeHandlers) {
+    if (entry.method !== method) continue;
+    const params = matchPath(entry.path, pathname);
+    if (params) return { handler: entry.handler, params };
   }
-  if (!workerStarted) {
-    await waitForPromise(
-      worker.start({ onUnhandledRequest: 'bypass', quiet: true }),
-    );
-    workerStarted = true;
+  for (const entry of defaultHandlers) {
+    if (entry.method !== method) continue;
+    const params = matchPath(entry.path, pathname);
+    if (params) return { handler: entry.handler, params };
   }
+  return null;
 }
 
-// ─── Fetch waiter wrapper ────────────────────────────────────────────────────
+function ensureInterceptor() {
+  if (interceptorApplied) return;
 
-let fetchWrapped = false;
-let nativeFetch;
+  interceptor = new FetchInterceptor();
 
-function wrapFetchWithWaiter() {
-  if (fetchWrapped) return;
-  fetchWrapped = true;
-  nativeFetch = window.fetch;
-
-  window.fetch = function (...args) {
-    const token = fetchWaiter.beginAsync();
-    return nativeFetch
-      .apply(window, args)
-      .then((response) => {
-        fetchWaiter.endAsync(token);
-        return response;
-      })
-      .catch((error) => {
-        fetchWaiter.endAsync(token);
-        throw error;
-      });
-  };
-}
-
-// ─── Mirage-compatible server API ────────────────────────────────────────────
-
-function normalizePath(path) {
-  const cleanPath = path.replace(/^\//, '');
-  return `/api/${cleanPath}`;
-}
-
-function createMSWHandler(method, path, mirageHandler) {
-  const fullPath = normalizePath(path);
-  const httpMethod = http[method.toLowerCase()];
-
-  return httpMethod(fullPath, async ({ request, params }) => {
+  interceptor.on('request', async ({ request, controller }) => {
     const url = new URL(request.url);
+    const method = request.method.toUpperCase();
+    const pathname = url.pathname;
+
+    const match = findHandler(method, pathname);
+    if (!match) {
+      return;
+    }
+
+    const { handler, params } = match;
     const queryParams = Object.fromEntries(url.searchParams);
 
     let requestBody = '';
@@ -109,18 +130,48 @@ function createMSWHandler(method, path, mirageHandler) {
     }
 
     const mirageRequest = { params, queryParams, requestBody };
-    const result = mirageHandler(null, mirageRequest);
+    const token = fetchWaiter.beginAsync();
 
-    if (result === undefined || result === null) {
-      return new HttpResponse(null, { status: 200 });
+    try {
+      const result = handler(null, mirageRequest);
+
+      if (result === undefined || result === null) {
+        controller.respondWith(new Response(null, { status: 200 }));
+      } else {
+        controller.respondWith(
+          new Response(JSON.stringify(result), {
+            status: 200,
+            headers: { 'Content-Type': 'application/json' },
+          }),
+        );
+      }
+    } finally {
+      fetchWaiter.endAsync(token);
     }
-    return HttpResponse.json(result);
   });
+
+  interceptor.apply();
+  interceptorApplied = true;
+}
+
+function resetHandlers() {
+  runtimeHandlers = [];
+}
+
+// ─── Mirage-compatible server API ────────────────────────────────────────────
+
+function normalizePath(path) {
+  const cleanPath = path.replace(/^\//, '');
+  return `/api/${cleanPath}`;
 }
 
 function createServerCompat() {
   const addHandler = (method, path, handler) => {
-    worker.use(createMSWHandler(method, path, handler));
+    runtimeHandlers.unshift({
+      method: method.toUpperCase(),
+      path: normalizePath(path),
+      handler,
+    });
   };
 
   return {
@@ -142,14 +193,13 @@ function createServerCompat() {
 // ─── Test setup ──────────────────────────────────────────────────────────────
 
 export function setupMSW(hooks) {
-  hooks.beforeEach(async function () {
-    await ensureWorker();
-    wrapFetchWithWaiter();
-    worker.resetHandlers(...defaultHandlers);
+  hooks.beforeEach(function () {
+    ensureInterceptor();
+    resetHandlers();
     window.server = createServerCompat();
   });
 
   hooks.afterEach(function () {
-    worker.resetHandlers(...defaultHandlers);
+    resetHandlers();
   });
 }

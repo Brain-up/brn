@@ -156,8 +156,5 @@
     "paths": [
       "lib/dev-headers"
     ]
-  },
-  "msw": {
-    "workerDirectory": "public"
   }
 }
