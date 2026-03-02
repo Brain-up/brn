@@ -28,11 +28,11 @@ import { notEq } from 'ember-truth-helpers';
 import { t } from 'ember-intl';
 import htmlSafe from 'brn/helpers/html-safe';
 import SlotTo from 'brn/components/slot-to';
-import Timer from 'brn/components/timer/component';
+import Timer from 'brn/components/timer';
 import ExerciseStudyConfig from 'brn/components/exercise-study-config';
-import ProgressSausage from 'brn/components/progress-sausage/component';
-import ExerciseSteps from 'brn/components/exercise-steps/component';
-import AudioPlayer from 'brn/components/audio-player/component';
+import ProgressSausage from 'brn/components/progress-sausage';
+import ExerciseSteps from 'brn/components/exercise-steps';
+import AudioPlayer from 'brn/components/audio-player';
 import UiBottomContainer from 'brn/components/ui/bottom-container';
 import StartTaskButton from 'brn/components/start-task-button';
 

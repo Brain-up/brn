@@ -11,7 +11,7 @@ import {action} from "@ember/object";
 import didInsert from '@ember/render-modifiers/modifiers/did-insert';
 import didUpdate from '@ember/render-modifiers/modifiers/did-update';
 import { t } from 'ember-intl';
-import LoadingSpinner from 'brn/components/loading-spinner/component';
+import LoadingSpinner from 'brn/components/loading-spinner';
 
 interface DailyTimeTableSignature {
   Args: {

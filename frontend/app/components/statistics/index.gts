@@ -16,9 +16,9 @@ import didInsert from '@ember/render-modifiers/modifiers/did-insert';
 import { on } from '@ember/modifier';
 import { t } from 'ember-intl';
 import UiHelp from 'brn/components/ui/help';
-import StatisticsMonthTimeTrack from 'brn/components/statistics/month-time-track/component';
-import StatisticsWeekTimeTrack from 'brn/components/statistics/week-time-track/component';
-import StatisticsInfoDialog from 'brn/components/statistics/info-dialog/component';
+import StatisticsMonthTimeTrack from 'brn/components/statistics/month-time-track';
+import StatisticsWeekTimeTrack from 'brn/components/statistics/week-time-track';
+import StatisticsInfoDialog from 'brn/components/statistics/info-dialog';
 
 interface StatisticsSignature {
   Args: {

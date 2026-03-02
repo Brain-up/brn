@@ -11,7 +11,7 @@ import { eq } from 'ember-truth-helpers';
 import { not } from 'ember-truth-helpers';
 import UiLeftArrow from 'brn/components/ui/left-arrow';
 import UiRightArrow from 'brn/components/ui/right-arrow';
-import LoadingSpinner from 'brn/components/loading-spinner/component';
+import LoadingSpinner from 'brn/components/loading-spinner';
 import StatisticsMonthTimeTrackItem from 'brn/components/statistics/month-time-track-item';
 interface MonthTimeTrackSignature {
   Args: {

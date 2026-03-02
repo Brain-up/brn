@@ -2,7 +2,7 @@ import RouteTemplate from 'ember-route-template';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import UiIconLogo from 'brn/components/ui/icon/logo';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import LoadingSpinner from 'brn/components/loading-spinner/component';
+import LoadingSpinner from 'brn/components/loading-spinner';
 
 export default RouteTemplate(
   <template>

@@ -1,27 +1,111 @@
-import Component from 'brn/components/task-player/words-sequences/component';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import Component from '@glimmer/component';
+import { set, action } from '@ember/object';
+import { service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import deepEqual from 'brn/utils/deep-equal';
+import deepCopy from 'brn/utils/deep-copy';
 import customTimeout from 'brn/utils/custom-timeout';
 import { urlForAudio } from 'brn/utils/file-url';
-import deepCopy from 'brn/utils/deep-copy';
 import { TaskItem } from 'brn/utils/task-item';
-import { MODES } from 'brn/utils/task-modes';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { MODES, type Mode } from 'brn/utils/task-modes';
 import { task, Task as TaskGenerator } from 'ember-concurrency';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { StatEvents } from 'brn/services/stats';
+import type AudioService from 'brn/services/audio';
+import StatsService, { StatEvents } from 'brn/services/stats';
 import AnswerOption from 'brn/utils/answer-option';
 import type { TaskSingleSimpleWords as SingleSimpleWordTask } from 'brn/schemas/task/single-simple-words';
+import type { TaskBase as Task } from 'brn/schemas/task';
 import didInsert from '@ember/render-modifiers/modifiers/did-insert';
 import { hash } from '@ember/helper';
 import { t } from 'ember-intl';
 import UiTaskContent from 'brn/components/ui/task-content';
 import TaskPlayerSingleSimpleWordsOption from 'brn/components/task-player/single-simple-words/option';
 import optional from 'brn/helpers/optional';
-export default class SingleSimpleWordsComponent extends Component<SingleSimpleWordTask> {
+
+export interface WordsSequencesSignature<T> {
+  Args: {
+  task: T;
+  mode: Mode;
+  disableAnswers: boolean;
+  activeWord: string;
+  disableAudioPlayer: boolean;
+  onPlayText(): void;
+  onRightAnswer(): void;
+  onWrongAnswer(params?: { skipRetry: true }): void;
+  };
+  Element: HTMLElement;
+}
+
+export default class SingleSimpleWordsComponent extends Component<WordsSequencesSignature<SingleSimpleWordTask>> {
+  // --- Services (from WordsSequencesComponent) ---
+  @service audio!: AudioService;
+  @service stats!: StatsService;
+
+  // --- Tracked properties (from WordsSequencesComponent) ---
+  @tracked tasksCopy: TaskItem[] = [];
+  @tracked isCorrect = false;
+
+  // --- Own tracked properties ---
   @tracked currentAnswer: string[] = [];
+
+  // --- Getters from WordsSequencesComponent ---
+  get task(): SingleSimpleWordTask {
+    return this.args.task;
+  }
+  get mode() {
+    return this.args.mode;
+  }
+  get onWrongAnswer() {
+    return this.args.onWrongAnswer;
+  }
+  get onRightAnswer() {
+    return this.args.onRightAnswer;
+  }
+  get uncompletedTasks(): TaskItem[] {
+    return this.tasksCopy.filter(
+      ({ completedInCurrentCycle }) => completedInCurrentCycle === false,
+    );
+  }
+  get firstUncompletedTask() {
+    const item = this.uncompletedTasks[0];
+    const words = item?.answer.map((a: { word: string }) => a.word);
+    document.body.dataset.correctAnswer = words?.join(',') ?? '';
+    return item;
+  }
+
+  // --- Methods from WordsSequencesComponent ---
+  startNewTask() {
+    this.markCompleted(this.firstUncompletedTask as TaskItem);
+    this.startTask();
+  }
+  markCompleted(task: TaskItem) {
+    set(task, 'completedInCurrentCycle', true);
+    set(task, 'nextAttempt', false);
+  }
+  markNextAttempt(task: TaskItem) {
+    set(task, 'nextAttempt', true);
+  }
+
+  async handleCorrectAnswer() {
+    await customTimeout(300);
+    this.startNewTask();
+    if (!this.firstUncompletedTask) {
+      await customTimeout(3000);
+      this.onRightAnswer();
+    }
+  }
+
+  // --- Actions from WordsSequencesComponent ---
+  @action onInsert() {
+    this.updateLocalTasks();
+    this.startTask();
+  }
+
+  @action
+  async checkMaybe(selectedData: AnswerOption) {
+    this.showTaskResult.perform(selectedData);
+  }
+
+  // --- Own overrides ---
   willDestroy(): void {
     super.willDestroy();
     if (this.audio.isBusy) {
@@ -184,7 +268,7 @@ export default class SingleSimpleWordsComponent extends Component<SingleSimpleWo
     >
       {{yield (hash tasks=this.tasksCopy) to="header"}}
       {{#if this.tasksCopy.length}}
-    
+
         <UiTaskContent>
           <ul class="task-player__options sm:mx-8 mx-2 mt-2">
             {{#each this.sortedAnswerOptions key="word" as |answerOption|}}
@@ -201,7 +285,7 @@ export default class SingleSimpleWordsComponent extends Component<SingleSimpleWo
               />
             {{/each}}
           </ul>
-    
+
           {{#if this.showTip}}
             <div
               class="sm:mx-8 sm:mt-8 flex self-end px-4 py-3 mx-2 mt-4 text-sm leading-normal text-blue-700 bg-blue-100 rounded-md"
@@ -215,7 +299,7 @@ export default class SingleSimpleWordsComponent extends Component<SingleSimpleWo
             </div>
           {{/if}}
         </UiTaskContent>
-    
+
         {{yield (hash audioFileUrl=this.audioFileUrl) to="footer"}}
       {{/if}}
     </div>

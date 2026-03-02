@@ -2,7 +2,7 @@ import Component from '@glimmer/component';
 import {
   BarDataType,
   BarOptionsType,
-} from 'brn/components/statistics/bar-chart/component';
+} from 'brn/components/statistics/bar-chart';
 import {
   PROGRESS,
   type UserExercisingProgressStatusType,
@@ -18,9 +18,9 @@ import { isNone } from '@ember/utils';
 import didInsert from '@ember/render-modifiers/modifiers/did-insert';
 import didUpdate from '@ember/render-modifiers/modifiers/did-update';
 import { t } from 'ember-intl';
-import LoadingSpinner from 'brn/components/loading-spinner/component';
-import StatisticsBarChart from 'brn/components/statistics/bar-chart/component';
-import StatisticsDailyTimeTable from 'brn/components/statistics/daily-time-table/component';
+import LoadingSpinner from 'brn/components/loading-spinner';
+import StatisticsBarChart from 'brn/components/statistics/bar-chart';
+import StatisticsDailyTimeTable from 'brn/components/statistics/daily-time-table';
 
 /* eslint-disable no-unused-vars */
 enum PROGRESS_COLORS {

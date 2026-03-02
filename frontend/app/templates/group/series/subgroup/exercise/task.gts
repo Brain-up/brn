@@ -2,7 +2,7 @@ import RouteTemplate from 'ember-route-template';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import queue from 'brn/helpers/queue';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import TaskPlayer from 'brn/components/task-player/component';
+import TaskPlayer from 'brn/components/task-player';
 
 export default RouteTemplate(
   <template>

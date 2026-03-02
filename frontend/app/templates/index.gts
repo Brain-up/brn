@@ -6,7 +6,7 @@ import UiButton from 'brn/components/ui/button';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import UiIconPersons from 'brn/components/ui/icon/persons';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import AboutUs from 'brn/components/about-us/template';
+import AboutUs from 'brn/components/about-us';
 
 export default RouteTemplate(
   <template>

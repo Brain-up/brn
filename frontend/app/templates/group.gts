@@ -4,11 +4,11 @@ import pageTitle from 'ember-page-title/helpers/page-title';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import modelForRoute from 'brn/helpers/model-for-route';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import Breadcrumbs from 'brn/components/breadcrumbs/component';
+import Breadcrumbs from 'brn/components/breadcrumbs';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import SubgroupNavigation from 'brn/components/subgroup-navigation';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import GroupNavigation from 'brn/components/group-navigation/template';
+import GroupNavigation from 'brn/components/group-navigation';
 
 export default RouteTemplate(
   <template>

@@ -12,7 +12,7 @@ import arrayLast from 'brn/helpers/array-last';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import arrayFirst from 'brn/helpers/array-first';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import ExerciseType from 'brn/components/exercise-type/template';
+import ExerciseType from 'brn/components/exercise-type';
 
 export default RouteTemplate(
   <template>

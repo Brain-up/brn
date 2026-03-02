@@ -28,7 +28,7 @@ import { eq } from 'ember-truth-helpers';
 import { not } from 'ember-truth-helpers';
 import arrayLast from 'brn/helpers/array-last';
 import UiTaskContent from 'brn/components/ui/task-content';
-import TextImageButton from 'brn/components/text-image-button/component';
+import TextImageButton from 'brn/components/text-image-button';
 
 function getEmptyTemplate(
   selectedItemsOrder: string[] = [],

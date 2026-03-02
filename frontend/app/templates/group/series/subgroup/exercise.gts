@@ -14,9 +14,9 @@ import { LinkTo } from '@ember/routing';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import ModalDialog from 'ember-modal-dialog/components/modal-dialog';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import AnswerCorrectnessWidget from 'brn/components/answer-correctness-widget/component';
+import AnswerCorrectnessWidget from 'brn/components/answer-correctness-widget';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import ExerciseStats from 'brn/components/exercise-stats/component';
+import ExerciseStats from 'brn/components/exercise-stats';
 
 export default RouteTemplate(
   <template>

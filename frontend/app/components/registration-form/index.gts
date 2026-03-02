@@ -1,13 +1,13 @@
-import LoginFormComponent from 'brn/components/login-form/component';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import Component from '@glimmer/component';
+import { service } from '@ember/service';
 import { action } from '@ember/object';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { task, Task } from 'ember-concurrency';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { task, Task, timeout } from 'ember-concurrency';
 import { tracked } from '@glimmer/tracking';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { getOwner } from '@ember/application';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import type Router from '@ember/routing/router-service';
+import type Session from 'ember-simple-auth/services/session';
+import type IntlService from 'ember-intl/services/intl';
+import type NetworkService from 'brn/services/network';
 import FirebaseAuthenticator from 'brn/authenticators/firebase';
 import { isBornYearValid } from 'brn/utils/validators';
 import { LinkTo } from '@ember/routing';
@@ -15,18 +15,16 @@ import { on } from '@ember/modifier';
 import { t } from 'ember-intl';
 import { eq } from 'ember-truth-helpers';
 import { or } from 'ember-truth-helpers';
-import LoadingSpinner from 'brn/components/loading-spinner/component';
-import LoginFormInput from 'brn/components/login-form/input/component';
+import LoadingSpinner from 'brn/components/loading-spinner';
+import LoginFormInput from 'brn/components/login-form/input';
 import UiButton from 'brn/components/ui/button';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const ERRORS_MAP = {
   'The user already exists!': 'registration_form.email_exists',
   PASSWORD_MUST_BE_BETWEEN_6_AND_20_CHARACTERS_LONG:
     'registration_form.password_length',
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface LatestUserDTO {
   name: string;
   email: string;
@@ -37,7 +35,17 @@ interface LatestUserDTO {
   id?: string;
 }
 
-export default class RegistrationFormComponent extends LoginFormComponent {
+export default class RegistrationFormComponent extends Component {
+  // --- Services (from LoginFormComponent) ---
+  @service('session') session!: Session;
+  @service('router') router!: Router;
+  @service('network') network!: NetworkService;
+  @service('intl') intl!: IntlService;
+
+  // --- Tracked properties (from LoginFormComponent) ---
+  @tracked errorMessage = '';
+
+  // --- Own tracked properties ---
   @tracked email!: string;
   @tracked firstName!: string;
   @tracked lastName!: string;
@@ -49,6 +57,74 @@ export default class RegistrationFormComponent extends LoginFormComponent {
 
   @tracked agreedStatusErrorMessage = '';
   @tracked serverErrorMessage = '';
+
+  // --- Getters/methods from LoginFormComponent ---
+  get loginInProgress() {
+    return this.loginTask.lastSuccessful || this.loginTask.isRunning;
+  }
+
+  get usernameError() {
+    const { login } = this;
+    if (login === undefined) {
+      return false;
+    }
+    const trimmedLogin = this.trimmedValue(login);
+    return trimmedLogin.length === 0 || trimmedLogin.indexOf('@') === -1;
+  }
+
+  get passwordError() {
+    if (this.password === undefined) {
+      return false;
+    }
+    return this.trimmedValue(this.password).length === 0;
+  }
+
+  trimmedValue(value: string) {
+    return (value || '').trim();
+  }
+
+  // loginTask (from LoginFormComponent)
+  @(task(function* (this: RegistrationFormComponent) {
+    const { login, password } = this;
+    try {
+      yield this.session.authenticate(
+        'authenticator:firebase',
+        login,
+        password,
+      );
+      yield timeout(500);
+      yield this.network.loadCurrentUser();
+    } catch (error) {
+      let key = '';
+      if (error.responseJSON) {
+        key = error.responseJSON.errors.pop();
+      } else {
+        key = error.error || error;
+      }
+
+      if (this.intl.exists(`msg.validation.${key}`)) {
+        this.errorMessage = this.intl.t(`msg.validation.${key}`);
+      } else {
+        this.errorMessage = key;
+      }
+
+      yield this.loginTask.cancelAll();
+    }
+
+    if (this.session.isAuthenticated) {
+      this.router.transitionTo('index');
+    }
+  }).drop())
+  loginTask!: Task<any, any>;
+
+  // --- Own getters ---
+  // login getter/setter (overrides parent's tracked `login` property)
+  get login() {
+    return this.email;
+  }
+  set login(value) {
+    this.email = value;
+  }
 
   get warningPasswordsEquality() {
     if (this.repeatPassword === undefined) {
@@ -106,13 +182,7 @@ export default class RegistrationFormComponent extends LoginFormComponent {
       this.registrationTask.isRunning
     );
   }
-  // @ts-expect-error overrides property
-  get login() {
-    return this.email;
-  }
-  set login(value) {
-    this.email = value;
-  }
+
   @(task(function* (this: RegistrationFormComponent): Generator<unknown, void, any> {
     const user: LatestUserDTO = {
       name: this.firstName.trim(),
@@ -282,7 +352,7 @@ export default class RegistrationFormComponent extends LoginFormComponent {
             <label class="ml-1 text-sm text-gray-500" for="male">
               {{t "registration_form.gender_male"}}
             </label>
-    
+
             {{#if this.warningGender}}
               <p
                 data-test-warning-message="gender"

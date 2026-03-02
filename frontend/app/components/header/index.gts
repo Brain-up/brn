@@ -13,7 +13,7 @@ import { eq } from 'ember-truth-helpers';
 import UiIconLogo from 'brn/components/ui/icon/logo';
 import UiButton from 'brn/components/ui/button';
 import GlobalTimer from 'brn/components/global-timer';
-import LoadingSpinner from 'brn/components/loading-spinner/component';
+import LoadingSpinner from 'brn/components/loading-spinner';
 
 export default class HeaderComponent extends Component {
   @service('session') session!: Session;

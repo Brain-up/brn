@@ -8,9 +8,9 @@ import isActive from 'brn/helpers/is-active';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import htmlSafe from 'brn/helpers/html-safe';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import Header from 'brn/components/header/component';
+import Header from 'brn/components/header';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import Footer from 'brn/components/footer/template';
+import Footer from 'brn/components/footer';
 
 export default RouteTemplate(
   <template>

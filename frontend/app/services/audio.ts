@@ -27,10 +27,10 @@ import {
 } from 'brn/utils/audio-api';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import Service, { service } from '@ember/service';
-import TimerComponent from 'brn/components/timer/component';
+import TimerComponent from 'brn/components/timer';
 import NetworkService from './network';
 import StatsService, { StatEvents } from './stats';
-import { ToneObject } from 'brn/components/audio-player/component';
+import { ToneObject } from 'brn/components/audio-player';
 import type { Signal as SignalModel } from 'brn/schemas/signal';
 import Intl from 'ember-intl/services/intl';
 import { PolySynth, Synth, SynthOptions } from 'tone';

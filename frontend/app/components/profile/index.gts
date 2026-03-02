@@ -19,7 +19,7 @@ import { eq } from 'ember-truth-helpers';
 import htmlSafe from 'brn/helpers/html-safe';
 import ModalDialog from 'ember-modal-dialog/components/modal-dialog';
 import UiAvatars from 'brn/components/ui/avatars';
-import LoginFormInput from 'brn/components/login-form/input/component';
+import LoginFormInput from 'brn/components/login-form/input';
 
 export default class ProfileComponent extends Component {
   @service('intl') intl!: IntlService;

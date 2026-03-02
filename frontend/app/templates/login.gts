@@ -4,7 +4,7 @@ import pageTitle from 'ember-page-title/helpers/page-title';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { t } from 'ember-intl';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import LoginForm from 'brn/components/login-form/component';
+import LoginForm from 'brn/components/login-form';
 
 export default RouteTemplate(
   <template>
