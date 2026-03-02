@@ -1,25 +1,24 @@
 /**
- * Module augmentation for ember-concurrency's classic decorator pattern.
+ * Type shim for ember-concurrency that adds classic decorator pattern support.
  *
- * ember-concurrency 5.x ships types focused on the async arrow function pattern,
- * but at runtime it still supports the classic `@(task(function*(){}).drop())` pattern.
- * This augmentation adds proper type support for generator-based task decorators.
+ * Because tsconfig `paths` maps `"*"` to `"types/*"`, this file is resolved
+ * as the primary module for `ember-concurrency`. We re-export all public
+ * symbols from the real package and add a generator function overload for
+ * `task()` that returns `TaskProperty` (with `.drop()`, `.keepLatest()`, etc.).
  *
- * IMPORTANT: Because tsconfig `paths` maps `"*"` to `"types/*"`, this file is
- * resolved as the primary module for `ember-concurrency`. We must therefore
- * re-export every public symbol that consumers import from the package, in
- * addition to our generator-based overload.
+ * This approach works with `moduleResolution: "bundler"` where the re-export
+ * source resolves to node_modules (not back to this file).
  */
 
-// Pull everything from the real package (resolved via node_modules)
-// and re-export so that `import { Task, timeout, ... } from 'ember-concurrency'`
-// keeps working.
+// Re-export all public symbols from the real package
 export {
-  Task,
-  TaskInstance,
-  TaskProperty,
-  TaskCancelation,
-  Yieldable,
+  type Task,
+  type TaskInstance,
+  type TaskProperty,
+  type TaskCancelation,
+  type Yieldable,
+  type TaskForAsyncTaskFunction,
+  type AsyncArrowTaskFunction,
   timeout,
   rawTimeout,
   forever,

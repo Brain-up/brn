@@ -3,7 +3,7 @@ import RouteTemplate from 'ember-route-template';
 
 interface Signature {
   Args: {
-    model: any;
+    model: string;
   };
 }
 

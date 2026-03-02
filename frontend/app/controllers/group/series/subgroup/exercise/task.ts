@@ -18,11 +18,13 @@ export default class GroupSeriesSubgroupExerciseTaskController extends Controlle
 
     if (!this.model.isLastTask) {
       const nextTask = this.model.nextTask as { exercise?: { id?: string }; id?: string } | null;
-      this.router.transitionTo(
-        'group.series.subgroup.exercise.task',
-        nextTask?.exercise?.id,
-        nextTask?.id,
-      );
+      if (nextTask?.exercise?.id && nextTask?.id) {
+        this.router.transitionTo(
+          'group.series.subgroup.exercise.task',
+          nextTask.exercise.id,
+          nextTask.id,
+        );
+      }
     }
   }
 }

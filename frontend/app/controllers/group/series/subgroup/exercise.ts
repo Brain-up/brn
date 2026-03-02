@@ -92,7 +92,7 @@ export default class GroupSeriesSubgroupExerciseController extends Controller {
 
   @action
   async afterCompleted() {
-    this.enableNextExercise(this.model as Exercise);
+    this.enableNextExercise(this.model);
 
     const subgroupController = getOwner(this)!.lookup(`controller:group.series.subgroup`) as GroupSeriesSubgroupController;
     await subgroupController.exerciseAvailabilityCalculationTask.perform();
