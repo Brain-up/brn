@@ -1897,7 +1897,7 @@
     decorator-transforms "^2.0.0"
     dom-element-descriptors "^0.5.0"
 
-"@ember/test-waiters@^3":
+"@ember/test-waiters@^3", "@ember/test-waiters@^3.1.0":
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/@ember/test-waiters/-/test-waiters-3.1.0.tgz#61399919cbf793978da0b8bfdfdb7bca0cb80e9e"
   integrity sha512-bb9h95ktG2wKY9+ja1sdsFBdOms2lB19VWs8wmNpzgHv1NCetonBoV5jHBV4DHt0uS1tg9z66cZqhUVlYs96KQ==
