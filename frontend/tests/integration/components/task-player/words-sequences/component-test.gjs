@@ -36,7 +36,7 @@ module('Integration | Component | words-seq-task-player', function (hooks) {
         array = array.concat(subArray);
         return array;
       }, [])
-      .mapBy('word')
+      .map((item) => item.word)
       .forEach((word) => {
         assert.ok(pageWords.includes(word), `word "${word}" is present`);
       });

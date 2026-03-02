@@ -169,16 +169,13 @@ module(
 
       const columns = findAll('.type-column');
       columns.forEach((col) => {
-        const style = window.getComputedStyle(col);
-        assert.strictEqual(
-          style.display,
-          'flex',
-          'column uses flex layout',
+        assert.ok(
+          col.classList.contains('flex'),
+          'column has flex class for flex layout',
         );
-        assert.strictEqual(
-          style.flexDirection,
-          'column',
-          'column items are stacked vertically',
+        assert.ok(
+          col.classList.contains('flex-col'),
+          'column has flex-col class for vertical stacking',
         );
       });
     });

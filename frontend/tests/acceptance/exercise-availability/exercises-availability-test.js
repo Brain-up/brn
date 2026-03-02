@@ -1,5 +1,6 @@
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
+import { waitUntil, settled } from '@ember/test-helpers';
 import {
   getServerResponses,
   chooseAnswer,
@@ -28,6 +29,12 @@ module('Acceptance | exercises availability', function (hooks) {
 
   test('first exercices in the name group is available by default', async function (assert) {
     await pageObject.goToFirstSeriesPage();
+    // Wait for the keepLatestTask to resolve and update exercise availability
+    await waitUntil(
+      () => document.querySelector('[data-test-exercise-level="1"][data-test-exercise-name="exercise 1"]:not([aria-disabled])'),
+      { timeout: 3000 },
+    );
+    await settled();
     assert.dom('[data-test-exercise-level="1"]').exists({ count: 2 });
     assert
       .dom(
@@ -59,6 +66,12 @@ module('Acceptance | exercises availability', function (hooks) {
 
   test('marks available exercises withing a name group if previous is completed', async function (assert) {
     await pageObject.goToFirstSeriesPage();
+    // Wait for exercise availability to be calculated
+    await waitUntil(
+      () => document.querySelector('[data-test-exercise-level="1"][data-test-exercise-name="exercise 1"]:not([aria-disabled])'),
+      { timeout: 3000 },
+    );
+    await settled();
 
     assert
       .dom(
