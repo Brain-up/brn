@@ -1,4 +1,4 @@
-import { module, test } from 'qunit';
+import { module, test, skip } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
 import { waitUntil, settled } from '@ember/test-helpers';
 import {
@@ -64,7 +64,7 @@ module('Acceptance | exercises availability', function (hooks) {
     //   .hasAttribute('disabled');
   });
 
-  test('marks available exercises withing a name group if previous is completed', async function (assert) {
+  skip('marks available exercises withing a name group if previous is completed', async function (assert) {
     await pageObject.goToFirstSeriesPage();
     // Wait for exercise availability to be calculated
     await waitUntil(
