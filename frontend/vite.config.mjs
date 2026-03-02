@@ -31,6 +31,13 @@ const copyAssetsPlugin = () => ({
 });
 
 export default defineConfig(({ mode: _mode }) => ({
+  resolve: {
+    alias: {
+      // v1 addons use `import require from 'require'` (AMD require from loader.js).
+      // Map to a shim that re-exports the global AMD require as an ES module.
+      'require': resolve('lib/require-shim.js'),
+    },
+  },
   plugins: [
     classicEmberSupport(),
     ember(),
@@ -50,12 +57,6 @@ export default defineConfig(({ mode: _mode }) => ({
   },
   build: {
     rollupOptions: {
-      // v1 addons that use require() or have broken ESM exports.
-      // These only run in tests and are handled by Embroider's compat layer at runtime.
-      external: [
-        /node_modules\/ember-cli-mirage\//,
-        /node_modules\/ember-cli-page-object\//,
-      ],
       output: {
         // Exclude ffmpeg assets from fingerprinting
         assetFileNames(assetInfo) {
