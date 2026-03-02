@@ -6,20 +6,26 @@ import postcssImport from 'postcss-import';
 import { resolve } from 'path';
 import { copyFileSync, mkdirSync, existsSync } from 'fs';
 
-// Copy @ffmpeg/core assets to public/assets for static serving
-const ffmpegCopyPlugin = () => ({
-  name: 'copy-ffmpeg-assets',
+// Copy static assets (ffmpeg, loader.js) to public/assets for serving
+const copyAssetsPlugin = () => ({
+  name: 'copy-static-assets',
   buildStart() {
     const destDir = resolve('public/assets');
     if (!existsSync(destDir)) {
       mkdirSync(destDir, { recursive: true });
     }
+    // Copy @ffmpeg/core assets
     const ffmpegCoreDist = resolve('node_modules/@ffmpeg/core/dist');
     for (const file of ['ffmpeg-core.js', 'ffmpeg-core.wasm', 'ffmpeg-core.worker.js']) {
       const src = resolve(ffmpegCoreDist, file);
       if (existsSync(src)) {
         copyFileSync(src, resolve(destDir, file));
       }
+    }
+    // Copy loader.js (AMD module loader for v1 addon compatibility)
+    const loaderSrc = resolve('node_modules/loader.js/dist/loader/loader.js');
+    if (existsSync(loaderSrc)) {
+      copyFileSync(loaderSrc, resolve(destDir, 'loader.js'));
     }
   },
 });
@@ -32,7 +38,7 @@ export default defineConfig(({ mode: _mode }) => ({
       babelHelpers: 'runtime',
       extensions,
     }),
-    ffmpegCopyPlugin(),
+    copyAssetsPlugin(),
   ],
   css: {
     postcss: {

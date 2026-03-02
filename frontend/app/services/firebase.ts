@@ -11,7 +11,7 @@ export default class FirebaseService extends Service {
     return owner.resolveRegistration('config:environment').firebase;
   }
 
-  private get app(): firebase.app.App {
+  private ensureApp(): firebase.app.App {
     if (!this._app) {
       if (firebase.apps.length === 0) {
         this._app = firebase.initializeApp(this.config);
@@ -23,6 +23,6 @@ export default class FirebaseService extends Service {
   }
 
   auth(): firebase.auth.Auth {
-    return this.app.auth();
+    return this.ensureApp().auth();
   }
 }

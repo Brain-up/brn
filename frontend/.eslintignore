@@ -6,6 +6,9 @@
 /dist/
 /tmp/
 
+# generated static assets
+/public/assets/
+
 # dependencies
 /bower_components/
 /node_modules/
