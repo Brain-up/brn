@@ -26,7 +26,7 @@ import {
   preloadAudioFile,
 } from 'brn/utils/audio-api';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import Service, { inject as service } from '@ember/service';
+import Service, { service } from '@ember/service';
 import TimerComponent from 'brn/components/timer/component';
 import NetworkService from './network';
 import StatsService, { StatEvents } from './stats';

@@ -36,6 +36,9 @@
       ]
     }
   },
+  "glint": {
+    "environment": "ember-template-imports"
+  },
   "include": [
     "app/**/*",
     "tests/**/*",

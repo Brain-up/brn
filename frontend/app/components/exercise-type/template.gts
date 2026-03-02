@@ -1,0 +1,10 @@
+<template>
+  <div class="hover:shadow-outline shadow-xl">
+    <button class="btn-press card flex flex-col bg-white" type="button">
+      <img class="card-img" src="/pictures/exercise-type/{{@img}}.png" alt="{{@initial}}" />
+      <h4 class="w-full mb-2 text-sm font-medium text-center text-gray-700 uppercase">
+        {{@initial}}
+      </h4>
+    </button>
+  </div>
+</template>

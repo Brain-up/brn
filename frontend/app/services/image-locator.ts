@@ -1,4 +1,4 @@
-import Service, { inject as service } from '@ember/service';
+import Service, { service } from '@ember/service';
 import UserDataService from 'brn/services/user-data';
 
 export default class ImageLocatorService extends Service {

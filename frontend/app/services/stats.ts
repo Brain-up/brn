@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import Service, { inject as service } from '@ember/service';
+import Service, { service } from '@ember/service';
 import type { Exercise } from 'brn/schemas/exercise';
 import StudyingTimerService from './studying-timer';
 export enum StatEvents {

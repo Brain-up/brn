@@ -3,7 +3,7 @@ import type { Group as GroupModel } from 'brn/schemas/group';
 import type { Series as SeriesModel } from 'brn/schemas/series';
 import type Transition from '@ember/routing/-private/transition';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import type NetworkService from 'brn/services/network';
 import type Store from 'brn/services/store';
 import type Router from '@ember/routing/router-service';

@@ -1,4 +1,4 @@
-import Service, { inject as service } from '@ember/service';
+import Service, { service } from '@ember/service';
 import Session from 'ember-simple-auth/services/session';
 import Router from '@ember/routing/router-service';
 import NetworkService, { UserDTO } from 'brn/services/network';

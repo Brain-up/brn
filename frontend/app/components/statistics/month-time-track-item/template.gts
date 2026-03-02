@@ -1,0 +1,36 @@
+<template>
+  <div
+    class="
+      {{if @isSelected "selected" ""}}
+      month-time-track-item"
+    data-test-month-track-item
+    ...attributes
+  >
+    <div data-test-calendar class="calendar bg-PROGRESS-{{@data.progress}}">
+      <div class="header">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+      <div class="content">
+        <b class="time">
+          {{@data.time}}
+        </b>
+        <br />
+        <span class="days">
+          {{t "profile.statistics.month_time_track.days_period" days=@data.days}}
+        </span>
+      </div>
+    </div>
+    <div class="date">
+      <div class="month">
+        {{@data.month}}
+      </div>
+      <div class="year">
+        {{@data.year}}
+      </div>
+    </div>
+  </div>
+</template>

@@ -1,0 +1,5 @@
+<template>
+  <div style={{html-safe "flex: 1 0 auto;"}}>
+    {{yield}}
+  </div>
+</template>

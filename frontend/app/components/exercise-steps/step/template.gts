@@ -1,0 +1,5 @@
+<template>
+  <div class="flex flex-1">
+    <Ui::TabButton ...attributes @mode={{@mode}}>{{yield}}</Ui::TabButton>
+  </div>
+</template>

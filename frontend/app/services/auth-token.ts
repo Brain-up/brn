@@ -1,5 +1,5 @@
 import Service from '@ember/service';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import Session from 'ember-simple-auth/services/session';
 
 export default class AuthTokenService extends Service {

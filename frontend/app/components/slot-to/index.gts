@@ -1,0 +1,9 @@
+<template>
+  {{#let (query-node @selector) as |node|}}
+    {{#if node}}
+      {{#in-element node}}
+        {{yield}}
+      {{/in-element}}
+    {{/if}}
+  {{/let}}
+</template>

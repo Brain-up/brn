@@ -1,0 +1,19 @@
+<template>
+  <div ...attributes>
+    <ul class="hs full no-scrollbar">
+      {{#each (sort-by "id" (or @series @group.series)) as |series|}}
+        <li class="item">
+          <Ui::TabButton
+            data-test-active-link={{series.name}}
+            class="pl-3 pr-3"
+            @route="group.series"
+            @models={{array series.id}}
+            @title={{series.name}}
+            @tooltip={{series.description}}
+            {{autofit-text series.name}}
+          />
+        </li>
+      {{/each}}
+    </ul>
+  </div>
+</template>

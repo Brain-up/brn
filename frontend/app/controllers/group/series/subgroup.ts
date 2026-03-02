@@ -4,7 +4,7 @@ import { tracked } from '@glimmer/tracking';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { task, Task } from 'ember-concurrency';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import type NetworkService from 'brn/services/network';
 
 export default class GroupSeriesSubgroupController extends Controller {

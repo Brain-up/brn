@@ -1,7 +1,4 @@
-import Service from '@ember/service';
-import fetch from 'fetch';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { inject as service } from '@ember/service';
+import Service, { service } from '@ember/service';
 import Session from 'ember-simple-auth/services/session';
 import AuthTokenService from './auth-token';
 import UserDataService from './user-data';

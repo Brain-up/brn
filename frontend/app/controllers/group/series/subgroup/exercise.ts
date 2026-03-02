@@ -1,6 +1,6 @@
 import Controller from '@ember/controller';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { task, Task } from 'ember-concurrency';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -31,6 +31,24 @@ module.exports = {
     'server': 'readable'
   },
   overrides: [
+    // gts/gjs files
+    {
+      files: ['**/*.gts'],
+      parser: 'ember-eslint-parser',
+      extends: [
+        'plugin:@typescript-eslint/recommended',
+        'plugin:ember/recommended',
+        'prettier',
+      ],
+    },
+    {
+      files: ['**/*.gjs'],
+      parser: 'ember-eslint-parser',
+      extends: [
+        'plugin:ember/recommended',
+        'prettier',
+      ],
+    },
     // node files
     {
       files: [
@@ -38,6 +56,7 @@ module.exports = {
         '.ember-cli.js',
         '.template-lintrc.js',
         'ember-cli-build.js',
+        'vite.config.mjs',
         'testem.js',
         'blueprints/*/index.js',
         'config/**/*.js',
@@ -54,10 +73,6 @@ module.exports = {
       plugins: ['node'],
       // eslint-disable-next-line @typescript-eslint/no-var-requires
       rules: Object.assign({}, require('eslint-plugin-node').configs.recommended.rules, {
-        // add your custom rules and overrides for node files here
-
-        // this can be removed once the following is fixed
-        // https://github.com/mysticatea/eslint-plugin-node/issues/77
         'node/no-unpublished-require': 'off'
       })
     }

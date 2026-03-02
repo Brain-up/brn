@@ -74,19 +74,6 @@ declare module 'ember-simple-auth/authenticators/oauth2-password-grant' {
   }
 }
 
-declare module 'ember-component-css/pod-names' {
-  const podNames: Record<string, string>;
-  export default podNames;
-}
-
-declare module 'ember-macro-helpers/computed' {
-  export default function computed(...args: [...deps: string[], fn: (...values: unknown[]) => unknown]): unknown;
-}
-
-declare module 'fetch' {
-  const fetch: typeof globalThis.fetch;
-  export default fetch;
-}
 
 declare module 'sinon' {
   const sinon: any;

@@ -1,6 +1,6 @@
 import Route from '@ember/routing/route';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import type NetworkService from 'brn/services/network';
 import type Store from 'brn/services/store';
 import type { Group as GroupModel } from 'brn/schemas/group';
