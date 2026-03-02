@@ -1,7 +1,7 @@
 import Component from '@glimmer/component';
 import type { Exercise } from 'brn/schemas/exercise';
 import { LinkTo } from '@ember/routing';
-import { not } from 'ember-truth-helpers';
+
 import { concat } from '@ember/helper';
 import { t } from 'ember-intl';
 import UiIconCheck from 'brn/components/ui/icon/check';
@@ -69,7 +69,7 @@ export default class UiExerciseButtonComponent extends Component<UiExerciseButto
   <template>
     <LinkTo
       class="{{this.classes}}"
-      aria-disabled={{if (not @isAvailable) "true"}}
+      aria-disabled={{unless @isAvailable "true"}}
       @route="group.series.subgroup.exercise"
       @model={{@exercise.id}}
       title={{concat (t "task_link.exercise") " " @exercise.level}}
