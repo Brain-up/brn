@@ -1,8 +1,7 @@
 import { defineConfig } from 'vite';
 import { extensions, classicEmberSupport, ember } from '@embroider/vite';
 import { babel } from '@rollup/plugin-babel';
-import tailwindcss from 'tailwindcss';
-import postcssImport from 'postcss-import';
+import tailwindcss from '@tailwindcss/vite';
 import { resolve } from 'path';
 import { copyFileSync, mkdirSync, existsSync } from 'fs';
 
@@ -39,6 +38,7 @@ export default defineConfig(({ mode: _mode }) => ({
     },
   },
   plugins: [
+    tailwindcss(),
     classicEmberSupport(),
     ember(),
     babel({
@@ -47,14 +47,6 @@ export default defineConfig(({ mode: _mode }) => ({
     }),
     copyAssetsPlugin(),
   ],
-  css: {
-    postcss: {
-      plugins: [
-        postcssImport({ path: ['node_modules'] }),
-        tailwindcss('./tailwind.config.js'),
-      ],
-    },
-  },
   build: {
     rollupOptions: {
       output: {

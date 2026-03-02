@@ -1,11 +1,69 @@
-@tailwind base;
+@import "tailwindcss";
 
-@tailwind components;
-
-@tailwind utilities;
-
-/*! purgecss start ignore */
+/* billboard.js chart styles */
 @import 'billboard.js/dist/billboard.min.css';
+
+/* Custom theme extending Tailwind defaults */
+@theme {
+  --font-openSans: 'Open Sans';
+
+  --font-size-xss: .5rem;
+
+  --color-PROGRESS-BAD: #F38698;
+  --color-PROGRESS-GOOD: #FBD051;
+  --color-PROGRESS-GREAT: #47CD8A;
+
+  --color-blue-100: #DAF0FC;
+  --color-blue-300: #EDF8FE;
+  --color-blue-500: #81D5F9;
+  --color-blue-700: #5E6EED;
+  --color-blue-900: #001274;
+  --color-blue-light: #428DFC;
+  --color-blue-dark: #5A6BFF;
+  --color-blue-1100: #428DFC;
+
+  --color-pink-200: #FBEDFE;
+  --color-pink-500: #FF6373;
+  --color-pink-secondary: #F38698;
+
+  --color-yellow-500: #F68820;
+  --color-yellow-secondary: #FBD051;
+
+  --color-purple-700: #2A165B;
+  --color-purple-primary: #503DAD;
+  --color-purple-left: #7979f2;
+  --color-purple-right: #a179f2;
+
+  --color-indigo-200: #EDF0FE;
+  --color-indigo-500: #63BBEB;
+
+  --color-green-secondary: #47CD8A;
+
+  --radius-large: 1.25rem;
+
+  --spacing-200px: 200px;
+  --spacing-48px: 48px;
+}
+
+/* Safelist: force Tailwind to generate these dynamic classes */
+@utility bg-PROGRESS-BAD {
+  background-color: var(--color-PROGRESS-BAD);
+}
+@utility bg-PROGRESS-GOOD {
+  background-color: var(--color-PROGRESS-GOOD);
+}
+@utility bg-PROGRESS-GREAT {
+  background-color: var(--color-PROGRESS-GREAT);
+}
+@utility bg-green-secondary {
+  background-color: var(--color-green-secondary);
+}
+@utility bg-yellow-secondary {
+  background-color: var(--color-yellow-secondary);
+}
+@utility bg-pink-secondary {
+  background-color: var(--color-pink-secondary);
+}
 
 html {
   background: #efefef;
@@ -239,4 +297,3 @@ a[disabled] {
   background-color: #f4f4f4;
   animation: none;
 }
-/*! purgecss end ignore */
