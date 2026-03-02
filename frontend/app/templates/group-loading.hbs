@@ -1,5 +1,5 @@
 <div class="skeleton-page flex flex-col flex-grow">
-  <div class="flex items-center ml-4">
+  <div class="sm:ml-4 flex items-center ml-2">
     <Skeleton::Line @class="w-64 h-4" />
   </div>
   <div class="flex justify-center w-full">
@@ -13,12 +13,12 @@
       </div>
     </aside>
   </div>
-  <div class="series-container w-7/8 md:w-5/6 lg:w-3/4 xl:w-3/4 container flex mx-auto">
+  <div class="series-container md:w-5/6 lg:w-3/4 xl:w-3/4 container flex w-11/12 mx-auto">
     <div class="series-page--canvas flex justify-center flex-grow">
       <div class="sm:grid-cols-4 gap-y-2 sm:gap-y-3 grid w-full grid-cols-3 mx-2 mb-4">
         {{! template-lint-disable no-unused-block-params }}
         {{#each (array 1 2 3 4 5 6 7 8) as |_|}}
-          <div class="sm:m-2 m-1 overflow-hidden border-2 border-gray-200 rounded-lg shadow-lg">
+          <div class="sm:m-2 flex flex-col m-1 overflow-hidden border-2 border-gray-200 rounded-lg shadow-lg">
             <Skeleton::Block @class="sm:h-40 h-16 rounded-none" />
             <div class="sm:px-2 sm:py-2 flex items-center justify-center px-1 py-1 bg-gray-200">
               <Skeleton::Line @class="w-20 h-4" />

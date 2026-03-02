@@ -1,7 +1,7 @@
 {{page-title this.group.name}}
 <div class="flex flex-col flex-grow">
   {{#unless this.headerAndNavShown}}
-    <div class="flex items-center ml-4">
+    <div class="sm:ml-4 flex items-center ml-2">
       <Breadcrumbs />
     </div>
   {{/unless}}
@@ -9,8 +9,7 @@
     {{#if this.isInSubgroupView}}
       <div class="flex justify-center w-full">
         <aside
-          class="bg-gradient-to-b from-white sticky top-0 z-10 w-full rounded-bl rounded-br"
-          {{! template-lint-disable no-inline-styles }}
+          class="bg-gradient-to-b from-white sticky top-0 z-10 w-full rounded-bl rounded-br" {{! template-lint-disable no-inline-styles }}
           style="max-width: 80vw;"
         >
           <SubgroupNavigation @group={{model-for-route "group.series"}} />
@@ -19,8 +18,7 @@
     {{else}}
       <div class="flex justify-center w-full">
         <aside
-          class="bg-gradient-to-b from-white sticky top-0 z-10 w-full rounded-bl rounded-br"
-          {{! template-lint-disable no-inline-styles }}
+          class="bg-gradient-to-b from-white sticky top-0 z-10 w-full rounded-bl rounded-br" {{! template-lint-disable no-inline-styles }}
           style="max-width: 80vw;"
         >
           <GroupNavigation @group={{this.group}} @series={{this.series}} />
@@ -29,7 +27,7 @@
     {{/if}}
   {{/unless}}
   <div
-    class="series-container w-7/8 md:w-5/6 lg:w-3/4 xl:w-3/4 container flex mx-auto"
+    class="series-container md:w-5/6 lg:w-3/4 xl:w-3/4 container flex w-11/12 mx-auto"
   >
     <div class="series-page--canvas flex justify-center flex-grow">
       {{outlet}}
