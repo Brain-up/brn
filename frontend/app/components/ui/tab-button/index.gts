@@ -1,4 +1,5 @@
 import Component from '@glimmer/component';
+import { LinkTo } from '@ember/routing';
 
 interface UiTabButtonComponentArguments {
   title?: string;

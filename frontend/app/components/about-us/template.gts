@@ -1,3 +1,5 @@
+import { t } from 'ember-intl';
+
 <template>
   <section class="bg-gradient-to-r from-blue-100 to-purple-100 sm:p-8 lg:p-16 p-4">
     <h2 class="sm:text-4xl sm:mb-6 mb-4 text-2xl font-semibold text-center">

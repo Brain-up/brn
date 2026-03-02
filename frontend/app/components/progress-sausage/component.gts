@@ -1,4 +1,5 @@
 import Component from '@glimmer/component';
+import htmlSafe from 'brn/helpers/html-safe';
 
 interface ProgressSausageSignature {
   Args: {
@@ -33,7 +34,7 @@ export default class ProgressSausageComponent extends Component<ProgressSausageS
         {{! template-lint-disable no-inline-styles style-concatenation }}
         <div
           class="progress-bar__value"
-          style={{html-safe this.progressWidth}}
+          style={{htmlSafe this.progressWidth}}
           data-test-progress-sausage
         ></div>
       </div>

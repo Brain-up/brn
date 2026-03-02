@@ -2,6 +2,15 @@ import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { MODES, type Mode } from 'brn/utils/task-modes';
+import htmlSafe from 'brn/helpers/html-safe';
+import { concat } from '@ember/helper';
+import didInsert from '@ember/render-modifiers/modifiers/did-insert';
+import didUpdate from '@ember/render-modifiers/modifiers/did-update';
+import { on } from '@ember/modifier';
+import { fn } from '@ember/helper';
+import { t } from 'ember-intl';
+import ExerciseStepsStep from 'brn/components/exercise-steps/step';
+import UiChevron from 'brn/components/ui/chevron';
 
 const BUTTONS = {
   ACTIVE: 'active',
@@ -65,35 +74,35 @@ export default class ExerciseStepsComponent extends Component<ExerciseStepsSigna
 
   <template>
     <div
-      style={{html-safe (concat "visibility:" this.visibility ";")}}
-      {{did-insert this.setLastMode @activeStep}}
-      {{did-update this.setLastMode @activeStep}}
+      style={{htmlSafe (concat "visibility:" this.visibility ";")}}
+      {{didInsert this.setLastMode @activeStep}}
+      {{didUpdate this.setLastMode @activeStep}}
       ...attributes
     >
-      <ExerciseSteps::Step
+      <ExerciseStepsStep
         @mode={{this.modeForListen}}
         {{on "click" (fn this.onClick this.MODES.LISTEN this.modeForListen)}}
       >
         {{t "control_exercises.listen"}}
-      </ExerciseSteps::Step>
-      <div class="chevron-container flex justify-center flex-1"><Ui::Chevron
+      </ExerciseStepsStep>
+      <div class="chevron-container flex justify-center flex-1"><UiChevron
           class="chevron"
         /></div>
-      <ExerciseSteps::Step
+      <ExerciseStepsStep
         @mode={{this.modeForInteract}}
         {{on "click" (fn this.onClick this.MODES.INTERACT this.modeForInteract)}}
       >
         {{t "control_exercises.interact"}}
-      </ExerciseSteps::Step>
-      <div class="chevron-container flex justify-center flex-1"><Ui::Chevron
+      </ExerciseStepsStep>
+      <div class="chevron-container flex justify-center flex-1"><UiChevron
           class="chevron"
         /></div>
-      <ExerciseSteps::Step
+      <ExerciseStepsStep
         @mode={{this.modeForTask}}
         {{on "click" (fn this.onClick this.MODES.TASK this.modeForTask)}}
       >
         {{t "control_exercises.solve"}}
-      </ExerciseSteps::Step>
+      </ExerciseStepsStep>
     </div>
   </template>
 }

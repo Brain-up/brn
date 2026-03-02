@@ -1,4 +1,9 @@
 import Component from '@glimmer/component';
+import { t } from 'ember-intl';
+import { not } from 'ember-truth-helpers';
+import htmlSafe from 'brn/helpers/html-safe';
+import { concat } from '@ember/helper';
+import UiIconCorrectAnswer from 'brn/components/ui/icon/correct-answer';
 
 interface AnswerCorrectnessWidgetSignature {
   Args: {
@@ -55,7 +60,7 @@ export default class AnswerCorrectnessWidgetComponent extends Component<AnswerCo
           data-test-isnt-correct={{not @isCorrect}}
           class="object-center"
         >
-          <Ui::Icon::CorrectAnswer />
+          <UiIconCorrectAnswer />
         </div>
       {{else}}
         {{! template-lint-configure no-inline-styles false }}
@@ -63,8 +68,8 @@ export default class AnswerCorrectnessWidgetComponent extends Component<AnswerCo
           data-test-answer-correctness-widget
           data-test-is-correct={{@isCorrect}}
           data-test-isnt-correct={{not @isCorrect}}
-          aria-label={{html-safe (concat (t "exercise_messages.successfully"))}}
-          style={{html-safe
+          aria-label={{htmlSafe (concat (t "exercise_messages.successfully"))}}
+          style={{htmlSafe
             (concat
               (concat "background-image: url('/pictures/" this.imagePath ".jpg')")
               ", "

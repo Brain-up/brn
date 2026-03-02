@@ -11,6 +11,13 @@ import StatsService, { StatEvents } from 'brn/services/stats';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { task, Task as TaskGenerator } from 'ember-concurrency';
 import AudioService from 'brn/services/audio';
+import didInsert from '@ember/render-modifiers/modifiers/did-insert';
+import { hash } from '@ember/helper';
+import { on } from '@ember/modifier';
+import { fn } from '@ember/helper';
+import { eq } from 'ember-truth-helpers';
+import UiTaskContent from 'brn/components/ui/task-content';
+import frequencyVisualizer from 'brn/modifiers/frequency-visualizer';
 
 interface TaskPlayerSignalSignature {
   Args: {
@@ -108,12 +115,12 @@ export default class TaskPlayerSignalComponent extends Component<TaskPlayerSigna
       class="
         flex flex-grow flex-col"
       ...attributes
-      {{did-insert this.onInsert}}
+      {{didInsert this.onInsert}}
     >
       {{yield (hash tasks=this.tasksCopy) to="header"}}
       {{#if this.tasksCopy.length}}
     
-        <Ui::TaskContent>
+        <UiTaskContent>
           <ul class="task-player__options mt-5">
             {{#each @task.answerOptions as |answerOption|}}
               <li class="task-player__option">
@@ -144,13 +151,13 @@ export default class TaskPlayerSignalComponent extends Component<TaskPlayerSigna
                   }}
                 >
                   {{!-- template-lint-disable no-nested-interactive --}}
-                  <canvas {{frequency-visualizer answerOption}}></canvas>
+                  <canvas {{frequencyVisualizer answerOption}}></canvas>
                 </button>
               </li>
             {{/each}}
           </ul>
     
-        </Ui::TaskContent>
+        </UiTaskContent>
     
         {{yield (hash audioFileUrl=this.audioFileUrl) to="footer"}}
       {{/if}}

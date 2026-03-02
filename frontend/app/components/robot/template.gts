@@ -1,3 +1,5 @@
+import { LinkTo } from '@ember/routing';
+
 <template>
   <div>
     <svg

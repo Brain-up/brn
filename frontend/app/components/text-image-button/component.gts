@@ -3,6 +3,13 @@ import { action } from '@ember/object';
 import { service } from '@ember/service';
 import ImageLocatorService from 'brn/services/image-locator';
 import StudyConfigService from 'brn/services/study-config';
+import didInsert from '@ember/render-modifiers/modifiers/did-insert';
+import didUpdate from '@ember/render-modifiers/modifiers/did-update';
+import willDestroy from '@ember/render-modifiers/modifiers/will-destroy';
+import { on } from '@ember/modifier';
+import { fn } from '@ember/helper';
+import FaIcon from '@fortawesome/ember-fontawesome/components/fa-icon';
+import { and } from 'ember-truth-helpers';
 
 interface TextImageButtonSignature {
   Args: {
@@ -55,8 +62,8 @@ export default class TextImageButton extends Component<TextImageButtonSignature>
     <div
       class="{{unless this.studyConfig.showImages "text-mode"}}"
       data-test-text-image-button
-      {{did-insert this.setStyle @pictureFileUrl}}
-      {{did-update this.setStyle @pictureFileUrl}}
+      {{didInsert this.setStyle @pictureFileUrl}}
+      {{didUpdate this.setStyle @pictureFileUrl}}
     >
       <button
         data-test-task-answer
@@ -74,15 +81,15 @@ export default class TextImageButton extends Component<TextImageButtonSignature>
             <FaIcon
               class="correctness-indicator right"
               @icon="check-circle"
-              {{did-insert (fn this.addFrame "border-green-500")}}
-              {{will-destroy (fn this.removeFrame "border-green-500")}}
+              {{didInsert (fn this.addFrame "border-green-500")}}
+              {{willDestroy (fn this.removeFrame "border-green-500")}}
             />
           {{else}}
             <FaIcon
               class="correctness-indicator wrong"
               @icon="times-circle"
-              {{did-insert (fn this.addFrame "border-red-500")}}
-              {{will-destroy (fn this.removeFrame "border-red-500")}}
+              {{didInsert (fn this.addFrame "border-red-500")}}
+              {{willDestroy (fn this.removeFrame "border-red-500")}}
             />
           {{/if}}
         {{/if}}

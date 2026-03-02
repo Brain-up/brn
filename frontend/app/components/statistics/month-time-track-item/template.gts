@@ -1,3 +1,5 @@
+import { t } from 'ember-intl';
+
 <template>
   <div
     class="

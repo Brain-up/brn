@@ -10,6 +10,16 @@ import UserDataService from 'brn/services/user-data';
 import IntlService from 'ember-intl/services/intl';
 import { UserDTO } from 'brn/services/network';
 import { isBornYearValid, isNotEmptyString } from 'brn/utils/validators';
+import { LinkTo } from '@ember/routing';
+import { on } from '@ember/modifier';
+import { fn } from '@ember/helper';
+import { concat } from '@ember/helper';
+import { t } from 'ember-intl';
+import { eq } from 'ember-truth-helpers';
+import htmlSafe from 'brn/helpers/html-safe';
+import ModalDialog from 'ember-modal-dialog/components/modal-dialog';
+import UiAvatars from 'brn/components/ui/avatars';
+import LoginFormInput from 'brn/components/login-form/input/component';
 
 export default class ProfileComponent extends Component {
   @service('intl') intl!: IntlService;
@@ -144,7 +154,7 @@ export default class ProfileComponent extends Component {
         @overlayClass="p-8 z-50 min-h-full w-full fixed flex"
         @containerClass="max-w-4xl flex bg-white rounded-lg text-2xl m-auto"
       >
-        <Ui::Avatars
+        <UiAvatars
           @selectedAvatar={{this.avatar}}
           @onCancel={{this.onCancel}}
           @onSubmit={{this.onAvatarSubmit}}
@@ -158,7 +168,7 @@ export default class ProfileComponent extends Component {
         <button
           type="button"
           title="{{this.user.email}}"
-          style={{html-safe
+          style={{htmlSafe
             (concat "background-image: url('" this.avatarUrl "');")
           }} class="btn-press gradient-background focus:outline-none inline-flex items-center justify-center w-32 h-32 m-auto bg-center bg-contain border border-gray-400 rounded-full" {{on "click" this.onShowAvatars}}
         >
@@ -166,7 +176,7 @@ export default class ProfileComponent extends Component {
       </div>
       <div class="sm:p-8 lg:p-12 p-4">
         <div class="mb-4">
-          <LoginForm::Input
+          <LoginFormInput
             @model={{this.user}}
             @name="firstName"
             @label={{t "registration_form.name"}}
@@ -174,7 +184,7 @@ export default class ProfileComponent extends Component {
             @trimRight={{false}}
             {{on "change" (fn this.onInput "firstName")}}
           />
-          <LoginForm::Input
+          <LoginFormInput
             @model={{this.user}}
             @name="lastName"
             @label={{false}}
@@ -184,7 +194,7 @@ export default class ProfileComponent extends Component {
           />
         </div>
         <div class="mb-4">
-          <LoginForm::Input
+          <LoginFormInput
             required
             minlength="4"
             maxlength="4"
@@ -229,7 +239,7 @@ export default class ProfileComponent extends Component {
         </div>
     
         <div class="mb-4">
-          <LoginForm::Input
+          <LoginFormInput
             disabled
             @model={{this.user}}
             @name="email"

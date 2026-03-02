@@ -19,6 +19,16 @@ import StatsService, { StatEvents } from 'brn/services/stats';
 import type { TaskWordsSequences as WordsSequences } from 'brn/schemas/task/words-sequences';
 import type { TaskBase as Task } from 'brn/schemas/task';
 import type AnswerOption from 'brn/utils/answer-option';
+import didInsert from '@ember/render-modifiers/modifiers/did-insert';
+import { hash } from '@ember/helper';
+import { fn } from '@ember/helper';
+import { get } from '@ember/helper';
+import { or } from 'ember-truth-helpers';
+import { eq } from 'ember-truth-helpers';
+import { not } from 'ember-truth-helpers';
+import arrayLast from 'brn/helpers/array-last';
+import UiTaskContent from 'brn/components/ui/task-content';
+import TextImageButton from 'brn/components/text-image-button/component';
 
 function getEmptyTemplate(
   selectedItemsOrder: string[] = [],
@@ -205,17 +215,17 @@ export default class WordsSequencesComponent<
     <div
       class="flex-1 flex flex-col"
       ...attributes
-      {{did-insert this.onInsert}}
+      {{didInsert this.onInsert}}
     >
       {{yield (hash tasks=this.tasksCopy) to="header"}}
       {{#if this.tasksCopy.length}}
     
-        <Ui::TaskContent>
+        <UiTaskContent>
           <div class="words-sequences-columns flex justify-center flex-grow mt-4">
             {{#each @task.selectedItemsOrder as |type|}}
               <div
                 class="column flex-1 flex-col type-column
-                  {{if (not (eq (array-last @task.selectedItemsOrder) type)) "mr-2"}}"
+                  {{if (not (eq (arrayLast @task.selectedItemsOrder) type)) "mr-2"}}"
               >
                 {{#each (get @task.answerOptions type) as |answerOption|}}
                   <TextImageButton
@@ -238,7 +248,7 @@ export default class WordsSequencesComponent<
               </div>
             {{/each}}
           </div>
-        </Ui::TaskContent>
+        </UiTaskContent>
     
         {{yield (hash audioFileUrl=this.audioFiles) to="footer"}}
       {{/if}}

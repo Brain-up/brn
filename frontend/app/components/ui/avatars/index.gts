@@ -1,6 +1,12 @@
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
+import didInsert from '@ember/render-modifiers/modifiers/did-insert';
+import { on } from '@ember/modifier';
+import { fn } from '@ember/helper';
+import { t } from 'ember-intl';
+import { eq } from 'ember-truth-helpers';
+import UiButton from 'brn/components/ui/button';
 
 interface UiAvatarsSignature {
   Args: {
@@ -32,7 +38,7 @@ export default class UiAvatarsComponent extends Component<UiAvatarsSignature> {
 
   <template>
     <div
-      {{did-insert this.storeCurrentAvatar}}
+      {{didInsert this.storeCurrentAvatar}}
       class="p-8 relative flex flex-row flex-wrap justify-between
        "
     >
@@ -60,7 +66,7 @@ export default class UiAvatarsComponent extends Component<UiAvatarsSignature> {
         {{/each}}
       </div>
       <div class="sm:justify-end flex justify-between w-full mt-8">
-        <Ui::Button
+        <UiButton
           {{on "click" @onCancel}}
           data-test-submit-form
           @kind="outline"
@@ -68,7 +74,7 @@ export default class UiAvatarsComponent extends Component<UiAvatarsSignature> {
           @title={{t "avatar_controls.cancel"}}
         />
     
-        <Ui::Button
+        <UiButton
           @type="button"
           data-test-submit-form
           class="w-full text-lg"

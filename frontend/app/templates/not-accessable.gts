@@ -1,0 +1,15 @@
+import RouteTemplate from 'ember-route-template';
+
+export default RouteTemplate(
+  <template>
+    <div class="not-accessable">
+      <h3>
+        Страница, которую вы хотите посетить, недоступна.
+      </h3>
+      <h5>
+        Вы можете перейти на
+        <LinkTo @route="index">главную страницу</LinkTo>
+      </h5>
+    </div>
+  </template>
+);

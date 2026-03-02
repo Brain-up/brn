@@ -1,5 +1,10 @@
 import Component from '@glimmer/component';
 import type { Exercise } from 'brn/schemas/exercise';
+import { LinkTo } from '@ember/routing';
+import { not } from 'ember-truth-helpers';
+import { concat } from '@ember/helper';
+import { t } from 'ember-intl';
+import UiIconCheck from 'brn/components/ui/icon/check';
 
 interface UiExerciseButtonComponentArguments {
   title?: string;
@@ -71,7 +76,7 @@ export default class UiExerciseButtonComponent extends Component<UiExerciseButto
         {{@title}}
       </div>
       <div class="check-container">
-        <Ui::Icon::Check
+        <UiIconCheck
           @isCompleted={{this.isCompleted}}
           @isLocked={{this.isLocked}}
           @isDisabled={{this.isDisabled}}

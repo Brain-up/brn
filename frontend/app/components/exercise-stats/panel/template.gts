@@ -1,3 +1,8 @@
+import { or } from 'ember-truth-helpers';
+import { eq } from 'ember-truth-helpers';
+import { hash } from '@ember/helper';
+import { get } from '@ember/helper';
+
 <template>
   {{!
     <script @typedef>

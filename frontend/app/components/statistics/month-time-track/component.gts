@@ -3,6 +3,16 @@ import type { UserYearlyStatistics as UserYearlyStatisticsModel } from 'brn/sche
 import { DateTime } from 'luxon';
 import { action } from '@ember/object';
 import { isNone } from '@ember/utils';
+import { on } from '@ember/modifier';
+import { fn } from '@ember/helper';
+import { t } from 'ember-intl';
+import { and } from 'ember-truth-helpers';
+import { eq } from 'ember-truth-helpers';
+import { not } from 'ember-truth-helpers';
+import UiLeftArrow from 'brn/components/ui/left-arrow';
+import UiRightArrow from 'brn/components/ui/right-arrow';
+import LoadingSpinner from 'brn/components/loading-spinner/component';
+import StatisticsMonthTimeTrackItem from 'brn/components/statistics/month-time-track-item';
 interface MonthTimeTrackSignature {
   Args: {
   isLoading: boolean;
@@ -60,7 +70,7 @@ export default class MonthTimeTrackComponent extends Component<MonthTimeTrackSig
           data-test-btn-prev class="btn-press focus:outline-none w-48px h-48px rounded-2xl border-purple-left bg-gradient-to-r from-purple-left to-purple-right m-w-0 flex items-center justify-center flex-shrink-0 text-white shadow-lg" type="button"
           {{on "click" @onLoadPrevYear}}
         >
-          <Ui::LeftArrow />
+          <UiLeftArrow />
         </button>
         <div
           data-test-month-items-wrap
@@ -72,7 +82,7 @@ export default class MonthTimeTrackComponent extends Component<MonthTimeTrackSig
             <LoadingSpinner />
           {{else if this.monthTimeTrackItemsData.length}}
             {{#each this.monthTimeTrackItemsData as |itemData index|}}
-              <Statistics::MonthTimeTrackItem
+              <StatisticsMonthTimeTrackItem
                 data-test-month-track-item-index={{index}} class="last:mr-0 mr-2" @data={{itemData}}
                 @isSelected={{and
                   (eq @selectedMonth.year itemData.date.year)
@@ -97,7 +107,7 @@ export default class MonthTimeTrackComponent extends Component<MonthTimeTrackSig
           type="button"
           {{on "click" @onLoadNextYear}}
         >
-          <Ui::RightArrow />
+          <UiRightArrow />
         </button>
       </div>
     </div>

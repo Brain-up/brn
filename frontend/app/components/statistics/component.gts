@@ -12,6 +12,13 @@ import { task, Task as TaskGenerator } from 'ember-concurrency';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { action } from '@ember/object';
 import type Store from 'brn/services/store';
+import didInsert from '@ember/render-modifiers/modifiers/did-insert';
+import { on } from '@ember/modifier';
+import { t } from 'ember-intl';
+import UiHelp from 'brn/components/ui/help';
+import StatisticsMonthTimeTrack from 'brn/components/statistics/month-time-track/component';
+import StatisticsWeekTimeTrack from 'brn/components/statistics/week-time-track/component';
+import StatisticsInfoDialog from 'brn/components/statistics/info-dialog/component';
 
 interface StatisticsSignature {
   Args: {
@@ -127,7 +134,7 @@ export default class StatisticsComponent extends Component<StatisticsSignature> 
   }
 
   <template>
-    <div class="overflow-hidden" ...attributes {{did-insert this.onInit}}>
+    <div class="overflow-hidden" ...attributes {{didInsert this.onInit}}>
       <div class="flex justify-end mb-2">
         <button
           data-test-help-button
@@ -135,11 +142,11 @@ export default class StatisticsComponent extends Component<StatisticsSignature> 
           class="btn-press hover:bg-gray-300 text-purple-primary active:bg-gray-400 focus:outline-none flex items-center px-4 py-2 text-xs font-bold tracking-wider uppercase border-2 border-gray-200 rounded-full shadow-lg"
           {{on "click" this.openStatisticsInfoDialog}}
         >
-          <Ui::Help class="mr-2" />
+          <UiHelp class="mr-2" />
           {{t "profile.statistics.about"}}
         </button>
       </div>
-      <Statistics::MonthTimeTrack
+      <StatisticsMonthTimeTrack
         @isLoading={{this.isLoadingMonthTimeTrackData}}
         @selectedMonth={{this.selectedMonth}}
         @onSelectMonth={{this.selectMonth}}
@@ -147,13 +154,13 @@ export default class StatisticsComponent extends Component<StatisticsSignature> 
         @onLoadNextYear={{this.loadNextYear}}
         @data={{this.monthTimeTrackData}}
       />
-      <Statistics::WeekTimeTrack
+      <StatisticsWeekTimeTrack
         @isLoading={{this.isLoadingWeekTimeTrackData}}
         @selectedMonth={{this.selectedMonth}}
         @data={{this.weekTimeTrackData}}
       />
       {{#if this.isShownStatisticsInfoDialog}}
-        <Statistics::InfoDialog
+        <StatisticsInfoDialog
           @closeModalAction={{this.hideStatisticsInfoDialog}}
         />
       {{/if}}

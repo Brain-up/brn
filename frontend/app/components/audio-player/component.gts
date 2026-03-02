@@ -7,6 +7,12 @@ import AudioService from 'brn/services/audio';
 import StatsService, { StatEvents } from '../../services/stats';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { ref } from 'ember-ref-bucket';
+import didUpdate from '@ember/render-modifiers/modifiers/did-update';
+import didInsert from '@ember/render-modifiers/modifiers/did-insert';
+import { on } from '@ember/modifier';
+import createRef from 'ember-ref-bucket/modifiers/create-ref';
+import { t } from 'ember-intl';
+import UiButton from 'brn/components/ui/button';
 
 export interface ToneObject {
   duration: number;
@@ -63,14 +69,14 @@ export default class AudioPlayerComponent extends Component<AudioPlayerSignature
     <div
       class="flex mr-1 ml-1"
       ...attributes
-      {{did-update this.onUpdateProgress this.audioPlayingProgress}}
-      {{did-insert this.onUpdateProgress this.audioPlayingProgress}}
-      {{did-update this.onUpdateSource @audioFileUrl}}
-      {{did-insert this.onUpdateSource @audioFileUrl}}
+      {{didUpdate this.onUpdateProgress this.audioPlayingProgress}}
+      {{didInsert this.onUpdateProgress this.audioPlayingProgress}}
+      {{didUpdate this.onUpdateSource @audioFileUrl}}
+      {{didInsert this.onUpdateSource @audioFileUrl}}
     >
       {{! template-lint-configure no-invalid-interactive false }}
       {{#let this.isPlaying as |disablePlayButton|}}
-        <Ui::Button
+        <UiButton
           class="play-button
             {{if disablePlayButton "opacity-50" "hover:bg-blue-700"}}
             {{if @transparent "invisible"}}
@@ -79,7 +85,7 @@ export default class AudioPlayerComponent extends Component<AudioPlayerSignature
           data-test-playing-progress={{this.audioPlayingProgress}}
           disabled={{disablePlayButton}}
           {{on "click" this.playAudio}}
-          {{create-ref "buttonElement"}}
+          {{createRef "buttonElement"}}
         >
           {{! template-lint-disable no-inline-styles }}
           <svg
@@ -108,7 +114,7 @@ export default class AudioPlayerComponent extends Component<AudioPlayerSignature
           <span class="sm:pl-6 sm:text-base inline-block text-xs tracking-wider">{{t
               "audio_player.listen"
             }}</span>
-        </Ui::Button>
+        </UiButton>
       {{/let}}
     </div>
   </template>

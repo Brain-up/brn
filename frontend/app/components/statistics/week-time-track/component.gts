@@ -15,6 +15,12 @@ import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import { secondsTo } from 'brn/utils/seconds-to';
 import { isNone } from '@ember/utils';
+import didInsert from '@ember/render-modifiers/modifiers/did-insert';
+import didUpdate from '@ember/render-modifiers/modifiers/did-update';
+import { t } from 'ember-intl';
+import LoadingSpinner from 'brn/components/loading-spinner/component';
+import StatisticsBarChart from 'brn/components/statistics/bar-chart/component';
+import StatisticsDailyTimeTable from 'brn/components/statistics/daily-time-table/component';
 
 /* eslint-disable no-unused-vars */
 enum PROGRESS_COLORS {
@@ -175,8 +181,8 @@ export default class WeekTimeTrackComponent extends Component<WeekTimeTrackSigna
     <div
      
       ...attributes
-      {{did-insert this.didUpdateData}}
-      {{did-update this.didUpdateData @data}}
+      {{didInsert this.didUpdateData}}
+      {{didUpdate this.didUpdateData @data}}
     >
       <div class="text-xs font-semibold leading-3 uppercase">
         {{t "profile.statistics.week_time_track.title_weeks"}}
@@ -185,7 +191,7 @@ export default class WeekTimeTrackComponent extends Component<WeekTimeTrackSigna
         {{#if @isLoading}}
           <LoadingSpinner />
         {{else if this.barData.length}}
-          <Statistics::BarChart
+          <StatisticsBarChart
             @data={{this.barData}}
             @options={{this.barOptions}}
             @lastBarIndex={{this.lastBarIndex}}
@@ -201,7 +207,7 @@ export default class WeekTimeTrackComponent extends Component<WeekTimeTrackSigna
       </div>
       {{#if this.selectedDay}}
         <div>
-          <Statistics::DailyTimeTable
+          <StatisticsDailyTimeTable
             @day={{this.selectedDay}}
           />
         </div>

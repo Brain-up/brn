@@ -2,6 +2,9 @@ import { action } from '@ember/object';
 import Component from '@glimmer/component';
 import type {Chart, ChartOptions, Data, DataItem} from 'billboard.js';
 import { isNone } from '@ember/utils';
+import willDestroy from '@ember/render-modifiers/modifiers/will-destroy';
+import didInsert from '@ember/render-modifiers/modifiers/did-insert';
+import didUpdate from '@ember/render-modifiers/modifiers/did-update';
 
 const SELECTED_BAR_CLASS_NAME = 'selected-bar';
 
@@ -111,10 +114,10 @@ export default class BarChartComponent extends Component<BarChartSignature> {
       id="chart"
       class="chart flex justify-center"
       ...attributes
-      {{will-destroy this.onWillDestroy}}
-      {{did-insert this.buildChart}}
-      {{did-update this.didUpdateData @data}}
-      {{did-update this.didUpdateOptions @options}}
+      {{willDestroy this.onWillDestroy}}
+      {{didInsert this.buildChart}}
+      {{didUpdate this.didUpdateData @data}}
+      {{didUpdate this.didUpdateOptions @options}}
     ></div>
   </template>
 }

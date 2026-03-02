@@ -5,6 +5,11 @@ import { service } from '@ember/service';
 import { later, cancel } from '@ember/runloop';
 import StudyingTimerService from 'brn/services/studying-timer';
 import { tracked } from '@glimmer/tracking';
+import didInsert from '@ember/render-modifiers/modifiers/did-insert';
+import willDestroy from '@ember/render-modifiers/modifiers/will-destroy';
+import { on } from '@ember/modifier';
+import { or } from 'ember-truth-helpers';
+import { not } from 'ember-truth-helpers';
 
 interface TimerSignature {
   Args: {
@@ -90,8 +95,8 @@ export default class TimerComponent extends Component<TimerSignature> {
     <div
      
       ...attributes
-      {{did-insert this.onInsert}}
-      {{will-destroy this.onDestroy}}
+      {{didInsert this.onInsert}}
+      {{willDestroy this.onDestroy}}
     >
       <div
         class="timer-wrapper sm:px-5 flex items-center px-2 py-2 rounded-full"

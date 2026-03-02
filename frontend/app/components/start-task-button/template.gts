@@ -1,3 +1,7 @@
+import { t } from 'ember-intl';
+import { on } from '@ember/modifier';
+import FaIcon from '@fortawesome/ember-fontawesome/components/fa-icon';
+
 <template>
   <div ...attributes>
     <button

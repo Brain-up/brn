@@ -1,5 +1,6 @@
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
+import didInsert from '@ember/render-modifiers/modifiers/did-insert';
 export default class LoadingSpinnerComponent extends Component {
   @action fadeOut(node: HTMLDivElement) {
     const animation = node.animate(
@@ -21,7 +22,7 @@ export default class LoadingSpinnerComponent extends Component {
   <template>
     <div
       class="flex flex-1 w-full items-center justify-center"
-      {{did-insert this.fadeOut}}
+      {{didInsert this.fadeOut}}
     >
       <div class="loader">
         Loading...

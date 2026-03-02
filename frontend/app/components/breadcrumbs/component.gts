@@ -4,6 +4,8 @@ import { service } from '@ember/service';
 import Router from '@ember/routing/router-service';
 import type Store from 'brn/services/store';
 import { getOwner } from '@ember/application';
+import { LinkTo } from '@ember/routing';
+import UiIconHeadphones from 'brn/components/ui/icon/headphones';
 
 interface InternalRouter {
   _router: {
@@ -62,7 +64,7 @@ export default class BreadcrumbsComponent extends Component {
         <ul aria-label="Breadcrumbs" class="breadcrumbs list-none">
           <li>
             <LinkTo @route="groups" class="inline-block align-top">
-              <Ui::Icon::Headphones />
+              <UiIconHeadphones />
             </LinkTo>
           </li>
           {{#each this.parts as |part|}}

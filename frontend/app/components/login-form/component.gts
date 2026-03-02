@@ -7,6 +7,14 @@ import Router from '@ember/routing/router-service';
 import Session from 'ember-simple-auth/services/session';
 import IntlService from 'ember-intl/services/intl';
 import NetworkService from 'brn/services/network';
+import { LinkTo } from '@ember/routing';
+import { on } from '@ember/modifier';
+import { t } from 'ember-intl';
+import { or } from 'ember-truth-helpers';
+import { hash } from '@ember/helper';
+import LoadingSpinner from 'brn/components/loading-spinner/component';
+import LoginFormInput from 'brn/components/login-form/input/component';
+import UiButton from 'brn/components/ui/button';
 
 const BUTTON_STATES = {
   ACTIVE: 'active',
@@ -124,14 +132,14 @@ export default class LoginFormComponent extends Component {
           </div>
     
           <div class="mb-4">
-            <LoginForm::Input
+            <LoginFormInput
               @placeholder={{t "login_form.login"}}
               @model={{this}}
               @name="login"
             />
           </div>
           <div class="mb-3">
-            <LoginForm::Input
+            <LoginFormInput
               autocomplete="current-password"
               @placeholder={{t "login_form.password"}}
               @model={{this}}
@@ -164,7 +172,7 @@ export default class LoginFormComponent extends Component {
               )
               as |buttonState|
             }}
-              <Ui::Button
+              <UiButton
                 @size="small"
                 data-test-submit-form
                 class="{{get buttonState this.buttonState}} w-full"

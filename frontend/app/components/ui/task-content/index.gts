@@ -1,5 +1,7 @@
+import htmlSafe from 'brn/helpers/html-safe';
+
 <template>
-  <div style={{html-safe "flex: 1 0 auto;"}}>
+  <div style={{htmlSafe "flex: 1 0 auto;"}}>
     {{yield}}
   </div>
 </template>

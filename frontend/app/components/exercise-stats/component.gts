@@ -1,5 +1,10 @@
 import Component from '@glimmer/component';
 import { IStatsExerciseStats } from 'brn/services/stats';
+import { on } from '@ember/modifier';
+import { t } from 'ember-intl';
+import { or } from 'ember-truth-helpers';
+import UiStatsIcon from 'brn/components/ui/stats/icon';
+import UiButton from 'brn/components/ui/button';
 
 interface ExerciseStatsSignature {
   Args: {
@@ -32,7 +37,7 @@ export default class ExerciseStatsComponent extends Component<ExerciseStatsSigna
         ...attributes
         class="justify-evenly flex flex-col flex-1 w-full"
       >
-        <Ui::Stats::Icon class="flex items-center justify-around w-full mb-1" />
+        <UiStatsIcon class="flex items-center justify-around w-full mb-1" />
         <div class="flex items-center justify-around w-full mb-6">
           <ul class="leading-10 text-center">
             <li>{{t "statistics.time_board"}}:
@@ -47,7 +52,7 @@ export default class ExerciseStatsComponent extends Component<ExerciseStatsSigna
           </ul>
         </div>
         <div class="flex items-center justify-center">
-          <Ui::Button
+          <UiButton
             data-test-continue
             class="w-auto px-8"
             @title={{t "statistics.continue"}}

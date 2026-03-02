@@ -99,6 +99,7 @@
     "ember-page-title": "^9.0.3",
     "ember-qunit": "^9.0.4",
     "ember-ref-bucket": "5.0.8",
+    "ember-route-template": "^1.0.3",
     "ember-resolver": "13.2.0",
     "ember-simple-auth": "7.1.3",
     "ember-sinon": "^5.0.0",

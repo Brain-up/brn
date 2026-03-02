@@ -1,5 +1,7 @@
+import queryNode from 'brn/helpers/query-node';
+
 <template>
-  {{#let (query-node @selector) as |node|}}
+  {{#let (queryNode @selector) as |node|}}
     {{#if node}}
       {{#in-element node}}
         {{yield}}

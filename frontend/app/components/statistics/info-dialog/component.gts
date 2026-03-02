@@ -2,6 +2,9 @@ import Component from '@glimmer/component';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { service } from '@ember/service';
 import IntlService from 'ember-intl/services/intl';
+import { t } from 'ember-intl';
+import { on } from '@ember/modifier';
+import ModalDialog from 'ember-modal-dialog/components/modal-dialog';
 
 export default class StatisticsInfoDialogComponent extends Component {
   @service declare intl: IntlService;

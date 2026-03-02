@@ -2,6 +2,9 @@ import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import StudyConfigService from 'brn/services/study-config';
 import { service } from '@ember/service';
+import didInsert from '@ember/render-modifiers/modifiers/did-insert';
+import htmlSafe from 'brn/helpers/html-safe';
+import { concat } from '@ember/helper';
 
 interface ImageDisplayBlockSignature {
   Args: {
@@ -23,13 +26,13 @@ export default class ImageDisplayBlock extends Component<ImageDisplayBlockSignat
   }
 
   <template>
-    <div {{did-insert this.setStyle}} ...attributes>
+    <div {{didInsert this.setStyle}} ...attributes>
       <div class="flex flex-wrap flex-1 mt-5">
         {{#if @pictureFileUrl}}
           {{! template-lint-configure no-inline-styles false }}
           <div
             data-test-image-block
-            aria-label={{html-safe (concat "изображение " @label)}}
+            aria-label={{htmlSafe (concat "изображение " @label)}}
             role="img"
             class="image-block flex-1 mx-auto rounded"
           ></div>

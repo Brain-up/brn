@@ -4,6 +4,11 @@ import { MODES, type Mode } from 'brn/utils/task-modes';
 import { service } from '@ember/service';
 import ImageLocatorService from 'brn/services/image-locator';
 import StudyConfigService from 'brn/services/study-config';
+import didUpdate from '@ember/render-modifiers/modifiers/did-update';
+import { on } from '@ember/modifier';
+import { fn } from '@ember/helper';
+import { eq } from 'ember-truth-helpers';
+import { and } from 'ember-truth-helpers';
 
 interface TaskPlayerSingleWordsOptionSignature {
   Args: {
@@ -77,7 +82,7 @@ export default class TaskPlayerSingleWordsOptionComponent extends Component<Task
         data-test-task-answer-option={{@answerOption.word}}
         disabled={{this.isDisabled}}
         type="button"
-        {{did-update this.handleAnswer @isCorrect}}
+        {{didUpdate this.handleAnswer @isCorrect}}
         class="btn-press task-player__option-button bg-transparent py-1 sm:px-2 rounded
           {{if
             (eq @activeWord @answerOption.word)

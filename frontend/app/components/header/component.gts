@@ -4,6 +4,16 @@ import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import Session from 'ember-simple-auth/services/session';
 import UserDataService from 'brn/services/user-data';
+import { LinkTo } from '@ember/routing';
+import { on } from '@ember/modifier';
+import { fn } from '@ember/helper';
+import { hash } from '@ember/helper';
+import { t } from 'ember-intl';
+import { eq } from 'ember-truth-helpers';
+import UiIconLogo from 'brn/components/ui/icon/logo';
+import UiIconLogout from 'brn/components/ui/icon/logout';
+import UiButton from 'brn/components/ui/button';
+import GlobalTimer from 'brn/components/global-timer';
 
 export default class HeaderComponent extends Component {
   @service('session') session!: Session;
@@ -61,7 +71,7 @@ export default class HeaderComponent extends Component {
             data-test-logo
             class="logo-text text-xl tracking-tight text-gray-700"
           >
-            <Ui::Icon::Logo
+            <UiIconLogo
               @fill={{if this.session.isAuthenticated "white" "black"}}
             />
           </LinkTo>
@@ -221,14 +231,14 @@ export default class HeaderComponent extends Component {
               {{#if this.isLoggingOut}}
                 <span class="btn-spinner" aria-hidden="true"></span>
               {{else}}
-                <Ui::Icon::Logout />
+                <UiIconLogout />
               {{/if}}
             </button>
           </div>
         {{else}}
           <div class="relative z-10 flex justify-end px-16">
             <div>
-              <Ui::Button
+              <UiButton
                 data-test-registration-form
                 class="flex items-center w-full px-16"
                 @kind="outline"

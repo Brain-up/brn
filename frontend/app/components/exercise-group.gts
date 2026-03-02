@@ -7,6 +7,11 @@ import { tracked } from '@glimmer/tracking';
 import { service } from '@ember/service';
 import NetworkService from 'brn/services/network';
 import type { Subgroup as SubGroup } from 'brn/schemas/subgroup';
+import { LinkTo } from '@ember/routing';
+import { on } from '@ember/modifier';
+import { concat } from '@ember/helper';
+import { t } from 'ember-intl';
+import htmlSafe from 'brn/helpers/html-safe';
 
 interface ExerciseGroupSignature {
   Args: {
@@ -76,7 +81,7 @@ export default class ExerciseGroup extends Component<ExerciseGroupSignature> {
     >
       {{! template-lint-disable no-inline-styles style-concatenation }}
       <div
-        class="sm:h-40 h-16 bg-white bg-center bg-no-repeat bg-contain" style={{html-safe (concat "background-image: url(" @group.picture ");")}}
+        class="sm:h-40 h-16 bg-white bg-center bg-no-repeat bg-contain" style={{htmlSafe (concat "background-image: url(" @group.picture ");")}}
       >
         {{#if this.isFlipped}}
           {{! @ts-ignore }}

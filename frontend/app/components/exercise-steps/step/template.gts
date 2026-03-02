@@ -1,5 +1,7 @@
+import UiTabButton from 'brn/components/ui/tab-button';
+
 <template>
   <div class="flex flex-1">
-    <Ui::TabButton ...attributes @mode={{@mode}}>{{yield}}</Ui::TabButton>
+    <UiTabButton ...attributes @mode={{@mode}}>{{yield}}</UiTabButton>
   </div>
 </template>

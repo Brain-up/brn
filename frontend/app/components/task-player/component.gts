@@ -18,6 +18,24 @@ import type { TaskBase as TaskModel } from 'brn/schemas/task';
 import type { TaskWordsSequences as WordsSequencesModel } from 'brn/schemas/task/words-sequences';
 import type AnswerOption from 'brn/utils/answer-option';
 import { ExerciseMechanism } from 'brn/utils/exercise-types';
+import didInsert from '@ember/render-modifiers/modifiers/did-insert';
+import didUpdate from '@ember/render-modifiers/modifiers/did-update';
+import { on } from '@ember/modifier';
+import { hash } from '@ember/helper';
+import { concat } from '@ember/helper';
+import { component } from '@ember/helper';
+import { not } from 'ember-truth-helpers';
+import { notEq } from 'ember-truth-helpers';
+import { t } from 'ember-intl';
+import htmlSafe from 'brn/helpers/html-safe';
+import SlotTo from 'brn/components/slot-to';
+import Timer from 'brn/components/timer/component';
+import ExerciseStudyConfig from 'brn/components/exercise-study-config';
+import ProgressSausage from 'brn/components/progress-sausage/component';
+import ExerciseSteps from 'brn/components/exercise-steps/component';
+import AudioPlayer from 'brn/components/audio-player/component';
+import UiBottomContainer from 'brn/components/ui/bottom-container';
+import StartTaskButton from 'brn/components/start-task-button';
 
 export default class TaskPlayerComponent extends Component {
   @service('audio') audio!: AudioService;
@@ -316,8 +334,8 @@ export default class TaskPlayerComponent extends Component {
       <ExerciseStudyConfig />
     </SlotTo>
     <div 
-      {{did-insert this.preloadNoise @task}}
-      {{did-update this.preloadNoise @task}}
+      {{didInsert this.preloadNoise @task}}
+      {{didUpdate this.preloadNoise @task}}
       class="flex flex-1" ...attributes>
     
       {{#let
@@ -342,7 +360,7 @@ export default class TaskPlayerComponent extends Component {
           <:header as |context|>
             <SlotTo @selector="#progress-slot">
               <ProgressSausage
-                style={{html-safe
+                style={{htmlSafe
                   (concat
                     "visibility:"
                     (if this.isProgressBarVisible "visible" "hidden")
@@ -355,7 +373,7 @@ export default class TaskPlayerComponent extends Component {
           </:header>
     
           <:footer as |content|>
-            <Ui::BottomContainer>
+            <UiBottomContainer>
               <ExerciseSteps
                 @visible={{not this.justEnteredTask}}
                 @activeStep={{this.mode}}
@@ -365,9 +383,9 @@ export default class TaskPlayerComponent extends Component {
               <AudioPlayer
                 @audioFileUrl={{content.audioFileUrl}}
                 @disabled={{this.disableAudioPlayer}}
-                @transparent={{not-eq this.mode "task"}}
+                @transparent={{notEq this.mode "task"}}
               />
-            </Ui::BottomContainer>
+            </UiBottomContainer>
           </:footer>
         </Player>
     

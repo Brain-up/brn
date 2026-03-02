@@ -10,6 +10,14 @@ import { getOwner } from '@ember/application';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import FirebaseAuthenticator from 'brn/authenticators/firebase';
 import { isBornYearValid } from 'brn/utils/validators';
+import { LinkTo } from '@ember/routing';
+import { on } from '@ember/modifier';
+import { t } from 'ember-intl';
+import { eq } from 'ember-truth-helpers';
+import { or } from 'ember-truth-helpers';
+import LoadingSpinner from 'brn/components/loading-spinner/component';
+import LoginFormInput from 'brn/components/login-form/input/component';
+import UiButton from 'brn/components/ui/button';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const ERRORS_MAP = {
@@ -220,7 +228,7 @@ export default class RegistrationFormComponent extends LoginFormComponent {
           <LoadingSpinner />
         {{else}}
           <div class="mb-4">
-            <LoginForm::Input
+            <LoginFormInput
               required
               @trimRight={{false}}
               @warning={{this.warningName}}
@@ -231,7 +239,7 @@ export default class RegistrationFormComponent extends LoginFormComponent {
             />
           </div>
           <div class="mb-4">
-            <LoginForm::Input
+            <LoginFormInput
               required
               minlength="4"
               maxlength="4"
@@ -285,7 +293,7 @@ export default class RegistrationFormComponent extends LoginFormComponent {
             {{/if}}
           </div>
           <div class="mb-4">
-            <LoginForm::Input
+            <LoginFormInput
               @label={{t "registration_form.email"}}
               @placeholder={{t "registration_form.email_placeholder"}}
               @model={{this}}
@@ -294,7 +302,7 @@ export default class RegistrationFormComponent extends LoginFormComponent {
             />
           </div>
           <div class="mb-4">
-            <LoginForm::Input
+            <LoginFormInput
               @label={{t "registration_form.password"}}
               @placeholder={{t "registration_form.password_placeholder"}}
               @model={{this}}
@@ -303,7 +311,7 @@ export default class RegistrationFormComponent extends LoginFormComponent {
             />
           </div>
           <div class="mb-6">
-            <LoginForm::Input
+            <LoginFormInput
               @label={{t "registration_form.repeat_password"}}
               @placeholder={{t "registration_form.password_placeholder"}}
               @model={{this}}
@@ -351,7 +359,7 @@ export default class RegistrationFormComponent extends LoginFormComponent {
             </p>
           {{/if}}
           <div class="flex mb-4">
-            <Ui::Button
+            <UiButton
               @type="submit"
               class="w-full"
               disabled={{false}}

@@ -8,6 +8,10 @@ import {service} from "@ember/service";
 import type Store from 'brn/services/store';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {action} from "@ember/object";
+import didInsert from '@ember/render-modifiers/modifiers/did-insert';
+import didUpdate from '@ember/render-modifiers/modifiers/did-update';
+import { t } from 'ember-intl';
+import LoadingSpinner from 'brn/components/loading-spinner/component';
 
 interface DailyTimeTableSignature {
   Args: {
@@ -47,8 +51,8 @@ export default class DailyTimeTableComponent extends Component<DailyTimeTableSig
     <div
      
       ...attributes
-      {{did-insert this.didInit}}
-      {{did-update this.didInit @day}}
+      {{didInsert this.didInit}}
+      {{didUpdate this.didInit @day}}
     >
       <div class="sm:px-5 box-content flex items-center justify-center px-2 py-6">
         {{#if this.isLoading}}

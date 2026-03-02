@@ -14,6 +14,12 @@ import { task, Task as TaskGenerator } from 'ember-concurrency';
 import { StatEvents } from 'brn/services/stats';
 import AnswerOption from 'brn/utils/answer-option';
 import type { TaskSingleSimpleWords as SingleSimpleWordTask } from 'brn/schemas/task/single-simple-words';
+import didInsert from '@ember/render-modifiers/modifiers/did-insert';
+import { hash } from '@ember/helper';
+import { t } from 'ember-intl';
+import UiTaskContent from 'brn/components/ui/task-content';
+import TaskPlayerSingleSimpleWordsOption from 'brn/components/task-player/single-simple-words/option';
+import optional from 'brn/helpers/optional';
 export default class SingleSimpleWordsComponent extends Component<SingleSimpleWordTask> {
   @tracked currentAnswer: string[] = [];
   willDestroy(): void {
@@ -174,15 +180,15 @@ export default class SingleSimpleWordsComponent extends Component<SingleSimpleWo
       class="
         flex flex-grow flex-col"
       ...attributes
-      {{did-insert this.onInsert}}
+      {{didInsert this.onInsert}}
     >
       {{yield (hash tasks=this.tasksCopy) to="header"}}
       {{#if this.tasksCopy.length}}
     
-        <Ui::TaskContent>
+        <UiTaskContent>
           <ul class="task-player__options sm:mx-8 mx-2 mt-2">
             {{#each this.sortedAnswerOptions key="word" as |answerOption|}}
-              <TaskPlayer::SingleSimpleWords::Option
+              <TaskPlayerSingleSimpleWordsOption
                 data-cols={{this.amountOfColumns}}
                 class="flex"
                 @activeWord={{@activeWord}}
@@ -208,7 +214,7 @@ export default class SingleSimpleWordsComponent extends Component<SingleSimpleWo
               }}
             </div>
           {{/if}}
-        </Ui::TaskContent>
+        </UiTaskContent>
     
         {{yield (hash audioFileUrl=this.audioFileUrl) to="footer"}}
       {{/if}}

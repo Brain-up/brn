@@ -1,3 +1,5 @@
+import { or } from 'ember-truth-helpers';
+
 <template>
   <svg
     width="112"

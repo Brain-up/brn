@@ -1,3 +1,5 @@
+import { t } from 'ember-intl';
+
 <template>
   <footer
     class="relative z-10 p-2 sm:p-4 text-white"

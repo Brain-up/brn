@@ -102,7 +102,7 @@ export default class SubgroupNavigation extends Component {
                 @models={{array exercise.id}}
                 @title={{exercise.name}}
                 @tooltip={{exercise.description}}
-                {{autofit-text exercise.name}}
+                {{autofitText exercise.name}}
               />
             </li>
           {{/each}}
