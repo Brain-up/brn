@@ -1,7 +1,6 @@
 import { module, test } from 'qunit';
 import { setupIntl } from 'ember-intl/test-support';import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
-import hbs from 'htmlbars-inline-precompile';
 import { timeout } from 'ember-concurrency';
 import pageObject from './page-object';
 import { TIMINGS } from 'brn/utils/audio-api';

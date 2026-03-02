@@ -67,7 +67,7 @@ module('Unit | Service | audio', function (hooks) {
     let service = this.owner.lookup('service:audio');
     try {
       await service.startPlayTask(['http://example.com/audio.mp3']);
-    } catch (e) {
+    } catch (_e) {
       // expected
     }
 

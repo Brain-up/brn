@@ -3,7 +3,6 @@ import autofitText from 'brn/modifiers/autofit-text';
 import { module, test } from 'qunit';
 import { setupIntl } from 'ember-intl/test-support';import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
-import hbs from 'htmlbars-inline-precompile';
 
 module('Integration | Modifier | autofit-text', function (hooks) {
   setupRenderingTest(hooks);setupIntl(hooks, 'en-us');

@@ -110,7 +110,7 @@ export default class NetworkService extends Service {
       )}`.toUpperCase();
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       this.userData!.userModel = user;
-    } catch (e) {
+    } catch (_e) {
       this.router.transitionTo('login');
       const error: Error & { code?: number } = new Error('Unable to login');
       error.message = 'Unable to login';

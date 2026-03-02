@@ -1,7 +1,6 @@
 import { module, test } from 'qunit';
 import { setupIntl } from 'ember-intl/test-support';import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
-import hbs from 'htmlbars-inline-precompile';
 import pageObject from './test-support/page-object';
 
 const TEST_EXERCISE_NAMES = ['Type 1', 'Type 2'];

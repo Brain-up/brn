@@ -93,7 +93,7 @@ export default class AudioService extends Service {
       }
       yield timeout(100);
       this.setProgress(0);
-    } catch (e) {
+    } catch (_e) {
       // NOP
     } finally {
       if (!this.isDestroyed && !this.isDestroying) {
@@ -210,7 +210,7 @@ export default class AudioService extends Service {
       if (this.noiseNode) {
         this.noiseNode.source.stop();
       }
-    } catch (e) {
+    } catch (_e) {
       // EOL
     }
     if (this.noiseTaskInstance) {
@@ -226,7 +226,7 @@ export default class AudioService extends Service {
       } else {
         await this.fakePlayTask.perform();
       }
-    } catch (e) {
+    } catch (_e) {
       // EOL
     }
   }

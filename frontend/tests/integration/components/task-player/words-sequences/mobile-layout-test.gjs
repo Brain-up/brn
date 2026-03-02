@@ -2,7 +2,6 @@ import { module, test } from 'qunit';
 import { setupIntl } from 'ember-intl/test-support';
 import { setupRenderingTest } from 'ember-qunit';
 import { render, find, findAll } from '@ember/test-helpers';
-import hbs from 'htmlbars-inline-precompile';
 import AudioService from 'brn/services/audio';
 import TaskPlayerWordsSequences from 'brn/components/task-player/words-sequences';
 

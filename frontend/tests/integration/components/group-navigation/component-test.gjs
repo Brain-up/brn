@@ -2,7 +2,6 @@ import { module, test } from 'qunit';
 import { setupIntl } from 'ember-intl/test-support';import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import { run } from '@ember/runloop';
-import hbs from 'htmlbars-inline-precompile';
 
 module('Integration | Component | group-navigation', function (hooks) {
   setupRenderingTest(hooks);setupIntl(hooks, 'en-us');

@@ -1,7 +1,6 @@
 import { module, test } from 'qunit';
 import { setupIntl } from 'ember-intl/test-support';import { setupRenderingTest } from 'ember-qunit';
 import { render, click, settled, waitFor } from '@ember/test-helpers';
-import hbs from 'htmlbars-inline-precompile';
 import data from './test-support/data-storage';
 import pageObject from './test-support/page-object';
 import AudioService from 'brn/services/audio';

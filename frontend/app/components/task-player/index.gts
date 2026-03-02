@@ -182,7 +182,7 @@ export default class TaskPlayerComponent extends Component<TaskPlayerSignature> 
         yield timeout(1500);
         this.activeWord = null;
       }
-    } catch (e) {
+    } catch (_e) {
       // EOL
     } finally {
       this.activeWord = null;
@@ -203,7 +203,7 @@ export default class TaskPlayerComponent extends Component<TaskPlayerSignature> 
     try {
       this.mode = MODES.TASK;
       yield this.audio.startPlayTask();
-    } catch (e) {
+    } catch (_e) {
       // EOL
     } finally {
       // EOL
@@ -243,7 +243,7 @@ export default class TaskPlayerComponent extends Component<TaskPlayerSignature> 
         yield timeout(250);
         this.activeWord = null;
       }
-    } catch (e) {
+    } catch (_e) {
       // EOL
     } finally {
       this.audio.stop();
@@ -271,12 +271,12 @@ export default class TaskPlayerComponent extends Component<TaskPlayerSignature> 
       if (this.activeTask) {
         try {
           this.activeTask.cancel();
-        } catch (e) {
+        } catch (_e) {
           // EOL
         } finally {
           try {
             await this.activeTask;
-          } catch (e) {
+          } catch (_e) {
             // EOL
           }
         }
@@ -293,7 +293,7 @@ export default class TaskPlayerComponent extends Component<TaskPlayerSignature> 
         // EOL
       });
       return this.activeTask;
-    } catch (e) {
+    } catch (_e) {
       // EOLS
     }
   }
@@ -313,12 +313,12 @@ export default class TaskPlayerComponent extends Component<TaskPlayerSignature> 
       try {
         await this.setMode(MODES.LISTEN);
         // Let's switch to interact right after listen if not stopped
-      } catch (e) {
+      } catch (_e) {
         // EOL
       } finally {
         try {
           await this.setMode(MODES.INTERACT);
-        } catch (e) {
+        } catch (_e) {
           // EOL
         }
       }

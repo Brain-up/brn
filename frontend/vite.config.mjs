@@ -24,7 +24,7 @@ const ffmpegCopyPlugin = () => ({
   },
 });
 
-export default defineConfig(({ mode }) => ({
+export default defineConfig(({ mode: _mode }) => ({
   plugins: [
     classicEmberSupport(),
     ember(),
