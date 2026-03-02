@@ -76,23 +76,23 @@ module('Unit | Model | task/words-sequences', function (hooks) {
     assert.ok(this.model.tasksToSolve.length === 9);
   });
 
-  test('tasksToSolve grows when wrongAnswers is mutated via pushObject — documents why updateLocalTasks must not be called in handleWrongAnswer', function (assert) {
+  test('tasksToSolve grows when wrongAnswers is mutated via push — documents why updateLocalTasks must not be called in handleWrongAnswer', function (assert) {
     const initialLength = this.model.tasksToSolve.length;
     assert.strictEqual(initialLength, 8, 'initial tasksToSolve has 8 items');
 
     // Simulate what handleWrongAnswer does: push a wrong answer onto the array
-    this.model.wrongAnswers.pushObject({
+    this.model.wrongAnswers.push({
       answer: {
         OBJECT: TASK_DATA.answerOptions.OBJECT[0],
         OBJECT_ACTION: TASK_DATA.answerOptions.OBJECT_ACTION[0],
       },
     });
 
-    // After pushObject, tasksToSolve recalculates and grows by 1
+    // After push, tasksToSolve recalculates and grows by 1
     // This is the root cause of the progress bar regression: if updateLocalTasks()
-    // is called after pushObject, it rebuilds tasksCopy with the longer array, shrinking
+    // is called after push, it rebuilds tasksCopy with the longer array, shrinking
     // the progress ratio (completed / total).
     const newLength = this.model.tasksToSolve.length;
-    assert.strictEqual(newLength, initialLength + 1, 'tasksToSolve grows by 1 after pushObject to wrongAnswers');
+    assert.strictEqual(newLength, initialLength + 1, 'tasksToSolve grows by 1 after push to wrongAnswers');
   });
 });
