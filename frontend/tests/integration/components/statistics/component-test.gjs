@@ -3,14 +3,14 @@ import { setupIntl } from 'ember-intl/test-support';
 import { setupRenderingTest } from 'ember-qunit';
 import { render, click } from '@ember/test-helpers';
 import sinon from 'sinon';
-import { setupMirage } from "ember-cli-mirage/test-support";
+import { setupMSW } from '../../../helpers/msw';
 import { DateTime } from 'luxon';
 import Statistics from 'brn/components/statistics';
 
 module('Integration | Component | statistics', function (hooks) {
   setupRenderingTest(hooks);
   setupIntl(hooks, 'en-us');
-  setupMirage(hooks);
+  setupMSW(hooks);
 
   test('it renders', async function (assert) {
     // Set any properties with this.set('myProperty', 'value');

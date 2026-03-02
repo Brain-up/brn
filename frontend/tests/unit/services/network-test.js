@@ -1,10 +1,10 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import { setupMirage } from "ember-cli-mirage/test-support";
+import { setupMSW } from '../../helpers/msw';
 
 module('Unit | Service | network', function (hooks) {
   setupTest(hooks);
-  setupMirage(hooks);
+  setupMSW(hooks);
 
   // Replace this with your real tests.
   test('it exists', function (assert) {

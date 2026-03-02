@@ -6,11 +6,11 @@ import {
   authenticateSession,
   invalidateSession,
 } from 'ember-simple-auth/test-support';
-import { setupMirage } from "ember-cli-mirage/test-support";
+import { setupMSW } from '../../helpers/msw';
 
 module('Acceptance | app test', function (hooks) {
   setupApplicationTest(hooks);
-  setupMirage(hooks);
+  setupMSW(hooks);
 
   // hooks.beforeEach(async function () {
   //   // this.server.get('users/current', () => {

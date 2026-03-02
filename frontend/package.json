@@ -31,7 +31,6 @@
     "local": "ember s --secure-proxy=false --proxy=http://localhost:8081",
     "develop": "cross-env FIREBASE_PROJECT_ID=brainup-spb-dev-bb6d0 FIREBASE_AUTH_DOMAIN=brainup-spb-dev-bb6d0.firebaseapp.com FIREBASE_API_KEY=AIzaSyB03Q4ZCxdqaKuN7cJqCQGhkibYD4Q-qsc ember s --secure-proxy=false --proxy=http://localhost:8081",
     "remote": "ember s --secure-proxy=true --proxy=https://www.brainup.site/",
-    "mirage": "ember s",
     "postinstall": "patch-package"
   },
   "lint-staged": {
@@ -67,6 +66,7 @@
     "@glint/environment-ember-loose": "^1.5.2",
     "@glint/template": "^1.7.4",
     "@rollup/plugin-babel": "^6.0.4",
+    "@tailwindcss/vite": "^4.2.1",
     "@types/idle-js": "^1.2.1",
     "@types/luxon": "^1.27.0",
     "@types/qunit": "^2.9.1",
@@ -81,7 +81,6 @@
     "ember-cli-code-coverage": "^3.1.0",
     "ember-cli-dependency-checker": "3.3.2",
     "ember-cli-htmlbars": "^7.0.0",
-    "ember-cli-mirage": "3.0.4",
     "ember-cli-page-object": "v2.0.0-beta.2",
     "ember-concurrency": "^5.2.0",
     "ember-eslint-parser": "^0.5.13",
@@ -110,9 +109,8 @@
     "husky": "^9.1.0",
     "lint-staged": "^15.2.0",
     "loader.js": "^4.7.0",
-    "miragejs": "0.1.48",
+    "msw": "^2.12.10",
     "npm-run-all": "^4.1.5",
-    "postcss-import": "^13.0.0",
     "prettier": "^3.4.0",
     "qunit": "^2.17.2",
     "qunit-dom": "^2.0.0",
@@ -139,13 +137,14 @@
     "@warp-drive/legacy": "5.8.1",
     "@warp-drive/utilities": "5.8.1",
     "billboard.js": "^3.1.0",
+    "ember-inflector": "^6.0.0",
     "ember-scoped-css": "^2.1.0",
     "firebase": "^8.10.0",
     "idle-js": "^1.2.0",
     "luxon": "^1.28.1",
     "patch-package": "6.4.7",
     "postinstall-postinstall": "^2.1.0",
-    "tailwindcss": "^3.4.0",
+    "tailwindcss": "^4.2.1",
     "tone": "^14.7.60"
   },
   "volta": {
@@ -155,6 +154,11 @@
   "ember-addon": {
     "paths": [
       "lib/dev-headers"
+    ]
+  },
+  "msw": {
+    "workerDirectory": [
+      "public"
     ]
   }
 }

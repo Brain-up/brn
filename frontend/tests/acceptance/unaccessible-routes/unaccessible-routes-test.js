@@ -1,6 +1,6 @@
 import { module, skip } from 'qunit';
 import { currentURL } from '@ember/test-helpers';
-import { setupMirage } from "ember-cli-mirage/test-support";
+import { setupMSW } from '../../helpers/msw';
 import { setupApplicationTest } from 'ember-qunit';
 import pageObject from './test-support/page-object';
 import { authenticateSession } from 'ember-simple-auth/test-support';
@@ -13,7 +13,7 @@ import {
 
 module('Acceptance | unaccessible routes', function (hooks) {
   setupApplicationTest(hooks);
-  setupMirage(hooks);
+  setupMSW(hooks);
 
   hooks.beforeEach(async () => {
     await authenticateSession();

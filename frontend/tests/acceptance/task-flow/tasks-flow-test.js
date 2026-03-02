@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { module, skip, test } from 'qunit';
-import { setupMirage } from "ember-cli-mirage/test-support";
+import { setupMSW } from '../../helpers/msw';
 import { setupApplicationTest } from 'ember-qunit';
 import pageObject from './test-support/page-object';
 import { setupAfterPageVisit } from './test-support/helpers';
@@ -14,7 +14,7 @@ import { getOwner } from '@ember/application';
 
 module('Acceptance | tasks flow', function (hooks) {
   setupApplicationTest(hooks);
-  setupMirage(hooks);
+  setupMSW(hooks);
 
   hooks.beforeEach(async () => {
     await authenticateSession();

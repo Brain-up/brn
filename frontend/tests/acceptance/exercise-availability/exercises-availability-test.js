@@ -7,12 +7,12 @@ import {
 } from '../general-helpers';
 import { getTestData } from './test-support/data-storage';
 import pageObject from './test-support/page-object';
-import { setupMirage } from "ember-cli-mirage/test-support";
+import { setupMSW } from '../../helpers/msw';
 import { authenticateSession } from 'ember-simple-auth/test-support';
 
 module('Acceptance | exercises availability', function (hooks) {
   setupApplicationTest(hooks);
-  setupMirage(hooks);
+  setupMSW(hooks);
 
   hooks.beforeEach(async function () {
     await authenticateSession();

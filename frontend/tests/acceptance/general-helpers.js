@@ -19,13 +19,15 @@ export function getServerResponses({
 
   server.get('series', (schema, request) => {
     const targetGroup = request.queryParams.groupId;
-    const seriesIds = groups.findBy('id', targetGroup).series;
+    const group = groups.find((g) => g.id === targetGroup);
+    const seriesIds = group ? group.series : [];
     return { data: series.filter((s) => seriesIds.includes(s.id)) };
   });
 
   server.get('exercises', (schema, request) => {
     const targetSeries = request.queryParams.subGroupId;
-    const exercisesIds = subgroups.findBy('id', targetSeries).exercises;
+    const subgroup = subgroups.find((sg) => sg.id === targetSeries);
+    const exercisesIds = subgroup ? subgroup.exercises : [];
     return { data: exercises.filter((e) => exercisesIds.includes(e.id)) };
   });
 
@@ -34,19 +36,19 @@ export function getServerResponses({
   });
 
   server.get('tasks/:id', (schema, request) => {
-    return { data: tasks.findBy('id', request.params.id) };
+    return { data: tasks.find((t) => t.id === request.params.id) };
   });
 
   server.get('groups/:id', (schema, request) => {
-    return { data: groups.findBy('id', request.params.id) };
+    return { data: groups.find((g) => g.id === request.params.id) };
   });
 
   server.get('series/:id', (schema, request) => {
-    return { data: series.findBy('id', request.params.id) };
+    return { data: series.find((s) => s.id === request.params.id) };
   });
 
   server.get('exercises/:id', (schema, request) => {
-    return { data: exercises.findBy('id', request.params.id) };
+    return { data: exercises.find((e) => e.id === request.params.id) };
   });
 
   server.post('exercises/byIds', () => {
