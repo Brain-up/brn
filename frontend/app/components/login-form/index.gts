@@ -168,7 +168,7 @@ export default class LoginFormComponent extends Component {
           <div class="flex mb-4">
             {{#let
               (hash
-                active="bg-blue-700 hover:bg-blue-900 focus:outline-none focus:shadow-outline"
+                active="bg-blue-700 hover:bg-blue-900 focus:outline-none focus:ring"
                 disabled="bg-blue-700 opacity-50  cursor-not-allowed"
               )
               as |buttonState|

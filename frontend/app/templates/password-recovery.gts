@@ -15,7 +15,7 @@ export default RouteTemplate(
     {{#let
       (hash
         label="block mb-2 text-sm font-bold text-gray-700"
-        input="appearance-none border-b-2 w-full text-sm leading-tight focus:outline-none focus:shadow-outline py-2"
+        input="appearance-none border-b-2 w-full text-sm leading-tight focus:outline-none focus:ring py-2"
       )
       as |style|
     }}

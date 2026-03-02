@@ -74,7 +74,7 @@ export default class HeaderComponent extends Component {
             <UiIconLogo @fill="white" />
           </LinkTo>
           <div class="nav-links flex items-center flex-1 min-w-0">
-            <div class="sm:text-sm flex items-center text-xs text-white whitespace-no-wrap">
+            <div class="sm:text-sm flex items-center text-xs text-white whitespace-nowrap">
               <LinkTo
                 @route="groups"
                 @query={{hash locale=this.activeLocale}}

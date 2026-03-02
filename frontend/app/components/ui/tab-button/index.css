@@ -9,6 +9,8 @@
   padding: 0 !important;
   min-width: 70px;
   max-width: 260px;
+  text-decoration: none;
+  cursor: pointer;
 }
 
 &::before {
@@ -25,9 +27,12 @@
   color: #131312;
 }
 
-&:disabled {
+&:disabled,
+&.disabled {
   color: rgb(128, 127, 127);
   border: rgb(199, 199, 199) solid 1px;
+  pointer-events: none;
+  cursor: default;
 }
 
 /*! purgecss end ignore */

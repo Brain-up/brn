@@ -22,6 +22,9 @@ export default class UiTabButtonComponent extends Component<UiTabButtonComponent
     if (this.args.mode === 'active') {
       items.push('active');
     }
+    if (this.args.mode === 'disabled') {
+      items.push('disabled');
+    }
     return items.join(' ');
   }
   get isDisabled() {
@@ -32,12 +35,11 @@ export default class UiTabButtonComponent extends Component<UiTabButtonComponent
     {{#if @route}}
     
       <LinkTo
-        @tagName="button"
-        type="button"
         @route={{@route}}
         @models={{@models}}
+        role="button"
         class="{{this.classes}}"
-        disabled={{this.isDisabled}}
+        aria-disabled={{if this.isDisabled "true"}}
         title={{@tooltip}}
         ...attributes
       >

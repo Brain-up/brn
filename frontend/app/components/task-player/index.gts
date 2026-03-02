@@ -1,13 +1,7 @@
-/* eslint-disable ember/no-component-lifecycle-hooks */
-// eslint-disable-next-line ember/no-classic-components
-import Component from '@ember/component';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import Component from '@glimmer/component';
 import { service } from '@ember/service';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { tracked } from '@glimmer/tracking';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { action } from '@ember/object';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { timeout, task, TaskInstance } from 'ember-concurrency';
 import { MODES } from 'brn/utils/task-modes';
 import { isTesting } from '@embroider/macros';
@@ -36,27 +30,34 @@ import AudioPlayer from 'brn/components/audio-player';
 import UiBottomContainer from 'brn/components/ui/bottom-container';
 import StartTaskButton from 'brn/components/start-task-button';
 
-export default class TaskPlayerComponent extends Component {
-  @service('audio') audio!: AudioService;
-  @service('stats') stats!: StatsService;
-  @service('studying-timer') studyingTimer!: StudyingTimerService;
+interface TaskPlayerSignature {
+  Args: {
+    task: TaskModel;
+    onRightAnswer?: () => void;
+  };
+  Blocks: {};
+  Element: HTMLDivElement;
+}
+
+export default class TaskPlayerComponent extends Component<TaskPlayerSignature> {
+  @service('audio') declare audio: AudioService;
+  @service('stats') declare stats: StatsService;
+  @service('studying-timer') declare studyingTimer: StudyingTimerService;
   @tracked justEnteredTask = true;
-  @tracked task!: TaskModel;
-  _task = undefined;
   @tracked
   activeWord: string | null = null;
   @tracked
   textToPlay: string | null = null;
-  tagName = '';
   activeTask: null | TaskInstance<any> = null;
-  willDestroyElement() {
-    super.willDestroyElement();
+
+  willDestroy() {
+    super.willDestroy();
     this.audio.stopNoise();
   }
 
   @tracked mode = ''; // listen, interact, task
   get componentType() {
-    const mechanism = this.task.exerciseMechanism;
+    const mechanism = this.args.task.exerciseMechanism;
     let postfix = '';
 
     if (mechanism === ExerciseMechanism.SIGNALS) {
@@ -80,9 +81,10 @@ export default class TaskPlayerComponent extends Component {
     }
     return this.audio.isBusy || this.disableAudioPlayer;
   }
-  didReceiveAttrs() {
-    super.didReceiveAttrs();
-    if (this.justEnteredTask === false && this._task !== this.task) {
+
+  @action
+  onTaskChanged() {
+    if (this.justEnteredTask === false) {
       if (isTesting()) {
         this.setMode(MODES.TASK);
       } else {
@@ -98,7 +100,7 @@ export default class TaskPlayerComponent extends Component {
 
   get disableAudioPlayer(): boolean {
     return (
-      this.task.pauseExecution ||
+      this.args.task.pauseExecution ||
       !this.studyingTimer.isStarted ||
       this.justEnteredTask
     );
@@ -118,36 +120,36 @@ export default class TaskPlayerComponent extends Component {
 
   @action onShuffled(words: string[]) {
     // we need this callback, because of singlw-words component shuffle logic
-    const sortedWords = this.task.normalizedAnswerOptions.sort((a, b) => {
+    const sortedWords = this.args.task.normalizedAnswerOptions.sort((a, b) => {
       return words.indexOf(a.word) - words.indexOf(b.word);
     });
-    this.task.normalizedAnswerOptions = sortedWords;
+    this.args.task.normalizedAnswerOptions = sortedWords;
   }
   get taskModelName() {
-    return this.task.exerciseMechanism;
+    return this.args.task.exerciseMechanism;
   }
   get orderedPlaylist(): AnswerOption[] {
     const { answerOptions, normalizedAnswerOptions } =
-      this.task;
+      this.args.task;
     // for ordered tasks we need to align audio stream with object order;
 
 
-    if (this.task.exerciseMechanism === ExerciseMechanism.SIGNALS) {
+    if (this.args.task.exerciseMechanism === ExerciseMechanism.SIGNALS) {
       return answerOptions;
     }
-    if (this.task.exerciseMechanism === ExerciseMechanism.WORDS) {
+    if (this.args.task.exerciseMechanism === ExerciseMechanism.WORDS) {
       return normalizedAnswerOptions;
     }
 
-    if (this.task.exerciseMechanism === ExerciseMechanism.MATRIX) {
-      const matrixTask = this.task as WordsSequencesModel;
+    if (this.args.task.exerciseMechanism === ExerciseMechanism.MATRIX) {
+      const matrixTask = this.args.task as WordsSequencesModel;
       const { selectedItemsOrder: itemsOrder } = matrixTask;
       const sortedItems: any[] = [];
       const length = answerOptions[itemsOrder[0]].length;
       for (let i = 0; i < length; i++) {
         itemsOrder.forEach((key: string) => {
           sortedItems.push(
-            this.task.normalizedAnswerOptions.find(
+            this.args.task.normalizedAnswerOptions.find(
               ({ word }: any) => word === answerOptions[key][i].word,
             ),
           );
@@ -156,7 +158,7 @@ export default class TaskPlayerComponent extends Component {
       return sortedItems;
     }
 
-    throw new Error(`Unknown task type - ${this.task.exerciseMechanism}`);
+    throw new Error(`Unknown task type - ${this.args.task.exerciseMechanism}`);
   }
 
   @(task(function* (this: TaskPlayerComponent) {
@@ -169,7 +171,7 @@ export default class TaskPlayerComponent extends Component {
           yield this.audio.setAudioElements([option.audioFileUrl]);
         } else {
           const useGeneratedUrl =
-            option.audioFileUrl && this.task.usePreGeneratedAudio;
+            option.audioFileUrl && this.args.task.usePreGeneratedAudio;
           yield this.audio.setAudioElements([
             useGeneratedUrl
               // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -192,9 +194,9 @@ export default class TaskPlayerComponent extends Component {
   listenModeTask!: any;
 
   maybeStartExercise() {
-    if (!this.task.exercise?.isStarted) {
+    if (!this.args.task.exercise?.isStarted) {
       this.stats.addEvent(StatEvents.Start);
-      this.task.exercise.trackTime('start');
+      this.args.task.exercise.trackTime('start');
     }
     this.audio.startNoise();
   }
@@ -219,7 +221,7 @@ export default class TaskPlayerComponent extends Component {
         if (playText) {
           this.activeWord = playText;
           this.textToPlay = null;
-          const option = this.task.normalizedAnswerOptions.find(
+          const option = this.args.task.normalizedAnswerOptions.find(
             ({ word }: any) => word === playText,
           );
           if (option) {
@@ -228,7 +230,7 @@ export default class TaskPlayerComponent extends Component {
               yield this.audio.setAudioElements([option.audioFileUrl]);
             } else {
               const useGeneratedUrl =
-              option.audioFileUrl && this.task.usePreGeneratedAudio;
+              option.audioFileUrl && this.args.task.usePreGeneratedAudio;
 
               yield this.audio.setAudioElements([
                 useGeneratedUrl
@@ -332,11 +334,12 @@ export default class TaskPlayerComponent extends Component {
     <SlotTo @selector="#exercise-config-slot">
       <ExerciseStudyConfig />
     </SlotTo>
-    <div 
+    <div
       {{didInsert this.preloadNoise @task}}
       {{didUpdate this.preloadNoise @task}}
+      {{didUpdate this.onTaskChanged @task}}
       class="flex flex-1" ...attributes>
-    
+
       {{#let
         (component
           this.componentType
@@ -354,7 +357,7 @@ export default class TaskPlayerComponent extends Component {
         )
         as |Player|
       }}
-    
+
         <Player>
           <:header as |context|>
             <SlotTo @selector="#progress-slot">
@@ -370,7 +373,7 @@ export default class TaskPlayerComponent extends Component {
               />
             </SlotTo>
           </:header>
-    
+
           <:footer as |content|>
             <UiBottomContainer>
               <ExerciseSteps
@@ -387,9 +390,9 @@ export default class TaskPlayerComponent extends Component {
             </UiBottomContainer>
           </:footer>
         </Player>
-    
+
       {{/let}}
-    
+
       {{#if this.justEnteredTask}}
         <StartTaskButton @startTask={{this.startTask}} />
       {{/if}}
