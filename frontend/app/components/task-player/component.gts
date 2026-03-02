@@ -23,7 +23,6 @@ import didUpdate from '@ember/render-modifiers/modifiers/did-update';
 import { on } from '@ember/modifier';
 import { hash } from '@ember/helper';
 import { concat } from '@ember/helper';
-import { component } from '@ember/helper';
 import { not } from 'ember-truth-helpers';
 import { notEq } from 'ember-truth-helpers';
 import { t } from 'ember-intl';

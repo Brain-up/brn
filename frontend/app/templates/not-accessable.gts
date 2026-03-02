@@ -1,4 +1,6 @@
 import RouteTemplate from 'ember-route-template';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { LinkTo } from '@ember/routing';
 
 export default RouteTemplate(
   <template>

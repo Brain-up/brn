@@ -1,3 +1,6 @@
+import { and, eq, gte, or, not } from 'ember-truth-helpers';
+import { hash } from '@ember/helper';
+
 <template>
   {{#if (and (eq @enabled true) (gte @level 2))}}
     {{! 3lvl enabled icon }}

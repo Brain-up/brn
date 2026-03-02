@@ -1,8 +1,12 @@
 import RouteTemplate from 'ember-route-template';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import pageTitle from 'ember-page-title/helpers/page-title';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { t } from 'ember-intl';
 
 export default RouteTemplate(
   <template>
-    {{page-title (t "header.used_resources")}}
+    {{pageTitle (t "header.used_resources")}}
     <section class="container">
       <h1 class="mb-5 text-3xl font-bold">{{t "header.used_resources"}}</h1>
       <p class="mb-5">

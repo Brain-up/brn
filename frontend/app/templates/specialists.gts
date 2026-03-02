@@ -1,8 +1,16 @@
 import RouteTemplate from 'ember-route-template';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import pageTitle from 'ember-page-title/helpers/page-title';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { t } from 'ember-intl';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { concat } from '@ember/helper';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { or } from 'ember-truth-helpers';
 
 export default RouteTemplate(
   <template>
-    {{page-title (t "header.specialists")}}
+    {{pageTitle (t "header.specialists")}}
     <section class="sm:py-16 py-8">
       <h2 class="sm:mb-6 sm:text-4xl mb-4 text-2xl font-semibold text-center">
         {{t "specialists.title"}}

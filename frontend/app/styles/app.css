@@ -1,7 +1,3 @@
-/*! purgecss start ignore */
-@import 'pod-styles.css';
-/*! purgecss end ignore */
-
 @tailwind base;
 
 @tailwind components;

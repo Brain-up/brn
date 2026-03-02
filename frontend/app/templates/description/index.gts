@@ -1,4 +1,10 @@
 import RouteTemplate from 'ember-route-template';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { t } from 'ember-intl';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { array, concat } from '@ember/helper';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { LinkTo } from '@ember/routing';
 
 export default RouteTemplate(
   <template>

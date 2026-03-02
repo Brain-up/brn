@@ -1,8 +1,18 @@
 import RouteTemplate from 'ember-route-template';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import pageTitle from 'ember-page-title/helpers/page-title';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { t } from 'ember-intl';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { array } from '@ember/helper';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { concat } from '@ember/helper';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import range from 'brn/helpers/range';
 
 export default RouteTemplate(
   <template>
-    {{page-title (t "header.contact")}}
+    {{pageTitle (t "header.contact")}}
     <section class="space-y-5">
       <h1 class="text-3xl font-semibold">
         {{t "contact.header"}}

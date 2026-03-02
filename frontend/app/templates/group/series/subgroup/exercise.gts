@@ -1,4 +1,22 @@
 import RouteTemplate from 'ember-route-template';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { t } from 'ember-intl';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { eq } from 'ember-truth-helpers';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { and, not } from 'ember-truth-helpers';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import didInsert from '@ember/render-modifiers/modifiers/did-insert';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import willDestroy from '@ember/render-modifiers/modifiers/will-destroy';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { LinkTo } from '@ember/routing';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import ModalDialog from 'ember-modal-dialog/components/modal-dialog';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import AnswerCorrectnessWidget from 'brn/components/answer-correctness-widget/component';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import ExerciseStats from 'brn/components/exercise-stats/component';
 
 export default RouteTemplate(
   <template>
@@ -8,10 +26,10 @@ export default RouteTemplate(
     >
       <div
         class="series-page--canvas flex flex-col flex-grow max-w-screen-xl"
-        {{did-insert @controller.disableBodyScroll}}
-        {{will-destroy @controller.enableBodyScroll}}
-        {{did-insert @controller.startStatsTracking @model}}
-        {{will-destroy @controller.stopStatsTracking @model}}
+        {{didInsert @controller.disableBodyScroll}}
+        {{willDestroy @controller.enableBodyScroll}}
+        {{didInsert @controller.startStatsTracking @model}}
+        {{willDestroy @controller.stopStatsTracking @model}}
       >
         <div class="fixed" id="modal-close-button">
           <LinkTo @route="group.series.subgroup" title={{t "navigation.come_back"}}>
@@ -55,7 +73,7 @@ export default RouteTemplate(
           }}
             <AnswerCorrectnessWidget
               @isCorrect={{true}}
-              {{did-insert @controller.greedOnCompletedExercise}}
+              {{didInsert @controller.greedOnCompletedExercise}}
             />
           {{else if @controller.showExerciseStats}}
             <ExerciseStats

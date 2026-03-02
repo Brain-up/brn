@@ -1,4 +1,12 @@
 import RouteTemplate from 'ember-route-template';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { t } from 'ember-intl';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import UiButton from 'brn/components/ui/button';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import UiIconPersons from 'brn/components/ui/icon/persons';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import AboutUs from 'brn/components/about-us/template';
 
 export default RouteTemplate(
   <template>
@@ -16,14 +24,14 @@ export default RouteTemplate(
             {{t "index.app_description"}}
           </p>
           <div class="mt-12 mb-4">
-            <Ui::Button
+            <UiButton
               data-test-registration-form class="sm:w-7/12 sm:px-16 flex items-center justify-center w-full p-2 px-4 text-lg" @route="login"
               @title={{t "login.title"}}
             />
           </div>
         </div>
       </div>
-      <Ui::Icon::Persons />
+      <UiIconPersons />
     </section>
 
     <AboutUs />

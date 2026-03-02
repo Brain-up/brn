@@ -1,4 +1,8 @@
 import RouteTemplate from 'ember-route-template';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { array } from '@ember/helper';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import SkeletonLine from 'brn/components/skeleton/line';
 
 export default RouteTemplate(
   <template>
@@ -7,12 +11,12 @@ export default RouteTemplate(
         <div class="max-w-none mx-auto">
           <div class="sm:rounded-lg pb-4 overflow-hidden">
             <div>
-              <h3 class="sm:pl-4 pl-2"><Skeleton::Line @class="w-40 h-5" /></h3>
+              <h3 class="sm:pl-4 pl-2"><SkeletonLine @class="w-40 h-5" /></h3>
               <div class="sm:grid-cols-4 md:grid-cols-5 gap-y-2 sm:gap-y-3 grid justify-center grid-cols-3 mx-2">
                 {{#each (array 1 2 3 4 5 6 7 8 9 10) as |_|}}
                   <div class="flex">
                     <div class="skeleton-exercise-btn flex items-center justify-center mt-2 ml-2 mr-2">
-                      <Skeleton::Line @class="w-12 h-10" />
+                      <SkeletonLine @class="w-12 h-10" />
                       <div style="position: absolute; right: -15px; top: -10px;">
                         <svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
                           <circle cx="28" cy="28" r="26.5" fill="white" stroke="#F4F4F4" stroke-width="3"></circle>
@@ -32,12 +36,12 @@ export default RouteTemplate(
         <div class="max-w-none mx-auto">
           <div class="sm:rounded-lg pb-4 overflow-hidden">
             <div>
-              <h3 class="sm:pl-4 pl-2"><Skeleton::Line @class="w-48 h-5" /></h3>
+              <h3 class="sm:pl-4 pl-2"><SkeletonLine @class="w-48 h-5" /></h3>
               <div class="sm:grid-cols-4 md:grid-cols-5 gap-y-2 sm:gap-y-3 grid justify-center grid-cols-3 mx-2">
                 {{#each (array 1 2 3 4 5) as |_|}}
                   <div class="flex">
                     <div class="skeleton-exercise-btn flex items-center justify-center mt-2 ml-2 mr-2">
-                      <Skeleton::Line @class="w-12 h-10" />
+                      <SkeletonLine @class="w-12 h-10" />
                       <div style="position: absolute; right: -15px; top: -10px;">
                         <svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
                           <circle cx="28" cy="28" r="26.5" fill="white" stroke="#F4F4F4" stroke-width="3"></circle>

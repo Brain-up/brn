@@ -1,4 +1,12 @@
 import RouteTemplate from 'ember-route-template';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { t } from 'ember-intl';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { hash } from '@ember/helper';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { on } from '@ember/modifier';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import UiButton from 'brn/components/ui/button';
 
 export default RouteTemplate(
   <template>
@@ -30,7 +38,7 @@ export default RouteTemplate(
           </div>
 
           <div class="flex mb-4">
-            <Ui::Button
+            <UiButton
               @title={{t "password_reset_form.send_recovery_email"}}
               @type="button"
               @isLoading={{@controller.isSubmitting}}
@@ -66,7 +74,7 @@ export default RouteTemplate(
             </div>
 
             <div class="flex mb-4">
-              <Ui::Button
+              <UiButton
                 @title={{t "password_reset_form.update_password"}}
                 @type="button"
                 @isLoading={{@controller.isSubmitting}}

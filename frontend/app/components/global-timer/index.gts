@@ -20,7 +20,7 @@ interface GlobalTimerSignature {
 }
 
 export default class GlobalTimerComponent extends Component<GlobalTimerSignature> {
-  constructor(owner: any, args: IGlobalTimerArgs) {
+  constructor(owner: any, args: GlobalTimerSignature['Args']) {
     super(owner, args);
     this.syncTask.perform();
     window.addEventListener('blur', this.disableTimer);

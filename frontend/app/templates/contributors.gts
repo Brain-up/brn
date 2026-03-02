@@ -1,8 +1,18 @@
 import RouteTemplate from 'ember-route-template';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import pageTitle from 'ember-page-title/helpers/page-title';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { t } from 'ember-intl';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { concat } from '@ember/helper';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { or } from 'ember-truth-helpers';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import groupBy from 'brn/helpers/group-by';
 
 export default RouteTemplate(
   <template>
-    {{page-title (t "header.contributors")}}
+    {{pageTitle (t "header.contributors")}}
     <section class="bg-gradient-to-r from-blue-100 to-purple-100 sm:p-8 lg:p-16 p-4 rounded-lg">
       <h2 class="sm:mb-6 sm:text-4xl mb-4 text-2xl font-semibold text-center">
         {{t "contributors.title"}}
@@ -11,7 +21,7 @@ export default RouteTemplate(
         {{t "contributors.subtitle"}}
       </div>
 
-      {{#each-in (group-by "kind" @model) as |kindType group|}}
+      {{#each-in (groupBy "kind" @model) as |kindType group|}}
         <h3 class="pb-2 text-xl font-medium">{{t
             (concat "contributors.kinds." kindType)
           }}</h3>
