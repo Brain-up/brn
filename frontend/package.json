@@ -109,7 +109,7 @@
     "husky": "^9.1.0",
     "lint-staged": "^15.2.0",
     "loader.js": "^4.7.0",
-    "msw": "^2.12.10",
+
     "npm-run-all": "^4.1.5",
     "prettier": "^3.4.0",
     "qunit": "^2.17.2",
@@ -154,11 +154,6 @@
   "ember-addon": {
     "paths": [
       "lib/dev-headers"
-    ]
-  },
-  "msw": {
-    "workerDirectory": [
-      "public"
     ]
   }
 }

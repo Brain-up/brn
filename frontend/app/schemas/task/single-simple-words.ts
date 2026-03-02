@@ -20,7 +20,8 @@ interface IRawAnswerOption {
 export const TaskSingleSimpleWordsSchema: LegacyResourceSchema = withDefaults({
   type: 'task/single-simple-words',
   fields: [
-    ...BASE_TASK_FIELDS,
+    // Filter out exerciseMechanism from base fields — the extension provides it
+    ...BASE_TASK_FIELDS.filter((f) => f.name !== 'exerciseMechanism'),
     // answerOptions is already in BASE_TASK_FIELDS but the subtype overrides it
     // with a specific type. The attribute field name is the same so it's fine.
   ],
@@ -34,6 +35,10 @@ export const TaskSingleSimpleWordsExtension: CAUTION_MEGA_DANGER_ZONE_Extension 
   kind: 'object',
   name: 'task-single-simple-words-ext',
   features: {
+    get exerciseMechanism() {
+      return ExerciseMechanism.WORDS;
+    },
+
     get tasksToSolve() {
       const self = this as unknown as {
         answerOptions: IRawAnswerOption[];
