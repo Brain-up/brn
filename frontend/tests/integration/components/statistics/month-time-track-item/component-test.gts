@@ -1,6 +1,7 @@
 // @ts-nocheck -- QUnit test context typing not supported with @types/qunit v2.9
 import { module, test } from 'qunit';
-import { setupIntl } from 'ember-intl/test-support';import { setupRenderingTest } from 'ember-qunit';
+import { setupIntl } from 'ember-intl/test-support';
+import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import { PROGRESS } from 'brn/schemas/user-weekly-statistics-types';
 import { DateTime } from 'luxon';
@@ -9,7 +10,8 @@ import StatisticsMonthTimeTrackItem from 'brn/components/statistics/month-time-t
 module(
   'Integration | Component | statistics/month-time-track-item',
   function (hooks) {
-    setupRenderingTest(hooks);setupIntl(hooks, 'en-us');
+    setupRenderingTest(hooks);
+    setupIntl(hooks, 'en-us');
 
     test('it renders', async function (assert) {
       // Set any properties with this.set('myProperty', 'value');

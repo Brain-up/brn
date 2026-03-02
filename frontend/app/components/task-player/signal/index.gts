@@ -30,6 +30,10 @@ interface TaskPlayerSignalSignature {
   onRightAnswer(config?: any): void;
   onWrongAnswer(config?: any): void;
   };
+  Blocks: {
+    header: [{ tasks: unknown[] }];
+    footer: [{ audioFileUrl: unknown }];
+  };
   Element: HTMLElement;
 }
 

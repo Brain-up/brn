@@ -1,9 +1,12 @@
 import { module, test } from 'qunit';
-import { setupIntl } from 'ember-intl/test-support';import { setupRenderingTest } from 'ember-qunit';
+import { setupIntl } from 'ember-intl/test-support';
+import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
+import ProgressBarCircle from 'brn/components/progress-bar-circle';
 
 module('Integration | Component | progress-bar-circle', function (hooks) {
-  setupRenderingTest(hooks);setupIntl(hooks, 'en-us');
+  setupRenderingTest(hooks);
+  setupIntl(hooks, 'en-us');
 
   test('it renders', async function (assert) {
     // Set any properties with this.set('myProperty', 'value');

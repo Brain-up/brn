@@ -1,10 +1,13 @@
 import { module, test } from 'qunit';
-import { setupIntl } from 'ember-intl/test-support';import { setupRenderingTest } from 'ember-qunit';
+import { setupIntl } from 'ember-intl/test-support';
+import { setupRenderingTest } from 'ember-qunit';
 import { render, fillIn, click } from '@ember/test-helpers';
 import Service from '@ember/service';
+import LoginForm from 'brn/components/login-form';
 
 module('Integration | Component | login-form', function (hooks) {
-  setupRenderingTest(hooks);setupIntl(hooks, 'en-us');
+  setupRenderingTest(hooks);
+  setupIntl(hooks, 'en-us');
   setupIntl(hooks, 'en-us');
 
   test('it renders', async function (assert) {

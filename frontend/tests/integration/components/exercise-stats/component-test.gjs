@@ -1,9 +1,12 @@
 import { module, test } from 'qunit';
-import { setupIntl } from 'ember-intl/test-support';import { setupRenderingTest } from 'ember-qunit';
+import { setupIntl } from 'ember-intl/test-support';
+import { setupRenderingTest } from 'ember-qunit';
 import { render, click } from '@ember/test-helpers';
+import ExerciseStats from 'brn/components/exercise-stats';
 
 module('Integration | Component | exercise-stats', function (hooks) {
-  setupRenderingTest(hooks);setupIntl(hooks, 'en-us');
+  setupRenderingTest(hooks);
+  setupIntl(hooks, 'en-us');
 
   test('it renders', async function (assert) {
     this.set('stats', {

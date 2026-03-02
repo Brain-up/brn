@@ -30,6 +30,10 @@ export interface WordsSequencesSignature<T> {
   onRightAnswer(): void;
   onWrongAnswer(params?: { skipRetry: true }): void;
   };
+  Blocks: {
+    header: [{ tasks: TaskItem[] }];
+    footer: [{ audioFileUrl: string | null }];
+  };
   Element: HTMLElement;
 }
 

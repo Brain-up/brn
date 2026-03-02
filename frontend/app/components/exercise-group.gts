@@ -84,7 +84,7 @@ export default class ExerciseGroup extends Component<ExerciseGroupSignature> {
         class="sm:h-40 flex-shrink-0 h-16 bg-white bg-center bg-no-repeat bg-contain" style={{htmlSafe (concat "background-image: url(" @group.picture ");")}}
       >
         {{#if this.isFlipped}}
-          {{! @ts-ignore }}
+          {{! @ts-expect-error -- Glint does not type-check inline style expressions }}
           <div
             class="sm:text-6xl w-full h-full pt-5 text-2xl font-extrabold text-center text-blue-600 bg-blue-300 bg-opacity-75" title={{concat @group.description ' / ' (t "exercise.progress") ': ' this.completedStats}}
           >{{this.completedStats}}</div>

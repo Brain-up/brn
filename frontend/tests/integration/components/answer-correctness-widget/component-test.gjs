@@ -1,9 +1,12 @@
 import { module, test } from 'qunit';
-import { setupIntl } from 'ember-intl/test-support';import { setupRenderingTest } from 'ember-qunit';
+import { setupIntl } from 'ember-intl/test-support';
+import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
+import AnswerCorrectnessWidget from 'brn/components/answer-correctness-widget';
 
 module('Integration | Component | answer-correctness-widget', function (hooks) {
-  setupRenderingTest(hooks);setupIntl(hooks, 'en-us');
+  setupRenderingTest(hooks);
+  setupIntl(hooks, 'en-us');
 
   test('gets victory image if isCorrect', async function (assert) {
     await render(<template><AnswerCorrectnessWidget @isCorrect={{true}} /></template>);

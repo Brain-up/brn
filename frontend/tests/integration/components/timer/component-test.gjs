@@ -1,11 +1,14 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { module, test } from 'qunit';
-import { setupIntl } from 'ember-intl/test-support';import { setupRenderingTest } from 'ember-qunit';
+import { setupIntl } from 'ember-intl/test-support';
+import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import mockService from '../../../test-support/mock-service';
+import Timer from 'brn/components/timer';
 
 module('Integration | Component | timer', function (hooks) {
-  setupRenderingTest(hooks);setupIntl(hooks, 'en-us');
+  setupRenderingTest(hooks);
+  setupIntl(hooks, 'en-us');
 
   test('supports mm:ss format', async function (assert) {
     mockService(this.owner, 'studying-timer', {

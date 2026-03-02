@@ -1,10 +1,12 @@
 import { module, test } from 'qunit';
-import { setupIntl } from 'ember-intl/test-support';import { setupRenderingTest } from 'ember-qunit';
+import { setupIntl } from 'ember-intl/test-support';
+import { setupRenderingTest } from 'ember-qunit';
 import { render, click } from '@ember/test-helpers';
 import UiAvatars from 'brn/components/ui/avatars';
 
 module('Integration | Component | ui/avatars', function (hooks) {
-  setupRenderingTest(hooks);setupIntl(hooks, 'en-us');
+  setupRenderingTest(hooks);
+  setupIntl(hooks, 'en-us');
 
   test('it renders avatars', async function (assert) {
     this.setProperties({

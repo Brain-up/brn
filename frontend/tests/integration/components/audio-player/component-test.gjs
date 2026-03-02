@@ -1,5 +1,6 @@
 import { module, test } from 'qunit';
-import { setupIntl } from 'ember-intl/test-support';import { setupRenderingTest } from 'ember-qunit';
+import { setupIntl } from 'ember-intl/test-support';
+import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import { timeout } from 'ember-concurrency';
 import pageObject from './page-object';
@@ -8,9 +9,11 @@ import customTimeout from 'brn/utils/custom-timeout';
 import Service from '@ember/service';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { tracked } from '@glimmer/tracking';
+import AudioPlayer from 'brn/components/audio-player';
 
 module('Integration | Component | audio-player', function (hooks) {
-  setupRenderingTest(hooks);setupIntl(hooks, 'en-us');
+  setupRenderingTest(hooks);
+  setupIntl(hooks, 'en-us');
 
   hooks.beforeEach(async function () {
     const fakeAudio = {

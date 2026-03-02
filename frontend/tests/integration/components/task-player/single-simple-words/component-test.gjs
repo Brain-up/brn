@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { module, test } from 'qunit';
-import { setupIntl } from 'ember-intl/test-support';import { setupRenderingTest } from 'ember-qunit';
+import { setupIntl } from 'ember-intl/test-support';
+import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import { task, taskWithPreGeneratedAudio } from './test-support/data-storage';
 import AudioService from 'brn/services/audio';
@@ -18,7 +19,8 @@ function schemaData(obj) {
 module(
   'Integration | Component | task-player/single-simple-words',
   function (hooks) {
-    setupRenderingTest(hooks);setupIntl(hooks, 'en-us');
+    setupRenderingTest(hooks);
+    setupIntl(hooks, 'en-us');
     let counter = 0;
 
     hooks.beforeEach(async function () {
@@ -189,7 +191,8 @@ module(
 module(
   'Integration | Component | task-player/single-simple-words | audio source unification',
   function (hooks) {
-    setupRenderingTest(hooks);setupIntl(hooks, 'en-us');
+    setupRenderingTest(hooks);
+    setupIntl(hooks, 'en-us');
 
     test('startPlayTask receives the pre-generated audio URL when available', async function (assert) {
       const receivedUrls = [];

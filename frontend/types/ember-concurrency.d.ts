@@ -44,6 +44,8 @@ export {
 
 // Overload: task() accepting a generator function returns TaskProperty
 // (which has .drop(), .keepLatest(), .enqueue(), etc.)
+// TODO: Tighten generator overload types once migration is stable.
+// Currently defaults to `any` for pragmatic migration compatibility.
 declare module 'ember-concurrency' {
   export function task<T = any, Args extends any[] = any[]>(
     fn: (...args: any[]) => Generator<any, T, any>,

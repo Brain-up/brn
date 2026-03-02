@@ -2,12 +2,14 @@ import TaskPlayerSingleSimpleWordsOption from 'brn/components/task-player/single
 
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { module, test } from 'qunit';
-import { setupIntl } from 'ember-intl/test-support';import { setupRenderingTest } from 'ember-qunit';
+import { setupIntl } from 'ember-intl/test-support';
+import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 module(
   'Integration | Component | task-player/single-simple-words/option',
   function (hooks) {
-    setupRenderingTest(hooks);setupIntl(hooks, 'en-us');
+    setupRenderingTest(hooks);
+    setupIntl(hooks, 'en-us');
     test('it renders', async function (assert) {
       this.set('activeWord', 'activeword');
       this.set('answerOption', { word: 'any' });

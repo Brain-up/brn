@@ -1,5 +1,6 @@
 import { module, test } from 'qunit';
-import { setupIntl } from 'ember-intl/test-support';import { setupRenderingTest } from 'ember-qunit';
+import { setupIntl } from 'ember-intl/test-support';
+import { setupRenderingTest } from 'ember-qunit';
 import { render, typeIn } from '@ember/test-helpers';
 import { tracked } from '@glimmer/tracking';
 import LoginFormInput from 'brn/components/login-form/input';
@@ -10,7 +11,8 @@ function getNumSymbols(num) {
 }
 
 module('Integration | Component | login-form/input', function (hooks) {
-  setupRenderingTest(hooks);setupIntl(hooks, 'en-us');
+  setupRenderingTest(hooks);
+  setupIntl(hooks, 'en-us');
 
   test('it renders', async function (assert) {
     this.set('model', {});

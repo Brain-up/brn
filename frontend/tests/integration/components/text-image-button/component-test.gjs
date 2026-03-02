@@ -1,9 +1,12 @@
 import { module, test } from 'qunit';
-import { setupIntl } from 'ember-intl/test-support';import { setupRenderingTest } from 'ember-qunit';
+import { setupIntl } from 'ember-intl/test-support';
+import { setupRenderingTest } from 'ember-qunit';
 import { render, settled } from '@ember/test-helpers';
+import TextImageButton from 'brn/components/text-image-button';
 
 module('Integration | Component | text-image-button', function (hooks) {
-  setupRenderingTest(hooks);setupIntl(hooks, 'en-us');
+  setupRenderingTest(hooks);
+  setupIntl(hooks, 'en-us');
 
   test('sets right classes and action', async function (assert) {
     this.set('clickAction', () => {
@@ -18,7 +21,7 @@ module('Integration | Component | text-image-button', function (hooks) {
     await render(<template><TextImageButton
     @disabled={{true}}
     @isSelected={{true}}
-    @clickAction={{action self.clickAction}}
+    @clickAction={{self.clickAction}}
     @pictureFileUrl="/image"
     @word="word"
     /></template>);

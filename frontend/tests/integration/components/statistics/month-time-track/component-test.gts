@@ -1,7 +1,8 @@
 // @ts-nocheck -- QUnit test context typing not supported with @types/qunit v2.9
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { module, test } from 'qunit';
-import { setupIntl } from 'ember-intl/test-support';import { setupRenderingTest } from 'ember-qunit';
+import { setupIntl } from 'ember-intl/test-support';
+import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import { DateTime } from 'luxon';
 import { PROGRESS } from 'brn/schemas/user-weekly-statistics-types';
@@ -37,7 +38,8 @@ const generateTrackData = (
 module(
   'Integration | Component | statistics/month-time-track',
   function (hooks) {
-    setupRenderingTest(hooks);setupIntl(hooks, 'en-us');
+    setupRenderingTest(hooks);
+    setupIntl(hooks, 'en-us');
 
     hooks.beforeEach(function () {
       //@ts-expect-error this

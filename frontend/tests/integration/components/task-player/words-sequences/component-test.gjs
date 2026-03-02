@@ -1,5 +1,6 @@
 import { module, test } from 'qunit';
-import { setupIntl } from 'ember-intl/test-support';import { setupRenderingTest } from 'ember-qunit';
+import { setupIntl } from 'ember-intl/test-support';
+import { setupRenderingTest } from 'ember-qunit';
 import { render, click, settled, waitFor } from '@ember/test-helpers';
 import data from './test-support/data-storage';
 import pageObject from './test-support/page-object';
@@ -8,7 +9,8 @@ import TaskPlayer from 'brn/components/task-player';
 import TaskPlayerWordsSequences from 'brn/components/task-player/words-sequences';
 
 module('Integration | Component | words-seq-task-player', function (hooks) {
-  setupRenderingTest(hooks);setupIntl(hooks, 'en-us');
+  setupRenderingTest(hooks);
+  setupIntl(hooks, 'en-us');
 
   hooks.beforeEach(async function () {
     const store = this.owner.lookup('service:store');
@@ -42,7 +44,8 @@ module('Integration | Component | words-seq-task-player', function (hooks) {
 });
 
 module('Integration | Component | words-seq-task-player | per-word correctness', function (hooks) {
-  setupRenderingTest(hooks);setupIntl(hooks, 'en-us');
+  setupRenderingTest(hooks);
+  setupIntl(hooks, 'en-us');
 
   hooks.beforeEach(async function () {
     class MockAudio extends AudioService {
@@ -127,7 +130,8 @@ module('Integration | Component | words-seq-task-player | per-word correctness',
 });
 
 module('Integration | Component | words-seq-task-player | progress stability on wrong answer', function (hooks) {
-  setupRenderingTest(hooks);setupIntl(hooks, 'en-us');
+  setupRenderingTest(hooks);
+  setupIntl(hooks, 'en-us');
 
   hooks.beforeEach(async function () {
     class MockAudio extends AudioService {
