@@ -1,16 +1,12 @@
 /**
- * MSW test helper with @ember/test-waiters integration.
+ * MSW test helper with @mswjs/interceptors for reliable fetch interception.
  *
- * Uses @mswjs/interceptors/fetch for reliable fetch interception (no Service Worker).
- * Wraps fetch with a test-waiter so settled() waits for all pending requests.
+ * Uses @mswjs/interceptors/fetch (same mechanism as MSW's setupServer).
+ * App-level @ember/test-waiters integration in services/network.ts ensures
+ * settled() waits for all pending requests.
  * Provides a mirage-compatible server.get/post/put/delete API.
  */
 import { FetchInterceptor } from '@mswjs/interceptors/fetch';
-import { buildWaiter } from '@ember/test-waiters';
-
-// ─── Test waiter for fetch tracking ──────────────────────────────────────────
-
-const fetchWaiter = buildWaiter('fetch-waiter');
 
 // ─── Path matching ───────────────────────────────────────────────────────────
 
@@ -130,23 +126,17 @@ function ensureInterceptor() {
     }
 
     const mirageRequest = { params, queryParams, requestBody };
-    const token = fetchWaiter.beginAsync();
+    const result = handler(null, mirageRequest);
 
-    try {
-      const result = handler(null, mirageRequest);
-
-      if (result === undefined || result === null) {
-        controller.respondWith(new Response(null, { status: 200 }));
-      } else {
-        controller.respondWith(
-          new Response(JSON.stringify(result), {
-            status: 200,
-            headers: { 'Content-Type': 'application/json' },
-          }),
-        );
-      }
-    } finally {
-      fetchWaiter.endAsync(token);
+    if (result === undefined || result === null) {
+      controller.respondWith(new Response(null, { status: 200 }));
+    } else {
+      controller.respondWith(
+        new Response(JSON.stringify(result), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+        }),
+      );
     }
   });
 
