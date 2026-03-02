@@ -75,7 +75,7 @@
     json5 "^2.2.3"
     semver "^6.3.1"
 
-"@babel/core@^7.12.3", "@babel/core@^7.14.5", "@babel/core@^7.22.9", "@babel/core@^7.24.4", "@babel/core@^7.25.2", "@babel/core@^7.28.5":
+"@babel/core@^7.12.3", "@babel/core@^7.14.5", "@babel/core@^7.22.9", "@babel/core@^7.23.2", "@babel/core@^7.24.4", "@babel/core@^7.25.2", "@babel/core@^7.28.5":
   version "7.29.0"
   resolved "https://registry.yarnpkg.com/@babel/core/-/core-7.29.0.tgz#5286ad785df7f79d656e88ce86e650d16ca5f322"
   integrity sha512-CGOfOJqWjg2qW/Mb6zNsDm+u5vFQ8DxXfbM09z69p5Z6+mE1ikP2jUXw+j42Pf1XTYED2Rni5f95npYeuwMDQA==
@@ -1880,7 +1880,7 @@
     mkdirp "^1.0.4"
     silent-error "^1.1.1"
 
-"@ember/render-modifiers@3.0.0":
+"@ember/render-modifiers@3.0.0", "@ember/render-modifiers@^3.0.0":
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@ember/render-modifiers/-/render-modifiers-3.0.0.tgz#3f046ee6dc35ebccf86a50aeb48c63ad58217c00"
   integrity sha512-gJztS8dI7Jt8ohFQptEDJAgpl9DG84IpqwQoR1JDpVIBy2uLbf8KFD6S3h3LfyMsgJce6G38cOvyQv6BDgcnsA==
@@ -1989,6 +1989,11 @@
     typescript-memoize "^1.0.1"
     walk-sync "^3.0.0"
 
+"@embroider/config-meta-loader@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@embroider/config-meta-loader/-/config-meta-loader-1.0.0.tgz#d7e4c1d2e732b83905035b2fde9777f5733ff269"
+  integrity sha512-qznkdjgEGPe6NM94hZNXvOm/WhrJwBh8FtSQZ+nGjh9TOjY42tOiTEevFuM0onNXUn6bpdGzmjwKo2xY2jxQxQ==
+
 "@embroider/core@^4.4.4":
   version "4.4.4"
   resolved "https://registry.yarnpkg.com/@embroider/core/-/core-4.4.4.tgz#f0ae0c4df2e708f4b694dd345abad61058e22a97"
@@ -2021,6 +2026,13 @@
     semver "^7.3.5"
     typescript-memoize "^1.0.1"
     walk-sync "^3.0.0"
+
+"@embroider/legacy-inspector-support@^0.1.3":
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/@embroider/legacy-inspector-support/-/legacy-inspector-support-0.1.3.tgz#37d0f6f6f04450d0e051996f08a40571d08e9d18"
+  integrity sha512-0VzD1xExkT78a1CUiW8wZ5VZDL4bVyMSc3t8E/RiAW1X6TlyKIA/m6zoQgsQtQIiiTPPxH0/1Tdd0F7b5//etw==
+  dependencies:
+    "@embroider/addon-shim" "^1.10.0"
 
 "@embroider/macros@1.20.0", "@embroider/macros@^1.10.0", "@embroider/macros@^1.16.12", "@embroider/macros@^1.16.9", "@embroider/macros@^1.19.5":
   version "1.20.0"
@@ -2630,10 +2642,22 @@
     "@embroider/addon-shim" "^1.10.0"
     "@embroider/macros" "^1.10.0"
 
+"@fortawesome/fontawesome-common-types@7.2.0":
+  version "7.2.0"
+  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-common-types/-/fontawesome-common-types-7.2.0.tgz#ae54831ab5974bc1a64e8b07410f2da2b4abf87f"
+  integrity sha512-IpR0bER9FY25p+e7BmFH25MZKEwFHTfRAfhOyJubgiDnoJNsSvJ7nigLraHtp4VOG/cy8D7uiV0dLkHOne5Fhw==
+
 "@fortawesome/fontawesome-common-types@^0.2.30":
   version "0.2.35"
   resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-common-types/-/fontawesome-common-types-0.2.35.tgz#01dd3d054da07a00b764d78748df20daf2b317e9"
   integrity "sha1-Ad09BU2gegC3ZNeHSN8g2vKzF+k= sha512-IHUfxSEDS9dDGqYwIW7wTN6tn/O8E0n5PcAHz9cAaBoZw6UpG20IG/YM3NNLaGPwPqgjBAFjIURzqoQs3rrtuw=="
+
+"@fortawesome/fontawesome-svg-core@^7.2.0":
+  version "7.2.0"
+  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-svg-core/-/fontawesome-svg-core-7.2.0.tgz#813550a5e8946a798e170d3f7331a685f8f8a550"
+  integrity sha512-6639htZMjEkwskf3J+e6/iar+4cTNM9qhoWuRfj9F3eJD6r7iCzV1SWnQr2Mdv0QT0suuqU8BoJCZUyCtP9R4Q==
+  dependencies:
+    "@fortawesome/fontawesome-common-types" "7.2.0"
 
 "@fortawesome/free-solid-svg-icons@^5.14.0":
   version "5.14.0"
@@ -7671,6 +7695,18 @@ ember-test-selectors@^7.1.0:
     ember-cli-babel "^7.26.4"
     ember-cli-version-checker "^5.1.2"
     strip-test-selectors "0.1.0"
+
+ember-tether@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/ember-tether/-/ember-tether-3.1.1.tgz#8ebc2cdefd1587e0f79499d11273d43dd03d9577"
+  integrity sha512-l3VmUVSm6TmJEDw0exRjHJJKcQCZHwfJmCXNOMXLeRRpZQg10n4kXa1T1Kjt/7a5d7Qs0SZue3Dp78tUmlCaBg==
+  dependencies:
+    "@babel/core" "^7.23.2"
+    "@ember/render-modifiers" "^3.0.0"
+    ember-auto-import "^2.6.3"
+    ember-cli-babel "^8.2.0"
+    ember-cli-htmlbars "^6.3.0"
+    tether "^2.0.0"
 
 ember-truth-helpers@^5.0.0:
   version "5.0.0"
@@ -13974,6 +14010,11 @@ testem@^3.15.2:
     styled_string "0.0.1"
     tap-parser "^7.0.0"
     tmp "0.0.33"
+
+tether@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/tether/-/tether-2.0.0.tgz#8ccb03992e71e2e913e6b1d4feb6be8cb49a4f79"
+  integrity sha512-iAkyBhwILpLIvkwzO5w5WUBtpYwxvzLRTO+sbzF3Uy7X4zznsy73v2b4sOQHXE3CQHeSNtB/YMU2Nn9tocbeBQ==
 
 text-table@^0.2.0:
   version "0.2.0"
