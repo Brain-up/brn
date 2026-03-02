@@ -1,16 +1,23 @@
 /* eslint-disable */
-const {
-  fontSize,
-  colors,
-  borderRadius,
-  justifyContent,
-} = require('tailwindcss/defaultTheme');
+const defaultTheme = require('tailwindcss/defaultTheme');
 
+/** @type {import('tailwindcss').Config} */
 module.exports = {
+  content: ['./app/**/*.{gts,gjs,hbs,ts,js}'],
+  safelist: [
+    // Dynamic PROGRESS color classes used via template interpolation:
+    // bg-PROGRESS-{{@data.progress}} where progress is BAD | GOOD | GREAT
+    'bg-PROGRESS-BAD',
+    'bg-PROGRESS-GOOD',
+    'bg-PROGRESS-GREAT',
+    // Dynamic classes used in global-timer component
+    'bg-green-secondary',
+    'bg-yellow-secondary',
+    'bg-pink-secondary',
+  ],
   theme: {
     extend: {
       fontSize: {
-        ...fontSize,
         xss: '.5rem',
       },
       colors: {
@@ -20,7 +27,6 @@ module.exports = {
           GREAT: '#47CD8A',
         },
         blue: {
-          ...colors.blue,
           100: '#DAF0FC',
           300: '#EDF8FE',
           500: '#81D5F9',
@@ -31,43 +37,30 @@ module.exports = {
           1100: '#428DFC',
         },
         pink: {
-          ...colors.pink,
           200: '#FBEDFE',
           500: '#FF6373',
           secondary: '#F38698',
         },
-
         yellow: {
-          ...colors.yellow,
           500: '#F68820',
           secondary: '#FBD051',
         },
-
         purple: {
-          ...colors.purple,
           700: '#2A165B',
           primary: '#503DAD',
           left: '#7979f2',
           right: '#a179f2',
         },
-
         indigo: {
-          ...colors.indigo,
           200: '#EDF0FE',
           500: '#63BBEB',
         },
         green: {
-          ...colors.green,
           secondary: '#47CD8A',
         },
       },
       borderRadius: {
-        ...borderRadius,
         large: '1.25rem',
-      },
-      justifyContent: {
-        ...justifyContent,
-        evenly: 'space-evenly',
       },
       flex: {
         6: '0 1 16.666%',
@@ -83,14 +76,6 @@ module.exports = {
     fontFamily: {
       openSans: ['Open Sans'],
     },
-  },
-  variants: {
-    backgroundColor: ['responsive', 'hover', 'focus', 'disabled', 'active'],
-    textColor: ['responsive', 'hover', 'focus', 'disabled', 'active'],
-    gradientColorStops: ['responsive', 'hover', 'focus', 'disabled', 'active'],
-    cursor: ['disabled'],
-    boxShadow: ['disabled'],
-    opacity: ['disabled'],
   },
   plugins: [],
 };

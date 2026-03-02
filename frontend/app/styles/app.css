@@ -2,11 +2,11 @@
 @import 'pod-styles.css';
 /*! purgecss end ignore */
 
-@import 'tailwindcss/base';
+@tailwind base;
 
-@import 'tailwindcss/components';
+@tailwind components;
 
-@import 'tailwindcss/utilities';
+@tailwind utilities;
 
 /*! purgecss start ignore */
 @import 'billboard.js/dist/billboard.min.css';
