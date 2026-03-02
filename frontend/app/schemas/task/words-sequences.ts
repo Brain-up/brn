@@ -33,8 +33,7 @@ function createTasks(
 export const TaskWordsSequencesSchema: LegacyResourceSchema = withDefaults({
   type: 'task/words-sequences',
   fields: [
-    // Filter out exerciseMechanism from base fields — the extension provides it
-    ...BASE_TASK_FIELDS.filter((f) => f.name !== 'exerciseMechanism'),
+    ...BASE_TASK_FIELDS,
     { kind: 'attribute', name: 'template', type: 'string' },
     {
       kind: 'attribute',
@@ -52,10 +51,6 @@ export const TaskWordsSequencesExtension: CAUTION_MEGA_DANGER_ZONE_Extension = {
   kind: 'object',
   name: 'task-words-sequences-ext',
   features: {
-    get exerciseMechanism() {
-      return ExerciseMechanism.MATRIX;
-    },
-
     get selectedItemsOrder(): string[] {
       const self = this as unknown as { template: string; exercise: { template: string } };
       // template lives on the exercise, not the task

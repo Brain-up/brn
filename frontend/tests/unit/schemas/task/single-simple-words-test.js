@@ -1,7 +1,6 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import { ExerciseMechanism } from 'brn/utils/exercise-types';
-import { TaskSingleSimpleWordsExtension } from 'brn/schemas/task/single-simple-words';
 
 module('Unit | Schema | task/single-simple-words', function (hooks) {
   setupTest(hooks);
@@ -19,15 +18,12 @@ module('Unit | Schema | task/single-simple-words', function (hooks) {
     assert.strictEqual(record.exerciseType, 'SINGLE_SIMPLE_WORDS');
   });
 
-  test('exerciseMechanism extension getter returns WORDS', function (assert) {
-    // The extension getter is defined on the extension object directly.
-    // When the attribute is not set by the API, the extension provides the default.
-    const getter = Object.getOwnPropertyDescriptor(
-      TaskSingleSimpleWordsExtension.features,
-      'exerciseMechanism',
-    );
-    assert.ok(getter, 'exerciseMechanism getter exists');
-    assert.strictEqual(getter.get.call({}), ExerciseMechanism.WORDS);
+  test('exerciseMechanism attribute stores the value from createRecord', function (assert) {
+    const store = this.owner.lookup('service:store');
+    const record = store.createRecord('task/single-simple-words', {
+      exerciseMechanism: 'WORDS',
+    });
+    assert.strictEqual(record.exerciseMechanism, ExerciseMechanism.WORDS);
   });
 
   test('has base task fields', function (assert) {
