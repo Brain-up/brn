@@ -147,8 +147,7 @@ function resetHandlers() {
   runtimeHandlers = [];
 }
 
-// eslint-disable-next-line no-unused-vars
-function restoreFetch() {
+function _restoreFetch() {
   if (interceptorInstalled) {
     window.fetch = originalFetch;
     interceptorInstalled = false;
