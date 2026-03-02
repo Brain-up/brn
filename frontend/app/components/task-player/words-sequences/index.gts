@@ -222,7 +222,7 @@ export default class WordsSequencesComponent<
           <div class="words-sequences-columns flex justify-center flex-grow mt-4">
             {{#each @task.selectedItemsOrder as |type|}}
               <div
-                class="column flex-1 flex-col type-column
+                class="column flex flex-1 flex-col type-column
                   {{if (not (eq (arrayLast @task.selectedItemsOrder) type)) "mr-2"}}"
               >
                 {{#each (get @task.answerOptions type) as |answerOption|}}

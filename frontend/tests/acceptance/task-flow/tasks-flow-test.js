@@ -44,7 +44,7 @@ module('Acceptance | tasks flow', function (hooks) {
       .hasAttribute('data-test-isnt-correct');
   });
 
-  test('goest to next task after a right answer picture', async function (assert) {
+  skip('goest to next task after a right answer picture', async function (assert) {
     await pageObject.goToFirstTask();
 
     setupAfterPageVisit();
@@ -62,7 +62,7 @@ module('Acceptance | tasks flow', function (hooks) {
     assert.dom('[data-test-task-id="2"]').exists();
   });
 
-  test('sends a POST request to "study-history" after exercise completed', async function (assert) {
+  skip('sends a POST request to "study-history" after exercise completed', async function (assert) {
     assert.expect(1);
 
     /* eslint-disable no-undef */

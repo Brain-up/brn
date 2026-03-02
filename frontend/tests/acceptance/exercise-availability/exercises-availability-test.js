@@ -33,12 +33,12 @@ module('Acceptance | exercises availability', function (hooks) {
       .dom(
         '[data-test-exercise-level="1"][data-test-exercise-name="exercise 1"]',
       )
-      .hasNoAttribute('disabled');
+      .doesNotHaveAttribute('aria-disabled');
     assert
       .dom(
         '[data-test-exercise-level="2"][data-test-exercise-name="exercise 1"]',
       )
-      .hasAttribute('disabled');
+      .hasAttribute('aria-disabled');
 
     //   await this.pauseTest();
 
@@ -64,7 +64,7 @@ module('Acceptance | exercises availability', function (hooks) {
       .dom(
         '[data-test-exercise-level="2"][data-test-exercise-name="exercise 1"]',
       )
-      .hasAttribute('disabled');
+      .hasAttribute('aria-disabled');
 
     await pageObject.goToFirstExercisePage();
     await pageObject.startTask();
@@ -84,12 +84,12 @@ module('Acceptance | exercises availability', function (hooks) {
       .dom(
         '[data-test-exercise-level="1"][data-test-exercise-name="exercise 1"]',
       )
-      .hasNoAttribute('disabled');
+      .doesNotHaveAttribute('aria-disabled');
 
     assert
       .dom(
         '[data-test-exercise-level="2"][data-test-exercise-name="exercise 1"]',
       )
-      .hasNoAttribute('disabled');
+      .doesNotHaveAttribute('aria-disabled');
   });
 });

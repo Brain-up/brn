@@ -1,5 +1,5 @@
 import { module, test } from 'qunit';
-import { visit, currentURL } from '@ember/test-helpers';
+import { visit, currentURL, settled } from '@ember/test-helpers';
 import { setupApplicationTest } from 'ember-qunit';
 import {
   currentSession,
@@ -27,7 +27,12 @@ module('Acceptance | app test', function (hooks) {
       authToken: '12345',
       otherData: 'some-data',
     });
-    await visit('/');
+    try {
+      await visit('/');
+    } catch (e) {
+      // TransitionAborted is expected: IndexRoute redirects authenticated users to /groups
+    }
+    await settled();
 
     assert.equal(currentURL(), '/groups');
 

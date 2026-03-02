@@ -1,7 +1,7 @@
 import { module, test } from 'qunit';
 import { setupIntl } from 'ember-intl/test-support';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, click } from '@ember/test-helpers';
+import { render, click, waitUntil } from '@ember/test-helpers';
 import sinon from 'sinon';
 import { setupMSW } from '../../../helpers/msw';
 import { DateTime } from 'luxon';
@@ -41,6 +41,9 @@ module('Integration | Component | statistics', function (hooks) {
     await render(
       <template><Statistics @initialSelectedMonth={{self.initialSelectedMonth}} /></template>
     );
+
+    // MSW Service Worker intercept is async — wait for the stubs to be called
+    await waitUntil(() => stubGetStatsByWeek.calledOnce && stubGetStatsByYear.calledOnce, { timeout: 5000 });
 
     assert.ok(
       stubGetStatsByWeek.calledOnce,
