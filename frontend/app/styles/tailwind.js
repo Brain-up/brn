@@ -1,6 +1,3 @@
-/* eslint-disable */
-const defaultTheme = require('tailwindcss/defaultTheme');
-
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ['./app/**/*.{gts,gjs,hbs,ts,js}'],
