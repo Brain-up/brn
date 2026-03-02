@@ -2,7 +2,7 @@
 import { service } from '@ember/service';
 
 import BaseAuthenticator from 'ember-simple-auth/authenticators/base';
-import FirebaseService from 'ember-firebase-service/services/firebase';
+import type FirebaseService from 'brn/services/firebase';
 import { getOwner } from '@ember/application';
 
 export interface SerializedUser {
