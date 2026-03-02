@@ -83,17 +83,16 @@ export default class GlobalTimerComponent extends Component<GlobalTimerSignature
   syncTask!: TaskGenerator<any, any>;
 
   <template>
-    <div class="md:mr-4 lg:mr-6 mr-3">
+    <div class="sm:mr-3 md:mr-4 lg:mr-6 mr-1">
       <span
         title={{this.minutes}}
         data-test-timer-container
-        class="flex items-center w-32 justify-between h-10 rounded-full py-2 px-5 text-blue-1100 text-sm font-semibold leading-none text-center
+        class="flex items-center sm:w-32 w-auto justify-between sm:h-10 h-8 rounded-full py-1 sm:py-2 px-2 sm:px-5 text-blue-1100 sm:text-sm text-xs font-semibold leading-none text-center
           {{this.getColor}}"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
+          class="sm:w-6 sm:h-6 flex-shrink-0 w-4 h-4"
           viewBox="0 0 24 24"
           fill="none"
         >

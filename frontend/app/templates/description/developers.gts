@@ -126,7 +126,7 @@ export default RouteTemplate(
           {{t "description.team.thanks_words"}}
         </p>
 
-        <ul class="flex flex-wrap justify-between p-10 -mx-4 bg-gray-100">
+        <ul class="sm:p-10 flex flex-wrap justify-between p-4 -mx-4 bg-gray-100">
           {{#each @controller.persons.teamMembers as |teamMember i|}}
             <li class="w-24 h-24 m-2 my-4 overflow-hidden rounded-full">
               <img

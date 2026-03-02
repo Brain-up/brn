@@ -3,11 +3,11 @@ import RouteTemplate from 'ember-route-template';
 export default RouteTemplate(
   <template>
     {{page-title (t "header.contributors")}}
-    <section class="bg-gradient-to-r from-blue-100 to-purple-100 p-16 rounded-lg">
-      <h2 class="mb-6 text-4xl font-semibold text-center">
+    <section class="bg-gradient-to-r from-blue-100 to-purple-100 sm:p-8 lg:p-16 p-4 rounded-lg">
+      <h2 class="sm:mb-6 sm:text-4xl mb-4 text-2xl font-semibold text-center">
         {{t "contributors.title"}}
       </h2>
-      <div class="font-openSans mb-16 text-lg text-center">
+      <div class="font-openSans sm:mb-16 sm:text-lg mb-8 text-base text-center">
         {{t "contributors.subtitle"}}
       </div>
 
@@ -21,7 +21,7 @@ export default RouteTemplate(
         >
           {{#each group as |i|}}
             <div
-              class="team-member md:flex-1 px-6 py-10 text-center bg-white rounded-lg"
+              class="team-member md:flex-1 sm:px-6 sm:py-10 px-4 py-6 text-center bg-white rounded-lg"
             >
               <div>
                 <img

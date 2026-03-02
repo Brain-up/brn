@@ -3,11 +3,11 @@ import RouteTemplate from 'ember-route-template';
 export default RouteTemplate(
   <template>
     {{page-title (t "header.specialists")}}
-    <section class="py-16">
-      <h2 class="mb-6 text-4xl font-semibold text-center">
+    <section class="sm:py-16 py-8">
+      <h2 class="sm:mb-6 sm:text-4xl mb-4 text-2xl font-semibold text-center">
         {{t "specialists.title"}}
       </h2>
-      <div class="font-openSans max-w-screen-lg m-auto mb-16 text-lg text-center">
+      <div class="font-openSans sm:mb-16 sm:text-lg max-w-screen-lg m-auto mb-8 text-base text-center">
         {{t "specialists.subtitle"}}
       </div>
 
@@ -16,7 +16,7 @@ export default RouteTemplate(
       >
         {{#each @model as |i|}}
           <div
-            class="lg:mb-0 lg:flex-1 md:flex lg:mr-12 p-12 mt-6 mb-12 border-4 border-gray-200 rounded-lg"
+            class="lg:mb-0 lg:flex-1 md:flex lg:mr-12 sm:p-8 lg:p-12 sm:mt-6 sm:mb-12 p-4 mt-4 mb-4 border-4 border-gray-200 rounded-lg"
           >
             <div class="flex-initial w-24 mr-4">
               <img

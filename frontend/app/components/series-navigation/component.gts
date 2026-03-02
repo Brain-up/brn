@@ -53,19 +53,19 @@ export default class SeriesNavigationComponent extends Component<SeriesNavigatio
                 <div
                   data-test-exercises-name-group
                 >
-                  <h3 class="pl-4">{{get (get slices '0') 'name'}}</h3>
-                  <div class="sm:grid-cols-4 md:grid-cols-5 gap-y-2 sm:gap-y-3 grid justify-center grid-cols-3 mx-2 ml-0">
+                  <h3 class="sm:pl-4 pl-2">{{get (get slices '0') 'name'}}</h3>
+                  <div class="sm:grid-cols-4 md:grid-cols-5 sm:gap-3 grid justify-center grid-cols-3 gap-2 mx-2">
                     {{#each slices as |exercise|}}
                     {{#let
                       (contains exercise.id (or @available (array)))
                       as |isAvailable|
                     }}
-                      <div class="flex">
+                      <div class="flex justify-center">
                         <UiExerciseButton
                           @exercise={{exercise}}
                           @title={{exercise.level}}
                           @isAvailable={{isAvailable}}
-                          class="exercise-block__level flex mt-2 ml-2 mr-2"
+                          class="exercise-block__level flex"
                           data-test-series-navigation-list-link
                           data-test-exercise-level={{exercise.level}}
                           data-test-exercise-name={{exercise.name}}

@@ -12,6 +12,7 @@ import { on } from '@ember/modifier';
 import { t } from 'ember-intl';
 import { or } from 'ember-truth-helpers';
 import { hash } from '@ember/helper';
+import { get } from '@ember/helper';
 import LoadingSpinner from 'brn/components/loading-spinner/component';
 import LoginFormInput from 'brn/components/login-form/input/component';
 import UiButton from 'brn/components/ui/button';

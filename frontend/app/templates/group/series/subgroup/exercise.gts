@@ -41,10 +41,10 @@ export default RouteTemplate(
           (eq @controller.target.currentRouteName "group.series.subgroup.exercise.task")
         }}
           <div class="flex items-center justify-between">
-            <div class="sm:w-32 w-16"></div>
-            <div class="w-full mr-4" id="progress-slot"></div>
-            <div id="exercise-config-slot"></div>
-            <div id="exercise-timer-slot"></div>
+            <div class="sm:w-32 flex-shrink-0 w-10"></div>
+            <div class="sm:mr-4 flex-1 min-w-0 mr-2" id="progress-slot"></div>
+            <div class="flex-shrink-0" id="exercise-config-slot"></div>
+            <div class="flex-shrink-0" id="exercise-timer-slot"></div>
           </div>
         {{/if}}
         <div class="exercise-container">

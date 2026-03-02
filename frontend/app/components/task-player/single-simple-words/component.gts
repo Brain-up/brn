@@ -204,7 +204,7 @@ export default class SingleSimpleWordsComponent extends Component<SingleSimpleWo
     
           {{#if this.showTip}}
             <div
-              class="flex self-end px-4 py-3 mx-8 mt-8 text-sm leading-normal text-blue-700 bg-blue-100 rounded-md"
+              class="sm:mx-8 sm:mt-8 flex self-end px-4 py-3 mx-2 mt-4 text-sm leading-normal text-blue-700 bg-blue-100 rounded-md"
               role="alert"
             >
               {{t

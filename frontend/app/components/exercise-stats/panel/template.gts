@@ -30,7 +30,7 @@ import { get } from '@ember/helper';
       class="relative flex flex-col items-center justify-center px-4 py-4 bg-white"
     >
       <p
-        class="absolute top-0 right-0 flex items-center justify-end p-1 mt-12 mr-12 bg-white border-2 border-yellow-500 rounded-full"
+        class="sm:mt-12 sm:mr-12 absolute top-0 right-0 flex items-center justify-end p-1 mt-4 mr-4 bg-white border-2 border-yellow-500 rounded-full"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -46,7 +46,7 @@ import { get } from '@ember/helper';
         </p>
         <p
           data-test-value
-          class="text-3xl text-4xl font-semibold text-center text-pink-500"
+          class="sm:text-4xl text-3xl font-semibold text-center text-pink-500"
         >
           {{#if (has-block)}}
             {{yield}}

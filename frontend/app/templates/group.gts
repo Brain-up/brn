@@ -5,7 +5,7 @@ export default RouteTemplate(
     {{page-title @controller.group.name}}
     <div class="flex flex-col flex-grow">
       {{#unless @controller.headerAndNavShown}}
-        <div class="flex items-center ml-4">
+        <div class="sm:ml-4 flex items-center ml-2">
           <Breadcrumbs />
         </div>
       {{/unless}}
@@ -31,7 +31,7 @@ export default RouteTemplate(
         {{/if}}
       {{/unless}}
       <div
-        class="series-container w-7/8 md:w-5/6 lg:w-3/4 xl:w-3/4 container flex mx-auto"
+        class="series-container md:w-5/6 lg:w-3/4 xl:w-3/4 container flex w-11/12 mx-auto"
       >
         <div class="series-page--canvas flex justify-center flex-grow">
           {{outlet}}

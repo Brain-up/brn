@@ -14,7 +14,7 @@ export default RouteTemplate(
 
       <div class="w-full max-w-lg mx-auto">
         <form
-          class="px-16 pt-16 pb-16 pr-16 mb-6 bg-white rounded shadow-lg"
+          class="sm:px-16 sm:py-16 px-4 py-8 mb-6 bg-white rounded shadow-lg"
           {{on "submit" @controller.onSubmit}}
         >
           <div class="mb-4">

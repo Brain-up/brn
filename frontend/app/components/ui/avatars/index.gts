@@ -39,7 +39,7 @@ export default class UiAvatarsComponent extends Component<UiAvatarsSignature> {
   <template>
     <div
       {{didInsert this.storeCurrentAvatar}}
-      class="p-8 relative flex flex-row flex-wrap justify-between
+      class="p-4 sm:p-8 relative flex flex-row flex-wrap justify-between
        "
     >
       <div class="w-full mb-6">{{t "avatar_controls.title"}}</div>

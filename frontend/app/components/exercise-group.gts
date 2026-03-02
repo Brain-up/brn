@@ -73,7 +73,7 @@ export default class ExerciseGroup extends Component<ExerciseGroupSignature> {
 
   <template>
     <LinkTo
-      class="sm:m-2 m-1 overflow-hidden border-2 border-gray-200 rounded-lg shadow-lg" {{on "mouseenter" this.mouseEnter}}
+      class="sm:m-2 flex flex-col m-1 overflow-hidden border-2 border-gray-200 rounded-lg shadow-lg" {{on "mouseenter" this.mouseEnter}}
       {{on "mouseleave" this.mouseLeave}}
       @route="group.series.subgroup"
       @model={{@group.id}}
@@ -81,7 +81,7 @@ export default class ExerciseGroup extends Component<ExerciseGroupSignature> {
     >
       {{! template-lint-disable no-inline-styles style-concatenation }}
       <div
-        class="sm:h-40 h-16 bg-white bg-center bg-no-repeat bg-contain" style={{htmlSafe (concat "background-image: url(" @group.picture ");")}}
+        class="sm:h-40 flex-shrink-0 h-16 bg-white bg-center bg-no-repeat bg-contain" style={{htmlSafe (concat "background-image: url(" @group.picture ");")}}
       >
         {{#if this.isFlipped}}
           {{! @ts-ignore }}
@@ -90,9 +90,9 @@ export default class ExerciseGroup extends Component<ExerciseGroupSignature> {
           >{{this.completedStats}}</div>
         {{/if}}
       </div>
-      <div class="sm:px-2 sm:py-2 flex items-center justify-center px-1 py-1 bg-gray-200">
+      <div class="sm:px-2 sm:py-2 flex items-center justify-center flex-1 px-1 py-1 bg-gray-200">
         <div
-          class="sm:tracking-normal sm:leading-normal sm:text-base text-xs leading-tight tracking-tighter text-center"
+          class="sm:tracking-normal sm:leading-normal sm:text-base text-xs leading-tight tracking-tighter text-center break-words"
         >
           {{@group.name}}
         </div>
