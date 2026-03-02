@@ -29,7 +29,7 @@ module('Acceptance | app test', function (hooks) {
     });
     try {
       await visit('/');
-    } catch (e) {
+    } catch (_e) {
       // TransitionAborted is expected: IndexRoute redirects authenticated users to /groups
     }
     await settled();
