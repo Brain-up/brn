@@ -72,11 +72,14 @@ export function getTestData() {
   ];
   const series = [
     {
-      order: 1,
       id: '1',
       name: 'default',
-      exerciseGroupId: '1',
-      subgroups: ['1', '2'],
+      group: 1,
+      type: 'SINGLE_SIMPLE_WORDS',
+      level: 1,
+      description: '',
+      active: true,
+      subGroups: [1, 2],
     },
   ];
   const groups = [
@@ -91,6 +94,7 @@ export function getTestData() {
       name: 'Семья',
       pictureUrl: 'pictures/theme/family.svg',
       description: 'Слова про семью',
+      withPictures: false,
       exercises: ['1', '2', '3', '4'],
     },
     {
@@ -100,6 +104,7 @@ export function getTestData() {
       name: 'Любимый дом',
       pictureUrl: 'pictures/theme/home.svg',
       description: 'Слова про дом',
+      withPictures: false,
       exercises: [],
     },
   ];

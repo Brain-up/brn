@@ -3,14 +3,24 @@ export function getTestData() {
   const exercises = [];
   const series = [
     {
-      order: 1,
       id: '1',
       name: 'link-1',
+      group: 1,
+      type: 'SINGLE_SIMPLE_WORDS',
+      level: 1,
+      description: '',
+      active: true,
+      subGroups: [],
     },
     {
-      order: 2,
       id: '2',
       name: 'link-2',
+      group: 1,
+      type: 'SINGLE_SIMPLE_WORDS',
+      level: 2,
+      description: '',
+      active: true,
+      subGroups: [],
     },
   ];
   const groups = [{ order: 1, id: '1', series: ['1', '2'] }];

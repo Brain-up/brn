@@ -26,13 +26,13 @@ export function getTaskScenarioData() {
     },
   ];
   const series = [
-    { order: 1, id: '1', name: 'default', exerciseGroupId: '1', exercises: ['1'] },
+    { id: '1', name: 'default', group: 1, type: 'SINGLE_SIMPLE_WORDS', level: 1, description: '', active: true, subGroups: [1] },
   ];
   const groups = [
     { order: 1, id: '1', name: 'default', description: '123', series: ['1'] },
   ];
   const subgroups = [
-    { id: '1', seriesId: '1', level: 1, name: 'default', exercises: ['1'] },
+    { id: '1', seriesId: '1', level: 1, name: 'default', withPictures: false, exercises: ['1'] },
   ];
 
   return { tasks, exercises, series, groups, subgroups };
@@ -80,13 +80,13 @@ export function getExerciseScenarioData() {
     },
   ];
   const series = [
-    { order: 1, id: '1', name: 'default', exerciseGroupId: '1', exercises: ['1', '2'] },
+    { id: '1', name: 'default', group: 1, type: 'SINGLE_SIMPLE_WORDS', level: 1, description: '', active: true, subGroups: [1] },
   ];
   const groups = [
     { order: 1, id: '1', name: 'default', description: '123', series: ['1'] },
   ];
   const subgroups = [
-    { id: '1', seriesId: '1', level: 1, name: 'default', exercises: ['1', '2'] },
+    { id: '1', seriesId: '1', level: 1, name: 'default', withPictures: false, exercises: ['1', '2'] },
   ];
 
   return { tasks, exercises, series, groups, subgroups };

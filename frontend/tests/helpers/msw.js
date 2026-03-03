@@ -47,11 +47,20 @@ const defaultHandlers = [
     method: 'GET',
     path: '/api/users/current',
     handler: () => ({
-      data: {
-        firstName: 'First-Name',
-        lastName: 'Last-Name',
-        email: 'em@il',
-      },
+      data: [
+        {
+          id: '1',
+          name: 'First-Name Last-Name',
+          email: 'em@il',
+          bornYear: 2000,
+          gender: 'MALE',
+          active: true,
+          avatar: '1',
+          roles: ['ROLE_USER'],
+        },
+      ],
+      errors: [],
+      meta: [],
     }),
   },
   {
@@ -85,6 +94,26 @@ const defaultHandlers = [
   {
     method: 'POST',
     path: '/api/exercises/byIds',
+    handler: () => ({ data: [] }),
+  },
+  {
+    method: 'GET',
+    path: '/api/statistics/subgroups',
+    handler: () => ({ data: [] }),
+  },
+  {
+    method: 'GET',
+    path: '/api/v2/statistics/study/day',
+    handler: () => ({ data: [] }),
+  },
+  {
+    method: 'PATCH',
+    path: '/api/users/current',
+    handler: () => ({ data: [] }),
+  },
+  {
+    method: 'GET',
+    path: '/api/contributors',
     handler: () => ({ data: [] }),
   },
 ];
