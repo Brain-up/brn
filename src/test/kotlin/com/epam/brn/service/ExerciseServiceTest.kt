@@ -38,6 +38,7 @@ import io.mockk.verify
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.test.util.ReflectionTestUtils
+import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 import java.util.Optional
 import java.util.stream.Stream
@@ -341,6 +342,31 @@ internal class ExerciseServiceTest {
         // THEN
         actualResults shouldContain exerciseWithWordsResponseMock
         verify(exactly = 1) { exerciseRepository.findExercisesByWord(word) }
+    }
+
+    @Test
+    fun `should keep lazy-loading read methods transactional`() {
+        val transactionalReadMethods =
+            setOf(
+                "findExerciseById",
+                "findExercisesByUserId",
+                "findExercisesBySubGroupForCurrentUser",
+                "findExercisesByUserIdAndSubGroupId",
+                "getAvailableExerciseIds",
+                "findExercisesWithTasksBySubGroup",
+                "findExercisesByWord",
+            )
+
+        val methodsByName = ExerciseService::class.java.declaredMethods.associateBy { it.name }
+
+        transactionalReadMethods.forEach { methodName ->
+            val method = checkNotNull(methodsByName[methodName]) { "Method $methodName is missing" }
+            val annotation =
+                checkNotNull(method.getAnnotation(Transactional::class.java)) {
+                    "Method $methodName must remain transactional"
+                }
+            annotation.readOnly shouldBe true
+        }
     }
 
     @Test
