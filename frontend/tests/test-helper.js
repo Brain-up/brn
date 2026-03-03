@@ -7,6 +7,13 @@ import { setup } from 'qunit-dom';
 import { start as qunitStart, setupEmberOnerrorValidation } from 'ember-qunit';
 import DefaultAdapter from 'ember-cli-page-object/adapters/rfc268';
 import { setAdapter } from 'ember-cli-page-object/adapters';
+import { sendCoverage } from 'ember-cli-code-coverage/test-support';
+
+// Send Istanbul coverage data to the testem middleware after all tests complete.
+// The middleware writes the coverage reports (including coverage-summary.json).
+QUnit.done(async function () {
+  await sendCoverage();
+});
 
 export function start() {
   setAdapter(new DefaultAdapter());
