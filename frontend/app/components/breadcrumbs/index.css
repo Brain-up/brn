@@ -15,10 +15,6 @@
   min-width: 0;
 }
 
-.breadcrumbs li:nth-child(2) {
-  flex: 1;
-}
-
 .breadcrumbs li:not(:first-child):before {
   content: '/';
   margin-right: 6px;
