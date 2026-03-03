@@ -1,5 +1,7 @@
 package com.epam.brn.service
 
+import com.epam.brn.service.findSyllableCount
+import com.epam.brn.service.toResourceDtoSet
 import com.epam.brn.dto.response.TaskResponse
 import com.epam.brn.dto.response.TaskWordsGroupResponse
 import com.epam.brn.enums.BrnLocale
