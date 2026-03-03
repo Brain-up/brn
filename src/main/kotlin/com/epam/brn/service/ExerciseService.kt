@@ -256,6 +256,8 @@ class ExerciseService(
                 val nextClosedExercise = currentNameExercises.firstOrNull { !doneExerciseIds.contains(it.id) } ?: return@forEach
                 availableExerciseIds.add(nextClosedExercise.id)
             }
-        return availableExerciseIds.toList()
+        return subGroupExercises
+            .map(ExerciseAvailabilityView::id)
+            .filter(availableExerciseIds::contains)
     }
 }

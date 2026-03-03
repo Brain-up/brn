@@ -278,24 +278,11 @@ internal class ExerciseServiceTest {
         val currentUser = UserAccount(id = userId, email = "user@example.com", fullName = "User")
         currentUser.roleSet.add(Role(id = 1L, name = BrnRole.USER))
 
-        val exercise1 = mockk<ExerciseAvailabilityView>()
-        val exercise2 = mockk<ExerciseAvailabilityView>()
-        val exercise3 = mockk<ExerciseAvailabilityView>()
-        every { exercise1.id } returns 1L
-        every { exercise1.name } returns "pets"
-        every { exercise1.level } returns 1
-        every { exercise2.id } returns 2L
-        every { exercise2.name } returns "pets"
-        every { exercise2.level } returns 2
-        every { exercise3.id } returns 3L
-        every { exercise3.name } returns "pets"
-        every { exercise3.level } returns 3
+        val exercise1 = exerciseAvailabilityView(id = 1L, name = "pets", level = 1)
+        val exercise2 = exerciseAvailabilityView(id = 2L, name = "pets", level = 2)
+        val exercise3 = exerciseAvailabilityView(id = 3L, name = "pets", level = 3)
 
-        val lastAttempt = mockk<ExerciseLastAttemptView>()
-        every { lastAttempt.exerciseId } returns 1L
-        every { lastAttempt.tasksCount } returns 10
-        every { lastAttempt.replaysCount } returns 0
-        every { lastAttempt.wrongAnswers } returns 0
+        val lastAttempt = exerciseLastAttemptView(exerciseId = 1L, replaysCount = 0, wrongAnswers = 0)
 
         every { exerciseRepository.findSubGroupIdByExerciseId(requestedExerciseId) } returns subGroupId
         every { userAccountService.getCurrentUser() } returns currentUser
@@ -339,6 +326,94 @@ internal class ExerciseServiceTest {
         verify(exactly = 0) { studyHistoryRepository.getDoneExerciseIds(any(), any()) }
         verify(exactly = 0) { studyHistoryRepository.findLastAttemptBySubGroupAndUserAccount(any(), any()) }
         verify(exactly = 0) { exerciseRepository.findExercisesWithSubGroupBySubGroupId(any()) }
+    }
+
+    @Test
+    fun `should preserve level order when available exercise names are interleaved`() {
+        // GIVEN
+        ReflectionTestUtils.setField(exerciseService, "minRepetitionIndex", 0.8)
+        ReflectionTestUtils.setField(exerciseService, "minRightAnswersIndex", 0.8)
+        val requestedExerciseId = 1L
+        val subGroupId = 2L
+        val userId = 3L
+        val currentUser = UserAccount(id = userId, email = "user@example.com", fullName = "User")
+        currentUser.roleSet.add(Role(id = 1L, name = BrnRole.USER))
+
+        val exercise1 = exerciseAvailabilityView(id = 1L, name = "alpha", level = 1)
+        val exercise2 = exerciseAvailabilityView(id = 2L, name = "beta", level = 2)
+        val exercise3 = exerciseAvailabilityView(id = 3L, name = "alpha", level = 3)
+        val exercise4 = exerciseAvailabilityView(id = 4L, name = "beta", level = 4)
+        val lastAttempt1 = exerciseLastAttemptView(exerciseId = 1L, replaysCount = 0, wrongAnswers = 0)
+        val lastAttempt2 = exerciseLastAttemptView(exerciseId = 2L, replaysCount = 0, wrongAnswers = 0)
+
+        every { exerciseRepository.findSubGroupIdByExerciseId(requestedExerciseId) } returns subGroupId
+        every { userAccountService.getCurrentUser() } returns currentUser
+        every { exerciseRepository.findExerciseAvailabilityBySubGroupId(subGroupId) } returns listOf(exercise1, exercise2, exercise3, exercise4)
+        every { studyHistoryRepository.getDoneExerciseIds(subGroupId, userId) } returns listOf(1L, 2L)
+        every { studyHistoryRepository.findLastAttemptBySubGroupAndUserAccount(subGroupId, userId) } returns listOf(lastAttempt1, lastAttempt2)
+
+        // WHEN
+        val actualResult = exerciseService.getAvailableExerciseIds(listOf(requestedExerciseId))
+
+        // THEN
+        actualResult shouldBe listOf(1L, 2L, 3L, 4L)
+    }
+
+    @Test
+    fun `should not unlock next exercise when last attempt is missing`() {
+        // GIVEN
+        ReflectionTestUtils.setField(exerciseService, "minRepetitionIndex", 0.8)
+        ReflectionTestUtils.setField(exerciseService, "minRightAnswersIndex", 0.8)
+        val requestedExerciseId = 1L
+        val subGroupId = 2L
+        val userId = 3L
+        val currentUser = UserAccount(id = userId, email = "user@example.com", fullName = "User")
+        currentUser.roleSet.add(Role(id = 1L, name = BrnRole.USER))
+
+        val exercise1 = exerciseAvailabilityView(id = 1L, name = "pets", level = 1)
+        val exercise2 = exerciseAvailabilityView(id = 2L, name = "pets", level = 2)
+        val exercise3 = exerciseAvailabilityView(id = 3L, name = "pets", level = 3)
+
+        every { exerciseRepository.findSubGroupIdByExerciseId(requestedExerciseId) } returns subGroupId
+        every { userAccountService.getCurrentUser() } returns currentUser
+        every { exerciseRepository.findExerciseAvailabilityBySubGroupId(subGroupId) } returns listOf(exercise1, exercise2, exercise3)
+        every { studyHistoryRepository.getDoneExerciseIds(subGroupId, userId) } returns listOf(1L)
+        every { studyHistoryRepository.findLastAttemptBySubGroupAndUserAccount(subGroupId, userId) } returns emptyList()
+
+        // WHEN
+        val actualResult = exerciseService.getAvailableExerciseIds(listOf(requestedExerciseId))
+
+        // THEN
+        actualResult shouldBe listOf(1L)
+    }
+
+    @Test
+    fun `should not unlock next exercise when last attempt is not done well`() {
+        // GIVEN
+        ReflectionTestUtils.setField(exerciseService, "minRepetitionIndex", 0.8)
+        ReflectionTestUtils.setField(exerciseService, "minRightAnswersIndex", 0.8)
+        val requestedExerciseId = 1L
+        val subGroupId = 2L
+        val userId = 3L
+        val currentUser = UserAccount(id = userId, email = "user@example.com", fullName = "User")
+        currentUser.roleSet.add(Role(id = 1L, name = BrnRole.USER))
+
+        val exercise1 = exerciseAvailabilityView(id = 1L, name = "pets", level = 1)
+        val exercise2 = exerciseAvailabilityView(id = 2L, name = "pets", level = 2)
+        val exercise3 = exerciseAvailabilityView(id = 3L, name = "pets", level = 3)
+        val lastAttempt = exerciseLastAttemptView(exerciseId = 1L, replaysCount = 2, wrongAnswers = 5)
+
+        every { exerciseRepository.findSubGroupIdByExerciseId(requestedExerciseId) } returns subGroupId
+        every { userAccountService.getCurrentUser() } returns currentUser
+        every { exerciseRepository.findExerciseAvailabilityBySubGroupId(subGroupId) } returns listOf(exercise1, exercise2, exercise3)
+        every { studyHistoryRepository.getDoneExerciseIds(subGroupId, userId) } returns listOf(1L)
+        every { studyHistoryRepository.findLastAttemptBySubGroupAndUserAccount(subGroupId, userId) } returns listOf(lastAttempt)
+
+        // WHEN
+        val actualResult = exerciseService.getAvailableExerciseIds(listOf(requestedExerciseId))
+
+        // THEN
+        actualResult shouldBe listOf(1L)
     }
 
     @Test
@@ -840,5 +915,31 @@ internal class ExerciseServiceTest {
         verify(exactly = 1) { seriesMatrixRecordProcessor.isApplicable(any()) }
         verify(exactly = 1) { seriesMatrixRecordProcessor.process(any(), any()) }
         exception.message shouldBe "Exercise with this name (${exerciseSentencesCreateDto.exerciseName}) already exist"
+    }
+
+    private fun exerciseAvailabilityView(
+        id: Long,
+        name: String,
+        level: Int,
+    ): ExerciseAvailabilityView {
+        val exercise = mockk<ExerciseAvailabilityView>()
+        every { exercise.id } returns id
+        every { exercise.name } returns name
+        every { exercise.level } returns level
+        return exercise
+    }
+
+    private fun exerciseLastAttemptView(
+        exerciseId: Long,
+        tasksCount: Short = 10,
+        replaysCount: Int,
+        wrongAnswers: Int,
+    ): ExerciseLastAttemptView {
+        val lastAttempt = mockk<ExerciseLastAttemptView>()
+        every { lastAttempt.exerciseId } returns exerciseId
+        every { lastAttempt.tasksCount } returns tasksCount
+        every { lastAttempt.replaysCount } returns replaysCount
+        every { lastAttempt.wrongAnswers } returns wrongAnswers
+        return lastAttempt
     }
 }
