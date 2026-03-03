@@ -97,22 +97,7 @@ const defaultHandlers = [
     handler: () => ({ data: {} }),
   },
   { method: 'GET', path: '/api/tasks', handler: () => ({ data: [] }) },
-  {
-    method: 'GET',
-    path: '/api/tasks/:id',
-    handler: (request) => ({
-      data: {
-        id: Number(request.params.id),
-        serialNumber: 0,
-        name: '',
-        level: 0,
-        exerciseType: 'SINGLE_SIMPLE_WORDS',
-        exerciseMechanism: 'WORDS',
-        shouldBeWithPictures: true,
-        answerOptions: [],
-      },
-    }),
-  },
+  { method: 'GET', path: '/api/tasks/:id', handler: () => ({ data: {} }) },
   {
     method: 'POST',
     path: '/api/study-history',
