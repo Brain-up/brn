@@ -1,6 +1,7 @@
 package com.epam.brn.repo
 
 import com.epam.brn.model.Exercise
+import com.epam.brn.model.projection.ExerciseAvailabilityView
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
@@ -44,8 +45,14 @@ interface ExerciseRepository : JpaRepository<Exercise, Long> {
     )
     fun findExercisesByWord(word: String): List<Exercise>
 
-    @Query("SELECT e.id FROM Exercise e WHERE e.subGroup.id = :subGroupId")
+    @Query("SELECT e.id AS id, e.name AS name, e.level AS level FROM Exercise e WHERE e.subGroup.id = :subGroupId ORDER BY e.level")
+    fun findExerciseAvailabilityBySubGroupId(subGroupId: Long): List<ExerciseAvailabilityView>
+
+    @Query("SELECT e.id FROM Exercise e WHERE e.subGroup.id = :subGroupId ORDER BY e.level")
     fun findExerciseIdsBySubGroupId(subGroupId: Long): List<Long>
+
+    @Query("SELECT e.subGroup.id FROM Exercise e WHERE e.id = :id")
+    fun findSubGroupIdByExerciseId(id: Long): Long?
 
     fun existsBySubGroupId(subGroupId: Long): Boolean
 

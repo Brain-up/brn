@@ -2,6 +2,7 @@ package com.epam.brn.repo
 
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.StudyHistory
+import com.epam.brn.model.projection.ExerciseLastAttemptView
 import com.epam.brn.model.projection.UserStatisticView
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
@@ -19,6 +20,15 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
         @Param("subGroupId") subGroupId: Long,
         @Param("userId") userId: Long,
     ): List<Exercise>
+
+    @Query(
+        "SELECT DISTINCT s.exercise.id FROM StudyHistory s " +
+            " WHERE s.exercise.subGroup.id = :subGroupId and s.userAccount.id = :userId",
+    )
+    fun getDoneExerciseIds(
+        @Param("subGroupId") subGroupId: Long,
+        @Param("userId") userId: Long,
+    ): List<Long>
 
     @Query(
         "SELECT DISTINCT s.exercise.id FROM StudyHistory s " +
@@ -51,6 +61,21 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
         subGroupId: Long,
         userId: Long,
     ): List<StudyHistory>
+
+    @Query(
+        "SELECT s.exercise.id AS exerciseId, s.tasksCount AS tasksCount, " +
+            "s.wrongAnswers AS wrongAnswers, s.replaysCount AS replaysCount FROM StudyHistory s " +
+            "WHERE (s.userAccount.id, s.exercise.id, s.startTime) " +
+            "IN (SELECT userAccount.id, exercise.id, max(startTime) " +
+            "      FROM StudyHistory " +
+            "      WHERE exercise.subGroup.id = :subGroupId " +
+            "      GROUP BY exercise.id, userAccount.id " +
+            "      HAVING userAccount.id = :userId)",
+    )
+    fun findLastAttemptBySubGroupAndUserAccount(
+        @Param("subGroupId") subGroupId: Long,
+        @Param("userId") userId: Long,
+    ): List<ExerciseLastAttemptView>
 
     @Query(
         "SELECT s FROM StudyHistory s " +
