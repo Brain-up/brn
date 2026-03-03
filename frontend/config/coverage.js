@@ -12,7 +12,7 @@ module.exports = {
   // The default adjustCoverageKey logic expects Ember module-style names
   // (e.g. brn/components/foo) and fails to map them correctly.
   // This hook returns the correct absolute path so coverage data is preserved.
-  modifyAssetLocation(root, relativePath, filepath) {
+  modifyAssetLocation(root, relativePath, _filepath) {
     // relativePath is already correct (e.g. "app/components/foo.js"),
     // return the absolute path so the relative-to-root calculation works.
     return path.join(root, relativePath);
