@@ -11,6 +11,8 @@ import com.epam.brn.enums.BrnRole
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.StudyHistory
+import com.epam.brn.model.projection.ExerciseAvailabilityView
+import com.epam.brn.model.projection.ExerciseLastAttemptView
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.upload.csv.RecordProcessor
@@ -91,12 +93,22 @@ class ExerciseService(
     @Transactional(readOnly = true)
     fun getAvailableExerciseIds(exerciseIds: List<Long>): List<Long> {
         if (exerciseIds.isEmpty()) return emptyList()
-        val exercise = exerciseRepository.findById(exerciseIds[0])
-        if (!exercise.isPresent) throw EntityNotFoundException("There is no one exercise with id = ${exerciseIds[0]}")
-        val currentUserId = userAccountService.getCurrentUserId()
-        return findExercisesByUserIdAndSubGroupId(currentUserId, exercise.get().subGroup!!.id!!)
-            .filter(ExerciseDto::available)
-            .map { e -> e.id!! }
+        val exerciseId = exerciseIds[0]
+        val subGroupId =
+            exerciseRepository.findSubGroupIdByExerciseId(exerciseId)
+                ?: throw EntityNotFoundException("There is no one exercise with id = $exerciseId")
+        val currentUser = userAccountService.getCurrentUser()
+        val currentUserId = currentUser.id!!
+        val currentUserRoles = currentUser.roleSet.map { it.name }.toSet()
+        if (currentUserRoles.contains(BrnRole.ADMIN) || currentUserRoles.contains(BrnRole.SPECIALIST)) {
+            return exerciseRepository.findExerciseIdsBySubGroupId(subGroupId)
+        }
+        val subGroupExercises = exerciseRepository.findExerciseAvailabilityBySubGroupId(subGroupId)
+        val doneExerciseIds = studyHistoryRepository.getDoneExerciseIds(subGroupId, currentUserId).toSet()
+        val lastAttemptsByExerciseId =
+            studyHistoryRepository.findLastAttemptBySubGroupAndUserAccount(subGroupId, currentUserId)
+                .associateBy { it.exerciseId }
+        return calculateAvailableExerciseIds(subGroupExercises, doneExerciseIds, lastAttemptsByExerciseId)
     }
 
     fun getAvailableExercisesForSubGroup(
@@ -145,6 +157,12 @@ class ExerciseService(
     fun isDoneWell(studyHistory: StudyHistory): Boolean {
         val repetitionIndex = studyHistory.tasksCount.toFloat() / (studyHistory.replaysCount + studyHistory.tasksCount)
         val rightAnswersIndex = 1F - studyHistory.wrongAnswers.toFloat() / studyHistory.tasksCount
+        return (repetitionIndex >= minRepetitionIndex.toFloat() && rightAnswersIndex >= minRightAnswersIndex.toFloat())
+    }
+
+    private fun isDoneWell(lastAttempt: ExerciseLastAttemptView): Boolean {
+        val repetitionIndex = lastAttempt.tasksCount.toFloat() / (lastAttempt.replaysCount + lastAttempt.tasksCount)
+        val rightAnswersIndex = 1F - lastAttempt.wrongAnswers.toFloat() / lastAttempt.tasksCount
         return (repetitionIndex >= minRepetitionIndex.toFloat() && rightAnswersIndex >= minRightAnswersIndex.toFloat())
     }
 
@@ -211,4 +229,33 @@ class ExerciseService(
         .orElseThrow { RuntimeException("There is no applicable processor for type '${exerciseRecord.javaClass}'") }
         .process(listOf(exerciseRecord) as List<Nothing>, locale)
         .firstOrNull() as Exercise?
+
+    private fun calculateAvailableExerciseIds(
+        subGroupExercises: List<ExerciseAvailabilityView>,
+        doneExerciseIds: Set<Long>,
+        lastAttemptsByExerciseId: Map<Long, ExerciseLastAttemptView>,
+    ): List<Long> {
+        if (subGroupExercises.isEmpty()) return emptyList()
+        if (doneExerciseIds.size == subGroupExercises.size) return subGroupExercises.map(ExerciseAvailabilityView::id)
+
+        val availableExerciseIds = linkedSetOf<Long>()
+        subGroupExercises
+            .groupBy(ExerciseAvailabilityView::name)
+            .forEach { (_, currentNameExercises) ->
+                val firstExercise = currentNameExercises.first()
+                availableExerciseIds.add(firstExercise.id)
+
+                val currentDoneExercises = currentNameExercises.filter { doneExerciseIds.contains(it.id) }
+                if (currentDoneExercises.isEmpty()) return@forEach
+
+                availableExerciseIds.addAll(currentDoneExercises.map(ExerciseAvailabilityView::id))
+                val lastDoneExercise = currentDoneExercises.last()
+                val lastAttempt = lastAttemptsByExerciseId[lastDoneExercise.id] ?: return@forEach
+                if (!isDoneWell(lastAttempt)) return@forEach
+
+                val nextClosedExercise = currentNameExercises.firstOrNull { !doneExerciseIds.contains(it.id) } ?: return@forEach
+                availableExerciseIds.add(nextClosedExercise.id)
+            }
+        return availableExerciseIds.toList()
+    }
 }

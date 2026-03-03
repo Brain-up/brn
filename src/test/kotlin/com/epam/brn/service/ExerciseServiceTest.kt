@@ -13,10 +13,13 @@ import com.epam.brn.enums.BrnRole
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
+import com.epam.brn.model.Role
 import com.epam.brn.model.Series
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.SubGroup
 import com.epam.brn.model.UserAccount
+import com.epam.brn.model.projection.ExerciseAvailabilityView
+import com.epam.brn.model.projection.ExerciseLastAttemptView
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.upload.csv.RecordProcessor
@@ -262,6 +265,80 @@ internal class ExerciseServiceTest {
         actualResult.filter { it.available } shouldHaveSize 3
         verify(exactly = 1) { exerciseRepository.findExercisesWithSubGroupBySubGroupId(subGroupId) }
         verify(exactly = 1) { studyHistoryRepository.getDoneExercises(ofType(Long::class), ofType(Long::class)) }
+    }
+
+    @Test
+    fun `should get available exercise ids without loading exercise DTOs for user`() {
+        // GIVEN
+        ReflectionTestUtils.setField(exerciseService, "minRepetitionIndex", 0.8)
+        ReflectionTestUtils.setField(exerciseService, "minRightAnswersIndex", 0.8)
+        val requestedExerciseId = 1L
+        val subGroupId = 2L
+        val userId = 3L
+        val currentUser = UserAccount(id = userId, email = "user@example.com", fullName = "User")
+        currentUser.roleSet.add(Role(id = 1L, name = BrnRole.USER))
+
+        val exercise1 = mockk<ExerciseAvailabilityView>()
+        val exercise2 = mockk<ExerciseAvailabilityView>()
+        val exercise3 = mockk<ExerciseAvailabilityView>()
+        every { exercise1.id } returns 1L
+        every { exercise1.name } returns "pets"
+        every { exercise1.level } returns 1
+        every { exercise2.id } returns 2L
+        every { exercise2.name } returns "pets"
+        every { exercise2.level } returns 2
+        every { exercise3.id } returns 3L
+        every { exercise3.name } returns "pets"
+        every { exercise3.level } returns 3
+
+        val lastAttempt = mockk<ExerciseLastAttemptView>()
+        every { lastAttempt.exerciseId } returns 1L
+        every { lastAttempt.tasksCount } returns 10
+        every { lastAttempt.replaysCount } returns 0
+        every { lastAttempt.wrongAnswers } returns 0
+
+        every { exerciseRepository.findSubGroupIdByExerciseId(requestedExerciseId) } returns subGroupId
+        every { userAccountService.getCurrentUser() } returns currentUser
+        every { exerciseRepository.findExerciseAvailabilityBySubGroupId(subGroupId) } returns listOf(exercise1, exercise2, exercise3)
+        every { studyHistoryRepository.getDoneExerciseIds(subGroupId, userId) } returns listOf(1L)
+        every { studyHistoryRepository.findLastAttemptBySubGroupAndUserAccount(subGroupId, userId) } returns listOf(lastAttempt)
+
+        // WHEN
+        val actualResult = exerciseService.getAvailableExerciseIds(listOf(requestedExerciseId))
+
+        // THEN
+        actualResult shouldBe listOf(1L, 2L)
+        verify(exactly = 1) { exerciseRepository.findSubGroupIdByExerciseId(requestedExerciseId) }
+        verify(exactly = 1) { exerciseRepository.findExerciseAvailabilityBySubGroupId(subGroupId) }
+        verify(exactly = 1) { studyHistoryRepository.getDoneExerciseIds(subGroupId, userId) }
+        verify(exactly = 1) { studyHistoryRepository.findLastAttemptBySubGroupAndUserAccount(subGroupId, userId) }
+        verify(exactly = 0) { exerciseRepository.findExercisesWithSubGroupBySubGroupId(any()) }
+        verify(exactly = 0) { studyHistoryRepository.getDoneExercises(any(), any()) }
+    }
+
+    @Test
+    fun `should get all subgroup exercise ids for admin without loading exercise DTOs`() {
+        // GIVEN
+        val requestedExerciseId = 1L
+        val subGroupId = 2L
+        val currentUser = UserAccount(id = 3L, email = "admin@example.com", fullName = "Admin")
+        currentUser.roleSet.add(Role(id = 1L, name = BrnRole.ADMIN))
+
+        every { exerciseRepository.findSubGroupIdByExerciseId(requestedExerciseId) } returns subGroupId
+        every { userAccountService.getCurrentUser() } returns currentUser
+        every { exerciseRepository.findExerciseIdsBySubGroupId(subGroupId) } returns listOf(1L, 2L, 3L)
+
+        // WHEN
+        val actualResult = exerciseService.getAvailableExerciseIds(listOf(requestedExerciseId))
+
+        // THEN
+        actualResult shouldBe listOf(1L, 2L, 3L)
+        verify(exactly = 1) { exerciseRepository.findSubGroupIdByExerciseId(requestedExerciseId) }
+        verify(exactly = 1) { exerciseRepository.findExerciseIdsBySubGroupId(subGroupId) }
+        verify(exactly = 0) { exerciseRepository.findExerciseAvailabilityBySubGroupId(any()) }
+        verify(exactly = 0) { studyHistoryRepository.getDoneExerciseIds(any(), any()) }
+        verify(exactly = 0) { studyHistoryRepository.findLastAttemptBySubGroupAndUserAccount(any(), any()) }
+        verify(exactly = 0) { exerciseRepository.findExercisesWithSubGroupBySubGroupId(any()) }
     }
 
     @Test
