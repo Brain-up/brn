@@ -36,7 +36,6 @@ export default class GroupNavigationComponent extends Component<GroupNavigationS
           <li class="item">
             <UiTabButton
               data-test-active-link={{series.name}}
-              class="pl-3 pr-3"
               @route="group.series"
               @models={{array series.id}}
               @title={{series.name}}
