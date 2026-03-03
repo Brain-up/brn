@@ -15,12 +15,10 @@ import com.epam.brn.service.impl.UserAccountServiceImpl
 import com.google.firebase.auth.UserRecord
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
-import io.mockk.Runs
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
-import io.mockk.just
 import io.mockk.mockkClass
 import io.mockk.slot
 import io.mockk.verify
@@ -39,6 +37,7 @@ import org.springframework.test.util.ReflectionTestUtils
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.util.Optional
+import java.util.concurrent.Executor
 import kotlin.test.assertFailsWith
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
@@ -84,6 +83,9 @@ internal class UserAccountServiceTest {
 
     @MockK
     lateinit var timeService: TimeService
+
+    @MockK
+    lateinit var lastVisitUpdateExecutor: Executor
 
     @Nested
     @DisplayName("Tests for getting users")
@@ -315,13 +317,66 @@ internal class UserAccountServiceTest {
             every { securityContext.authentication } returns authentication
             every { authentication.name } returns email
             every { timeService.now() } returns now
-            every { userAccountRepository.updateLastVisitByEmail(email, now) } just Runs
+            every { lastVisitUpdateExecutor.execute(any()) } answers { (args[0] as Runnable).run() }
+            every {
+                userAccountRepository.updateLastVisitByEmailIfOlderThan(
+                    email = email,
+                    lastVisit = now,
+                    staleBefore = now.minusMinutes(15),
+                )
+            } returns 1
 
             // WHEN
             userAccountService.markVisitForCurrentUser()
 
             // THEN
-            verify { userAccountRepository.updateLastVisitByEmail(email, now) }
+            verify { lastVisitUpdateExecutor.execute(any()) }
+            verify {
+                userAccountRepository.updateLastVisitByEmailIfOlderThan(
+                    email = email,
+                    lastVisit = now,
+                    staleBefore = now.minusMinutes(15),
+                )
+            }
+        }
+
+        @Test
+        fun `should throttle visit updates within configured interval`() {
+            // GIVEN
+            val email = "test@test.ru"
+            val firstVisit = LocalDateTime.now(ZoneOffset.UTC)
+            val throttledVisit = firstVisit.plusMinutes(5)
+            val secondUpdateVisit = firstVisit.plusMinutes(16)
+
+            SecurityContextHolder.setContext(securityContext)
+            every { securityContext.authentication } returns authentication
+            every { authentication.name } returns email
+            every { timeService.now() } returnsMany listOf(firstVisit, throttledVisit, secondUpdateVisit)
+            every { lastVisitUpdateExecutor.execute(any()) } answers { (args[0] as Runnable).run() }
+            every { userAccountRepository.updateLastVisitByEmailIfOlderThan(any(), any(), any()) } returns 1
+
+            // WHEN
+            userAccountService.markVisitForCurrentUser()
+            userAccountService.markVisitForCurrentUser()
+            userAccountService.markVisitForCurrentUser()
+
+            // THEN
+            verify(exactly = 2) { lastVisitUpdateExecutor.execute(any()) }
+            verify(exactly = 2) { userAccountRepository.updateLastVisitByEmailIfOlderThan(any(), any(), any()) }
+            verify {
+                userAccountRepository.updateLastVisitByEmailIfOlderThan(
+                    email = email,
+                    lastVisit = firstVisit,
+                    staleBefore = firstVisit.minusMinutes(15),
+                )
+            }
+            verify {
+                userAccountRepository.updateLastVisitByEmailIfOlderThan(
+                    email = email,
+                    lastVisit = secondUpdateVisit,
+                    staleBefore = secondUpdateVisit.minusMinutes(15),
+                )
+            }
         }
     }
 

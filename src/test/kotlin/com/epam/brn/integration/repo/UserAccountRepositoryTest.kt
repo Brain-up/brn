@@ -64,4 +64,35 @@ class UserAccountRepositoryTest {
             repository.updateLastVisitByEmail(email, today)
         }
     }
+
+    @Test
+    fun `should not update lastVisit when user was seen recently`() {
+        // GIVEN
+        val recentVisit = LocalDateTime.now().minusMinutes(5).truncatedTo(ChronoUnit.MILLIS)
+        val requestedVisit = LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS)
+        val email = "recent@email.com"
+        val user =
+            UserAccount(
+                email = email,
+                fullName = "John Doe",
+                lastVisit = recentVisit,
+            )
+        val savedUser = testEntityManager.persistAndFlush(user)
+
+        // WHEN
+        repository.updateLastVisitByEmailIfOlderThan(
+            email = email,
+            lastVisit = requestedVisit,
+            staleBefore = requestedVisit.minusMinutes(15),
+        )
+
+        testEntityManager.flush()
+        testEntityManager.clear()
+
+        // THEN
+        val retrievedUser = testEntityManager.find(UserAccount::class.java, savedUser.id)
+        assertThat(retrievedUser).isNotNull
+        val actualLastVisit = retrievedUser.lastVisit?.truncatedTo(ChronoUnit.MILLIS)
+        assertThat(actualLastVisit).isEqualTo(recentVisit)
+    }
 }
