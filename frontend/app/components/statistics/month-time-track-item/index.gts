@@ -1,3 +1,4 @@
+import './index.css';
 import type { TOC } from '@ember/component/template-only';
 import { t } from 'ember-intl';
 
@@ -19,7 +20,7 @@ interface Signature {
 
 const StatisticsMonthTimeTrackItem: TOC<Signature> = <template>
   <div
-    class="
+    class="c-month-time-track-item
       {{if @isSelected "selected" ""}}
       month-time-track-item"
     data-test-month-track-item

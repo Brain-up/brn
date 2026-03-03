@@ -1,3 +1,4 @@
+import './index.css';
 import Component from '@glimmer/component';
 import { t } from 'ember-intl';
 import { not } from 'ember-truth-helpers';
@@ -42,7 +43,7 @@ export default class AnswerCorrectnessWidgetComponent extends Component<AnswerCo
 
   <template>
     <div
-      class="
+      class="c-answer-correctness-widget
         flex flex-wrap flex-1 flex-col text-center justify-evenly pb-0 items-center rounded-large"
       ...attributes
     >

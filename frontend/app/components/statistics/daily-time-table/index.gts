@@ -1,3 +1,4 @@
+import './index.css';
 import Component from '@glimmer/component';
 import {DateTime} from "luxon";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -49,7 +50,7 @@ export default class DailyTimeTableComponent extends Component<DailyTimeTableSig
 
   <template>
     <div
-     
+      class="c-daily-time-table"
       ...attributes
       {{didInsert this.didInit}}
       {{didUpdate this.didInit @day}}

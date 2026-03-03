@@ -1,7 +1,8 @@
 @import "tailwindcss";
 
-/* billboard.js chart styles */
-@import 'billboard.js/dist/billboard.min.css';
+/* Scan .gts/.gjs files for Tailwind utility classes */
+@source "../../app/**/*.gts";
+@source "../../app/**/*.gjs";
 
 /* Custom theme extending Tailwind defaults */
 @theme {

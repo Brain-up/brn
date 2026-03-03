@@ -1,3 +1,4 @@
+import './index.css';
 import Component from '@glimmer/component';
 import type { Exercise } from 'brn/schemas/exercise';
 import { LinkTo } from '@ember/routing';
@@ -68,7 +69,7 @@ export default class UiExerciseButtonComponent extends Component<UiExerciseButto
 
   <template>
     <LinkTo
-      class="{{this.classes}}"
+      class="c-exercise-button {{this.classes}}"
       aria-disabled={{unless @isAvailable "true"}}
       @route="group.series.subgroup.exercise"
       @model={{@exercise.id}}

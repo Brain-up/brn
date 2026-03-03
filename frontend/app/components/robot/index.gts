@@ -1,7 +1,8 @@
+import './index.css';
 import { LinkTo } from '@ember/routing';
 
 <template>
-  <div>
+  <div class="c-robot">
     <svg
       id="robot"
       version="1.1"

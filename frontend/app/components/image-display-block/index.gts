@@ -1,3 +1,4 @@
+import './index.css';
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import StudyConfigService from 'brn/services/study-config';

@@ -1,3 +1,4 @@
+import './index.css';
 import Component from '@glimmer/component';
 import {
   BarDataType,
@@ -179,7 +180,7 @@ export default class WeekTimeTrackComponent extends Component<WeekTimeTrackSigna
 
   <template>
     <div
-     
+      class="c-week-time-track"
       ...attributes
       {{didInsert this.didUpdateData}}
       {{didUpdate this.didUpdateData @data}}

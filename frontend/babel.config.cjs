@@ -2,7 +2,6 @@ const {
   babelCompatSupport,
   templateCompatSupport,
 } = require('@embroider/compat/babel');
-
 const plugins = [
   ['@babel/plugin-transform-typescript', { allowDeclareFields: true }],
   [

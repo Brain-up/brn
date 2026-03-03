@@ -1,11 +1,6 @@
 /*! purgecss start ignore */
 
-&::after {
-  backdrop-filter: blur(2px);
-}
-
-&::after,
-& {
+.c-start-task-button {
   position: absolute;
   top: 0;
   left: 0;
@@ -14,50 +9,59 @@
   display: flex;
   justify-content: center;
   align-items: center;
-}
 
-&::after {
-  content: '';
-  z-index: 0;
-}
+  &::after {
+    content: '';
+    backdrop-filter: blur(2px);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 0;
+  }
 
-button {
-  padding: 90px 95px 90px 105px;
-  line-height: 90px;
-  border-radius: 50%;
-  color: #fff;
-  font-size: 80px;
-  z-index: 1;
-  background: radial-gradient(
-    #fc8181 45%,
-    rgba(252, 129, 129, 0.3) 0,
-    transparent 90%
-  );
-  outline: none;
-  transition: 0.3s;
+  button {
+    padding: 90px 95px 90px 105px;
+    line-height: 90px;
+    border-radius: 50%;
+    color: #fff;
+    font-size: 80px;
+    z-index: 1;
+    background: radial-gradient(
+      #fc8181 45%,
+      rgba(252, 129, 129, 0.3) 0,
+      transparent 90%
+    );
+    outline: none;
+    transition: 0.3s;
+  }
+
+  button:active {
+    transform: scale(0.9);
+    outline: none;
+  }
+
+  button:hover,
+  button:focus:not(:active) {
+    transform: scale(1.05);
+  }
+
+  button:focus:not(:active) {
+    box-shadow: 0px 0px 5px 1px #fc8181;
+    outline: none;
+  }
 }
 
 @media (max-width: 640px) {
-  button {
+  .c-start-task-button button {
     padding: 40px 45px 40px 50px;
     font-size: 40px;
     line-height: 40px;
   }
-}
-
-button:active {
-  transform: scale(0.9);
-  outline: none;
-}
-
-button:hover,
-button:focus:not(:active) {
-  transform: scale(1.05);
-}
-
-button:focus:not(:active) {
-  box-shadow: 0px 0px 5px 1px #fc8181;
-  outline: none;
 }
 
 /*! purgecss end ignore */

@@ -1,3 +1,4 @@
+import 'billboard.js/dist/billboard.min.css';
 import { action } from '@ember/object';
 import Component from '@glimmer/component';
 import type {Chart, ChartOptions, Data, DataItem} from 'billboard.js';

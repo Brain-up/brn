@@ -1,3 +1,4 @@
+import './index.css';
 import Component from '@glimmer/component';
 import { LinkTo } from '@ember/routing';
 
@@ -45,7 +46,7 @@ export default class UiTabButtonComponent extends Component<UiTabButtonSignature
         @route={{@route}}
         @models={{@models}}
         role="button"
-        class="{{this.classes}}"
+        class="c-tab-button {{this.classes}}"
         aria-disabled={{if this.isDisabled "true"}}
         title={{@tooltip}}
         ...attributes
@@ -61,7 +62,7 @@ export default class UiTabButtonComponent extends Component<UiTabButtonSignature
     
       <button
         type="button"
-        class="{{this.classes}}"
+        class="c-tab-button {{this.classes}}"
         disabled={{this.isDisabled}}
         title={{@tooltip}}
         ...attributes

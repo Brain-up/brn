@@ -1,3 +1,4 @@
+import './index.css';
 import type { TOC } from '@ember/component/template-only';
 import { t } from 'ember-intl';
 import { on } from '@ember/modifier';
@@ -11,7 +12,7 @@ interface Signature {
 }
 
 const StartTaskButton: TOC<Signature> = <template>
-  <div ...attributes>
+  <div class="c-start-task-button" ...attributes>
     <button
       data-test-start-task-button
       aria-label={{t "start_task_button.label"}}

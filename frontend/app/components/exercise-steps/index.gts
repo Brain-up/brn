@@ -1,3 +1,4 @@
+import './index.css';
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
@@ -74,6 +75,7 @@ export default class ExerciseStepsComponent extends Component<ExerciseStepsSigna
 
   <template>
     <div
+      class="c-exercise-steps"
       style={{htmlSafe (concat "visibility:" this.visibility ";")}}
       {{didInsert this.setLastMode @activeStep}}
       {{didUpdate this.setLastMode @activeStep}}

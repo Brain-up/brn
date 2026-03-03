@@ -1753,6 +1753,13 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
+"@codemod-utils/files@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@codemod-utils/files/-/files-4.0.0.tgz#0a4fe5eabdd79a3d36b52140737762087f0b7e79"
+  integrity sha512-0sOt/kUY8fvEE+R6Mons6SSRrj926SUBt9Np1C3b3FU9+QmjO8obC+AEZ9vnLVqdchduKc/ytTDOQFGGstDfkQ==
+  dependencies:
+    glob "^13.0.6"
+
 "@csstools/color-helpers@^5.1.0":
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/@csstools/color-helpers/-/color-helpers-5.1.0.tgz#106c54c808cabfd1ab4c602d8505ee584c2996ef"
@@ -1805,6 +1812,14 @@
   version "0.0.4"
   resolved "https://registry.yarnpkg.com/@ember-data/rfc395-data/-/rfc395-data-0.0.4.tgz#ecb86efdf5d7733a76ff14ea651a1b0ed1f8a843"
   integrity sha512-tGRdvgC9/QMQSuSuJV45xoyhI0Pzjm7A9o/MVVA3HakXIImJbbzx/k/6dO9CUEQXIyS2y0fW6C1XaYOG7rY0FQ==
+
+"@ember-intl/vite@^0.5.4":
+  version "0.5.4"
+  resolved "https://registry.yarnpkg.com/@ember-intl/vite/-/vite-0.5.4.tgz#6b5852a1a9f75d7887479a909bae2e491ddf3577"
+  integrity sha512-i4479EjfM448rhwp+ioLUNZ9hO8nGSV5qt+xhK11hRewCVgEuCp8gYvLy5ViqV3Y3QXRQcDgcEQGji19puUdIg==
+  dependencies:
+    "@codemod-utils/files" "^4.0.0"
+    js-yaml "^4.1.1"
 
 "@ember-tooling/blueprint-blueprint@^0.2.1":
   version "0.2.1"
@@ -8533,7 +8548,7 @@ glob-parent@^6.0.2:
   dependencies:
     is-glob "^4.0.3"
 
-glob@^13.0.3:
+glob@^13.0.3, glob@^13.0.6:
   version "13.0.6"
   resolved "https://registry.yarnpkg.com/glob/-/glob-13.0.6.tgz#078666566a425147ccacfbd2e332deb66a2be71d"
   integrity sha512-Wjlyrolmm8uDpm/ogGyXZXb1Z+Ca2B8NbJwqBVg0axK9GbBeoS7yGV6vjXnYdGm6X53iehEuxxbyiKp8QmN4Vw==
@@ -9689,6 +9704,13 @@ js-yaml@^4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-4.1.0.tgz#c1fb65f8f5017901cdd2c951864ba18458a10602"
   integrity sha512-wpxZs9NoxZaJESJGIZTyDEaYpl0FKSA+FB9aJiyemKhMwkxQg63h4T1KJgUGHpTqPDNRcmmYLugrRjJlBtWvRA==
+  dependencies:
+    argparse "^2.0.1"
+
+js-yaml@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-4.1.1.tgz#854c292467705b699476e1a2decc0c8a3458806b"
+  integrity sha512-qQKT4zQxXl8lLwBtHMWwaTcGfFOZviOJet3Oy/xmGk2gZH677CJM9EvtfdSkgWcATZhj/55JZ0rmy3myCT5lsA==
   dependencies:
     argparse "^2.0.1"
 

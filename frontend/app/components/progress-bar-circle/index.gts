@@ -1,3 +1,4 @@
+import './index.css';
 import Component from '@glimmer/component';
 
 interface ProgressBarCircleSignature {

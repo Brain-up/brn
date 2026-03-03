@@ -2,6 +2,7 @@ import { defineConfig } from 'vite';
 import { extensions, classicEmberSupport, ember } from '@embroider/vite';
 import { babel } from '@rollup/plugin-babel';
 import tailwindcss from '@tailwindcss/vite';
+import { loadTranslations } from '@ember-intl/vite';
 import { resolve } from 'path';
 import { copyFileSync, mkdirSync, existsSync } from 'fs';
 
@@ -29,7 +30,22 @@ const copyAssetsPlugin = () => ({
   },
 });
 
+const proxyUrl = process.env.PROXY_URL;
+
 export default defineConfig(({ mode: _mode }) => ({
+  server: {
+    ...(proxyUrl
+      ? {
+          proxy: {
+            '/api': {
+              target: proxyUrl,
+              changeOrigin: true,
+              secure: false,
+            },
+          },
+        }
+      : {}),
+  },
   resolve: {
     alias: {
       // v1 addons use `import require from 'require'` (AMD require from loader.js).
@@ -46,6 +62,7 @@ export default defineConfig(({ mode: _mode }) => ({
       extensions,
     }),
     copyAssetsPlugin(),
+    loadTranslations(),
   ],
   build: {
     rollupOptions: {

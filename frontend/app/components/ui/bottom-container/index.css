@@ -1,13 +1,11 @@
 /*! purgecss start ignore */
 
-& {
+.c-bottom-container {
   bottom: 0;
   max-width: 80%;
   margin: auto;
-}
 
-@media (max-width: 640px) {
-  & {
+  @media (max-width: 640px) {
     max-width: 100%;
     padding-left: 8px;
     padding-right: 8px;

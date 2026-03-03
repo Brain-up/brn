@@ -1,3 +1,4 @@
+import './index.css';
 import { t } from 'ember-intl';
 
 <template>

@@ -1,3 +1,4 @@
+import './index.css';
 import type { TOC } from '@ember/component/template-only';
 
 interface BottomContainerSignature {
@@ -9,7 +10,7 @@ interface BottomContainerSignature {
 const BottomContainer: TOC<BottomContainerSignature> = <template>
   <div
     ...attributes
-    class="w-full my-4"
+    class="c-bottom-container w-full my-4"
   >
     {{yield}}
   </div>

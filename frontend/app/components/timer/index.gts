@@ -1,3 +1,4 @@
+import './index.css';
 import { isTesting } from '@embroider/macros';
 import Component from '@glimmer/component';
 import { action } from '@ember/object';

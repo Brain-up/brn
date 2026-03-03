@@ -1,3 +1,4 @@
+import './index.css';
 import Component from '@glimmer/component';
 import type { Exercise } from 'brn/schemas/exercise';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -38,7 +39,7 @@ export default class SeriesNavigationComponent extends Component<SeriesNavigatio
   }
 
   <template>
-    <div ...attributes>
+    <div class="c-series-navigation" ...attributes>
       {{#each this.exerciseGroups as |group|}}
         <div class="mx-auto mb-10">
           <div class="max-w-none mx-auto">

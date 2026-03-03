@@ -1,3 +1,4 @@
+import './index.css';
 import Component from '@glimmer/component';
 import { service } from '@ember/service';
 import { action } from '@ember/object';
@@ -60,7 +61,7 @@ export default class HeaderComponent extends Component {
   <template>
     <div
       class="
-        header relative z-20
+        c-header header relative z-20
         {{if this.session.isAuthenticated "bg-purple-primary"}}"
       ...attributes
     >

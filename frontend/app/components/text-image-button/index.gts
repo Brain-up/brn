@@ -1,3 +1,4 @@
+import './index.css';
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import { service } from '@ember/service';
@@ -64,7 +65,7 @@ export default class TextImageButton extends Component<TextImageButtonSignature>
 
   <template>
     <div
-      class="{{unless this.studyConfig.showImages "text-mode"}}"
+      class="c-text-image-button {{unless this.studyConfig.showImages "text-mode"}}"
       data-test-text-image-button
       {{didInsert this.setStyle @pictureFileUrl}}
       {{didUpdate this.setStyle @pictureFileUrl}}

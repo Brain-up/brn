@@ -1,5 +1,5 @@
 /*! purgecss start ignore */
-& {
+.c-tab-button {
   color: rgba(19, 19, 18, 0.5);
   border: double 1px transparent;
   background-image: linear-gradient(white, white),
@@ -11,28 +11,29 @@
   max-width: 260px;
   text-decoration: none;
   cursor: pointer;
-}
 
-&::before {
-  content: '';
-}
-&:active,
-&.active {
-  background: #ebf4ff;
-  font-weight: bold;
-  color: #131312;
-}
+  &::before {
+    content: '';
+  }
 
-&:hover {
-  color: #131312;
-}
+  &:active,
+  &.active {
+    background: #ebf4ff;
+    font-weight: bold;
+    color: #131312;
+  }
 
-&:disabled,
-&.disabled {
-  color: rgb(128, 127, 127);
-  border: rgb(199, 199, 199) solid 1px;
-  pointer-events: none;
-  cursor: default;
+  &:hover {
+    color: #131312;
+  }
+
+  &:disabled,
+  &.disabled {
+    color: rgb(128, 127, 127);
+    border: rgb(199, 199, 199) solid 1px;
+    pointer-events: none;
+    cursor: default;
+  }
 }
 
 /*! purgecss end ignore */

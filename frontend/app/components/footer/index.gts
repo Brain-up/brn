@@ -1,8 +1,9 @@
+import './index.css';
 import { t } from 'ember-intl';
 
 <template>
   <footer
-    class="relative z-10 p-2 sm:p-4 text-white"
+    class="c-footer relative z-10 p-2 sm:p-4 text-white"
     ...attributes
   >
     <div class="sm:text-base flex flex-wrap items-center justify-between text-sm">
@@ -53,6 +54,6 @@ import { t } from 'ember-intl';
         </div>
       </div>
     </div>
-  
+
   </footer>
 </template>
