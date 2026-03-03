@@ -58,13 +58,13 @@ export default class UiExerciseButtonComponent extends Component<UiExerciseButto
 
   get titleClasses() {
     if (this.mode === 'locked') {
-      return 'title title-locked';
+      return 'c-exercise-button__title c-exercise-button__title-locked';
     }
 
     if (this.mode === 'disabled') {
-      return 'title title-disabled';
+      return 'c-exercise-button__title c-exercise-button__title-disabled';
     }
-    return 'title';
+    return 'c-exercise-button__title';
   }
 
   <template>
@@ -79,7 +79,7 @@ export default class UiExerciseButtonComponent extends Component<UiExerciseButto
       <div class={{this.titleClasses}}>
         {{@title}}
       </div>
-      <div class="check-container">
+      <div class="c-exercise-button__check-container">
         <UiIconCheck
           @isCompleted={{this.isCompleted}}
           @isLocked={{this.isLocked}}

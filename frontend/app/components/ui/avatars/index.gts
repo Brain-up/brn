@@ -40,12 +40,12 @@ export default class UiAvatarsComponent extends Component<UiAvatarsSignature> {
   <template>
     <div
       {{didInsert this.storeCurrentAvatar}}
-      class="p-4 sm:p-8 relative flex flex-row flex-wrap justify-between
+      class="c-avatars p-4 sm:p-8 relative flex flex-row flex-wrap justify-between
        "
     >
       <div class="w-full mb-6">{{t "avatar_controls.title"}}</div>
       <div
-        class="modal-max-h flex flex-row flex-wrap justify-around overflow-y-auto"
+        class="c-avatars__modal-max-h flex flex-row flex-wrap justify-around overflow-y-auto"
       >
         {{#each this.avatars as |avatar|}}
           <div class="w-32 h-32 m-2 rounded-full shadow-lg">
@@ -53,7 +53,7 @@ export default class UiAvatarsComponent extends Component<UiAvatarsSignature> {
               title="Select Avatar"
               type="button"
               {{on "click" (fn this.onSelect avatar)}}
-              class="btn-press {{if (eq avatar this.preferredAvatar) "activeTab"}}
+              class="btn-press {{if (eq avatar this.preferredAvatar) "c-avatars__active-tab"}}
                 focus:outline-none"
                 data-test-avatar-btn={{avatar}}
             >

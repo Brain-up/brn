@@ -19,7 +19,7 @@
     border: solid 6px transparent;
   }
 
-  &:hover .check-container {
+  &:hover .c-exercise-button__check-container {
     right: -18px;
     top: -13px;
   }
@@ -34,7 +34,7 @@
     color: white;
   }
 
-  &:active .check-container {
+  &:active .c-exercise-button__check-container {
     right: -12px;
     top: -7px;
   }
@@ -60,7 +60,7 @@
     border: 3px solid #f4f4f4;
   }
 
-  .title {
+  .c-exercise-button__title {
     font-size: 60px;
     color: #4691fd;
     text-align: center;
@@ -68,7 +68,7 @@
   }
 
   @media (max-width: 640px) {
-    .title {
+    .c-exercise-button__title {
       font-size: 40px;
       color: #4691fd;
       text-align: center;
@@ -76,21 +76,21 @@
     }
   }
 
-  .title:active {
+  .c-exercise-button__title:active {
     color: white;
   }
 
-  .title-locked,
-  .title-locked:active {
+  .c-exercise-button__title-locked,
+  .c-exercise-button__title-locked:active {
     color: #bdbdbd;
   }
 
-  .title-disabled,
-  .title-disabled:active {
+  .c-exercise-button__title-disabled,
+  .c-exercise-button__title-disabled:active {
     color: #f4f4f4;
   }
 
-  .check-container {
+  .c-exercise-button__check-container {
     position: absolute;
     right: -15px;
     top: -10px;

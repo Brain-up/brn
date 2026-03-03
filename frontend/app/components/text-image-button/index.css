@@ -20,7 +20,7 @@
     transition: 0.1s;
   }
 
-  .word {
+  .c-text-image-button__word {
     background: #fff;
     padding: 2px 3px;
     bottom: 0;
@@ -39,11 +39,11 @@
     cursor: default;
   }
 
-  .selected {
+  .c-text-image-button__selected {
     box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
   }
 
-  .correctness-indicator {
+  .c-text-image-button__correctness-indicator {
     position: absolute;
     top: 10px;
     left: 10px;
@@ -52,11 +52,11 @@
     border-radius: 50%;
   }
 
-  .correctness-indicator.right {
+  .c-text-image-button__correctness-indicator.right {
     color: #46cb18;
   }
 
-  .correctness-indicator.wrong {
+  .c-text-image-button__correctness-indicator.wrong {
     color: #ff0100;
   }
 
@@ -69,7 +69,7 @@
     padding: 8px 12px;
   }
 
-  &.text-mode .word {
+  &.text-mode .c-text-image-button__word {
     position: static;
     box-shadow: none;
     background: transparent;
@@ -83,7 +83,7 @@
       min-height: 60px;
     }
 
-    .word {
+    .c-text-image-button__word {
       font-size: 14px;
       line-height: 16px;
     }

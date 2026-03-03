@@ -1,30 +1,4 @@
 .c-series-navigation {
-  .series-nav__exercies-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    height: 100%;
-  }
-
-  .series-nav__exercies-link {
-    font-size: 18px;
-    margin-bottom: 0.2em;
-    display: inline-block;
-  }
-
-  .series-nav__exercies-link.active {
-    outline-offset: 2px;
-  }
-
-  .series-nav__exercies-list > li {
-    margin-bottom: 5px;
-  }
-
-  .exercise-navigation > nav.c-pagination {
-    padding-left: 0;
-    padding-top: 0;
-  }
-
   .exercise-block__level {
     flex-direction: initial;
     align-items: center;
@@ -47,42 +21,11 @@
     }
   }
 
-  .exercise-block__status-icon {
-    width: 20px;
-    height: 20px;
-    position: absolute;
-    right: 10px;
-    top: 10px;
-  }
-
   .navigation-block__header {
     color: #001274;
   }
 
-  .exercise-block__icon {
-    color: #3dc8f4;
-    margin-right: 20px;
-    cursor: pointer;
-  }
-
-  .inactive-icon {
-    color: #8093b2;
-    /* color: #fc8181; */
-    cursor: not-allowed;
-  }
-
-  h2 {
+  h3 {
     margin-bottom: 20px;
-  }
-
-  .number-container {
-    position: absolute;
-    left: -8px;
-    bottom: -8px;
-    font-size: 14px;
-    border-radius: 25%;
-    color: #fff;
-    width: 20px;
-    height: 20px;
   }
 }

@@ -1,36 +1,38 @@
 /*! purgecss start ignore */
 
-.activeTab {
-  position: relative;
-}
+.c-avatars {
+  .c-avatars__active-tab {
+    position: relative;
+  }
 
-.activeTab img {
-  position: relative;
-  z-index: 3;
-}
+  .c-avatars__active-tab img {
+    position: relative;
+    z-index: 3;
+  }
 
-.activeTab:before {
-  content: '';
-  background: linear-gradient(92.58deg, #4691fd 49.26%, #d5b0ff 85.77%);
-  border-radius: 100%;
-  position: absolute;
-  top: -4px;
-  left: -4px;
-  right: -4px;
-  bottom: -4px;
-}
-.activeTab:after {
-  content: '';
-  position: absolute;
-  border-radius: 100%;
-  background: #fff;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-}
-.modal-max-h {
-  max-height: calc(100vh - 300px);
+  .c-avatars__active-tab:before {
+    content: '';
+    background: linear-gradient(92.58deg, #4691fd 49.26%, #d5b0ff 85.77%);
+    border-radius: 100%;
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    right: -4px;
+    bottom: -4px;
+  }
+  .c-avatars__active-tab:after {
+    content: '';
+    position: absolute;
+    border-radius: 100%;
+    background: #fff;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+  .c-avatars__modal-max-h {
+    max-height: calc(100vh - 300px);
+  }
 }
 
 /*! purgecss end ignore */

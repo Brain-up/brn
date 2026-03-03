@@ -77,21 +77,21 @@ export default class TextImageButton extends Component<TextImageButtonSignature>
         type="button"
         {{on "click" @clickAction}}
         class="btn-press bg-transparent rounded text-black mb-2 focus:outline-none focus:ring transition-all duration-500 ease-in-out border-2
-          {{if @isSelected "selected"}}
+          {{if @isSelected "c-text-image-button__selected"}}
           {{if @disabled "opacity-50"}}"
       >
-        <span class="word" data-test-word>{{@word}}</span>
+        <span class="c-text-image-button__word" data-test-word>{{@word}}</span>
         {{#if (and @checked @isSelected)}}
           {{#if @isCorrect}}
             <FaIcon
-              class="correctness-indicator right"
+              class="c-text-image-button__correctness-indicator right"
               @icon="check-circle"
               {{didInsert (fn this.addFrame "border-green-500")}}
               {{willDestroy (fn this.removeFrame "border-green-500")}}
             />
           {{else}}
             <FaIcon
-              class="correctness-indicator wrong"
+              class="c-text-image-button__correctness-indicator wrong"
               @icon="times-circle"
               {{didInsert (fn this.addFrame "border-red-500")}}
               {{willDestroy (fn this.removeFrame "border-red-500")}}

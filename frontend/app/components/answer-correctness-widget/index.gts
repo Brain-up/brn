@@ -81,7 +81,7 @@ export default class AnswerCorrectnessWidgetComponent extends Component<AnswerCo
               (concat "url('/pictures/" this.imagePath ".svg')")
             )
           }}
-          class="answer-correctness-widget flex-1 mx-auto rounded"
+          class="c-answer-correctness-widget__content flex-1 mx-auto rounded"
         ></div>
       {{/if}}
     </div>
