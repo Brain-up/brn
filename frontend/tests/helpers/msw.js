@@ -1,22 +1,30 @@
 /**
- * MSW test helper with @mswjs/interceptors for reliable fetch interception.
+ * Test helper using @mswjs/interceptors for reliable fetch interception.
  *
- * Uses @mswjs/interceptors/fetch (same mechanism as MSW's setupServer).
+ * Uses FetchInterceptor (same mechanism as MSW's setupServer internally).
  * App-level @ember/test-waiters integration in services/network.ts ensures
  * settled() waits for all pending requests.
+ *
  * Provides a mirage-compatible server.get/post/put/delete API.
+ * Handler signature: `server.get('path', (request) => response)`
+ * where request = { params, queryParams, requestBody }.
  */
 import { FetchInterceptor } from '@mswjs/interceptors/fetch';
 
-// ─── Path matching ───────────────────────────────────────────────────────────
+// ─── Path matching (with cache) ─────────────────────────────────────────────
+
+const pathCache = new Map();
 
 function compilePath(pattern) {
+  if (pathCache.has(pattern)) return pathCache.get(pattern);
   const paramNames = [];
   const regexStr = pattern.replace(/:([^/]+)/g, (_match, name) => {
     paramNames.push(name);
     return '([^/]+)';
   });
-  return { regex: new RegExp(`^${regexStr}$`), paramNames };
+  const result = { regex: new RegExp(`^${regexStr}$`), paramNames };
+  pathCache.set(pattern, result);
+  return result;
 }
 
 function matchPath(pattern, pathname) {
@@ -112,6 +120,12 @@ function ensureInterceptor() {
 
     const match = findHandler(method, pathname);
     if (!match) {
+      if (pathname.startsWith('/api/')) {
+        console.warn(
+          `[msw] Unhandled ${method} ${pathname} — no handler registered. ` +
+            `Add server.${method.toLowerCase()}('${pathname.replace('/api/', '')}', handler) in your test.`,
+        );
+      }
       return;
     }
 
@@ -126,7 +140,7 @@ function ensureInterceptor() {
     }
 
     const mirageRequest = { params, queryParams, requestBody };
-    const result = handler(null, mirageRequest);
+    const result = handler(mirageRequest);
 
     if (result === undefined || result === null) {
       controller.respondWith(new Response(null, { status: 200 }));
@@ -148,10 +162,13 @@ function resetHandlers() {
   runtimeHandlers = [];
 }
 
-// ─── Mirage-compatible server API ────────────────────────────────────────────
+// ─── Server API ──────────────────────────────────────────────────────────────
 
 function normalizePath(path) {
   const cleanPath = path.replace(/^\//, '');
+  if (cleanPath.startsWith('api/')) {
+    return `/${cleanPath}`;
+  }
   return `/api/${cleanPath}`;
 }
 
@@ -174,6 +191,9 @@ function createServerCompat() {
     put(path, handler) {
       addHandler('PUT', path, handler);
     },
+    patch(path, handler) {
+      addHandler('PATCH', path, handler);
+    },
     delete(path, handler) {
       addHandler('DELETE', path, handler);
     },
@@ -191,5 +211,6 @@ export function setupMSW(hooks) {
 
   hooks.afterEach(function () {
     resetHandlers();
+    delete window.server;
   });
 }

@@ -18,12 +18,12 @@ module('Integration | Component | statistics', function (hooks) {
     const stubGetStatsByYear = sinon.stub();
     const stubGetStatsByWeek = sinon.stub();
 
-    server.get('/v2/statistics/study/week', function (schema, request) {
+    server.get('/v2/statistics/study/week', function (request) {
       stubGetStatsByWeek(request.queryParams.from, request.queryParams.to);
       return { data: [] };
     });
 
-    server.get('/v2/statistics/study/year', function (schema, request) {
+    server.get('/v2/statistics/study/year', function (request) {
       stubGetStatsByYear(request.queryParams.from, request.queryParams.to);
       return { data: [] };
     });
