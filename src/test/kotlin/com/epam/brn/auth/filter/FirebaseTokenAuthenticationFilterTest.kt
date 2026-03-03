@@ -31,6 +31,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
+import java.time.Instant
 import javax.servlet.FilterChain
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -67,6 +68,7 @@ internal class FirebaseTokenAuthenticationFilterTest {
     @BeforeEach
     fun init() {
         SecurityContextHolder.clearContext()
+        every { firebaseTokenMock.claims } returns mapOf("exp" to Instant.now().plusSeconds(600).epochSecond)
     }
 
     /*
@@ -104,6 +106,46 @@ internal class FirebaseTokenAuthenticationFilterTest {
         verify(exactly = 1) { brainUpUserDetailsService.loadUserByUsername(email) }
         verify(exactly = 0) { firebaseUserService.getUserByUuid(any()) }
         verify(exactly = 0) { userAccountService.createUser(any()) }
+    }
+
+    @Test
+    fun `should skip token verification when bearer token is missing`() {
+        // GIVEN
+        val request = MockHttpServletRequest(HttpMethod.GET.name, "/test")
+        val response = MockHttpServletResponse()
+        val filterChain = FilterChain { _, _ -> }
+
+        every { tokenHelperUtils.getBearerToken(request) } returns null
+
+        // WHEN
+        firebaseTokenAuthenticationFilter.doFilter(request, response, filterChain)
+
+        // THEN
+        assertNull(SecurityContextHolder.getContext().authentication)
+
+        verify(exactly = 1) { tokenHelperUtils.getBearerToken(request) }
+        verify(exactly = 0) { firebaseAuth.verifyIdToken(any(), any()) }
+        verify(exactly = 0) { brainUpUserDetailsService.loadUserByUsername(any()) }
+    }
+
+    @Test
+    fun `should skip token verification when authentication already exists`() {
+        // GIVEN
+        val request = MockHttpServletRequest(HttpMethod.GET.name, "/test")
+        val response = MockHttpServletResponse()
+        val filterChain = FilterChain { _, _ -> }
+        SecurityContextHolder.getContext().authentication =
+            UsernamePasswordAuthenticationToken("existing-user", null, emptyList())
+
+        // WHEN
+        firebaseTokenAuthenticationFilter.doFilter(request, response, filterChain)
+
+        // THEN
+        assertNotNull(SecurityContextHolder.getContext().authentication)
+
+        verify(exactly = 0) { tokenHelperUtils.getBearerToken(any()) }
+        verify(exactly = 0) { firebaseAuth.verifyIdToken(any(), any()) }
+        verify(exactly = 0) { brainUpUserDetailsService.loadUserByUsername(any()) }
     }
 
     /*
@@ -241,6 +283,34 @@ internal class FirebaseTokenAuthenticationFilterTest {
         verify(exactly = 1) { brainUpUserDetailsService.loadUserByUsername(email) }
         verify(exactly = 1) { firebaseUserService.getUserByUuid(uuid) }
         verify(exactly = 0) { userAccountService.createUser(any()) }
+    }
+
+    @Test
+    fun `should reuse cached verified token for repeated bearer token`() {
+        // GIVEN
+        val token = "firebaseTokenMock"
+        val firstRequest = MockHttpServletRequest(HttpMethod.GET.name, "/test")
+        firstRequest.addHeader("Authorization", "Bearer $token")
+        val secondRequest = MockHttpServletRequest(HttpMethod.GET.name, "/test")
+        secondRequest.addHeader("Authorization", "Bearer $token")
+        val response = MockHttpServletResponse()
+        val filterChain = FilterChain { _, _ -> }
+        val customUserDetailsMock = CustomUserDetails(createUserAccountMock())
+
+        every { tokenHelperUtils.getBearerToken(any()) } returns token
+        every { firebaseAuth.verifyIdToken(token, true) } returns firebaseTokenMock
+        every { firebaseTokenMock.email } returns email
+        every { brainUpUserDetailsService.loadUserByUsername(email) } returns customUserDetailsMock
+
+        // WHEN
+        firebaseTokenAuthenticationFilter.doFilter(firstRequest, response, filterChain)
+        SecurityContextHolder.clearContext()
+        firebaseTokenAuthenticationFilter.doFilter(secondRequest, response, filterChain)
+
+        // THEN
+        verify(exactly = 2) { tokenHelperUtils.getBearerToken(any()) }
+        verify(exactly = 1) { firebaseAuth.verifyIdToken(token, true) }
+        verify(exactly = 2) { brainUpUserDetailsService.loadUserByUsername(email) }
     }
 
     private fun createUserAccountMock(): UserAccount {
