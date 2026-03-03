@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.test.context.TestPropertySource
+import javax.persistence.EntityManager
 import javax.persistence.EntityManagerFactory
 
 @DataJpaTest
@@ -38,6 +39,9 @@ class ExerciseRepositoryTest {
     @Autowired
     lateinit var entityManagerFactory: EntityManagerFactory
 
+    @Autowired
+    lateinit var entityManager: EntityManager
+
     @AfterEach
     fun deleteAfterTest() {
         exerciseGroupRepository.deleteAll()
@@ -47,6 +51,8 @@ class ExerciseRepositoryTest {
     @Test
     fun `findExercisesWithSubGroupBySubGroupId should load dto graph without extra sql`() {
         val subGroupId = insertExerciseGraph()
+        entityManager.flush()
+        entityManager.clear()
         val sessionFactory = entityManagerFactory.unwrap(SessionFactory::class.java)
         val statistics = sessionFactory.statistics
         statistics.clear()
