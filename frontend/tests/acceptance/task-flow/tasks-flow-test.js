@@ -130,8 +130,6 @@ module('Acceptance | tasks flow', function (hooks) {
 
     await click('[data-test-continue]');
 
-    await settled();
-
     assert.equal(currentURL(), '/groups/1/series/1/subgroup/1');
   });
 });
