@@ -30,7 +30,7 @@ export default class ProgressSausageComponent extends Component<ProgressSausageS
   }
 
   <template>
-    <div ...attributes>
+    <div class="c-progress-sausage" ...attributes>
       <div class="progress-bar">
         {{! template-lint-disable no-inline-styles style-concatenation }}
         <div

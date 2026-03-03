@@ -1,8 +1,5 @@
 .c-footer {
   min-height: 50px;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
   font-size: 12px;
 
   a[rel='noopener'] {

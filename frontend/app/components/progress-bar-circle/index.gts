@@ -25,7 +25,7 @@ export default class ProgressBarCircleComponent extends Component<ProgressBarCir
   }
 
   <template>
-    <div>
+    <div class="c-progress-bar-circle">
       <svg viewBox="0 0 40 40" class="circular-chart blue">
         <path
           class="circle-bg"

@@ -22,7 +22,7 @@ export default class LoadingSpinnerComponent extends Component {
 
   <template>
     <div
-      class="flex flex-1 w-full items-center justify-center"
+      class="c-loading-spinner flex flex-1 w-full items-center justify-center"
       {{didInsert this.fadeOut}}
     >
       <div class="loader">

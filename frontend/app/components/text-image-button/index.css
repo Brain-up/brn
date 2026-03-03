@@ -1,7 +1,7 @@
 /*! purgecss start ignore */
 
 .c-text-image-button {
-  flex: 1;
+  flex: 1 1 auto;
   display: flex;
   flex-direction: column;
   justify-content: center;

@@ -1,4 +1,3 @@
-import './index.css';
 import Component from '@glimmer/component';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { action } from '@ember/object';
