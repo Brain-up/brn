@@ -1,3 +1,4 @@
+import org.gradle.jvm.toolchain.JavaLanguageVersion
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val kotestAssertionsVersion: String by properties
@@ -22,6 +23,16 @@ plugins {
     id("org.jetbrains.kotlin.plugin.allopen")
     jacoco
     id("org.sonarqube") version "6.2.0.5505"
+}
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+    }
+}
+
+kotlin {
+    jvmToolchain(17)
 }
 
 allOpen {
@@ -162,7 +173,12 @@ project.exec {
 
 tasks.named("compileKotlin") { dependsOn("ktlintCheck") }
 
-tasks.withType<Test> {
+tasks.withType<Test>().configureEach {
+    javaLauncher.set(
+        javaToolchains.launcherFor {
+            languageVersion.set(JavaLanguageVersion.of(17))
+        },
+    )
     useJUnitPlatform {
         excludeTags("integration-test")
     }
