@@ -24,7 +24,9 @@ interface ExerciseRepository : JpaRepository<Exercise, Long> {
         "SELECT DISTINCT e FROM Exercise e " +
             "WHERE e.subGroup.id = :subGroupId",
     )
-    fun findExercisesWithSubGroupBySubGroupId(@Param("subGroupId") subGroupId: Long): List<Exercise>
+    fun findExercisesWithSubGroupBySubGroupId(
+        @Param("subGroupId") subGroupId: Long,
+    ): List<Exercise>
 
     @Query(
         "SELECT DISTINCT e FROM Exercise e " +
