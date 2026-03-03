@@ -348,9 +348,23 @@ internal class ExerciseServiceTest {
 
         every { exerciseRepository.findSubGroupIdByExerciseId(requestedExerciseId) } returns subGroupId
         every { userAccountService.getCurrentUser() } returns currentUser
-        every { exerciseRepository.findExerciseAvailabilityBySubGroupId(subGroupId) } returns listOf(exercise1, exercise2, exercise3, exercise4)
+        every {
+            exerciseRepository.findExerciseAvailabilityBySubGroupId(subGroupId)
+        } returns
+            listOf(
+                exercise1,
+                exercise2,
+                exercise3,
+                exercise4,
+            )
         every { studyHistoryRepository.getDoneExerciseIds(subGroupId, userId) } returns listOf(1L, 2L)
-        every { studyHistoryRepository.findLastAttemptBySubGroupAndUserAccount(subGroupId, userId) } returns listOf(lastAttempt1, lastAttempt2)
+        every {
+            studyHistoryRepository.findLastAttemptBySubGroupAndUserAccount(subGroupId, userId)
+        } returns
+            listOf(
+                lastAttempt1,
+                lastAttempt2,
+            )
 
         // WHEN
         val actualResult = exerciseService.getAvailableExerciseIds(listOf(requestedExerciseId))

@@ -106,7 +106,8 @@ class ExerciseService(
         val subGroupExercises = exerciseRepository.findExerciseAvailabilityBySubGroupId(subGroupId)
         val doneExerciseIds = studyHistoryRepository.getDoneExerciseIds(subGroupId, currentUserId).toSet()
         val lastAttemptsByExerciseId =
-            studyHistoryRepository.findLastAttemptBySubGroupAndUserAccount(subGroupId, currentUserId)
+            studyHistoryRepository
+                .findLastAttemptBySubGroupAndUserAccount(subGroupId, currentUserId)
                 .associateBy { it.exerciseId }
         return calculateAvailableExerciseIds(subGroupExercises, doneExerciseIds, lastAttemptsByExerciseId)
     }
