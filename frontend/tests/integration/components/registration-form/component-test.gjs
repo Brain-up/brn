@@ -1,9 +1,8 @@
 import { module, test } from 'qunit';
 import { setupIntl } from 'ember-intl/test-support';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, fillIn, click, settled } from '@ember/test-helpers';
+import { render, fillIn, click } from '@ember/test-helpers';
 import Service from '@ember/service';
-import EmberObject from '@ember/object';
 import RegistrationForm from 'brn/components/registration-form';
 
 function getDate(num) {
@@ -27,11 +26,11 @@ module('Integration | Component | registration-form', function (hooks) {
   test('it send register request if all fields filled', async function (assert) {
     assert.expect(4);
 
-    const MockFirebaseAuthenticator = EmberObject.extend({
+    class MockFirebaseAuthenticator {
       registerUser() {
         return Promise.resolve();
-      },
-    });
+      }
+    }
 
     class MockNetwork extends Service {
       loadCurrentUser() {
@@ -68,18 +67,17 @@ module('Integration | Component | registration-form', function (hooks) {
     await click('[name="agreement"]');
     await click('[id="male"]');
     await click('[data-test-submit-form]');
-    await settled();
   });
 
   test('it able to handle registration error', async function (assert) {
     assert.expect(2);
 
-    const MockFirebaseAuthenticator = EmberObject.extend({
+    class MockFirebaseAuthenticator {
       registerUser() {
         assert.ok(true, 'registerUser was called');
         return Promise.reject(new Error('foo'));
-      },
-    });
+      }
+    }
 
     class MockNetwork extends Service {
       loadCurrentUser() {
@@ -110,7 +108,6 @@ module('Integration | Component | registration-form', function (hooks) {
     await click('[name="agreement"]');
     await click('[id="male"]');
     await click('[data-test-submit-form]');
-    await settled();
     assert.dom('[data-test-form-error]').hasText('foo');
   });
 

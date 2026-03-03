@@ -30,7 +30,7 @@ module('Acceptance | unaccessible routes', function (hooks) {
     // route guard in task.ts afterModel should redirect back to task 1.
     try {
       await visit('/groups/1/series/1/subgroup/1/exercise/1/task/2');
-    } catch (e) {
+    } catch (_e) {
       // TransitionAborted is expected when the route redirects
       await settled();
     }
@@ -51,7 +51,7 @@ module('Acceptance | unaccessible routes', function (hooks) {
     // route guard in task.ts model() should redirect to exercise 2's first task.
     try {
       await visit('/groups/1/series/1/subgroup/1/exercise/2/task/1');
-    } catch (e) {
+    } catch (_e) {
       // TransitionAborted is expected when the route redirects
       await settled();
     }

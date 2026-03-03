@@ -23,7 +23,7 @@ export function getTestData() {
       subGroups: [],
     },
   ];
-  const groups = [{ order: 1, id: '1', series: ['1', '2'] }];
+  const groups = [{ order: 1, id: '1', locale: 'ru-ru', name: 'default', description: '', series: ['1', '2'] }];
 
   const subgroups = [];
 

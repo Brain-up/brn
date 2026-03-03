@@ -74,7 +74,19 @@ const defaultHandlers = [
     handler: () => ({ data: [] }),
   },
   { method: 'GET', path: '/api/groups', handler: () => ({ data: [] }) },
-  { method: 'GET', path: '/api/groups/:id', handler: () => ({ data: {} }) },
+  {
+    method: 'GET',
+    path: '/api/groups/:id',
+    handler: (request) => ({
+      data: {
+        id: request.params.id,
+        locale: 'ru-ru',
+        name: '',
+        description: '',
+        series: [],
+      },
+    }),
+  },
   { method: 'GET', path: '/api/subgroups', handler: () => ({ data: [] }) },
   { method: 'GET', path: '/api/series', handler: () => ({ data: [] }) },
   { method: 'GET', path: '/api/series/:id', handler: () => ({ data: {} }) },
@@ -85,7 +97,22 @@ const defaultHandlers = [
     handler: () => ({ data: {} }),
   },
   { method: 'GET', path: '/api/tasks', handler: () => ({ data: [] }) },
-  { method: 'GET', path: '/api/tasks/:id', handler: () => ({ data: {} }) },
+  {
+    method: 'GET',
+    path: '/api/tasks/:id',
+    handler: (request) => ({
+      data: {
+        id: Number(request.params.id),
+        serialNumber: 0,
+        name: '',
+        level: 0,
+        exerciseType: 'SINGLE_SIMPLE_WORDS',
+        exerciseMechanism: 'WORDS',
+        shouldBeWithPictures: true,
+        answerOptions: [],
+      },
+    }),
+  },
   {
     method: 'POST',
     path: '/api/study-history',
