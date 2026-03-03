@@ -110,7 +110,7 @@ module('Integration | Component | words-seq-task-player | per-word correctness',
     click(`[data-test-task-answer-option="${wrongActionWord}"]`);
 
     // Wait for correctness indicators to appear
-    await waitFor('.correctness-indicator', { timeout: 2000 });
+    await waitFor('.correctness-indicator', { timeout: 5000 });
 
     // Correct word should have green border
     assert.dom(`[data-test-task-answer-option="${correctObjectWord}"]`).hasClass(

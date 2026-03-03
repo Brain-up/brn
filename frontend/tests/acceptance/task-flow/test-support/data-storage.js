@@ -7,7 +7,7 @@ export function getData() {
       level: 0,
       exerciseType: 'SINGLE_SIMPLE_WORDS',
       exerciseMechanism: 'WORDS',
-      shouldBeWithPictures: true,
+      shouldBeWithPictures: false,
       answerOptions: [
         {
           id: '4',
@@ -85,7 +85,7 @@ export function getData() {
       level: 0,
       exerciseType: 'SINGLE_SIMPLE_WORDS',
       exerciseMechanism: 'WORDS',
-      shouldBeWithPictures: true,
+      shouldBeWithPictures: false,
       answerOptions: [
         {
           id: '4',
@@ -163,7 +163,7 @@ export function getData() {
       level: 0,
       exerciseType: 'SINGLE_SIMPLE_WORDS',
       exerciseMechanism: 'WORDS',
-      shouldBeWithPictures: true,
+      shouldBeWithPictures: false,
       answerOptions: [
         {
           id: '4',

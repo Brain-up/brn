@@ -130,6 +130,21 @@ const defaultHandlers = [
   },
   {
     method: 'GET',
+    path: '/api/v1/symbols/search',
+    handler: () => ([]),
+  },
+  {
+    method: 'GET',
+    path: '/api/pictograms/:locale/bestsearch/:word',
+    handler: () => ([]),
+  },
+  {
+    method: 'GET',
+    path: '/api/pictograms/:locale/search/:word',
+    handler: () => ([]),
+  },
+  {
+    method: 'GET',
     path: '/api/v2/statistics/study/day',
     handler: () => ({ data: [] }),
   },
