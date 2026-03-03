@@ -104,10 +104,6 @@ export default class TaskPlayerComponent extends Component<TaskPlayerSignature> 
     );
   }
 
-  onRightAnswer() {
-    this.args.onRightAnswer?.();
-  }
-
   @action async onWrongAnswer({ skipRetry } = { skipRetry: false }) {
     await this.taskModeTask.cancelAll();
     if (!skipRetry) {
@@ -337,7 +333,7 @@ export default class TaskPlayerComponent extends Component<TaskPlayerSignature> 
       {{#let
         (component
           this.componentType
-          onRightAnswer=this.onRightAnswer
+          onRightAnswer=@onRightAnswer
           onWrongAnswer=this.onWrongAnswer
           onShuffled=this.onShuffled
           task=@task
