@@ -35,11 +35,11 @@ class ExerciseService(
 
     private val log = logger()
 
+    @Transactional(readOnly = true)
     fun findExerciseById(exerciseID: Long): ExerciseDto {
         val exercise =
-            exerciseRepository
-                .findById(exerciseID)
-                .orElseThrow { EntityNotFoundException("Could not find requested exerciseID=$exerciseID") }
+            exerciseRepository.findByIdWithSubGroup(exerciseID)
+                ?: throw EntityNotFoundException("Could not find requested exerciseID=$exerciseID")
         return updateExerciseDto(exercise.toDto())
     }
 
@@ -50,6 +50,7 @@ class ExerciseService(
         .findExerciseByNameAndLevel(name, level)
         .orElseThrow { EntityNotFoundException("Exercise was not found by name=$name and level=$level") }
 
+    @Transactional(readOnly = true)
     fun findExercisesByUserId(userId: Long): List<ExerciseDto> {
         log.info("Searching available exercises for user=$userId")
         val exercisesIdList = studyHistoryRepository.getDoneExercisesIdList(userId)
@@ -59,17 +60,19 @@ class ExerciseService(
         }
     }
 
+    @Transactional(readOnly = true)
     fun findExercisesBySubGroupForCurrentUser(subGroupId: Long): List<ExerciseDto> {
         val currentUserId = userAccountService.getCurrentUserId()
         return findExercisesByUserIdAndSubGroupId(currentUserId, subGroupId)
     }
 
+    @Transactional(readOnly = true)
     fun findExercisesByUserIdAndSubGroupId(
         userId: Long,
         subGroupId: Long,
     ): List<ExerciseDto> {
         log.debug("Searching exercises for user=$userId with subGroupId=$subGroupId with Availability")
-        val subGroupExercises = exerciseRepository.findExercisesBySubGroupId(subGroupId).sortedBy { s -> s.level }
+        val subGroupExercises = exerciseRepository.findExercisesWithSubGroupBySubGroupId(subGroupId).sortedBy { s -> s.level }
         val currentUserRoles = userAccountService.getCurrentUserRoles()
         if (currentUserRoles.contains(BrnRole.ADMIN) || currentUserRoles.contains(BrnRole.SPECIALIST))
             return subGroupExercises.map { exercise -> updateExerciseDto(exercise.toDto(true)) }
@@ -85,6 +88,7 @@ class ExerciseService(
             }
     }
 
+    @Transactional(readOnly = true)
     fun getAvailableExerciseIds(exerciseIds: List<Long>): List<Long> {
         if (exerciseIds.isEmpty()) return emptyList()
         val exercise = exerciseRepository.findById(exerciseIds[0])
@@ -158,10 +162,12 @@ class ExerciseService(
         exerciseRepository.save(exercise)
     }
 
+    @Transactional(readOnly = true)
     fun findExercisesWithTasksBySubGroup(subGroupId: Long): List<ExerciseDto> = exerciseRepository
-        .findExercisesBySubGroupId(subGroupId)
+        .findExercisesWithSubGroupBySubGroupId(subGroupId)
         .map { updateExerciseDto(it.toDto()) }
 
+    @Transactional(readOnly = true)
     fun findExercisesByWord(word: String): List<ExerciseWithWordsResponse> = exerciseRepository
         .findExercisesByWord(word)
         .map { it.toDtoWithWords() }

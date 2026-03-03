@@ -10,6 +10,7 @@ import com.epam.brn.dto.request.exercise.SetOfWords
 import com.epam.brn.dto.response.ExerciseWithWordsResponse
 import com.epam.brn.enums.BrnLocale
 import com.epam.brn.enums.BrnRole
+import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.Series
@@ -37,6 +38,7 @@ import io.mockk.verify
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.test.util.ReflectionTestUtils
+import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 import java.util.Optional
 import java.util.stream.Stream
@@ -109,7 +111,7 @@ internal class ExerciseServiceTest {
         val exercise2 = Exercise(id = 2, name = "pets", level = 100)
         val noiseUrl = "noiseUrl"
         every { userAccountService.getCurrentUserRoles() } returns setOf(BrnRole.ADMIN)
-        every { exerciseRepository.findExercisesBySubGroupId(subGroupId) } returns listOf(exercise1, exercise2)
+        every { exerciseRepository.findExercisesWithSubGroupBySubGroupId(subGroupId) } returns listOf(exercise1, exercise2)
         every { urlConversionService.makeUrlForNoise(ofType(String::class)) } returns noiseUrl
 
         // WHEN
@@ -118,7 +120,7 @@ internal class ExerciseServiceTest {
         // THEN
         actualResult shouldHaveSize 2
         actualResult.filter { it.available } shouldHaveSize 2
-        verify(exactly = 1) { exerciseRepository.findExercisesBySubGroupId(subGroupId) }
+        verify(exactly = 1) { exerciseRepository.findExercisesWithSubGroupBySubGroupId(subGroupId) }
         actualResult[0].level shouldBe 2
         actualResult[1].level shouldBe 100
     }
@@ -134,7 +136,7 @@ internal class ExerciseServiceTest {
         val exercise2 = Exercise(id = 2, name = "pets", level = 100)
         val noiseUrl = "noiseUrl"
         every { userAccountService.getCurrentUserRoles() } returns setOf(BrnRole.SPECIALIST, BrnRole.USER)
-        every { exerciseRepository.findExercisesBySubGroupId(subGroupId) } returns listOf(exercise1, exercise2)
+        every { exerciseRepository.findExercisesWithSubGroupBySubGroupId(subGroupId) } returns listOf(exercise1, exercise2)
         every { urlConversionService.makeUrlForNoise(ofType(String::class)) } returns noiseUrl
 
         // WHEN
@@ -143,7 +145,7 @@ internal class ExerciseServiceTest {
         // THEN
         actualResult shouldHaveSize 2
         actualResult.filter { it.available } shouldHaveSize 2
-        verify(exactly = 1) { exerciseRepository.findExercisesBySubGroupId(subGroupId) }
+        verify(exactly = 1) { exerciseRepository.findExercisesWithSubGroupBySubGroupId(subGroupId) }
         actualResult[0].level shouldBe 2
         actualResult[1].level shouldBe 100
     }
@@ -160,7 +162,7 @@ internal class ExerciseServiceTest {
         val exercise3 = Exercise(id = 3, name = "pets", level = 100)
         val noiseUrl = "noiseUrl"
         every { studyHistoryRepository.getDoneExercises(subGroupId, userId) } returns listOf(exercise1)
-        every { exerciseRepository.findExercisesBySubGroupId(subGroupId) } returns
+        every { exerciseRepository.findExercisesWithSubGroupBySubGroupId(subGroupId) } returns
             listOf(
                 exercise1,
                 exercise2,
@@ -176,7 +178,7 @@ internal class ExerciseServiceTest {
         // THEN
         actualResult shouldHaveSize 3
         actualResult.filter { it.available } shouldHaveSize 1
-        verify(exactly = 1) { exerciseRepository.findExercisesBySubGroupId(subGroupId) }
+        verify(exactly = 1) { exerciseRepository.findExercisesWithSubGroupBySubGroupId(subGroupId) }
         verify(exactly = 1) { studyHistoryRepository.getDoneExercises(ofType(Long::class), ofType(Long::class)) }
         verify(exactly = 1) {
             studyHistoryRepository.findLastBySubGroupAndUserAccount(
@@ -206,7 +208,7 @@ internal class ExerciseServiceTest {
         every { lastStudyHistoryMockk.replaysCount } returns 2
         every { lastStudyHistoryMockk.wrongAnswers } returns 5
         every { studyHistoryRepository.getDoneExercises(subGroupId, userId) } returns listOf(exercise1)
-        every { exerciseRepository.findExercisesBySubGroupId(subGroupId) } returns
+        every { exerciseRepository.findExercisesWithSubGroupBySubGroupId(subGroupId) } returns
             listOf(
                 exercise1,
                 exercise2,
@@ -225,7 +227,7 @@ internal class ExerciseServiceTest {
         // THEN
         actualResult shouldHaveSize 3
         actualResult.filter { it.available } shouldHaveSize 1
-        verify(exactly = 1) { exerciseRepository.findExercisesBySubGroupId(subGroupId) }
+        verify(exactly = 1) { exerciseRepository.findExercisesWithSubGroupBySubGroupId(subGroupId) }
         verify(exactly = 1) { studyHistoryRepository.getDoneExercises(ofType(Long::class), ofType(Long::class)) }
         verify(exactly = 1) {
             studyHistoryRepository.findLastBySubGroupAndUserAccount(
@@ -248,7 +250,7 @@ internal class ExerciseServiceTest {
         val allExercises = listOf(exercise1, exercise2, exercise3)
         val noiseUrl = "noiseUrl"
         every { studyHistoryRepository.getDoneExercises(subGroupId, userId) } returns allExercises
-        every { exerciseRepository.findExercisesBySubGroupId(subGroupId) } returns allExercises
+        every { exerciseRepository.findExercisesWithSubGroupBySubGroupId(subGroupId) } returns allExercises
         every { urlConversionService.makeUrlForNoise(ofType(String::class)) } returns noiseUrl
         every { userAccountService.getCurrentUserRoles() } returns setOf(BrnRole.USER)
 
@@ -258,7 +260,7 @@ internal class ExerciseServiceTest {
         // THEN
         actualResult shouldHaveSize 3
         actualResult.filter { it.available } shouldHaveSize 3
-        verify(exactly = 1) { exerciseRepository.findExercisesBySubGroupId(subGroupId) }
+        verify(exactly = 1) { exerciseRepository.findExercisesWithSubGroupBySubGroupId(subGroupId) }
         verify(exactly = 1) { studyHistoryRepository.getDoneExercises(ofType(Long::class), ofType(Long::class)) }
     }
 
@@ -269,7 +271,7 @@ internal class ExerciseServiceTest {
         val noiseUrl = "noiseUrl"
         val exerciseDtoMock = ExerciseDto(2, 1, "name", 1, NoiseDto(0, noiseUrl))
         every { exerciseMock.toDto() } returns exerciseDtoMock
-        every { exerciseRepository.findById(ofType(Long::class)) } returns Optional.of(exerciseMock)
+        every { exerciseRepository.findByIdWithSubGroup(ofType(Long::class)) } returns exerciseMock
         every { urlConversionService.makeUrlForNoise(noiseUrl) }.returns(noiseUrl)
 
         // WHEN
@@ -277,7 +279,20 @@ internal class ExerciseServiceTest {
 
         // THEN
         actualResult shouldBe exerciseDtoMock
-        verify(exactly = 1) { exerciseRepository.findById(ofType(Long::class)) }
+        verify(exactly = 1) { exerciseRepository.findByIdWithSubGroup(ofType(Long::class)) }
+    }
+
+    @Test
+    fun `should throw EntityNotFoundException when exercise not found by id`() {
+        // GIVEN
+        val exerciseId = 999L
+        every { exerciseRepository.findByIdWithSubGroup(exerciseId) } returns null
+
+        // WHEN & THEN
+        shouldThrow<EntityNotFoundException> {
+            exerciseService.findExerciseById(exerciseId)
+        }
+        verify(exactly = 1) { exerciseRepository.findByIdWithSubGroup(exerciseId) }
     }
 
     @Test
@@ -303,7 +318,7 @@ internal class ExerciseServiceTest {
         val exerciseMock: Exercise = mockkClass(Exercise::class)
         val subGroupId = 1L
         val exerciseDto = ExerciseDto(id = 1, seriesId = 1, name = "name", noise = NoiseDto(url = "url"))
-        every { exerciseRepository.findExercisesBySubGroupId(subGroupId) } returns listOf(exerciseMock)
+        every { exerciseRepository.findExercisesWithSubGroupBySubGroupId(subGroupId) } returns listOf(exerciseMock)
         every { exerciseMock.toDto() } returns (exerciseDto)
         every { urlConversionService.makeUrlForNoise(ofType(String::class)) } returns "updatedNoiseUrl"
         // WHEN
@@ -311,7 +326,7 @@ internal class ExerciseServiceTest {
         // THEN
         actualResults shouldContain exerciseDto
         exerciseDto.noise.url shouldBe "updatedNoiseUrl"
-        verify(exactly = 1) { exerciseRepository.findExercisesBySubGroupId(subGroupId) }
+        verify(exactly = 1) { exerciseRepository.findExercisesWithSubGroupBySubGroupId(subGroupId) }
     }
 
     @Test
@@ -327,6 +342,31 @@ internal class ExerciseServiceTest {
         // THEN
         actualResults shouldContain exerciseWithWordsResponseMock
         verify(exactly = 1) { exerciseRepository.findExercisesByWord(word) }
+    }
+
+    @Test
+    fun `should keep lazy-loading read methods transactional`() {
+        val transactionalReadMethods =
+            setOf(
+                "findExerciseById",
+                "findExercisesByUserId",
+                "findExercisesBySubGroupForCurrentUser",
+                "findExercisesByUserIdAndSubGroupId",
+                "getAvailableExerciseIds",
+                "findExercisesWithTasksBySubGroup",
+                "findExercisesByWord",
+            )
+
+        val methodsByName = ExerciseService::class.java.declaredMethods.associateBy { it.name }
+
+        transactionalReadMethods.forEach { methodName ->
+            val method = checkNotNull(methodsByName[methodName]) { "Method $methodName is missing" }
+            val annotation =
+                checkNotNull(method.getAnnotation(Transactional::class.java)) {
+                    "Method $methodName must remain transactional"
+                }
+            annotation.readOnly shouldBe true
+        }
     }
 
     @Test
