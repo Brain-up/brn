@@ -10,10 +10,13 @@ import { setAdapter } from 'ember-cli-page-object/adapters';
 import { sendCoverage } from 'ember-cli-code-coverage/test-support';
 
 // Send Istanbul coverage data to the testem middleware after all tests complete.
-// The middleware writes the coverage reports (including coverage-summary.json).
-QUnit.done(async function () {
-  await sendCoverage();
-});
+// Use Testem's afterTests hook (not QUnit.done) so the callback blocks the
+// browser from tearing down until the /write-coverage POST completes.
+if (typeof Testem !== 'undefined') {
+  Testem.afterTests(function (config, data, callback) {
+    sendCoverage().then(callback, callback);
+  });
+}
 
 export function start() {
   setAdapter(new DefaultAdapter());

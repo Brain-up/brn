@@ -14,6 +14,7 @@ import StatsService, { StatEvents } from 'brn/services/stats';
 import AnswerOption from 'brn/utils/answer-option';
 import type { TaskSingleSimpleWords as SingleSimpleWordTask } from 'brn/schemas/task/single-simple-words';
 import didInsert from '@ember/render-modifiers/modifiers/did-insert';
+import didUpdate from '@ember/render-modifiers/modifiers/did-update';
 import { hash } from '@ember/helper';
 import { t } from 'ember-intl';
 import UiTaskContent from 'brn/components/ui/task-content';
@@ -100,6 +101,10 @@ export default class SingleSimpleWordsComponent extends Component<WordsSequences
   @action onInsert() {
     this.updateLocalTasks();
     this.startTask();
+  }
+  @action onTaskChange() {
+    this.tasksCopy = [];
+    this.updateLocalTasks();
   }
 
   @action
@@ -266,6 +271,7 @@ export default class SingleSimpleWordsComponent extends Component<WordsSequences
         flex flex-grow flex-col"
       ...attributes
       {{didInsert this.onInsert}}
+      {{didUpdate this.onTaskChange @task}}
     >
       {{yield (hash tasks=this.tasksCopy) to="header"}}
       {{#if this.tasksCopy.length}}

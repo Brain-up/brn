@@ -18,6 +18,7 @@ import StatsService, { StatEvents } from 'brn/services/stats';
 import type { TaskWordsSequences as WordsSequences } from 'brn/schemas/task/words-sequences';
 import type AnswerOption from 'brn/utils/answer-option';
 import didInsert from '@ember/render-modifiers/modifiers/did-insert';
+import didUpdate from '@ember/render-modifiers/modifiers/did-update';
 import { hash } from '@ember/helper';
 import { fn } from '@ember/helper';
 import { get } from '@ember/helper';
@@ -62,6 +63,13 @@ export default class WordsSequencesComponent<
   @action onInsert() {
     this.updateLocalTasks();
     this.startTask();
+  }
+  @action onTaskChange() {
+    // Clear stale sub-task state so updateLocalTasks does not carry over
+    // completed orders from the previous task (whose sub-tasks share the
+    // same order indices).
+    this.tasksCopy = [];
+    this.updateLocalTasks();
   }
   @service audio!: AudioService;
   @service stats!: StatsService;
@@ -214,6 +222,7 @@ export default class WordsSequencesComponent<
       class="flex-1 flex flex-col"
       ...attributes
       {{didInsert this.onInsert}}
+      {{didUpdate this.onTaskChange @task}}
     >
       {{yield (hash tasks=this.tasksCopy) to="header"}}
       {{#if this.tasksCopy.length}}

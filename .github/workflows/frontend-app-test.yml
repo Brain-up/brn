@@ -60,6 +60,7 @@ jobs:
         id: base_coverage
         working-directory: ./frontend
         run: |
+          rm -rf coverage
           yarn test:coverage || true
           if [ -f coverage/coverage-summary.json ]; then
             coverage=$(node -e "const c=require('./coverage/coverage-summary.json'); console.log(c.total.statements.pct)")

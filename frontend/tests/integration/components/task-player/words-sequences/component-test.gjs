@@ -1,4 +1,4 @@
-import { module, test, skip } from 'qunit';
+import { module, test } from 'qunit';
 import { setupIntl } from 'ember-intl/test-support';
 import { setupRenderingTest } from 'ember-qunit';
 import { render, click, settled, waitFor } from '@ember/test-helpers';
@@ -78,7 +78,7 @@ module('Integration | Component | words-seq-task-player | per-word correctness',
     this.set('onPlayText', () => undefined);
   });
 
-  skip('it marks each word individually as correct or incorrect when answer is partially wrong', async function (assert) {
+  test('it marks each word individually as correct or incorrect when answer is partially wrong', async function (assert) {
     const self = this;
 
 
@@ -159,10 +159,10 @@ module('Integration | Component | words-seq-task-player | progress stability on 
       },
     });
     this.set('model', model);
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    this.set('onRightAnswer', function () {});
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    this.set('onWrongAnswer', function () {});
+    this.wrongAnswerCount = 0;
+    this.rightAnswerCount = 0;
+    this.set('onRightAnswer', () => { this.rightAnswerCount++; });
+    this.set('onWrongAnswer', () => { this.wrongAnswerCount++; });
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     this.set('onPlayText', function () {});
   });
@@ -211,12 +211,22 @@ module('Integration | Component | words-seq-task-player | progress stability on 
     const afterWrongCorrectAnswer = document.body.dataset.correctAnswer;
     assert.strictEqual(afterWrongCorrectAnswer, initialCorrectAnswer, 'same task repeats after wrong answer');
 
+    // onWrongAnswer should have been called once
+    assert.strictEqual(this.wrongAnswerCount, 1, 'onWrongAnswer was called after the wrong answer');
+
     // Now submit the correct answer
     await click(`[data-test-task-answer-option="${correctObjectWord}"]`);
     await click(`[data-test-task-answer-option="${correctActionWord}"]`);
 
-    // After correct answer: task should advance (different correctAnswer)
+    // After correct answer: tasks count should remain the same (progress denominator unchanged)
+    const afterCorrectTasksCount = document.querySelector('[data-test-tasks-count]').textContent.trim();
+    assert.strictEqual(afterCorrectTasksCount, initialTasksCount, 'tasksCopy length stays the same after correct answer');
+
+    // After correct answer: the next task should be presented (correctAnswer is set)
     const afterCorrectAnswer = document.body.dataset.correctAnswer;
-    assert.notStrictEqual(afterCorrectAnswer, initialCorrectAnswer, 'task advances after correct answer');
+    assert.ok(afterCorrectAnswer, 'a new correct answer is set after advancing');
+
+    // onRightAnswer should NOT have been called (only 1 out of many tasks completed)
+    assert.strictEqual(this.rightAnswerCount, 0, 'onRightAnswer is not called after completing just one task');
   });
 });
