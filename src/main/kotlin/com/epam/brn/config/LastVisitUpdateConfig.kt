@@ -13,6 +13,8 @@ class LastVisitUpdateConfig {
         setMaxPoolSize(1)
         setQueueCapacity(1000)
         setThreadNamePrefix("last-visit-")
+        setWaitForTasksToCompleteOnShutdown(true)
+        setAwaitTerminationSeconds(30)
         initialize()
     }
 }

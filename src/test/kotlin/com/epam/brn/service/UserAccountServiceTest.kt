@@ -38,6 +38,7 @@ import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.util.Optional
 import java.util.concurrent.Executor
+import java.util.concurrent.RejectedExecutionException
 import kotlin.test.assertFailsWith
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
@@ -375,6 +376,40 @@ internal class UserAccountServiceTest {
                     email = email,
                     lastVisit = secondUpdateVisit,
                     staleBefore = secondUpdateVisit.minusMinutes(15),
+                )
+            }
+        }
+
+        @Test
+        fun `should retry visit update after enqueue rejection`() {
+            // GIVEN
+            val email = "test@test.ru"
+            val rejectedVisit = LocalDateTime.now(ZoneOffset.UTC)
+            val retriedVisit = rejectedVisit.plusMinutes(5)
+            var executionAttempts = 0
+
+            SecurityContextHolder.setContext(securityContext)
+            every { securityContext.authentication } returns authentication
+            every { authentication.name } returns email
+            every { timeService.now() } returnsMany listOf(rejectedVisit, retriedVisit)
+            every { lastVisitUpdateExecutor.execute(any()) } answers {
+                executionAttempts += 1
+                if (executionAttempts == 1) throw RejectedExecutionException("Queue is full")
+                (args[0] as Runnable).run()
+            }
+            every { userAccountRepository.updateLastVisitByEmailIfOlderThan(any(), any(), any()) } returns 1
+
+            // WHEN
+            userAccountService.markVisitForCurrentUser()
+            userAccountService.markVisitForCurrentUser()
+
+            // THEN
+            verify(exactly = 2) { lastVisitUpdateExecutor.execute(any()) }
+            verify(exactly = 1) {
+                userAccountRepository.updateLastVisitByEmailIfOlderThan(
+                    email = email,
+                    lastVisit = retriedVisit,
+                    staleBefore = retriedVisit.minusMinutes(15),
                 )
             }
         }

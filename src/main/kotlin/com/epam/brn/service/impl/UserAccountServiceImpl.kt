@@ -97,17 +97,22 @@ class UserAccountServiceImpl(
         val lastVisit = timeService.now()
         if (!shouldScheduleLastVisitUpdate(email, lastVisit)) return
 
-        lastVisitUpdateExecutor.execute {
-            try {
-                userAccountRepository.updateLastVisitByEmailIfOlderThan(
-                    email = email,
-                    lastVisit = lastVisit,
-                    staleBefore = lastVisit.minus(lastVisitUpdateMinInterval),
-                )
-            } catch (e: Exception) {
-                recentLastVisitUpdatesCache().invalidate(email)
-                log.error("Error while updating lastVisit for email=$email: ${e.message}", e)
+        try {
+            lastVisitUpdateExecutor.execute {
+                try {
+                    userAccountRepository.updateLastVisitByEmailIfOlderThan(
+                        email = email,
+                        lastVisit = lastVisit,
+                        staleBefore = lastVisit.minus(lastVisitUpdateMinInterval),
+                    )
+                } catch (e: Exception) {
+                    invalidateScheduledLastVisitUpdate(email)
+                    log.error("Error while updating lastVisit for email=$email: ${e.message}", e)
+                }
             }
+        } catch (e: Exception) {
+            invalidateScheduledLastVisitUpdate(email)
+            log.error("Error while scheduling lastVisit update for email=$email: ${e.message}", e)
         }
     }
 
@@ -232,6 +237,10 @@ class UserAccountServiceImpl(
                     .build<String, LocalDateTime>()
                     .also { recentLastVisitUpdatesCache = it }
         }
+
+    private fun invalidateScheduledLastVisitUpdate(email: String) {
+        recentLastVisitUpdatesCache?.invalidate(email)
+    }
 
     private fun getDefaultRoleSet(): MutableSet<Role> = setOf(BrnRole.USER).mapTo(mutableSetOf()) { roleService.findByName(it) }
 
