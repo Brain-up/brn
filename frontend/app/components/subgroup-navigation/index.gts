@@ -1,3 +1,4 @@
+import '../../styles/horizontal-scroll.css';
 import Component from '@glimmer/component';
 import { trackedRef } from 'ember-ref-bucket';
 import { action } from '@ember/object';
@@ -93,7 +94,7 @@ export default class SubgroupNavigation extends Component<SubgroupNavigationSign
   }
 
   <template>
-    <div ...attributes>
+    <div class="hs-container" ...attributes>
       <div class="full relative overflow-hidden">
         {{#if this.showLeftScrollButton}}
           <div class="scroll-fade scroll-fade--left"></div>

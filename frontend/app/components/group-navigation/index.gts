@@ -1,4 +1,4 @@
-import './index.css';
+import '../../styles/horizontal-scroll.css';
 import Component from '@glimmer/component';
 import { array } from '@ember/helper';
 import UiTabButton from 'brn/components/ui/tab-button';
@@ -30,7 +30,7 @@ export default class GroupNavigationComponent extends Component<GroupNavigationS
   }
 
   <template>
-    <div class="c-group-navigation" ...attributes>
+    <div class="hs-container" ...attributes>
       <ul class="hs full no-scrollbar">
         {{#each this.sortedSeries as |series|}}
           <li class="item">
