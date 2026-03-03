@@ -104,9 +104,8 @@ export default class TaskPlayerComponent extends Component<TaskPlayerSignature> 
     );
   }
 
-  // @action
   onRightAnswer() {
-    // EOL
+    this.args.onRightAnswer?.();
   }
 
   @action async onWrongAnswer({ skipRetry } = { skipRetry: false }) {
