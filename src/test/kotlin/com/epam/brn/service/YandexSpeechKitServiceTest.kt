@@ -6,6 +6,8 @@ import com.epam.brn.dto.yandex.tts.AudioChunk
 import com.epam.brn.dto.yandex.tts.YandexTtsRequest
 import com.epam.brn.dto.yandex.tts.YandexTtsResponse
 import com.epam.brn.dto.yandex.tts.YandexTtsResult
+import com.epam.brn.enums.Voice
+import com.epam.brn.enums.VoiceRole
 import com.epam.brn.exception.YandexServiceException
 import com.epam.brn.service.yandex.tts.config.YandexTtsProperties
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -43,9 +45,9 @@ internal class YandexSpeechKitServiceTest {
         yandexTtsWebClient = mockk()
         yandexIamTokenWebClient = mockk()
 
-        every { yandexTtsProperties.emotions } returns listOf("friendly")
         every { yandexTtsProperties.folderId } returns "test-folder-id"
         every { yandexTtsProperties.authToken } returns "test-auth-token"
+        every { yandexTtsProperties.preferredRole } returns "neutral"
 
         yandexSpeechKitService =
             YandexSpeechKitService(
@@ -57,8 +59,6 @@ internal class YandexSpeechKitServiceTest {
             )
     }
 
-    // region Helper methods
-
     private fun mockIamTokenWebClient(mono: Mono<YandexIamTokenDto>): WebClient.ResponseSpec {
         val requestBodyUriSpec = mockk<WebClient.RequestBodyUriSpec>()
         val requestHeadersSpec = mockk<WebClient.RequestHeadersSpec<*>>()
@@ -69,6 +69,7 @@ internal class YandexSpeechKitServiceTest {
         every { requestHeadersSpec.retrieve() } returns responseSpec
         every { responseSpec.onStatus(any(), any()) } returns responseSpec
         every { responseSpec.bodyToMono(YandexIamTokenDto::class.java) } returns mono
+
         return responseSpec
     }
 
@@ -83,6 +84,7 @@ internal class YandexSpeechKitServiceTest {
         every { requestHeadersSpec.retrieve() } returns responseSpec
         every { responseSpec.onStatus(any(), any()) } returns responseSpec
         every { responseSpec.bodyToMono(String::class.java) } returns mono
+
         return requestBodyUriSpec
     }
 
@@ -90,6 +92,16 @@ internal class YandexSpeechKitServiceTest {
         yandexSpeechKitService.iamToken = "valid-token"
         yandexSpeechKitService.iamTokenExpiresTime = LocalDateTime.now().plusHours(1)
         every { timeService.now() } returns LocalDateTime.now()
+    }
+
+    private fun stubVoice(
+        locale: String = "ru-ru",
+        voiceName: String = Voice.FILIPP.name,
+        voice: Voice = Voice.FILIPP,
+    ) {
+        every { wordsService.getVoicesForLocale(locale) } returns Voice.getVoicesForLocale(locale).map { it.name }
+        every { wordsService.getVoiceForLocale(locale, voiceName) } returns voice
+        every { wordsService.getVoiceForLocale(locale, voiceName.lowercase()) } returns voice
     }
 
     private fun buildNdjsonResponse(vararg chunks: String): String = chunks.joinToString("\n") { base64Data ->
@@ -100,42 +112,37 @@ internal class YandexSpeechKitServiceTest {
         )
     }
 
-    // endregion
-
-    // region Locale and voice validation
-
     @ParameterizedTest
-    @ValueSource(strings = ["ru-ru", "en-us", "tr-tr"])
-    fun `should success pass locale validation without Exceptions`(locale: String) {
-        every { wordsService.getVoicesForLocale(locale) } returns emptyList()
+    @ValueSource(strings = ["ru-ru", "en-us"])
+    fun `should pass locale validation for supported v3 locales`(locale: String) {
+        every { wordsService.getVoicesForLocale(locale) } returns Voice.getVoicesForLocale(locale).map { it.name }
+
         yandexSpeechKitService.validateLocaleAndVoice(locale, "")
     }
 
     @ParameterizedTest
-    @ValueSource(strings = ["ruru", "en-en", "tr"])
-    fun `should failed on locale validation`(locale: String) {
+    @ValueSource(strings = ["ruru", "en-en", "tr-tr"])
+    fun `should fail on locale validation when v3 has no voices for locale`(locale: String) {
+        every { wordsService.getVoicesForLocale(locale) } returns emptyList()
+
         assertThrows<IllegalArgumentException> { yandexSpeechKitService.validateLocaleAndVoice(locale, "") }
     }
 
-    @ParameterizedTest
-    @ValueSource(strings = ["FILIPP", "NICK"])
-    fun `should success pass voice validation without Exceptions`(voice: String) {
-        val yandexVoices = listOf("FILIPP", "NICK")
-        every { wordsService.getVoicesForLocale("ru-ru") } returns yandexVoices
-        yandexSpeechKitService.validateLocaleAndVoice("ru-ru", voice)
+    @Test
+    fun `should pass voice validation case-insensitively`() {
+        every { wordsService.getVoicesForLocale("ru-ru") } returns Voice.getVoicesForLocale("ru-ru").map { it.name }
+        every { wordsService.getVoiceForLocale("ru-ru", "filipp") } returns Voice.FILIPP
+
+        yandexSpeechKitService.validateLocaleAndVoice("ru-ru", "filipp")
     }
 
-    @ParameterizedTest
-    @ValueSource(strings = ["ddd", "rrr"])
-    fun `should failed on voice validation`(voice: String) {
-        val yandexVoices = listOf("FILIPP", "NICK")
-        every { wordsService.getVoicesForLocale("ru-ru") } returns yandexVoices
-        assertThrows<IllegalArgumentException> { yandexSpeechKitService.validateLocaleAndVoice("ru-ru", voice) }
+    @Test
+    fun `should fail on unsupported voice validation`() {
+        every { wordsService.getVoicesForLocale("ru-ru") } returns Voice.getVoicesForLocale("ru-ru").map { it.name }
+        every { wordsService.getVoiceForLocale("ru-ru", "ddd") } returns null
+
+        assertThrows<IllegalArgumentException> { yandexSpeechKitService.validateLocaleAndVoice("ru-ru", "ddd") }
     }
-
-    // endregion
-
-    // region IAM token
 
     @Test
     fun `should return current token in getYandexIamTokenForAudioGeneration`() {
@@ -183,10 +190,9 @@ internal class YandexSpeechKitServiceTest {
     }
 
     @Test
-    fun `should throw Exception if token request returns empty`() {
+    fun `should throw exception if token request returns empty`() {
         yandexSpeechKitService.iamToken = ""
         every { timeService.now() } returns LocalDateTime.now()
-
         mockIamTokenWebClient(Mono.empty())
 
         assertThrows<YandexServiceException> { yandexSpeechKitService.getYandexIamTokenForAudioGeneration() }
@@ -196,15 +202,10 @@ internal class YandexSpeechKitServiceTest {
     fun `should propagate exception when token request fails with error`() {
         yandexSpeechKitService.iamToken = ""
         every { timeService.now() } returns LocalDateTime.now()
-
         mockIamTokenWebClient(Mono.error(RuntimeException("Connection refused")))
 
         assertThrows<RuntimeException> { yandexSpeechKitService.getYandexIamTokenForAudioGeneration() }
     }
-
-    // endregion
-
-    // region parseAudioChunks
 
     @Test
     fun `parseAudioChunks should decode base64 audio from NDJSON`() {
@@ -236,18 +237,18 @@ internal class YandexSpeechKitServiceTest {
     }
 
     @Test
-    fun `parseAudioChunks should skip responses with null result or audioChunk`() {
+    fun `parseAudioChunks should skip malformed lines`() {
         val validAudio = "valid".toByteArray()
         val base64Valid = Base64.getEncoder().encodeToString(validAudio)
-        val ndjsonLines =
+        val ndjson =
             listOf(
-                objectMapper.writeValueAsString(YandexTtsResponse(result = null)),
+                "not-json",
                 objectMapper.writeValueAsString(
-                    YandexTtsResponse(result = YandexTtsResult(audioChunk = AudioChunk(data = base64Valid))),
+                    YandexTtsResponse(
+                        result = YandexTtsResult(audioChunk = AudioChunk(data = base64Valid)),
+                    ),
                 ),
-                objectMapper.writeValueAsString(YandexTtsResponse(result = YandexTtsResult(audioChunk = null))),
-            )
-        val ndjson = ndjsonLines.joinToString("\n")
+            ).joinToString("\n")
 
         val chunks = yandexSpeechKitService.parseAudioChunks(ndjson)
 
@@ -258,20 +259,35 @@ internal class YandexSpeechKitServiceTest {
     @Test
     fun `parseAudioChunks should return empty list for blank input`() {
         val chunks = yandexSpeechKitService.parseAudioChunks("")
+
         chunks.size shouldBe 0
     }
 
-    // endregion
+    @Test
+    fun `should resolve preferred role when voice supports it`() {
+        every { yandexTtsProperties.preferredRole } returns "neutral"
 
-    // region generateAudioStream
+        val result = yandexSpeechKitService.resolvePreferredRole(Voice.FILIPP)
+
+        result shouldBe VoiceRole.NEUTRAL
+    }
 
     @Test
-    fun `should generate audio stream with correct headers and body`() {
+    fun `should skip preferred role when voice does not support it`() {
+        every { yandexTtsProperties.preferredRole } returns "friendly"
+
+        val result = yandexSpeechKitService.resolvePreferredRole(Voice.FILIPP)
+
+        result shouldBe null
+    }
+
+    @Test
+    fun `should generate audio stream with correct headers`() {
         val audioContent = "test audio content".toByteArray()
         val base64Audio = Base64.getEncoder().encodeToString(audioContent)
         val ndjson = buildNdjsonResponse(base64Audio)
         setValidToken()
-
+        stubVoice()
         val requestBodyUriSpec = mockTtsWebClient(Mono.just(ndjson))
 
         val result =
@@ -285,10 +301,11 @@ internal class YandexSpeechKitServiceTest {
     }
 
     @Test
-    fun `should build correct TTS request with hints`() {
+    fun `should build correct TTS request with safe role hints`() {
         val audioContent = "audio".toByteArray()
         val ndjson = buildNdjsonResponse(Base64.getEncoder().encodeToString(audioContent))
         setValidToken()
+        stubVoice()
 
         val requestBodyUriSpec = mockk<WebClient.RequestBodyUriSpec>()
         val requestHeadersSpec = mockk<WebClient.RequestHeadersSpec<*>>()
@@ -312,7 +329,34 @@ internal class YandexSpeechKitServiceTest {
         captured.hints.size shouldBe 3
         captured.hints[0].voice shouldBe "filipp"
         captured.hints[1].speed shouldBe "0.8"
-        captured.hints[2].role shouldBe "friendly"
+        captured.hints[2].role shouldBe "neutral"
+    }
+
+    @Test
+    fun `should omit unsupported configured role from TTS request`() {
+        val audioContent = "audio".toByteArray()
+        val ndjson = buildNdjsonResponse(Base64.getEncoder().encodeToString(audioContent))
+        setValidToken()
+        every { yandexTtsProperties.preferredRole } returns "friendly"
+        stubVoice()
+
+        val requestBodyUriSpec = mockk<WebClient.RequestBodyUriSpec>()
+        val requestHeadersSpec = mockk<WebClient.RequestHeadersSpec<*>>()
+        val responseSpec = mockk<WebClient.ResponseSpec>()
+        val bodySlot = slot<YandexTtsRequest>()
+
+        every { yandexTtsWebClient.post() } returns requestBodyUriSpec
+        every { requestBodyUriSpec.header(any(), any()) } returns requestBodyUriSpec
+        every { requestBodyUriSpec.bodyValue(capture(bodySlot)) } returns requestHeadersSpec
+        every { requestHeadersSpec.retrieve() } returns responseSpec
+        every { responseSpec.onStatus(any(), any()) } returns responseSpec
+        every { responseSpec.bodyToMono(String::class.java) } returns Mono.just(ndjson)
+
+        yandexSpeechKitService.generateAudioStream(
+            AudioFileMetaData(text = "hello", locale = "ru-ru", voice = "FILIPP", speedFloat = "0.8"),
+        )
+
+        bodySlot.captured.hints.size shouldBe 2
     }
 
     @Test
@@ -325,6 +369,7 @@ internal class YandexSpeechKitServiceTest {
                 Base64.getEncoder().encodeToString(chunk2),
             )
         setValidToken()
+        stubVoice()
         mockTtsWebClient(Mono.just(ndjson))
 
         val result =
@@ -338,6 +383,7 @@ internal class YandexSpeechKitServiceTest {
     @Test
     fun `should throw exception when audio response is empty`() {
         setValidToken()
+        stubVoice()
         mockTtsWebClient(Mono.just(""))
 
         assertThrows<YandexServiceException> {
@@ -350,6 +396,7 @@ internal class YandexSpeechKitServiceTest {
     @Test
     fun `should throw exception when WebClient returns null`() {
         setValidToken()
+        stubVoice()
         mockTtsWebClient(Mono.empty())
 
         assertThrows<YandexServiceException> {
@@ -362,6 +409,7 @@ internal class YandexSpeechKitServiceTest {
     @Test
     fun `should propagate exception when TTS request fails`() {
         setValidToken()
+        stubVoice()
         mockTtsWebClient(Mono.error(RuntimeException("Connection refused")))
 
         assertThrows<RuntimeException> {
@@ -371,17 +419,13 @@ internal class YandexSpeechKitServiceTest {
         }
     }
 
-    // endregion
-
-    // region generateAudioOggStreamWithValidation
-
     @Test
     fun `should generate audio with explicit voice`() {
         val audioContent = "audio".toByteArray()
         val ndjson = buildNdjsonResponse(Base64.getEncoder().encodeToString(audioContent))
         setValidToken()
+        stubVoice()
         mockTtsWebClient(Mono.just(ndjson))
-        every { wordsService.getVoicesForLocale("ru-ru") } returns listOf("filipp")
 
         val result =
             yandexSpeechKitService.generateAudioOggStreamWithValidation(
@@ -392,13 +436,14 @@ internal class YandexSpeechKitServiceTest {
     }
 
     @Test
-    fun `should fall back to default woman voice when voice is empty`() {
+    fun `should fall back to first male voice when voice is empty`() {
         val audioContent = "audio".toByteArray()
         val ndjson = buildNdjsonResponse(Base64.getEncoder().encodeToString(audioContent))
         setValidToken()
+        every { wordsService.getVoicesForLocale("ru-ru") } returns Voice.getVoicesForLocale("ru-ru").map { it.name }
+        every { wordsService.getDefaultVoiceForLocale("ru-ru") } returns Voice.FILIPP.name
+        every { wordsService.getVoiceForLocale("ru-ru", Voice.FILIPP.name) } returns Voice.FILIPP
         mockTtsWebClient(Mono.just(ndjson))
-        every { wordsService.getVoicesForLocale("ru-ru") } returns emptyList()
-        every { wordsService.getDefaultWomanVoiceForLocale("ru-ru") } returns "oksana"
 
         val result =
             yandexSpeechKitService.generateAudioOggStreamWithValidation(
@@ -406,17 +451,17 @@ internal class YandexSpeechKitServiceTest {
             )
 
         result.readBytes() shouldBe audioContent
-        verify { wordsService.getDefaultWomanVoiceForLocale("ru-ru") }
+        verify { wordsService.getDefaultVoiceForLocale("ru-ru") }
     }
 
     @Test
     fun `should throw on invalid locale in generateAudioOggStreamWithValidation`() {
+        every { wordsService.getVoicesForLocale("tr-tr") } returns emptyList()
+
         assertThrows<IllegalArgumentException> {
             yandexSpeechKitService.generateAudioOggStreamWithValidation(
-                AudioFileMetaData(text = "test", locale = "invalid", voice = "", speedFloat = "1.0"),
+                AudioFileMetaData(text = "test", locale = "tr-tr", voice = "", speedFloat = "1.0"),
             )
         }
     }
-
-    // endregion
 }

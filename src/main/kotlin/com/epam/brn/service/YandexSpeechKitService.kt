@@ -8,14 +8,15 @@ import com.epam.brn.dto.yandex.tts.Hint
 import com.epam.brn.dto.yandex.tts.OutputAudioSpec
 import com.epam.brn.dto.yandex.tts.YandexTtsRequest
 import com.epam.brn.dto.yandex.tts.YandexTtsResponse
-import com.epam.brn.enums.BrnLocale
+import com.epam.brn.enums.Voice
+import com.epam.brn.enums.VoiceRole
 import com.epam.brn.exception.YandexServiceException
 import com.epam.brn.service.yandex.tts.config.YandexTtsProperties
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.ObjectMapper
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
-import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient
@@ -40,10 +41,14 @@ class YandexSpeechKitService(
     var iamTokenExpiresTime: LocalDateTime = LocalDateTime.now(ZoneOffset.UTC)
 
     private val log = logger()
+    private val objectMapper =
+        ObjectMapper()
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
     fun getYandexIamTokenForAudioGeneration(): String {
         if (iamToken.isNotEmpty() && iamTokenExpiresTime.isAfter(timeService.now()))
             return iamToken
+
         val tokenDto = requestIamToken()
         iamToken = tokenDto.iamToken
         iamTokenExpiresTime =
@@ -69,26 +74,19 @@ class YandexSpeechKitService(
 
     fun generateAudioStream(audioFileMetaData: AudioFileMetaData): InputStream {
         val token = getYandexIamTokenForAudioGeneration()
-        val emotion = yandexTtsProperties.emotions.first()
-
+        val voice = resolveVoice(audioFileMetaData.locale, audioFileMetaData.voice)
         val request =
             YandexTtsRequest(
                 text = audioFileMetaData.text,
                 outputAudioSpec = OutputAudioSpec(containerAudio = ContainerAudio()),
-                hints =
-                    listOf(
-                        Hint(voice = audioFileMetaData.voice.lowercase()),
-                        Hint(speed = audioFileMetaData.speedFloat),
-                        Hint(role = emotion),
-                    ),
+                hints = buildHints(voice, audioFileMetaData.speedFloat),
             )
-
         val responseBody = requestAudioSynthesis(token, request)
-
         val outputStream = ByteArrayOutputStream()
-        parseAudioChunks(responseBody).forEach { outputStream.write(it) }
-        val audioBytes = outputStream.toByteArray()
 
+        parseAudioChunks(responseBody).forEach { outputStream.write(it) }
+
+        val audioBytes = outputStream.toByteArray()
         if (audioBytes.isEmpty())
             throw YandexServiceException("Yandex Cloud returned empty audio for $audioFileMetaData")
 
@@ -114,30 +112,39 @@ class YandexSpeechKitService(
         }.bodyToMono(String::class.java)
         .block() ?: throw YandexServiceException("Yandex Cloud did not return audio response")
 
-    internal fun parseAudioChunks(responseBody: String): List<ByteArray> {
-        val mapper =
-            ObjectMapper()
-                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-        return responseBody
-            .lines()
-            .filter { it.isNotBlank() }
-            .mapNotNull { line ->
-                val response = mapper.readValue(line, YandexTtsResponse::class.java)
-                response.result
-                    ?.audioChunk
-                    ?.data
-                    ?.let { Base64.getDecoder().decode(it) }
-            }
+    internal fun parseAudioChunks(responseBody: String): List<ByteArray> = responseBody
+        .lines()
+        .filter { it.isNotBlank() }
+        .mapNotNull { line ->
+            runCatching { objectMapper.readValue(line, YandexTtsResponse::class.java) }
+                .getOrNull()
+                ?.result
+                ?.audioChunk
+                ?.data
+                ?.let { Base64.getDecoder().decode(it) }
+        }
+
+    internal fun resolvePreferredRole(voice: Voice): VoiceRole? {
+        val preferredRole =
+            yandexTtsProperties.preferredRole
+                ?.takeIf { it.isNotBlank() }
+                ?.let(VoiceRole::findByValue)
+
+        return when {
+            preferredRole != null && voice.supportedRoles.contains(preferredRole) -> preferredRole
+            preferredRole == null -> voice.supportedRoles.firstOrNull()
+            else -> null
+        }
     }
 
     fun validateLocaleAndVoice(
         locale: String,
         voice: String,
     ) {
-        if (!BrnLocale.values().map { it.locale }.contains(locale.lowercase()))
-            throw IllegalArgumentException("Locale $locale does not support yet for generation audio files.")
         val localeVoices = wordsService.getVoicesForLocale(locale)
-        if (voice.isNotEmpty() && !localeVoices.contains(voice))
+        if (localeVoices.isEmpty())
+            throw IllegalArgumentException("Locale $locale does not support yet for generation audio files.")
+        if (voice.isNotBlank() && wordsService.getVoiceForLocale(locale, voice) == null)
             throw IllegalArgumentException("Locale $locale does not support voice $voice, only $localeVoices.")
     }
 
@@ -147,9 +154,34 @@ class YandexSpeechKitService(
             AudioFileMetaData(
                 audioFileMetaData.text,
                 audioFileMetaData.locale,
-                audioFileMetaData.voice.ifEmpty { wordsService.getDefaultWomanVoiceForLocale(audioFileMetaData.locale) },
+                audioFileMetaData.voice.ifBlank { wordsService.getDefaultVoiceForLocale(audioFileMetaData.locale) },
                 audioFileMetaData.speedFloat,
             ),
         )
+    }
+
+    private fun resolveVoice(
+        locale: String,
+        voice: String,
+    ): Voice = if (voice.isBlank())
+        wordsService
+            .getVoiceForLocale(locale, wordsService.getDefaultVoiceForLocale(locale))
+            ?: throw IllegalArgumentException("Locale $locale does not support yet for generation audio files.")
+    else
+        wordsService
+            .getVoiceForLocale(locale, voice)
+            ?: throw IllegalArgumentException("Locale $locale does not support voice $voice.")
+
+    private fun buildHints(
+        voice: Voice,
+        speed: String,
+    ): List<Hint> {
+        val hints = mutableListOf(Hint(voice = voice.apiValue))
+
+        if (speed.isNotBlank())
+            hints.add(Hint(speed = speed))
+        resolvePreferredRole(voice)?.let { hints.add(Hint(role = it.apiValue)) }
+
+        return hints
     }
 }

@@ -25,7 +25,7 @@ function YandexTTS(options, callback) {
     },
     hints: [
       { voice: 'filipp' },
-      { role: 'friendly' },
+      { role: 'neutral' },
     ],
     loudnessNormalizationType: 'LUFS',
   });
@@ -56,6 +56,7 @@ function YandexTTS(options, callback) {
         callback();
         return;
       }
+
       const lines = responseData.split('\n').filter((line) => line.trim());
       for (const line of lines) {
         try {
@@ -65,9 +66,10 @@ function YandexTTS(options, callback) {
             file.write(audioBuffer);
           }
         } catch (e) {
-          // skip non-JSON lines
+          // Ignore non-JSON transport lines.
         }
       }
+
       file.end(callback);
     });
   });

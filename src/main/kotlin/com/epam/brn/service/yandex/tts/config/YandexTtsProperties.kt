@@ -12,7 +12,6 @@ class YandexTtsProperties {
     lateinit var getTokenLink: String
     lateinit var generationAudioLink: String
     lateinit var folderId: String
-    lateinit var format: String
-    lateinit var emotions: List<String>
+    var preferredRole: String? = null
     lateinit var folderForFiles: String
 }
