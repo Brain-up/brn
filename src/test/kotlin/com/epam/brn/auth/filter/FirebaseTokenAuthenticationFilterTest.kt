@@ -15,9 +15,11 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.FirebaseToken
 import com.google.firebase.auth.UserRecord
+import io.mockk.Runs
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
+import io.mockk.just
 import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import io.mockk.verify
@@ -69,6 +71,7 @@ internal class FirebaseTokenAuthenticationFilterTest {
     fun init() {
         SecurityContextHolder.clearContext()
         every { firebaseTokenMock.claims } returns mapOf("exp" to Instant.now().plusSeconds(600).epochSecond)
+        every { brainUpUserDetailsService.evictCachedUser(any()) } just Runs
     }
 
     /*
@@ -89,7 +92,7 @@ internal class FirebaseTokenAuthenticationFilterTest {
         every { tokenHelperUtils.getBearerToken(request) } returns token
         every { firebaseAuth.verifyIdToken(token, true) } returns firebaseTokenMock
         every { firebaseTokenMock.email } returns email
-        every { brainUpUserDetailsService.loadUserByUsername(email, any()) } returns customUserDetailsMock
+        every { brainUpUserDetailsService.loadUserByUsername(email) } returns customUserDetailsMock
 
         // WHEN
         firebaseTokenAuthenticationFilter.doFilter(request, response, filterChain)
@@ -103,7 +106,8 @@ internal class FirebaseTokenAuthenticationFilterTest {
 
         verify(exactly = 1) { tokenHelperUtils.getBearerToken(request) }
         verify(exactly = 1) { firebaseAuth.verifyIdToken(token, true) }
-        verify(exactly = 1) { brainUpUserDetailsService.loadUserByUsername(email, any()) }
+        verify(exactly = 1) { brainUpUserDetailsService.evictCachedUser(email) }
+        verify(exactly = 1) { brainUpUserDetailsService.loadUserByUsername(email) }
         verify(exactly = 0) { firebaseUserService.getUserByUuid(any()) }
         verify(exactly = 0) { userAccountService.createUser(any()) }
     }
@@ -125,7 +129,8 @@ internal class FirebaseTokenAuthenticationFilterTest {
 
         verify(exactly = 1) { tokenHelperUtils.getBearerToken(request) }
         verify(exactly = 0) { firebaseAuth.verifyIdToken(any(), any()) }
-        verify(exactly = 0) { brainUpUserDetailsService.loadUserByUsername(any<String>(), any()) }
+        verify(exactly = 0) { brainUpUserDetailsService.evictCachedUser(any()) }
+        verify(exactly = 0) { brainUpUserDetailsService.loadUserByUsername(any()) }
     }
 
     @Test
@@ -145,7 +150,8 @@ internal class FirebaseTokenAuthenticationFilterTest {
 
         verify(exactly = 0) { tokenHelperUtils.getBearerToken(any()) }
         verify(exactly = 0) { firebaseAuth.verifyIdToken(any(), any()) }
-        verify(exactly = 0) { brainUpUserDetailsService.loadUserByUsername(any<String>(), any()) }
+        verify(exactly = 0) { brainUpUserDetailsService.evictCachedUser(any()) }
+        verify(exactly = 0) { brainUpUserDetailsService.loadUserByUsername(any()) }
     }
 
     /*
@@ -168,7 +174,7 @@ internal class FirebaseTokenAuthenticationFilterTest {
         every { firebaseAuth.verifyIdToken(tokenMock, true) } returns firebaseTokenMock
         every { firebaseTokenMock.email } returns email
         every { firebaseTokenMock.uid } returns uuid
-        every { brainUpUserDetailsService.loadUserByUsername(email, any()) } throws (UsernameNotFoundException("USER_NOT_FOUND")) andThen
+        every { brainUpUserDetailsService.loadUserByUsername(email) } throws (UsernameNotFoundException("USER_NOT_FOUND")) andThen
             customUserDetailsMock
         every { firebaseUserService.getUserByUuid(uuid) } returns userRecordMock
         every { userAccountService.createUser(userRecordMock) } returns
@@ -191,7 +197,8 @@ internal class FirebaseTokenAuthenticationFilterTest {
 
         verify(exactly = 1) { tokenHelperUtils.getBearerToken(requestMock) }
         verify(exactly = 1) { firebaseAuth.verifyIdToken(tokenMock, true) }
-        verify(exactly = 2) { brainUpUserDetailsService.loadUserByUsername(email, any()) }
+        verify(exactly = 1) { brainUpUserDetailsService.evictCachedUser(email) }
+        verify(exactly = 2) { brainUpUserDetailsService.loadUserByUsername(email) }
         verify(exactly = 1) { firebaseUserService.getUserByUuid(uuid) }
         verify(exactly = 1) { userAccountService.createUser(any()) }
     }
@@ -222,7 +229,8 @@ internal class FirebaseTokenAuthenticationFilterTest {
 
         verify(exactly = 1) { tokenHelperUtils.getBearerToken(requestMock) }
         verify(exactly = 1) { firebaseAuth.verifyIdToken(tokenMock, true) }
-        verify(exactly = 0) { brainUpUserDetailsService.loadUserByUsername(any<String>(), any()) }
+        verify(exactly = 0) { brainUpUserDetailsService.evictCachedUser(any()) }
+        verify(exactly = 0) { brainUpUserDetailsService.loadUserByUsername(any()) }
         verify(exactly = 0) { firebaseUserService.getUserByUuid(any()) }
         verify(exactly = 0) { userAccountService.createUser(any()) }
     }
@@ -248,7 +256,8 @@ internal class FirebaseTokenAuthenticationFilterTest {
 
         verify(exactly = 1) { tokenHelperUtils.getBearerToken(requestMock) }
         verify(exactly = 1) { firebaseAuth.verifyIdToken(tokenMock, true) }
-        verify(exactly = 0) { brainUpUserDetailsService.loadUserByUsername(any<String>(), any()) }
+        verify(exactly = 0) { brainUpUserDetailsService.evictCachedUser(any()) }
+        verify(exactly = 0) { brainUpUserDetailsService.loadUserByUsername(any()) }
         verify(exactly = 0) { firebaseUserService.getUserByUuid(any()) }
         verify(exactly = 0) { userAccountService.createUser(any()) }
     }
@@ -266,7 +275,7 @@ internal class FirebaseTokenAuthenticationFilterTest {
         every { firebaseAuth.verifyIdToken(tokenMock, true) } returns firebaseTokenMock
         every { firebaseTokenMock.email } returns email
         every { firebaseTokenMock.uid } returns uuid
-        every { brainUpUserDetailsService.loadUserByUsername(email, any()) } throws UsernameNotFoundException("USER_NOT_FOUND")
+        every { brainUpUserDetailsService.loadUserByUsername(email) } throws UsernameNotFoundException("USER_NOT_FOUND")
         every { firebaseUserService.getUserByUuid(uuid) } returns null
 
         // WHEN
@@ -278,7 +287,8 @@ internal class FirebaseTokenAuthenticationFilterTest {
 
         verify(exactly = 1) { tokenHelperUtils.getBearerToken(requestMock) }
         verify(exactly = 1) { firebaseAuth.verifyIdToken(tokenMock, true) }
-        verify(exactly = 1) { brainUpUserDetailsService.loadUserByUsername(email, any()) }
+        verify(exactly = 1) { brainUpUserDetailsService.evictCachedUser(email) }
+        verify(exactly = 1) { brainUpUserDetailsService.loadUserByUsername(email) }
         verify(exactly = 1) { firebaseUserService.getUserByUuid(uuid) }
         verify(exactly = 0) { userAccountService.createUser(any()) }
     }
@@ -298,7 +308,7 @@ internal class FirebaseTokenAuthenticationFilterTest {
         every { tokenHelperUtils.getBearerToken(any()) } returns token
         every { firebaseAuth.verifyIdToken(token, true) } returns firebaseTokenMock
         every { firebaseTokenMock.email } returns email
-        every { brainUpUserDetailsService.loadUserByUsername(email, any()) } returns customUserDetailsMock
+        every { brainUpUserDetailsService.loadUserByUsername(email) } returns customUserDetailsMock
 
         // WHEN
         firebaseTokenAuthenticationFilter.doFilter(firstRequest, response, filterChain)
@@ -308,7 +318,8 @@ internal class FirebaseTokenAuthenticationFilterTest {
         // THEN
         verify(exactly = 2) { tokenHelperUtils.getBearerToken(any()) }
         verify(exactly = 1) { firebaseAuth.verifyIdToken(token, true) }
-        verify(exactly = 2) { brainUpUserDetailsService.loadUserByUsername(email, any()) }
+        verify(exactly = 1) { brainUpUserDetailsService.evictCachedUser(email) }
+        verify(exactly = 2) { brainUpUserDetailsService.loadUserByUsername(email) }
     }
 
     private fun createUserAccountMock(): UserAccount {

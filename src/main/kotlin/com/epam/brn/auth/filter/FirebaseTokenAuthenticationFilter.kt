@@ -58,9 +58,13 @@ class FirebaseTokenAuthenticationFilter(
         val token = tokenHelperUtils.getBearerToken(request) ?: return
         try {
             val tokenHash = hashToken(token)
-            val decodedToken = getVerifiedToken(token, tokenHash)
+            val verifiedToken = getVerifiedToken(token, tokenHash)
+            val decodedToken = verifiedToken.decodedToken
+            if (!verifiedToken.fromCache) {
+                brainUpUserDetailsService.evictCachedUser(decodedToken.email)
+            }
             try {
-                val user: UserDetails = brainUpUserDetailsService.loadUserByUsername(decodedToken.email, tokenHash)
+                val user: UserDetails = brainUpUserDetailsService.loadUserByUsername(decodedToken.email)
                 val authentication =
                     UsernamePasswordAuthenticationToken(
                         user,
@@ -75,7 +79,7 @@ class FirebaseTokenAuthenticationFilter(
                 if (firebaseUserRecord != null) {
                     val createUser = userAccountService.createUser(firebaseUserRecord)
                     val userEmail = createUser.email ?: decodedToken.email
-                    val user: UserDetails = brainUpUserDetailsService.loadUserByUsername(userEmail, tokenHash)
+                    val user: UserDetails = brainUpUserDetailsService.loadUserByUsername(userEmail)
                     val authentication =
                         UsernamePasswordAuthenticationToken(
                             user,
@@ -96,17 +100,24 @@ class FirebaseTokenAuthenticationFilter(
     private fun getVerifiedToken(
         token: String,
         tokenHash: String,
-    ): FirebaseToken {
+    ): VerifiedTokenLookup {
         verifiedTokensCache().getIfPresent(tokenHash)?.let { cachedToken ->
             if (!cachedToken.isExpired(clock)) {
-                return cachedToken.decodedToken
+                return VerifiedTokenLookup(
+                    decodedToken = cachedToken.decodedToken,
+                    fromCache = true,
+                )
             }
             verifiedTokensCache().invalidate(tokenHash)
         }
 
-        return firebaseAuth
-            .verifyIdToken(token, true)
-            .also { cacheVerifiedToken(tokenHash, it) }
+        return VerifiedTokenLookup(
+            decodedToken =
+                firebaseAuth
+                    .verifyIdToken(token, true)
+                    .also { cacheVerifiedToken(tokenHash, it) },
+            fromCache = false,
+        )
     }
 
     private fun cacheVerifiedToken(
@@ -162,6 +173,11 @@ class FirebaseTokenAuthenticationFilter(
     ) {
         fun isExpired(clock: Clock): Boolean = !expiresAt.isAfter(clock.instant())
     }
+
+    private data class VerifiedTokenLookup(
+        val decodedToken: FirebaseToken,
+        val fromCache: Boolean,
+    )
 
     companion object {
         private const val TOKEN_EXPIRATION_CLAIM = "exp"

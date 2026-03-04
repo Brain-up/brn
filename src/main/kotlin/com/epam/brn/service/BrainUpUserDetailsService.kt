@@ -18,17 +18,8 @@ class BrainUpUserDetailsService(
     @Volatile
     private var authUsersCache: Cache<String, UserDetails>? = null
 
-    override fun loadUserByUsername(email: String): UserDetails = loadUserByCacheKey(email, email.lowercase(Locale.ROOT))
-
-    fun loadUserByUsername(
-        email: String,
-        cacheScope: String,
-    ): UserDetails = loadUserByCacheKey(email, "${email.lowercase(Locale.ROOT)}:$cacheScope")
-
-    private fun loadUserByCacheKey(
-        email: String,
-        cacheKey: String,
-    ): UserDetails {
+    override fun loadUserByUsername(email: String): UserDetails {
+        val cacheKey = email.lowercase(Locale.ROOT)
         authUsersCache().getIfPresent(cacheKey)?.let { return it }
 
         return userAccountRepository
@@ -36,6 +27,10 @@ class BrainUpUserDetailsService(
             .map { CustomUserDetails(it) }
             .orElseThrow { UsernameNotFoundException("User with email: $email doesn't exist") }
             .also { authUsersCache().put(cacheKey, it) }
+    }
+
+    fun evictCachedUser(email: String) {
+        authUsersCache().invalidate(email.lowercase(Locale.ROOT))
     }
 
     private fun authUsersCache(): Cache<String, UserDetails> = authUsersCache

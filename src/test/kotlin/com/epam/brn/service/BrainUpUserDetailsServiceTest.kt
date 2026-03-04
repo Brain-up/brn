@@ -44,7 +44,7 @@ internal class BrainUpUserDetailsServiceTest {
     }
 
     @Test
-    fun `should reload auth user details when cache scope changes`() {
+    fun `should reload auth user details after cache eviction`() {
         // GIVEN
         val email = "test@test.ru"
         every { userAccountRepository.findAuthenticationUserByEmail(email) } returnsMany
@@ -54,8 +54,9 @@ internal class BrainUpUserDetailsServiceTest {
             )
 
         // WHEN
-        val firstLookup = brainUpUserDetailsService.loadUserByUsername(email, "token-1")
-        val secondLookup = brainUpUserDetailsService.loadUserByUsername(email, "token-2")
+        val firstLookup = brainUpUserDetailsService.loadUserByUsername(email)
+        brainUpUserDetailsService.evictCachedUser(email)
+        val secondLookup = brainUpUserDetailsService.loadUserByUsername(email)
 
         // THEN
         assertEquals(email, firstLookup.username)
