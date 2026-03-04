@@ -24,12 +24,12 @@ module('Integration | Component | ui/avatars', function (hooks) {
     );
 
     assert.dom('img').exists({ count: 20 });
-    assert.dom('[data-test-avatar-btn="1"]').hasClass('activeTab');
+    assert.dom('[data-test-avatar-btn="1"]').hasClass('c-avatars__active-tab');
 
     await click(`[data-test-avatar-btn="2"]`);
 
-    assert.dom('[data-test-avatar-btn="1"]').hasNoClass('activeTab');
+    assert.dom('[data-test-avatar-btn="1"]').hasNoClass('c-avatars__active-tab');
 
-    assert.dom('[data-test-avatar-btn="2"]').hasClass('activeTab');
+    assert.dom('[data-test-avatar-btn="2"]').hasClass('c-avatars__active-tab');
   });
 });

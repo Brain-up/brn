@@ -30,7 +30,7 @@ module('Integration | Component | text-image-button', function (hooks) {
       .dom('[data-test-task-answer]')
       .hasAttribute('data-test-task-answer-option', 'word');
     assert.dom('[data-test-task-answer]').isDisabled();
-    assert.dom('[data-test-task-answer]').hasClass('selected');
+    assert.dom('[data-test-task-answer]').hasClass('c-text-image-button__selected');
   });
 
   test('shows image by default when showImages is true', async function (assert) {
