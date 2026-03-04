@@ -1,6 +1,7 @@
 package com.epam.brn.auth.filter
 
 import com.epam.brn.auth.model.UserAccountCredentials
+import com.epam.brn.service.BrainUpUserDetailsService
 import com.epam.brn.service.FirebaseUserService
 import com.epam.brn.service.TokenHelperUtils
 import com.epam.brn.service.UserAccountService
@@ -13,7 +14,6 @@ import org.apache.logging.log4j.kotlin.logger
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UserDetails
-import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
 import org.springframework.stereotype.Component
@@ -23,13 +23,15 @@ import java.security.MessageDigest
 import java.time.Clock
 import java.time.Duration
 import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 import javax.servlet.FilterChain
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 @Component
 class FirebaseTokenAuthenticationFilter(
-    private val brainUpUserDetailsService: UserDetailsService,
+    private val brainUpUserDetailsService: BrainUpUserDetailsService,
     private val firebaseUserService: FirebaseUserService,
     private val userAccountService: UserAccountService,
     private val firebaseAuth: FirebaseAuth,
@@ -58,8 +60,15 @@ class FirebaseTokenAuthenticationFilter(
         val token = tokenHelperUtils.getBearerToken(request) ?: return
         try {
             val decodedToken = getVerifiedToken(token)
+            val authStateChangedAt = brainUpUserDetailsService.findAuthenticationStateChangedAt(decodedToken.email)
+            if (isTokenStaleForCurrentAuthState(decodedToken, authStateChangedAt)) {
+                brainUpUserDetailsService.evictCachedUser(decodedToken.email)
+                invalidateVerifiedToken(token)
+                log.warn("Rejecting stale token for email: ${decodedToken.email}")
+                return
+            }
             try {
-                val user: UserDetails = brainUpUserDetailsService.loadUserByUsername(decodedToken.email)
+                val user: UserDetails = brainUpUserDetailsService.loadUserByUsername(decodedToken.email, authStateChangedAt)
                 val authentication =
                     UsernamePasswordAuthenticationToken(
                         user,
@@ -73,7 +82,8 @@ class FirebaseTokenAuthenticationFilter(
                 val firebaseUserRecord = firebaseUserService.getUserByUuid(decodedToken.uid)
                 if (firebaseUserRecord != null) {
                     val createUser = userAccountService.createUser(firebaseUserRecord)
-                    val user: UserDetails = brainUpUserDetailsService.loadUserByUsername(createUser.email)
+                    val userEmail = createUser.email ?: decodedToken.email
+                    val user: UserDetails = brainUpUserDetailsService.loadUserByUsername(userEmail)
                     val authentication =
                         UsernamePasswordAuthenticationToken(
                             user,
@@ -103,6 +113,10 @@ class FirebaseTokenAuthenticationFilter(
         return firebaseAuth
             .verifyIdToken(token, true)
             .also { cacheVerifiedToken(tokenHash, it) }
+    }
+
+    private fun invalidateVerifiedToken(token: String) {
+        verifiedTokensCache().invalidate(hashToken(token))
     }
 
     private fun cacheVerifiedToken(
@@ -138,11 +152,28 @@ class FirebaseTokenAuthenticationFilter(
         .digest(token.toByteArray(StandardCharsets.UTF_8))
         .joinToString("") { byte -> "%02x".format(byte.toInt() and 0xff) }
 
-    private fun getTokenExpiresAt(decodedToken: FirebaseToken): Instant? {
-        val expirationClaim = decodedToken.claims[TOKEN_EXPIRATION_CLAIM]
-        return when (expirationClaim) {
-            is Number -> Instant.ofEpochSecond(expirationClaim.toLong())
-            is String -> expirationClaim.toLongOrNull()?.let(Instant::ofEpochSecond)
+    private fun isTokenStaleForCurrentAuthState(
+        decodedToken: FirebaseToken,
+        authStateChangedAt: LocalDateTime?,
+    ): Boolean {
+        if (authStateChangedAt == null) return false
+        val tokenIssuedAt = getTokenIssuedAt(decodedToken) ?: return false
+        return authStateChangedAt.toInstant(ZoneOffset.UTC).isAfter(tokenIssuedAt)
+    }
+
+    private fun getTokenExpiresAt(decodedToken: FirebaseToken): Instant? = getTokenClaimInstant(decodedToken, TOKEN_EXPIRATION_CLAIM)
+
+    private fun getTokenIssuedAt(decodedToken: FirebaseToken): Instant? = getTokenClaimInstant(decodedToken, TOKEN_ISSUED_AT_CLAIM)
+        ?: getTokenClaimInstant(decodedToken, TOKEN_AUTH_TIME_CLAIM)
+
+    private fun getTokenClaimInstant(
+        decodedToken: FirebaseToken,
+        claimName: String,
+    ): Instant? {
+        val claimValue = decodedToken.claims[claimName]
+        return when (claimValue) {
+            is Number -> Instant.ofEpochSecond(claimValue.toLong())
+            is String -> claimValue.toLongOrNull()?.let(Instant::ofEpochSecond)
             else -> null
         }
     }
@@ -155,7 +186,9 @@ class FirebaseTokenAuthenticationFilter(
     }
 
     companion object {
+        private const val TOKEN_AUTH_TIME_CLAIM = "auth_time"
         private const val TOKEN_EXPIRATION_CLAIM = "exp"
+        private const val TOKEN_ISSUED_AT_CLAIM = "iat"
         private const val TOKEN_HASH_ALGORITHM = "SHA-256"
         private const val MAX_VERIFIED_TOKEN_CACHE_SIZE = 10_000L
         private val MAX_VERIFIED_TOKEN_CACHE_TTL: Duration = Duration.ofMinutes(5)

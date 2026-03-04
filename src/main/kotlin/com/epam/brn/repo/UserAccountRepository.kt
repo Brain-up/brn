@@ -32,6 +32,12 @@ interface UserAccountRepository : JpaRepository<UserAccount, Long> {
     fun findAuthenticationUserByEmail(email: String): Optional<UserAccount>
 
     @Query(
+        """select u.authStateChanged FROM UserAccount u
+            where LOWER(u.email) = LOWER(?1)""",
+    )
+    fun findAuthenticationStateChangedAtByEmail(email: String): LocalDateTime?
+
+    @Query(
         """select DISTINCT u FROM UserAccount u left JOIN FETCH u.roleSet
             left JOIN FETCH u.headphones where u.id = ?1""",
     )

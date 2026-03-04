@@ -12,6 +12,7 @@ import io.mockk.verify
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.security.core.userdetails.UsernameNotFoundException
+import java.time.LocalDateTime
 import java.util.Optional
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -28,11 +29,13 @@ internal class BrainUpUserDetailsServiceTest {
     fun `should cache auth user details between lookups`() {
         // GIVEN
         val email = "test@test.ru"
-        every { userAccountRepository.findAuthenticationUserByEmail(email) } returns Optional.of(createUserAccount(email))
+        val authStateChangedAt = LocalDateTime.now()
+        every { userAccountRepository.findAuthenticationUserByEmail(email) } returns
+            Optional.of(createUserAccount(email, authStateChangedAt))
 
         // WHEN
-        val firstLookup = brainUpUserDetailsService.loadUserByUsername(email)
-        val secondLookup = brainUpUserDetailsService.loadUserByUsername(email)
+        val firstLookup = brainUpUserDetailsService.loadUserByUsername(email, authStateChangedAt)
+        val secondLookup = brainUpUserDetailsService.loadUserByUsername(email, authStateChangedAt)
 
         // THEN
         assertEquals(email, firstLookup.username)
@@ -44,6 +47,29 @@ internal class BrainUpUserDetailsServiceTest {
     }
 
     @Test
+    fun `should refresh cached auth user details when auth state changes`() {
+        // GIVEN
+        val email = "test@test.ru"
+        val firstAuthStateChangedAt = LocalDateTime.now().minusMinutes(5)
+        val secondAuthStateChangedAt = firstAuthStateChangedAt.plusMinutes(1)
+        every { userAccountRepository.findAuthenticationUserByEmail(email) } returnsMany
+            listOf(
+                Optional.of(createUserAccount(email, firstAuthStateChangedAt)),
+                Optional.of(createUserAccount(email, secondAuthStateChangedAt)),
+            )
+
+        // WHEN
+        val firstLookup = brainUpUserDetailsService.loadUserByUsername(email, firstAuthStateChangedAt)
+        val secondLookup = brainUpUserDetailsService.loadUserByUsername(email, secondAuthStateChangedAt)
+
+        // THEN
+        assertEquals(email, firstLookup.username)
+        assertEquals(email, secondLookup.username)
+
+        verify(exactly = 2) { userAccountRepository.findAuthenticationUserByEmail(email) }
+    }
+
+    @Test
     fun `should throw when auth user is missing`() {
         // GIVEN
         val email = "missing@test.ru"
@@ -52,7 +78,7 @@ internal class BrainUpUserDetailsServiceTest {
         // WHEN
         val exception =
             assertFailsWith<UsernameNotFoundException> {
-                brainUpUserDetailsService.loadUserByUsername(email)
+                brainUpUserDetailsService.loadUserByUsername(email, null)
             }
 
         // THEN
@@ -60,7 +86,25 @@ internal class BrainUpUserDetailsServiceTest {
         verify(exactly = 1) { userAccountRepository.findAuthenticationUserByEmail(email) }
     }
 
-    private fun createUserAccount(email: String): UserAccount {
+    @Test
+    fun `should expose current auth state timestamp`() {
+        // GIVEN
+        val email = "test@test.ru"
+        val authStateChangedAt = LocalDateTime.now()
+        every { userAccountRepository.findAuthenticationStateChangedAtByEmail(email) } returns authStateChangedAt
+
+        // WHEN
+        val result = brainUpUserDetailsService.findAuthenticationStateChangedAt(email)
+
+        // THEN
+        assertEquals(authStateChangedAt, result)
+        verify(exactly = 1) { userAccountRepository.findAuthenticationStateChangedAtByEmail(email) }
+    }
+
+    private fun createUserAccount(
+        email: String,
+        authStateChangedAt: LocalDateTime,
+    ): UserAccount {
         val userAccount =
             UserAccount(
                 id = 1L,
@@ -68,6 +112,7 @@ internal class BrainUpUserDetailsServiceTest {
                 email = email,
                 fullName = "Full Name",
             )
+        userAccount.authStateChanged = authStateChangedAt
         userAccount.roleSet =
             mutableSetOf(
                 Role(

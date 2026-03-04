@@ -1,5 +1,6 @@
 package com.epam.brn.integration.repo
 
+import com.epam.brn.model.Role
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.UserAccountRepository
 import org.assertj.core.api.Assertions.assertThat
@@ -63,5 +64,34 @@ class UserAccountRepositoryTest {
         assertDoesNotThrow {
             repository.updateLastVisitByEmail(email, today)
         }
+    }
+
+    @Test
+    fun `should update authStateChanged when roles change`() {
+        // GIVEN
+        val email = "auth-state@email.com"
+        val initialRole = testEntityManager.persistAndFlush(Role(name = "USER"))
+        val promotedRole = testEntityManager.persistAndFlush(Role(name = "ADMIN"))
+        testEntityManager.persistAndFlush(
+            UserAccount(
+                email = email,
+                fullName = "John Doe",
+            ).apply {
+                roleSet = mutableSetOf(initialRole)
+            },
+        )
+        testEntityManager.clear()
+        val originalAuthStateChangedAt = repository.findAuthenticationStateChangedAtByEmail(email)?.truncatedTo(ChronoUnit.MILLIS)
+
+        // WHEN
+        Thread.sleep(20)
+        val userWithRoles = repository.findAuthenticationUserByEmail(email).orElseThrow()
+        userWithRoles.roleSet.add(promotedRole)
+        testEntityManager.flush()
+        testEntityManager.clear()
+
+        // THEN
+        val updatedAuthStateChangedAt = repository.findAuthenticationStateChangedAtByEmail(email)?.truncatedTo(ChronoUnit.MILLIS)
+        assertThat(updatedAuthStateChangedAt).isAfter(originalAuthStateChangedAt)
     }
 }

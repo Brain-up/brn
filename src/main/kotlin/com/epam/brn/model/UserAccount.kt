@@ -68,6 +68,9 @@ class UserAccount(
     )
     var roleSet: MutableSet<Role> = hashSetOf()
 
+    @Column(name = "auth_state_changed", nullable = false)
+    var authStateChanged: LocalDateTime = changed
+
     fun toDto() = UserAccountDto(
         id = id,
         userId = userId,

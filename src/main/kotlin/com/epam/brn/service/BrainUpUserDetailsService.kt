@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Service
 import java.time.Duration
+import java.time.LocalDateTime
 import java.util.Locale
 
 @Service("brainUpUserDetailService")
@@ -16,29 +17,56 @@ class BrainUpUserDetailsService(
     private val userAccountRepository: UserAccountRepository,
 ) : UserDetailsService {
     @Volatile
-    private var authUsersCache: Cache<String, UserDetails>? = null
+    private var authUsersCache: Cache<String, CachedAuthenticationUser>? = null
 
-    override fun loadUserByUsername(email: String): UserDetails {
+    override fun loadUserByUsername(email: String): UserDetails = loadUserByUsername(email, findAuthenticationStateChangedAt(email))
+
+    fun loadUserByUsername(
+        email: String,
+        authStateChangedAt: LocalDateTime?,
+    ): UserDetails {
         val cacheKey = email.lowercase(Locale.ROOT)
-        authUsersCache().getIfPresent(cacheKey)?.let { return it }
+        authUsersCache().getIfPresent(cacheKey)?.let { cachedUser ->
+            if (authStateChangedAt == null || cachedUser.authStateChangedAt == authStateChangedAt)
+                return cachedUser.userDetails
+            authUsersCache().invalidate(cacheKey)
+        }
 
-        return userAccountRepository
-            .findAuthenticationUserByEmail(email)
-            .map { CustomUserDetails(it) }
-            .orElseThrow { UsernameNotFoundException("User with email: $email doesn't exist") }
-            .also { authUsersCache().put(cacheKey, it) }
+        val cachedUser =
+            userAccountRepository
+                .findAuthenticationUserByEmail(email)
+                .map {
+                    CachedAuthenticationUser(
+                        userDetails = CustomUserDetails(it),
+                        authStateChangedAt = it.authStateChanged,
+                    )
+                }.orElseThrow { UsernameNotFoundException("User with email: $email doesn't exist") }
+        authUsersCache().put(cacheKey, cachedUser)
+        return cachedUser.userDetails
     }
 
-    private fun authUsersCache(): Cache<String, UserDetails> = authUsersCache
+    fun findAuthenticationStateChangedAt(email: String): LocalDateTime? = userAccountRepository
+        .findAuthenticationStateChangedAtByEmail(email)
+
+    fun evictCachedUser(email: String) {
+        authUsersCache().invalidate(email.lowercase(Locale.ROOT))
+    }
+
+    private fun authUsersCache(): Cache<String, CachedAuthenticationUser> = authUsersCache
         ?: synchronized(this) {
             authUsersCache
                 ?: Caffeine
                     .newBuilder()
                     .maximumSize(MAX_AUTH_USER_CACHE_SIZE)
                     .expireAfterWrite(AUTH_USER_CACHE_TTL)
-                    .build<String, UserDetails>()
+                    .build<String, CachedAuthenticationUser>()
                     .also { authUsersCache = it }
         }
+
+    private data class CachedAuthenticationUser(
+        val userDetails: UserDetails,
+        val authStateChangedAt: LocalDateTime,
+    )
 
     companion object {
         private const val MAX_AUTH_USER_CACHE_SIZE = 10_000L
