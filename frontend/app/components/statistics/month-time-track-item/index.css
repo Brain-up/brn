@@ -4,15 +4,6 @@
   border-radius: 8px;
   cursor: pointer;
 
-  &.selected {
-    background: linear-gradient(90deg, #7979f2 0%, #a179f2 100%);
-  }
-
-  &.selected .date .month,
-  &.selected .date .year {
-    color: #ffffff;
-  }
-
   .calendar {
     color: #3d3a4d;
     width: 70px;
@@ -61,6 +52,15 @@
     line-height: 16px;
     text-transform: uppercase;
     text-align: center;
+  }
+
+  &.selected {
+    background: linear-gradient(90deg, #7979f2 0%, #a179f2 100%);
+  }
+
+  &.selected .date .month,
+  &.selected .date .year {
+    color: #ffffff;
   }
 }
 

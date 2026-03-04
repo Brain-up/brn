@@ -25,35 +25,6 @@
     outline: none;
   }
 
-  .progress {
-    display: flex;
-    padding-top: 30px;
-  }
-
-  .progress__completed,
-  .progress__total,
-  .progress__text {
-    align-self: center;
-    color: #000;
-    display: flex;
-    font-size: 24px;
-    font-style: normal;
-    font-weight: 300;
-    line-height: 28px;
-  }
-
-  .progress__completed:after {
-    display: block;
-    content: '/';
-  }
-
-  .progress__text {
-    margin-right: 6px;
-  }
-
-  .svg-box {
-    margin-right: 6px;
-  }
 }
 
 @media (max-width: 640px) {

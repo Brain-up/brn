@@ -37,9 +37,6 @@
     background-color: #fff;
     background-color: rgba(255, 255, 255, var(--bg-opacity));
     color: #503dad;
-  }
-
-  .dropdown:hover {
     cursor: pointer;
   }
 

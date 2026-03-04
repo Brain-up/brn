@@ -54,17 +54,6 @@
   cursor: default;
 }
 
-.task-player__results {
-  text-align: center;
-  font-size: 32px;
-  color: rgb(44, 62, 80);
-  padding-right: 10px;
-}
-
-.task-player__results__answer {
-  white-space: nowrap;
-}
-
 @keyframes fade-out {
   0% {
     opacity: 0;
