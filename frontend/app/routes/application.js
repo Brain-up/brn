@@ -1,15 +1,11 @@
 import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
-import Ember from 'ember';
-// import Session from 'ember-simple-auth/services/session';
-// import IntlService from 'ember-intl/services/intl';
-// import type Transition from '@ember/routing/-private/transition';
+import { isTesting } from '@embroider/macros';
 
 export default class ApplicationRoute extends Route {
-  @service('session') session
-  // !: Session;
+  @service('session') session;
   @service('intl') intl;
-  // !: IntlService;
+  @service('router') router;
 
   async beforeModel() {
     await this.session.setup();
@@ -20,15 +16,15 @@ export default class ApplicationRoute extends Route {
   }
 
   redirect(_/* : unknown */, { to }/*: Transition*/) {
-    if (Ember.testing) {
-      // skip testing bahavour for now
+    if (isTesting()) {
+      // skip testing behaviour for now
       return;
     }
     if (['user-agreement', 'description', 'contributors'].includes(to.name)) {
       return;
     }
     if (!this.session.isAuthenticated) {
-      this.replaceWith('index');
+      this.router.replaceWith('index');
     }
   }
 }

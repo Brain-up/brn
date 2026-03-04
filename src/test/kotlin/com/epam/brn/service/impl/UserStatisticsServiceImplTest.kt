@@ -1,7 +1,6 @@
 package com.epam.brn.service.impl
 
 import com.epam.brn.dto.UserAccountDto
-import com.epam.brn.model.Exercise
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.repo.SubGroupRepository
@@ -11,7 +10,6 @@ import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
-import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
@@ -46,20 +44,18 @@ internal class UserStatisticsServiceImplTest {
     @Test
     fun `should return 0 to 2 user progress for subGroup`() {
         // GIVEN
-        val exercise = mockk<Exercise>()
         val subGroupIds: List<Long> = listOf(777)
-        val allExercisesForSubGroup: List<Exercise> = listOf(exercise, exercise)
         every { studyHistoryRepository.getDoneExercises(any(), any()) } returns emptyList()
         every { userAccountService.getCurrentUserDto() } returns userAccount
         every { userAccount.id } returns userAccountID
-        every { exerciseRepository.findExercisesBySubGroupId(any()) } returns allExercisesForSubGroup
+        every { exerciseRepository.findExerciseIdsBySubGroupId(any()) } returns listOf(1L, 2L)
 
         // WHEN
         val result = userStatisticService.getSubGroupStatistic(subGroupIds)
 
         // THEN
         verify(exactly = 1) { studyHistoryRepository.getDoneExercises(any(), any()) }
-        verify(exactly = 1) { exerciseRepository.findExercisesBySubGroupId(any()) }
+        verify(exactly = 1) { exerciseRepository.findExerciseIdsBySubGroupId(any()) }
         assertNotNull(result)
         Assertions.assertTrue(result.first().subGroupId == subGroupIds.first())
         Assertions.assertTrue(result.first().completedExercises == 0)

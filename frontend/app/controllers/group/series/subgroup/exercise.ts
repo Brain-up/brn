@@ -1,14 +1,20 @@
 import Controller from '@ember/controller';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { inject as service } from '@ember/service';
-import { task } from 'ember-concurrency';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { task, Task } from 'ember-concurrency';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import customTimeout from 'brn/utils/custom-timeout';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { tracked } from '@glimmer/tracking';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { action } from '@ember/object';
-import StatsService, { IStatsExerciseStats } from 'brn/services/stats';
+import type StatsService from 'brn/services/stats';
+import type { IStatsExerciseStats } from 'brn/services/stats';
 import Router from '@ember/routing/router-service';
-import TasksManagerService from 'brn/services/tasks-manager';
-import StudyingTimerService from 'brn/services/studying-timer';
-import Exercise from 'brn/models/exercise';
+import type TasksManagerService from 'brn/services/tasks-manager';
+import type StudyingTimerService from 'brn/services/studying-timer';
+import type { Exercise } from 'brn/schemas/exercise';
 import { getOwner } from '@ember/application';
 
 export default class GroupSeriesSubgroupExerciseController extends Controller {
@@ -22,11 +28,9 @@ export default class GroupSeriesSubgroupExerciseController extends Controller {
   @tracked exerciseStats = {};
 
   get exerciseIsCompletedInCurrentCycle() {
-    const tasks = this.model.hasMany('tasks').value();
-    if (!tasks) return false;
-    return tasks
-      .slice()
-      .every((task: any) => task.completedInCurrentCycle);
+    const tasksArray = Array.from(this.model.tasks);
+    if (tasksArray.length === 0) return false;
+    return tasksArray.every((task: any) => task.completedInCurrentCycle);
   }
 
   goToSeries() {
@@ -53,7 +57,7 @@ export default class GroupSeriesSubgroupExerciseController extends Controller {
     yield customTimeout(waitingTime);
     this.correctnessWidgetIsShown = false;
   }).drop())
-  runCorrectnessWidgetTimer;
+  runCorrectnessWidgetTimer!: Task<void, [boolean?]>;
 
   @action
   async greedOnCompletedExercise() {
@@ -63,23 +67,23 @@ export default class GroupSeriesSubgroupExerciseController extends Controller {
     this.exerciseStats = stats;
   }
 
-  @action startStatsTracking(_, [model]) {
+  @action startStatsTracking(_element: unknown, [model]: [Exercise]) {
     this.stats.registerModel(model);
   }
 
-  @action stopStatsTracking(_, [model]) {
+  @action stopStatsTracking(_element: unknown, [model]: [Exercise]) {
     this.stats.unregisterModel(model);
   }
 
   enableNextExercise(model: Exercise) {
     // to-do add integration test for it
-    const children = model.parent.exercises.toArray();
+    const children = Array.from(model.parent.exercises);
     const index = children.indexOf(this.model);
     const nextIndex = index + 1;
-    model.set('isManuallyCompleted', true);
+    model.isManuallyCompleted = true;
 
     if (children[nextIndex]) {
-      children[nextIndex].set('available', true);
+      children[nextIndex].available = true;
     }
   }
 

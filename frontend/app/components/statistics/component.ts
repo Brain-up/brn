@@ -1,13 +1,17 @@
 import Component from '@glimmer/component';
-import UserWeeklyStatisticsModel from 'brn/models/user-weekly-statistics';
-import UserYearlyStatisticsModel from 'brn/models/user-yearly-statistics';
+import type { UserWeeklyStatistics as UserWeeklyStatisticsModel } from 'brn/schemas/user-weekly-statistics';
+import type { UserYearlyStatistics as UserYearlyStatisticsModel } from 'brn/schemas/user-yearly-statistics';
 import NetworkService from 'brn/services/network';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { inject as service } from '@ember/service';
 import { DateTime } from 'luxon';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { tracked } from '@glimmer/tracking';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { task, Task as TaskGenerator } from 'ember-concurrency';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { action } from '@ember/object';
-import Store from '@ember-data/store';
+import type Store from 'brn/services/store';
 
 interface IStatisticsComponentArgs {
   initialSelectedMonth?: DateTime;
@@ -31,7 +35,7 @@ export default class StatisticsComponent extends Component<IStatisticsComponentA
     this.isLoadingWeekTimeTrackData = true;
 
     try {
-      this.weekTimeTrackData = yield this.store.query(
+      this.weekTimeTrackData = yield this.store.query<UserWeeklyStatisticsModel>(
         'user-weekly-statistics',
         {
           from: fromMonth,
@@ -52,7 +56,7 @@ export default class StatisticsComponent extends Component<IStatisticsComponentA
     this.isLoadingMonthTimeTrackData = true;
 
     try {
-      this.monthTimeTrackData = yield this.store.query(
+      this.monthTimeTrackData = yield this.store.query<UserYearlyStatisticsModel>(
         'user-yearly-statistics',
         {
           from: fromYear,
@@ -67,9 +71,8 @@ export default class StatisticsComponent extends Component<IStatisticsComponentA
       return;
     }
 
-    const lastMonth: DateTime | null = this.monthTimeTrackData.lastObject
-      ? this.monthTimeTrackData.lastObject?.date
-      : null;
+    const lastItem = this.monthTimeTrackData[this.monthTimeTrackData.length - 1];
+    const lastMonth: DateTime | null = lastItem ? lastItem.date : null;
     if (!lastMonth) {
       return;
     }

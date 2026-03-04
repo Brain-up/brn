@@ -70,7 +70,7 @@ a[disabled] {
   position: absolute;
   top: 50%;
   right: 50%;
-  transform: translate(-50% -50%);
+  transform: translate(-50%, -50%);
 }
 
 .not-accessable > * {
@@ -152,5 +152,95 @@ a[disabled] {
     top: 10px;
     right: 10px;
   }
+}
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+.skeleton-pulse {
+  animation: skeleton-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  background-color: #e2e8f0;
+  border-radius: 0.25rem;
+  max-width: 100%;
+}
+.skeleton-circle {
+  animation: skeleton-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  background-color: #e2e8f0;
+  border-radius: 9999px;
+}
+@keyframes btn-spin {
+  to { transform: rotate(360deg); }
+}
+.btn-spinner {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: btn-spin 0.6s linear infinite;
+  vertical-align: middle;
+}
+.scroll-fade {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 40px;
+  z-index: 10;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+.scroll-fade--left {
+  left: 0;
+  background: linear-gradient(to right, white 0%, transparent 100%);
+}
+.scroll-fade--right {
+  right: 0;
+  background: linear-gradient(to left, white 0%, transparent 100%);
+}
+.scroll-btn {
+  top: 50%;
+  transform: translateY(-50%);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.scroll-btn:active {
+  transform: translateY(-50%) scale(0.85);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
+}
+.btn-press {
+  transition: transform 0.1s ease;
+}
+.btn-press:not(:disabled):active {
+  transform: scale(0.97);
+}
+.skeleton-page {
+  min-height: calc(100vh - 10rem);
+  cursor: progress;
+}
+.skeleton-page * {
+  cursor: progress;
+}
+.skeleton-exercise-card {
+  width: 410px;
+  height: 280px;
+}
+@media (max-width: 640px) {
+  .skeleton-exercise-card {
+    width: 220px;
+    height: 150px;
+  }
+}
+.skeleton-exercise-btn {
+  width: 168px;
+  height: 168px;
+  background: #ffffff;
+  border: 3px solid #f4f4f4;
+  border-radius: 12px;
+  box-sizing: border-box;
+  position: relative;
+}
+.skeleton-exercise-btn .skeleton-pulse {
+  background-color: #f4f4f4;
+  animation: none;
 }
 /*! purgecss end ignore */

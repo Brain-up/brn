@@ -4,6 +4,7 @@ import com.epam.brn.dto.response.TaskResponse
 import com.epam.brn.dto.response.TaskWordsGroupResponse
 import com.epam.brn.enums.ExerciseType
 import com.epam.brn.enums.shouldBeWithPictures
+import org.hibernate.annotations.BatchSize
 import javax.persistence.CascadeType
 import javax.persistence.Entity
 import javax.persistence.FetchType
@@ -35,6 +36,7 @@ class Task(
         joinColumns = [JoinColumn(name = "task_id", referencedColumnName = "id")],
         inverseJoinColumns = [JoinColumn(name = "resource_id", referencedColumnName = "id")],
     )
+    @BatchSize(size = 100)
     var answerOptions: MutableSet<Resource> = hashSetOf(),
     @ManyToMany(cascade = [(CascadeType.MERGE)])
     @JoinTable(

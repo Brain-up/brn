@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "es2020",
     "allowJs": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "allowSyntheticDefaultImports": true,
     "noImplicitAny": true,
     "noImplicitThis": true,
@@ -20,6 +20,7 @@
     "baseUrl": ".",
     "module": "es2020",
     "experimentalDecorators": true,
+    "skipLibCheck": true,
     "paths": {
       "brn/tests/*": [
         "tests/*"

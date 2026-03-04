@@ -17,7 +17,7 @@ class SeriesService(
     fun findSeriesForGroup(groupId: Long): List<SeriesDto> {
         log.debug("try to find active series for groupId=$groupId")
         return seriesRepository
-            .findDistinctByExerciseGroupIdAndActiveTrue(groupId)
+            .findByExerciseGroupIdWithSubGroups(groupId)
             .map { it.toDto() }
     }
 

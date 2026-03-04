@@ -27,16 +27,6 @@ export default class SubgroupNavigation extends Component {
     return this.container?.scrollWidth > this.container?.offsetWidth;
   }
 
-  @action alignScrollPositions(node: HTMLButtonElement, [direction]: string[]) {
-    const rect = this.container.getBoundingClientRect();
-    if (direction === 'right') {
-      node.style.left = (rect.width + rect.left + 10).toString() + 'px';
-    } else {
-      node.style.left = (rect.left - 20).toString() + 'px';
-    }
-    node.style.top = (rect.top + 30).toString() + 'px';
-  }
-
   @action scroll(direction: 'right' | 'left') {
     const position = this.container.scrollLeft;
     const offset = 150;

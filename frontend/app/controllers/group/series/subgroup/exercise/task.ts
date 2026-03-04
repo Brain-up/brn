@@ -1,5 +1,7 @@
 import Controller from '@ember/controller';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { inject as service } from '@ember/service';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { action } from '@ember/object';
 import { getOwner } from '@ember/application';
 import Router from '@ember/routing/router-service';
@@ -14,8 +16,8 @@ export default class GroupSeriesSubgroupExerciseTaskController extends Controlle
     if (!this.model.isLastTask) {
       this.router.transitionTo(
         'group.series.subgroup.exercise.task',
-        this.model.get('nextTask.exercise.id'),
-        this.model.get('nextTask.id'),
+        this.model.nextTask?.exercise?.id,
+        this.model.nextTask?.id,
       );
     }
   }

@@ -7,6 +7,7 @@ import pageObject from './page-object';
 import { TIMINGS } from 'brn/utils/audio-api';
 import customTimeout from 'brn/utils/custom-timeout';
 import Service from '@ember/service';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { tracked } from '@glimmer/tracking';
 
 module('Integration | Component | audio-player', function (hooks) {

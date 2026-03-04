@@ -1,17 +1,16 @@
-import { SyncHasMany } from '@ember-data/model';
 import Component from '@glimmer/component';
-import Exercise from 'brn/models/exercise';
+import type { Exercise } from 'brn/schemas/exercise';
 
 interface ISeriesNavigationArgs {
-  exercises: SyncHasMany<Exercise>;
+  exercises: Exercise[];
 }
 
 export default class SeriesNavigationComponent extends Component<ISeriesNavigationArgs> {
   get sortedExercises() {
-    return this.args.exercises.toArray().sortBy('level');
+    return Array.from(this.args.exercises).sort((a, b) => a.level - b.level);
   }
 
   get exerciseHeaders() {
-    return this.sortedExercises.mapBy('name').uniq();
+    return [...new Set(this.sortedExercises.map((e) => e.name))];
   }
 }

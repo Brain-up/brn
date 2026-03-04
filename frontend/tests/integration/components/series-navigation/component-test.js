@@ -15,16 +15,14 @@ module('Integration | Component | series-navigation', function (hooks) {
     const exercises = TEST_EXERCISE_NAMES.map((name, index) =>
       store.createRecord('exercise', {
         name,
-        id: index,
+        id: String(index),
         order: TEST_EXERCISE_NAMES.length - index,
         series: testSeries,
         tasks: [
-          store.createRecord('task', [
-            {
-              order: '1',
-              word: 'бал',
-            },
-          ]),
+          store.createRecord('task', {
+            order: 1,
+            name: 'бал',
+          }),
         ],
       }),
     );
