@@ -1,35 +1,63 @@
-<section class="bg-gradient-to-r from-blue-100 to-purple-100 sm:p-8 lg:p-16 p-4">
-  <h2 class="sm:text-4xl sm:mb-6 mb-4 text-2xl font-semibold text-center">
+<section class="bg-gradient-to-r from-gray-100 to-blue-100 sm:p-8 lg:p-16 p-4">
+  <div class="max-w-screen-xl m-auto">
+    <h2 class="sm:text-4xl sm:mb-4 mb-4 text-2xl font-semibold text-center">
+      {{t "about_us.advantages"}}
+    </h2>
+    <div class="font-openSans sm:mb-16 mb-8 text-lg text-center text-gray-600">
+      {{t "about_us.train30"}}
+    </div>
 
-    {{t "about_us.advantages"}}
-  </h2>
-  <div class="font-openSans sm:mb-16 mb-8 text-lg text-center">
-    {{t "about_us.train30"}}
-  </div>
-  <div class="xl:flex max-w-screen-xl m-auto">
-    <div class="xl:mb-0 xl:flex-1 xl:mr-12 sm:p-8 lg:p-12 sm:mb-12 p-4 mb-4 bg-white rounded-lg">
-      <h4 class="mb-4 text-2xl font-semibold">
-        {{t "about_us.adv1.title"}}
-      </h4>
-      <div class="font-openSans">
-        {{t "about_us.adv1.content"}}
+    <div class="xl:grid-cols-3 grid gap-6">
+      <div class="sm:p-8 lg:p-10 p-5 bg-white rounded-lg shadow-lg">
+        <p
+          class="text-blue-light inline-flex px-3 py-1 text-xs font-bold tracking-wider uppercase bg-blue-100 rounded-full"
+        >
+          {{t "about_us.adv1.badge"}}
+        </p>
+        <h3 class="sm:text-3xl mt-4 text-2xl font-semibold text-gray-800">
+          {{t "about_us.adv1.title"}}
+        </h3>
+        <p class="font-openSans mt-4 text-base leading-relaxed text-gray-600">
+          {{t "about_us.adv1.content"}}
+        </p>
+      </div>
+
+      <div class="sm:p-8 lg:p-10 p-5 bg-white rounded-lg shadow-lg">
+        <p
+          class="inline-flex px-3 py-1 text-xs font-bold tracking-wider text-purple-500 uppercase bg-purple-100 rounded-full"
+        >
+          {{t "about_us.adv2.badge"}}
+        </p>
+        <h3 class="sm:text-3xl mt-4 text-2xl font-semibold text-gray-800">
+          {{t "about_us.adv2.title"}}
+        </h3>
+        <p class="font-openSans mt-4 text-base leading-relaxed text-gray-600">
+          {{t "about_us.adv2.content"}}
+        </p>
+      </div>
+
+      <div class="sm:p-8 lg:p-10 p-5 bg-white rounded-lg shadow-lg">
+        <p
+          class="inline-flex px-3 py-1 text-xs font-bold tracking-wider text-gray-700 uppercase bg-gray-200 rounded-full"
+        >
+          {{t "about_us.adv3.badge"}}
+        </p>
+        <h3 class="sm:text-3xl mt-4 text-2xl font-semibold text-gray-800">
+          {{t "about_us.adv3.title"}}
+        </h3>
+        <p class="font-openSans mt-4 text-base leading-relaxed text-gray-600">
+          {{t "about_us.adv3.content"}}
+        </p>
       </div>
     </div>
-    <div class="xl:mb-0 xl:flex-1 xl:mr-12 sm:p-8 lg:p-12 sm:mb-12 p-4 mb-4 bg-white rounded-lg">
-      <h4 class="mb-4 text-2xl font-semibold">
-        {{t "about_us.adv2.title"}}
-      </h4>
-      <div class="font-openSans">
-       {{t "about_us.adv2.content"}}
-      </div>
-    </div>
-    <div class="sm:p-8 lg:p-12 flex-1 p-4 bg-white rounded-lg">
-      <h4 class="mb-4 text-2xl font-semibold">
-        {{t "about_us.adv3.title"}}
-      </h4>
-      <div class="font-openSans">
-       {{t "about_us.adv3.content"}}
-      </div>
+
+    <div class="mt-10 text-center">
+      <LinkTo
+        @route="registration"
+        class="hover:bg-indigo-700 inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white transition-colors bg-indigo-600 rounded-full"
+      >
+        {{t "about_us.cta"}}
+      </LinkTo>
     </div>
   </div>
 </section>

@@ -106,31 +106,48 @@ footer:
   contact_us: Contact us
 
 about_us:
-  advantages: Advantages
-  train30: Train for just 30 minutes a day to develop and achieve results
+  advantages: How BrainUp works
+  train30: Three blocks answer the key questions a visitor has before starting.
   adv1:
-    title: BRAINUP
-    content: The first free online program for adults and children with cognitive
-      speech perception problems. All our lessons are designed for children
-      aged 7 and older. Currently, the program includes more than 20 different
-      topics that you can start working on right away. And there will be even
-      more — we plan to constantly expand our list of topics.
+    badge: Headphones
+    title: TRAIN YOUR HEARING
+    content: Listen to sounds, syllables, words, and phrases. Learn to tell
+      similar sounds apart, understand speech in noise, and follow phone
+      conversations. The trainer adapts to your level from simple to advanced.
   adv2:
-    title: ONLINE LESSONS
-    content: We wanted the learning format to be as convenient as possible for each
-      of our users. That is why our lessons are available at any time.
-      You can choose when to study and create your own lesson schedule.
+    badge: Progress
+    title: NOTICE YOUR PROGRESS
+    content: Every session strengthens the neural connections responsible for
+      hearing. You begin to understand speech better, feel more confident in
+      conversations, and regain sounds that seemed lost.
   adv3:
-    title: SELF-DEVELOPMENT
-    content: By following our program, you will be able to develop your hearing in various
-      acoustic situations; train your auditory memory by listening to exercises
-      as many times as you need. Additionally, you can expand your vocabulary
-      in an engaging, game-like format and later use new words in conversations
-      with friends and acquaintances.
+    badge: Hearing specialists
+    title: TRUST THE SCIENCE
+    content: The exercises are created by hearing specialists and built around
+      the principle of brain neuroplasticity. The program is free — BrainUp is
+      a charitable project.
+  cta: Start Training
 
 index:
-  app_info: BrainUP - online classes for children and adults
-  app_description: Our site is a platform of interactive exercises for adults and children from the age of seven with cognitive speech perception problems, which helps to train the ability to listen and understand.
+  hero_badge: Free for adults and children from age 7
+  app_info: "Hearing can be trained.<br />Practice 20 minutes a day."
+  app_description: Free exercises from hearing specialists for adults and
+    children from age 7. They help users hear speech better, distinguish
+    sounds, and regain confidence in communication.
+  cta: Start Training
+  visual:
+    child:
+      title: Children 7+
+      description: A gentle start with exercises for speech attention and
+        distinguishing sounds.
+    adult:
+      title: Adults
+      description: Short daily sessions fit into a work schedule and support
+        hearing rehabilitation.
+    senior:
+      title: Older adults
+      description: Regular practice helps people stay confident in family
+        conversations and keep up with speech.
 
 start_task_button:
   label: Start exercise
@@ -175,7 +192,7 @@ contact:
 description:
   tabs:
     users: For Users
-    developers: For Developers
+    developers: For Hearing Specialists
   users:
     header: "BrainUp — Free Online Hearing and Speech Comprehension Trainer!"
     intro:
@@ -233,73 +250,64 @@ description:
     welcome: "Welcome to BrainUp! Your path to a clearer world of sounds starts here."
     cta: Start Training
   dev:
-    header: "About '<span class=\"text-indigo-600\">'BrainUp'</span>'"
+    header: BrainUp for Hearing Specialists
     intro:
-      "Want your code and your decisions to directly change people's quality of life? Join the BrainUp project team."
-    done:
-      header: What has already been done and is working?
+      This section collects the concrete facts currently available about the
+      project methodology, target audience, and specialists involved in
+      BrainUp.
+    evidence:
+      header: What can already be confirmed
+      intro:
+        These are the specific details already present in the project materials
+        and inside the product interface.
+      0: The methodological foundation relies on the work of Professor Inna V.
+        Koroleva in auditory and speech rehabilitation.
+      1: The content was prepared together with teachers of the deaf and
+        hearing-care specialists from the Pavlov First Saint Petersburg State
+        Medical University, the Belarusian Republican Scientific and Practical
+        Center of Otorhinolaryngology, and regional care centers.
+      2:
+        "The built-in adherence benchmark is 20 minutes a day, 6 days a week,
+        for 2 years. In monthly terms, that is 8 hours 40 minutes across 26
+        days."
+    audience:
+      header: Which patients the trainer supports
+      0: People after cochlear implantation who need daily auditory and speech
+        practice.
+      1: Hard-of-hearing patients who hear sound but struggle with speech
+        intelligibility, especially in noisy environments.
+      2: Adults and children from age 7 who need consistent training of
+        auditory attention and speech comprehension.
+    routine:
+      header: How BrainUp fits into practice
+      intro:
+        The session format is built for regular use and visible progress
+        tracking.
+      0: Exercises move from simple to complex and adapt to the user's current
+        level.
+      1: The personal account stores statistics on time spent, consistency, and
+        task performance.
+      2: The program covers words, phrases, similar sounds, and speech
+        perception in more demanding acoustic situations.
+    experts:
+      header: Specialists involved in the project
+      intro:
+        These are the specialists already listed in the project as contributors
+        to the methodology and practical exercise design.
+    note:
+      header: What still needs to be added
       text:
-        "We, a team of volunteers from different countries, have been developing, launching, and maintaining a free
-        online trainer for hearing development and speech comprehension since 2019. This is not a prototype. This is a working
-        product in production that people are already using today."
-      features_header: "Key capabilities of the launched product:"
-      features:
-        0: More than 3,000 diverse audio exercises.
-        1:
-          "Smart adaptive system: exercise difficulty automatically adjusts to each user's level of hearing and speech
-          comprehension, providing the most effective personalized training."
-        2: Personal account with detailed statistics and session dynamics tracking.
-        3: Adaptive interface, convenient on any device.
-        4: "Stack: Backend written in Kotlin, frontend — Ember.js/Angular."
-    target_users:
-      header: Who are our users and why is this critically important?
-      0:
-        "People after cochlear implantation: for them, this is a tool for daily rehabilitation to learn to decode
-        new signals from the implant into articulate speech. The success of the entire operation depends on such training."
-      1:
-        "People with hearing loss (hard of hearing): the trainer helps maintain and train the ability to understand speech in noise,
-        slow down the process of isolation, and improve the quality of communication."
-      2: Children from age 6 who are beginning to lose hearing.
-    uniqueness:
-      header: What makes us unique and strong?
-      0: A working and free product. Exercises are available to everyone 24/7.
-      1: The only scientifically-based analogue for Russian speakers compared to expensive Western programs.
-      2: "Based on the methodology of a leading expert (Prof. I.V. Koroleva) and content from leading deaf education specialists."
-      3: "We solve the 'I hear but don't understand' problem at the brain signal processing level."
-    growth:
-      header: The project is alive, growing, and needs development!
-      intro: "We face new ambitious tasks, and we really need your hands and expertise:"
-      tasks:
-        0:
-          "Feature development: creating a new hearing diagnostics module for user progress tracking,
-          creating new exercise types, deepening analytics, improving the website landing page."
-        1: "Scaling and optimization: improving architecture, performance, and fault tolerance for a growing audience."
-        2: "UX/UI improvement: making an already convenient interface even more accessible and engaging."
-        3: "Testing and reliability: ensuring the highest quality of a constantly evolving product with real users."
-    volunteers:
-      header: We currently need volunteers
-      0: Backend developers (Kotlin)
-      1: Frontend developers (Ember.js / Angular)
-      2: QA engineers / Autotesters
-      3: DevOps / System administrators
-      4: UX/UI designers
-      5: Product managers and analysts
-    benefits:
-      header: What will you get by joining?
-      0: Real, measurable social impact. You see how your work helps specific people here and now.
-      1:
-        "Experience working with a production project with real users, complex logic, and a large volume of content
-        on a modern technology stack."
-      2: "Freedom for technological initiatives within a product that is truly needed."
+        "A full block with clinical publications, authors, years, samples, and
+        outcome statistics is not published yet. This section stays honest: it
+        shows only facts already confirmed by the current project materials,
+        without unsupported citations or retellings."
     cta:
-      header: Want to see the product, ask a question, or join?
-      0: "Visit and try it yourself: "
-      1: Tell colleagues who might find this meaningful.
-      2: Tell friends who might benefit as potential users.
-      3: "Our codebase and tasks are here: "
-      4: "To participate, contact the project founder, Elena Moshnikova, on Telegram: "
-    closing: Let's develop a project together that is already working and changing lives.
-    signature: "Best regards, BrainUp Project Team."
+      header: If you want to review BrainUp as a specialist
+      0: "See the trainer in action: "
+      1: Open the current specialists page
+      2:
+        "If you need a pilot, case feedback, or want to discuss a joint trial,
+        contact the project founder, Elena Moshnikova, on Telegram: "
   team:
     header: Meet our team
     thanks_words: 'We are glad to all the contributors who have helped at different times and those who continue to develop the platform today.'
