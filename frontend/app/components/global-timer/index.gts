@@ -90,7 +90,7 @@ export default class GlobalTimerComponent extends Component<GlobalTimerSignature
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          class="sm:w-6 sm:h-6 flex-shrink-0 w-4 h-4"
+          class="sm:w-6 sm:h-6 shrink-0 w-4 h-4"
           viewBox="0 0 24 24"
           fill="none"
         >

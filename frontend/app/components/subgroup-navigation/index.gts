@@ -100,7 +100,7 @@ export default class SubgroupNavigation extends Component<SubgroupNavigationSign
           <div class="scroll-fade scroll-fade--left"></div>
           <button
             type="button"
-            class="scroll-btn bg-purple-primary hover:opacity-75 focus:outline-none absolute left-0 z-20 flex items-center justify-center w-8 h-8 text-white rounded-full shadow-md"
+            class="scroll-btn bg-purple-primary hover:opacity-75 focus:outline-hidden absolute left-0 z-20 flex items-center justify-center w-8 h-8 text-white rounded-full shadow-md"
 
             {{on "click" (fn this.scroll "left")}}
             aria-label="Scroll left"
@@ -135,7 +135,7 @@ export default class SubgroupNavigation extends Component<SubgroupNavigationSign
           <div class="scroll-fade scroll-fade--right"></div>
           <button
             type="button"
-            class="scroll-btn bg-purple-primary hover:opacity-75 focus:outline-none absolute right-0 z-20 flex items-center justify-center w-8 h-8 text-white rounded-full shadow-md"
+            class="scroll-btn bg-purple-primary hover:opacity-75 focus:outline-hidden absolute right-0 z-20 flex items-center justify-center w-8 h-8 text-white rounded-full shadow-md"
 
             {{on "click" (fn this.scroll "right")}}
             aria-label="Scroll right"

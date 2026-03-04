@@ -76,7 +76,7 @@ export default class TextImageButton extends Component<TextImageButtonSignature>
         disabled={{@disabled}}
         type="button"
         {{on "click" @clickAction}}
-        class="btn-press bg-transparent rounded text-black mb-2 focus:outline-none focus:ring transition-all duration-500 ease-in-out border-2
+        class="btn-press bg-transparent rounded text-black mb-2 focus:outline-hidden focus:ring-2 focus:ring-purple-primary/50 transition-all duration-500 ease-in-out border-2
           {{if @isSelected "c-text-image-button__selected"}}
           {{if @disabled "opacity-50"}}"
       >

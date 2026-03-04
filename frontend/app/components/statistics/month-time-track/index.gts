@@ -67,7 +67,7 @@ export default class MonthTimeTrackComponent extends Component<MonthTimeTrackSig
       </div>
       <div class="justify-space h-200px sm:px-6 box-content flex items-center px-2 py-6">
         <button
-          data-test-btn-prev class="btn-press focus:outline-none w-48px h-48px rounded-2xl border-purple-left bg-gradient-to-r from-purple-left to-purple-right m-w-0 flex items-center justify-center flex-shrink-0 text-white shadow-lg" type="button"
+          data-test-btn-prev class="btn-press focus:outline-hidden w-48px h-48px rounded-2xl border-purple-left bg-gradient-to-r from-purple-left to-purple-right m-w-0 flex items-center justify-center shrink-0 text-white shadow-lg" type="button"
           {{on "click" @onLoadPrevYear}}
         >
           <UiLeftArrow />
@@ -103,7 +103,7 @@ export default class MonthTimeTrackComponent extends Component<MonthTimeTrackSig
           {{/if}}
         </div>
         <button
-          data-test-btn-next class="btn-press focus:outline-none w-48px h-48px rounded-2xl border-purple-left bg-gradient-to-r from-purple-left disabled:opacity-25 to-purple-right m-w-0 disabled:cursor-not-allowed disabled:shadow-none flex items-center justify-center flex-shrink-0 text-white shadow-lg" disabled={{not this.isAllowedNextYear}}
+          data-test-btn-next class="btn-press focus:outline-hidden w-48px h-48px rounded-2xl border-purple-left bg-gradient-to-r from-purple-left disabled:opacity-25 to-purple-right m-w-0 disabled:cursor-not-allowed disabled:shadow-none flex items-center justify-center shrink-0 text-white shadow-lg" disabled={{not this.isAllowedNextYear}}
           type="button"
           {{on "click" @onLoadNextYear}}
         >

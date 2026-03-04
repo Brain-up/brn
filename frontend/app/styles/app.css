@@ -8,7 +8,7 @@
 @theme {
   --font-openSans: 'Open Sans';
 
-  --font-size-xss: .5rem;
+  --text-xss: .5rem;
 
   --color-PROGRESS-BAD: #F38698;
   --color-PROGRESS-GOOD: #FBD051;

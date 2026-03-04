@@ -15,10 +15,10 @@ export default RouteTemplate(
       <div class="flex justify-center w-full">
         <aside class="bg-gradient-to-b from-white sticky top-0 z-10 w-full rounded-bl rounded-br" style="max-width: 80vw;">
           <div class="flex items-center overflow-x-auto" style="padding: 10px 20px; min-height: 80px; gap: 10px;">
-            <SkeletonLine @class="flex-shrink-0 rounded-lg" style="width: 140px; height: 48px;" />
-            <SkeletonLine @class="flex-shrink-0 rounded-lg" style="width: 140px; height: 48px;" />
-            <SkeletonLine @class="flex-shrink-0 rounded-lg" style="width: 140px; height: 48px;" />
-            <SkeletonLine @class="flex-shrink-0 rounded-lg" style="width: 140px; height: 48px;" />
+            <SkeletonLine @class="shrink-0 rounded-lg" style="width: 140px; height: 48px;" />
+            <SkeletonLine @class="shrink-0 rounded-lg" style="width: 140px; height: 48px;" />
+            <SkeletonLine @class="shrink-0 rounded-lg" style="width: 140px; height: 48px;" />
+            <SkeletonLine @class="shrink-0 rounded-lg" style="width: 140px; height: 48px;" />
           </div>
         </aside>
       </div>

@@ -18,7 +18,7 @@ interface UiExerciseButtonSignature {
 
 export default class UiExerciseButtonComponent extends Component<UiExerciseButtonSignature> {
   get classes() {
-    const items = ['focus:outline-none'];
+    const items = ['focus:outline-hidden'];
     if (this.mode) {
       items.push(this.mode);
     }

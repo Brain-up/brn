@@ -90,7 +90,7 @@ export default class TaskPlayerSingleWordsOptionComponent extends Component<Task
           {{if
             (eq @activeWord @answerOption.word)
             "border-2 text-white bg-purple-primary"
-            " border-2 border-purple-primary border-opacity-25  text-purple-primary"
+            " border-2 border-purple-primary/25 text-purple-primary"
           }}
           {{if
             @disableAnswers

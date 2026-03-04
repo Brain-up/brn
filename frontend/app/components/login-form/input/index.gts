@@ -76,7 +76,7 @@ export default class LoginFormInputComponent extends Component<LoginFormInputSig
       name={{@name}}
       @value={{this.value}}
       class="{{if this.hasError "border-red-500"}}
-        appearance-none border-b-2 w-full text-sm leading-tight focus:outline-none focus:ring py-2"
+        appearance-none border-b-2 w-full text-sm leading-tight focus:outline-hidden focus:ring-2 focus:ring-blue-500/50 py-2"
       id={{@name}}
       type={{or @type "text"}}
       placeholder={{or @placeholder ""}}

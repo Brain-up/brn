@@ -54,7 +54,7 @@ export default class UiAvatarsComponent extends Component<UiAvatarsSignature> {
               type="button"
               {{on "click" (fn this.onSelect avatar)}}
               class="btn-press {{if (eq avatar this.preferredAvatar) "c-avatars__active-tab"}}
-                focus:outline-none"
+                focus:outline-hidden"
                 data-test-avatar-btn={{avatar}}
             >
               <img

@@ -67,7 +67,7 @@ export default class BreadcrumbsComponent extends Component {
     >
     
         <ul aria-label="Breadcrumbs" class="breadcrumbs list-none">
-          <li class="flex-shrink-0">
+          <li class="shrink-0">
             <LinkTo @route="groups" class="inline-block align-top">
               <UiIconHeadphones />
             </LinkTo>

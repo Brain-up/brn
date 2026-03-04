@@ -37,7 +37,7 @@ export default class StatisticsInfoDialogComponent extends Component<StatisticsI
           <button
             data-test-button-close
             type="button"
-            class="btn-press focus:outline-none"
+            class="btn-press focus:outline-hidden"
             {{on "click" @closeModalAction}}
           >
             <img src="/ui/close-cross.svg" alt="Close" />
@@ -61,7 +61,7 @@ export default class StatisticsInfoDialogComponent extends Component<StatisticsI
           <button
             data-test-button-ok
             type="button"
-            class="btn-press border-purple-left bg-gradient-to-r from-purple-left to-purple-right rounded-large px-4 py-2 text-base font-medium text-white uppercase border shadow-lg outline-none"
+            class="btn-press border-purple-left bg-gradient-to-r from-purple-left to-purple-right rounded-large px-4 py-2 text-base font-medium text-white uppercase border shadow-lg outline-hidden"
             {{on "click" @closeModalAction}}
           >
             {{t "profile.statistics.info_dialog.button_ok"}}

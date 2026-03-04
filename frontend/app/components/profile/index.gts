@@ -170,7 +170,7 @@ export default class ProfileComponent extends Component {
           title="{{this.user.email}}"
           style={{htmlSafe
             (concat "background-image: url('" this.avatarUrl "');")
-          }} class="btn-press gradient-background focus:outline-none inline-flex items-center justify-center w-32 h-32 m-auto bg-center bg-contain border border-gray-400 rounded-full" {{on "click" this.onShowAvatars}}
+          }} class="btn-press gradient-background focus:outline-hidden inline-flex items-center justify-center w-32 h-32 m-auto bg-center bg-contain border border-gray-400 rounded-full" {{on "click" this.onShowAvatars}}
         >
         </button>
       </div>
@@ -248,7 +248,7 @@ export default class ProfileComponent extends Component {
         </div>
         <div class="mb-4">
           <LinkTo
-            @route="password-recovery" class="hover:text-indigo-600 text-md focus:outline-none focus:underline font-medium text-indigo-500 transition duration-150 ease-in-out"
+            @route="password-recovery" class="hover:text-indigo-600 text-md focus:outline-hidden focus:underline font-medium text-indigo-500 transition duration-150 ease-in-out"
           >
             {{t "password_reset_form.update_password"}}
           </LinkTo>

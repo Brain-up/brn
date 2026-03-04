@@ -70,7 +70,7 @@ export default class HeaderComponent extends Component {
           <LinkTo
             @route="index"
             data-test-logo
-            class="md:inline-flex items-center flex-shrink-0 hidden mr-4 text-xl tracking-tight text-gray-700"
+            class="md:inline-flex items-center shrink-0 hidden mr-4 text-xl tracking-tight text-gray-700"
           >
             <UiIconLogo @fill="white" />
           </LinkTo>
@@ -106,16 +106,16 @@ export default class HeaderComponent extends Component {
               >
                 Telegram
               </a>
-              <span class="md:inline-flex md:px-2 items-center flex-shrink-0 hidden font-semibold tracking-wider text-white uppercase">
+              <span class="md:inline-flex md:px-2 items-center shrink-0 hidden font-semibold tracking-wider text-white uppercase">
                 <button
                   type="button"
-                  class="btn-press hover:text-opacity-50 py-2 text-white bg-transparent rounded uppercase {{if (eq this.activeLocale 'ru-ru') 'font-bold'}}"
+                  class="btn-press hover:text-white/50 py-2 text-white bg-transparent rounded uppercase {{if (eq this.activeLocale 'ru-ru') 'font-bold'}}"
                   {{on "click" (fn this.setLocale "ru")}}
                 >RU</button>
                 <span class="mx-1">/</span>
                 <button
                   type="button"
-                  class="btn-press hover:text-opacity-50 py-2 text-white bg-transparent rounded uppercase {{if (eq this.activeLocale 'en-us') 'font-bold'}}"
+                  class="btn-press hover:text-white/50 py-2 text-white bg-transparent rounded uppercase {{if (eq this.activeLocale 'en-us') 'font-bold'}}"
                   {{on "click" (fn this.setLocale "en")}}
                 >EN</button>
               </span>
@@ -153,13 +153,13 @@ export default class HeaderComponent extends Component {
               </div>
             </div>
           </div>
-          <div class="sm:ml-4 flex items-center flex-shrink-0 ml-1">
-            <LinkTo @route="profile.statistics" class="flex-shrink-0">
+          <div class="sm:ml-4 flex items-center shrink-0 ml-1">
+            <LinkTo @route="profile.statistics" class="shrink-0">
               <GlobalTimer />
             </LinkTo>
             <LinkTo
               @route="profile"
-              class="hover:text-opacity-50 focus:underline flex items-center font-medium text-white transition duration-150 ease-in-out"
+              class="hover:text-white/50 focus:underline flex items-center font-medium text-white transition duration-150 ease-in-out"
             >
               <div class="sm:w-10 sm:h-10 sm:mr-2 w-8 h-8 mr-1 border border-gray-400 rounded-full">
                 <img
@@ -177,7 +177,7 @@ export default class HeaderComponent extends Component {
               data-test-logout-button
               type="button"
               disabled={{this.isLoggingOut}}
-              class="btn-press hover:text-opacity-50 text-xs inline-block leading-none text-white border-0 {{if this.isLoggingOut 'opacity-50 cursor-not-allowed'}}"
+              class="btn-press hover:text-white/50 text-xs inline-block leading-none text-white border-0 {{if this.isLoggingOut 'opacity-50 cursor-not-allowed'}}"
               {{on "click" this.logout}}
             >
               {{#if this.isLoggingOut}}
@@ -190,7 +190,7 @@ export default class HeaderComponent extends Component {
         </nav>
       {{else}}
         <nav class="justify-evenly md:p-4 flex flex-wrap items-center p-2 pt-4">
-          <div class="md:mr-4 z-10 flex flex-shrink-0">
+          <div class="md:mr-4 z-10 flex shrink-0">
             <LinkTo
               @route="index"
               data-test-logo
@@ -219,13 +219,13 @@ export default class HeaderComponent extends Component {
               <span class="sm:px-4 inline-block px-2 font-semibold tracking-wider uppercase">
                 <button
                   type="button"
-                  class="btn-press hover:text-opacity-50 py-2 text-purple-primary bg-transparent rounded uppercase {{if (eq this.activeLocale 'ru-ru') 'font-bold'}}"
+                  class="btn-press hover:text-purple-primary/50 py-2 text-purple-primary bg-transparent rounded uppercase {{if (eq this.activeLocale 'ru-ru') 'font-bold'}}"
                   {{on "click" (fn this.setLocale "ru")}}
                 >RU</button>
                 /
                 <button
                   type="button"
-                  class="btn-press hover:text-opacity-50 py-2 text-purple-primary bg-transparent rounded uppercase {{if (eq this.activeLocale 'en-us') 'font-bold'}}"
+                  class="btn-press hover:text-purple-primary/50 py-2 text-purple-primary bg-transparent rounded uppercase {{if (eq this.activeLocale 'en-us') 'font-bold'}}"
                   {{on "click" (fn this.setLocale "en")}}
                 >EN</button>
               </span>

@@ -159,7 +159,7 @@ export default class LoginFormComponent extends Component {
           </div>
           <div class="mb-8 text-sm leading-5 text-right">
             <LinkTo
-              @route="password-recovery" class="hover:text-indigo-600 text-md focus:outline-none focus:underline font-medium text-indigo-500 transition duration-150 ease-in-out"
+              @route="password-recovery" class="hover:text-indigo-600 text-md focus:outline-hidden focus:underline font-medium text-indigo-500 transition duration-150 ease-in-out"
             >
               {{t "login_form.forgot_password"}}
             </LinkTo>
@@ -167,7 +167,7 @@ export default class LoginFormComponent extends Component {
           <div class="flex mb-4">
             {{#let
               (hash
-                active="bg-blue-700 hover:bg-blue-900 focus:outline-none focus:ring"
+                active="bg-blue-700 hover:bg-blue-900 focus:outline-hidden focus:ring-2 focus:ring-blue-500/50"
                 disabled="bg-blue-700 opacity-50  cursor-not-allowed"
               )
               as |buttonState|

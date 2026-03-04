@@ -20,7 +20,7 @@ interface UiTabButtonSignature {
 export default class UiTabButtonComponent extends Component<UiTabButtonSignature> {
   get classes() {
     const items = [
-      'btn-press focus:outline-none rounded-lg w-full uppercase h-12 overflow-hidden flex items-center justify-center text-center',
+      'btn-press focus:outline-hidden rounded-lg w-full uppercase h-12 overflow-hidden flex items-center justify-center text-center',
     ];
     if (this.args.small) {
       items.push('text-xs');
