@@ -15,11 +15,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.FirebaseToken
 import com.google.firebase.auth.UserRecord
-import io.mockk.Runs
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
-import io.mockk.just
 import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import io.mockk.verify
@@ -34,8 +32,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneOffset
 import javax.servlet.FilterChain
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -72,13 +68,7 @@ internal class FirebaseTokenAuthenticationFilterTest {
     @BeforeEach
     fun init() {
         SecurityContextHolder.clearContext()
-        every { firebaseTokenMock.claims } returns
-            mapOf(
-                "exp" to Instant.now().plusSeconds(600).epochSecond,
-                "iat" to Instant.now().minusSeconds(60).epochSecond,
-            )
-        every { brainUpUserDetailsService.findAuthenticationStateChangedAt(any()) } returns null
-        every { brainUpUserDetailsService.evictCachedUser(any()) } just Runs
+        every { firebaseTokenMock.claims } returns mapOf("exp" to Instant.now().plusSeconds(600).epochSecond)
     }
 
     /*
@@ -99,7 +89,7 @@ internal class FirebaseTokenAuthenticationFilterTest {
         every { tokenHelperUtils.getBearerToken(request) } returns token
         every { firebaseAuth.verifyIdToken(token, true) } returns firebaseTokenMock
         every { firebaseTokenMock.email } returns email
-        every { brainUpUserDetailsService.loadUserByUsername(email, null) } returns customUserDetailsMock
+        every { brainUpUserDetailsService.loadUserByUsername(email, any()) } returns customUserDetailsMock
 
         // WHEN
         firebaseTokenAuthenticationFilter.doFilter(request, response, filterChain)
@@ -113,8 +103,7 @@ internal class FirebaseTokenAuthenticationFilterTest {
 
         verify(exactly = 1) { tokenHelperUtils.getBearerToken(request) }
         verify(exactly = 1) { firebaseAuth.verifyIdToken(token, true) }
-        verify(exactly = 1) { brainUpUserDetailsService.findAuthenticationStateChangedAt(email) }
-        verify(exactly = 1) { brainUpUserDetailsService.loadUserByUsername(email, null) }
+        verify(exactly = 1) { brainUpUserDetailsService.loadUserByUsername(email, any()) }
         verify(exactly = 0) { firebaseUserService.getUserByUuid(any()) }
         verify(exactly = 0) { userAccountService.createUser(any()) }
     }
@@ -136,7 +125,6 @@ internal class FirebaseTokenAuthenticationFilterTest {
 
         verify(exactly = 1) { tokenHelperUtils.getBearerToken(request) }
         verify(exactly = 0) { firebaseAuth.verifyIdToken(any(), any()) }
-        verify(exactly = 0) { brainUpUserDetailsService.findAuthenticationStateChangedAt(any()) }
         verify(exactly = 0) { brainUpUserDetailsService.loadUserByUsername(any<String>(), any()) }
     }
 
@@ -157,7 +145,6 @@ internal class FirebaseTokenAuthenticationFilterTest {
 
         verify(exactly = 0) { tokenHelperUtils.getBearerToken(any()) }
         verify(exactly = 0) { firebaseAuth.verifyIdToken(any(), any()) }
-        verify(exactly = 0) { brainUpUserDetailsService.findAuthenticationStateChangedAt(any()) }
         verify(exactly = 0) { brainUpUserDetailsService.loadUserByUsername(any<String>(), any()) }
     }
 
@@ -181,8 +168,8 @@ internal class FirebaseTokenAuthenticationFilterTest {
         every { firebaseAuth.verifyIdToken(tokenMock, true) } returns firebaseTokenMock
         every { firebaseTokenMock.email } returns email
         every { firebaseTokenMock.uid } returns uuid
-        every { brainUpUserDetailsService.loadUserByUsername(email, null) } throws UsernameNotFoundException("USER_NOT_FOUND")
-        every { brainUpUserDetailsService.loadUserByUsername(email) } returns customUserDetailsMock
+        every { brainUpUserDetailsService.loadUserByUsername(email, any()) } throws (UsernameNotFoundException("USER_NOT_FOUND")) andThen
+            customUserDetailsMock
         every { firebaseUserService.getUserByUuid(uuid) } returns userRecordMock
         every { userAccountService.createUser(userRecordMock) } returns
             UserAccountDto(
@@ -204,9 +191,7 @@ internal class FirebaseTokenAuthenticationFilterTest {
 
         verify(exactly = 1) { tokenHelperUtils.getBearerToken(requestMock) }
         verify(exactly = 1) { firebaseAuth.verifyIdToken(tokenMock, true) }
-        verify(exactly = 1) { brainUpUserDetailsService.findAuthenticationStateChangedAt(email) }
-        verify(exactly = 1) { brainUpUserDetailsService.loadUserByUsername(email, null) }
-        verify(exactly = 1) { brainUpUserDetailsService.loadUserByUsername(email) }
+        verify(exactly = 2) { brainUpUserDetailsService.loadUserByUsername(email, any()) }
         verify(exactly = 1) { firebaseUserService.getUserByUuid(uuid) }
         verify(exactly = 1) { userAccountService.createUser(any()) }
     }
@@ -237,7 +222,6 @@ internal class FirebaseTokenAuthenticationFilterTest {
 
         verify(exactly = 1) { tokenHelperUtils.getBearerToken(requestMock) }
         verify(exactly = 1) { firebaseAuth.verifyIdToken(tokenMock, true) }
-        verify(exactly = 0) { brainUpUserDetailsService.findAuthenticationStateChangedAt(any()) }
         verify(exactly = 0) { brainUpUserDetailsService.loadUserByUsername(any<String>(), any()) }
         verify(exactly = 0) { firebaseUserService.getUserByUuid(any()) }
         verify(exactly = 0) { userAccountService.createUser(any()) }
@@ -264,7 +248,6 @@ internal class FirebaseTokenAuthenticationFilterTest {
 
         verify(exactly = 1) { tokenHelperUtils.getBearerToken(requestMock) }
         verify(exactly = 1) { firebaseAuth.verifyIdToken(tokenMock, true) }
-        verify(exactly = 0) { brainUpUserDetailsService.findAuthenticationStateChangedAt(any()) }
         verify(exactly = 0) { brainUpUserDetailsService.loadUserByUsername(any<String>(), any()) }
         verify(exactly = 0) { firebaseUserService.getUserByUuid(any()) }
         verify(exactly = 0) { userAccountService.createUser(any()) }
@@ -278,13 +261,12 @@ internal class FirebaseTokenAuthenticationFilterTest {
         requestMock.addHeader("Authorization", "Bearer $tokenMock")
         val responseMock = MockHttpServletResponse()
         val filterChain = FilterChain { _, _ -> }
-        val customUserDetailsMock = CustomUserDetails(createUserAccountMock())
 
         every { tokenHelperUtils.getBearerToken(requestMock) } returns tokenMock
         every { firebaseAuth.verifyIdToken(tokenMock, true) } returns firebaseTokenMock
         every { firebaseTokenMock.email } returns email
         every { firebaseTokenMock.uid } returns uuid
-        every { brainUpUserDetailsService.loadUserByUsername(email, null) } throws UsernameNotFoundException("USER_NOT_FOUND")
+        every { brainUpUserDetailsService.loadUserByUsername(email, any()) } throws UsernameNotFoundException("USER_NOT_FOUND")
         every { firebaseUserService.getUserByUuid(uuid) } returns null
 
         // WHEN
@@ -296,42 +278,9 @@ internal class FirebaseTokenAuthenticationFilterTest {
 
         verify(exactly = 1) { tokenHelperUtils.getBearerToken(requestMock) }
         verify(exactly = 1) { firebaseAuth.verifyIdToken(tokenMock, true) }
-        verify(exactly = 1) { brainUpUserDetailsService.findAuthenticationStateChangedAt(email) }
-        verify(exactly = 1) { brainUpUserDetailsService.loadUserByUsername(email, null) }
+        verify(exactly = 1) { brainUpUserDetailsService.loadUserByUsername(email, any()) }
         verify(exactly = 1) { firebaseUserService.getUserByUuid(uuid) }
         verify(exactly = 0) { userAccountService.createUser(any()) }
-    }
-
-    @Test
-    fun `should reject stale token after auth state changes`() {
-        // GIVEN
-        val request = MockHttpServletRequest(HttpMethod.GET.name, "/test")
-        val token = "firebaseTokenMock"
-        val authStateChangedAt = LocalDateTime.now(ZoneOffset.UTC)
-        request.addHeader("Authorization", "Bearer $token")
-        val response = MockHttpServletResponse()
-        val filterChain = FilterChain { _, _ -> }
-
-        every { firebaseTokenMock.claims } returns
-            mapOf(
-                "exp" to Instant.now().plusSeconds(600).epochSecond,
-                "iat" to Instant.now().minusSeconds(600).epochSecond,
-            )
-        every { tokenHelperUtils.getBearerToken(request) } returns token
-        every { firebaseAuth.verifyIdToken(token, true) } returns firebaseTokenMock
-        every { firebaseTokenMock.email } returns email
-        every { brainUpUserDetailsService.findAuthenticationStateChangedAt(email) } returns authStateChangedAt
-
-        // WHEN
-        firebaseTokenAuthenticationFilter.doFilter(request, response, filterChain)
-
-        // THEN
-        assertNull(SecurityContextHolder.getContext().authentication)
-
-        verify(exactly = 1) { brainUpUserDetailsService.findAuthenticationStateChangedAt(email) }
-        verify(exactly = 1) { brainUpUserDetailsService.evictCachedUser(email) }
-        verify(exactly = 0) { brainUpUserDetailsService.loadUserByUsername(any<String>(), any()) }
-        verify(exactly = 0) { firebaseUserService.getUserByUuid(any()) }
     }
 
     @Test
@@ -349,7 +298,7 @@ internal class FirebaseTokenAuthenticationFilterTest {
         every { tokenHelperUtils.getBearerToken(any()) } returns token
         every { firebaseAuth.verifyIdToken(token, true) } returns firebaseTokenMock
         every { firebaseTokenMock.email } returns email
-        every { brainUpUserDetailsService.loadUserByUsername(email, null) } returns customUserDetailsMock
+        every { brainUpUserDetailsService.loadUserByUsername(email, any()) } returns customUserDetailsMock
 
         // WHEN
         firebaseTokenAuthenticationFilter.doFilter(firstRequest, response, filterChain)
@@ -359,8 +308,7 @@ internal class FirebaseTokenAuthenticationFilterTest {
         // THEN
         verify(exactly = 2) { tokenHelperUtils.getBearerToken(any()) }
         verify(exactly = 1) { firebaseAuth.verifyIdToken(token, true) }
-        verify(exactly = 2) { brainUpUserDetailsService.findAuthenticationStateChangedAt(email) }
-        verify(exactly = 2) { brainUpUserDetailsService.loadUserByUsername(email, null) }
+        verify(exactly = 2) { brainUpUserDetailsService.loadUserByUsername(email, any()) }
     }
 
     private fun createUserAccountMock(): UserAccount {

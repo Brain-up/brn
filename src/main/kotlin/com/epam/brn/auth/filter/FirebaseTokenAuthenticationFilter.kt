@@ -23,8 +23,6 @@ import java.security.MessageDigest
 import java.time.Clock
 import java.time.Duration
 import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneOffset
 import javax.servlet.FilterChain
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -59,16 +57,10 @@ class FirebaseTokenAuthenticationFilter(
     private fun verifyToken(request: HttpServletRequest) {
         val token = tokenHelperUtils.getBearerToken(request) ?: return
         try {
-            val decodedToken = getVerifiedToken(token)
-            val authStateChangedAt = brainUpUserDetailsService.findAuthenticationStateChangedAt(decodedToken.email)
-            if (isTokenStaleForCurrentAuthState(decodedToken, authStateChangedAt)) {
-                brainUpUserDetailsService.evictCachedUser(decodedToken.email)
-                invalidateVerifiedToken(token)
-                log.warn("Rejecting stale token for email: ${decodedToken.email}")
-                return
-            }
+            val tokenHash = hashToken(token)
+            val decodedToken = getVerifiedToken(token, tokenHash)
             try {
-                val user: UserDetails = brainUpUserDetailsService.loadUserByUsername(decodedToken.email, authStateChangedAt)
+                val user: UserDetails = brainUpUserDetailsService.loadUserByUsername(decodedToken.email, tokenHash)
                 val authentication =
                     UsernamePasswordAuthenticationToken(
                         user,
@@ -83,7 +75,7 @@ class FirebaseTokenAuthenticationFilter(
                 if (firebaseUserRecord != null) {
                     val createUser = userAccountService.createUser(firebaseUserRecord)
                     val userEmail = createUser.email ?: decodedToken.email
-                    val user: UserDetails = brainUpUserDetailsService.loadUserByUsername(userEmail)
+                    val user: UserDetails = brainUpUserDetailsService.loadUserByUsername(userEmail, tokenHash)
                     val authentication =
                         UsernamePasswordAuthenticationToken(
                             user,
@@ -101,8 +93,10 @@ class FirebaseTokenAuthenticationFilter(
         }
     }
 
-    private fun getVerifiedToken(token: String): FirebaseToken {
-        val tokenHash = hashToken(token)
+    private fun getVerifiedToken(
+        token: String,
+        tokenHash: String,
+    ): FirebaseToken {
         verifiedTokensCache().getIfPresent(tokenHash)?.let { cachedToken ->
             if (!cachedToken.isExpired(clock)) {
                 return cachedToken.decodedToken
@@ -113,10 +107,6 @@ class FirebaseTokenAuthenticationFilter(
         return firebaseAuth
             .verifyIdToken(token, true)
             .also { cacheVerifiedToken(tokenHash, it) }
-    }
-
-    private fun invalidateVerifiedToken(token: String) {
-        verifiedTokensCache().invalidate(hashToken(token))
     }
 
     private fun cacheVerifiedToken(
@@ -152,19 +142,7 @@ class FirebaseTokenAuthenticationFilter(
         .digest(token.toByteArray(StandardCharsets.UTF_8))
         .joinToString("") { byte -> "%02x".format(byte.toInt() and 0xff) }
 
-    private fun isTokenStaleForCurrentAuthState(
-        decodedToken: FirebaseToken,
-        authStateChangedAt: LocalDateTime?,
-    ): Boolean {
-        if (authStateChangedAt == null) return false
-        val tokenIssuedAt = getTokenIssuedAt(decodedToken) ?: return false
-        return authStateChangedAt.toInstant(ZoneOffset.UTC).isAfter(tokenIssuedAt)
-    }
-
     private fun getTokenExpiresAt(decodedToken: FirebaseToken): Instant? = getTokenClaimInstant(decodedToken, TOKEN_EXPIRATION_CLAIM)
-
-    private fun getTokenIssuedAt(decodedToken: FirebaseToken): Instant? = getTokenClaimInstant(decodedToken, TOKEN_ISSUED_AT_CLAIM)
-        ?: getTokenClaimInstant(decodedToken, TOKEN_AUTH_TIME_CLAIM)
 
     private fun getTokenClaimInstant(
         decodedToken: FirebaseToken,
@@ -186,9 +164,7 @@ class FirebaseTokenAuthenticationFilter(
     }
 
     companion object {
-        private const val TOKEN_AUTH_TIME_CLAIM = "auth_time"
         private const val TOKEN_EXPIRATION_CLAIM = "exp"
-        private const val TOKEN_ISSUED_AT_CLAIM = "iat"
         private const val TOKEN_HASH_ALGORITHM = "SHA-256"
         private const val MAX_VERIFIED_TOKEN_CACHE_SIZE = 10_000L
         private val MAX_VERIFIED_TOKEN_CACHE_TTL: Duration = Duration.ofMinutes(5)

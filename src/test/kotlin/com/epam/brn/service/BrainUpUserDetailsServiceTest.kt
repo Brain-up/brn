@@ -12,7 +12,6 @@ import io.mockk.verify
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.security.core.userdetails.UsernameNotFoundException
-import java.time.LocalDateTime
 import java.util.Optional
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -29,13 +28,11 @@ internal class BrainUpUserDetailsServiceTest {
     fun `should cache auth user details between lookups`() {
         // GIVEN
         val email = "test@test.ru"
-        val authStateChangedAt = LocalDateTime.now()
-        every { userAccountRepository.findAuthenticationUserByEmail(email) } returns
-            Optional.of(createUserAccount(email, authStateChangedAt))
+        every { userAccountRepository.findAuthenticationUserByEmail(email) } returns Optional.of(createUserAccount(email))
 
         // WHEN
-        val firstLookup = brainUpUserDetailsService.loadUserByUsername(email, authStateChangedAt)
-        val secondLookup = brainUpUserDetailsService.loadUserByUsername(email, authStateChangedAt)
+        val firstLookup = brainUpUserDetailsService.loadUserByUsername(email)
+        val secondLookup = brainUpUserDetailsService.loadUserByUsername(email)
 
         // THEN
         assertEquals(email, firstLookup.username)
@@ -47,20 +44,18 @@ internal class BrainUpUserDetailsServiceTest {
     }
 
     @Test
-    fun `should refresh cached auth user details when auth state changes`() {
+    fun `should reload auth user details when cache scope changes`() {
         // GIVEN
         val email = "test@test.ru"
-        val firstAuthStateChangedAt = LocalDateTime.now().minusMinutes(5)
-        val secondAuthStateChangedAt = firstAuthStateChangedAt.plusMinutes(1)
         every { userAccountRepository.findAuthenticationUserByEmail(email) } returnsMany
             listOf(
-                Optional.of(createUserAccount(email, firstAuthStateChangedAt)),
-                Optional.of(createUserAccount(email, secondAuthStateChangedAt)),
+                Optional.of(createUserAccount(email)),
+                Optional.of(createUserAccount(email)),
             )
 
         // WHEN
-        val firstLookup = brainUpUserDetailsService.loadUserByUsername(email, firstAuthStateChangedAt)
-        val secondLookup = brainUpUserDetailsService.loadUserByUsername(email, secondAuthStateChangedAt)
+        val firstLookup = brainUpUserDetailsService.loadUserByUsername(email, "token-1")
+        val secondLookup = brainUpUserDetailsService.loadUserByUsername(email, "token-2")
 
         // THEN
         assertEquals(email, firstLookup.username)
@@ -78,7 +73,7 @@ internal class BrainUpUserDetailsServiceTest {
         // WHEN
         val exception =
             assertFailsWith<UsernameNotFoundException> {
-                brainUpUserDetailsService.loadUserByUsername(email, null)
+                brainUpUserDetailsService.loadUserByUsername(email)
             }
 
         // THEN
@@ -86,25 +81,7 @@ internal class BrainUpUserDetailsServiceTest {
         verify(exactly = 1) { userAccountRepository.findAuthenticationUserByEmail(email) }
     }
 
-    @Test
-    fun `should expose current auth state timestamp`() {
-        // GIVEN
-        val email = "test@test.ru"
-        val authStateChangedAt = LocalDateTime.now()
-        every { userAccountRepository.findAuthenticationStateChangedAtByEmail(email) } returns authStateChangedAt
-
-        // WHEN
-        val result = brainUpUserDetailsService.findAuthenticationStateChangedAt(email)
-
-        // THEN
-        assertEquals(authStateChangedAt, result)
-        verify(exactly = 1) { userAccountRepository.findAuthenticationStateChangedAtByEmail(email) }
-    }
-
-    private fun createUserAccount(
-        email: String,
-        authStateChangedAt: LocalDateTime,
-    ): UserAccount {
+    private fun createUserAccount(email: String): UserAccount {
         val userAccount =
             UserAccount(
                 id = 1L,
@@ -112,7 +89,6 @@ internal class BrainUpUserDetailsServiceTest {
                 email = email,
                 fullName = "Full Name",
             )
-        userAccount.authStateChanged = authStateChangedAt
         userAccount.roleSet =
             mutableSetOf(
                 Role(
