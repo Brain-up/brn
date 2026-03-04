@@ -1,6 +1,6 @@
 <section class="space-y-5">
   <h1 class="text-3xl font-semibold">
-    {{t "description.dev.header" htmlSafe=true}}
+    {{t "description.dev.header"}}
   </h1>
   <p class="font-openSans font-semibold">
     {{t "description.dev.intro"}}
@@ -9,50 +9,17 @@
 
 <hr class="my-10" />
 
-<section class="space-y-5" aria-labelledby="whatIsDoneHeader">
-  <h2 id="whatIsDoneHeader" class="text-2xl font-semibold">
-    {{t "description.dev.done.header"}}
+<section class="space-y-5" aria-labelledby="evidenceHeader">
+  <h2 id="evidenceHeader" class="text-2xl font-semibold">
+    {{t "description.dev.evidence.header"}}
   </h2>
   <p class="font-openSans">
-    {{t "description.dev.done.text"}}
+    {{t "description.dev.evidence.intro"}}
   </p>
-  <h3 class="text-xl font-semibold">
-    {{t "description.dev.done.features_header"}}
-  </h3>
   <ul class="font-openSans space-y-3 list-disc list-inside">
-    {{#each (array 0 1 2 3 4) as |i|}}
-      <li>
-        {{t (concat "description.dev.done.features." i)}}
-      </li>
-    {{/each}}
-  </ul>
-</section>
-
-<hr class="my-10" />
-
-<section class="space-y-5" aria-labelledby="usersHeader">
-  <h2 id="usersHeader" class="text-2xl font-semibold">
-    {{t "description.dev.target_users.header"}}
-  </h2>
-  <ol class="font-openSans space-y-3 list-decimal list-inside">
     {{#each (array 0 1 2) as |i|}}
       <li>
-        {{t (concat "description.dev.target_users." i)}}
-      </li>
-    {{/each}}
-  </ol>
-</section>
-
-<hr class="my-10" />
-
-<section class="space-y-5" aria-labelledby="uniquenessHeader">
-  <h2 id="uniquenessHeader" class="text-2xl font-semibold">
-    {{t "description.dev.uniqueness.header"}}
-  </h2>
-  <ul class="font-openSans space-y-3 list-disc list-inside">
-    {{#each (array 0 1 2 3) as |i|}}
-      <li>
-        {{t (concat "description.dev.uniqueness." i)}}
+        {{t (concat "description.dev.evidence." i)}}
       </li>
     {{/each}}
   </ul>
@@ -60,47 +27,14 @@
 
 <hr class="my-10" />
 
-<section class="space-y-5" aria-labelledby="growthHeader">
-  <h2 id="growthHeader" class="text-2xl font-semibold">
-    {{t "description.dev.growth.header"}}
-  </h2>
-  <p class="font-openSans">
-    {{t "description.dev.growth.intro"}}
-  </p>
-  <ul class="font-openSans space-y-3 list-disc list-inside">
-    {{#each (array 0 1 2 3) as |i|}}
-      <li>
-        {{t (concat "description.dev.growth.tasks." i)}}
-      </li>
-    {{/each}}
-  </ul>
-</section>
-
-<hr class="my-10" />
-
-<section class="space-y-5" aria-labelledby="volunteersHeader">
-  <h2 id="volunteersHeader" class="text-2xl font-semibold">
-    {{t "description.dev.volunteers.header"}}
-  </h2>
-  <ul class="font-openSans space-y-3 list-disc list-inside">
-    {{#each (array 0 1 2 3 4 5) as |i|}}
-      <li>
-        {{t (concat "description.dev.volunteers." i)}}
-      </li>
-    {{/each}}
-  </ul>
-</section>
-
-<hr class="my-10" />
-
-<section class="space-y-5" aria-labelledby="benefitsHeader">
-  <h2 id="benefitsHeader" class="text-2xl font-semibold">
-    {{t "description.dev.benefits.header"}}
+<section class="space-y-5" aria-labelledby="audienceHeader">
+  <h2 id="audienceHeader" class="text-2xl font-semibold">
+    {{t "description.dev.audience.header"}}
   </h2>
   <ul class="font-openSans space-y-3 list-disc list-inside">
     {{#each (array 0 1 2) as |i|}}
       <li>
-        {{t (concat "description.dev.benefits." i)}}
+        {{t (concat "description.dev.audience." i)}}
       </li>
     {{/each}}
   </ul>
@@ -108,30 +42,63 @@
 
 <hr class="my-10" />
 
-<section
-  class="space-y-5" role="contentinfo"
-  aria-labelledby="teamHeader"
->
-  <h2 id="teamHeader" class="text-2xl font-semibold">
-    {{t "description.team.header"}}
+<section class="space-y-5" aria-labelledby="routineHeader">
+  <h2 id="routineHeader" class="text-2xl font-semibold">
+    {{t "description.dev.routine.header"}}
   </h2>
+  <p class="font-openSans">
+    {{t "description.dev.routine.intro"}}
+  </p>
+  <ul class="font-openSans space-y-3 list-disc list-inside">
+    {{#each (array 0 1 2) as |i|}}
+      <li>
+        {{t (concat "description.dev.routine." i)}}
+      </li>
+    {{/each}}
+  </ul>
+</section>
 
-  <section class="font-openSans">
-    <p class="mb-10">
-      {{t "description.team.thanks_words"}}
-    </p>
+<hr class="my-10" />
 
-    <ul class="sm:p-10 flex flex-wrap justify-between p-4 -mx-4 bg-gray-100">
-      {{#each this.persons.teamMembers as |teamMember i|}}
-        <li class="w-24 h-24 m-2 my-4 overflow-hidden rounded-full">
-          <img
-            src={{teamMember.img}}
-            alt={{t "description.team.image_alt" i=i}}
-          />
-        </li>
-      {{/each}}
-    </ul>
-  </section>
+<section class="space-y-5" aria-labelledby="expertsHeader">
+  <h2 id="expertsHeader" class="text-2xl font-semibold">
+    {{t "description.dev.experts.header"}}
+  </h2>
+  <p class="font-openSans">
+    {{t "description.dev.experts.intro"}}
+  </p>
+  <ul class="lg:grid-cols-2 grid gap-6">
+    {{#each this.persons.doctors as |doctor|}}
+      <li
+        class="sm:p-6 flex items-start p-4 bg-gray-100 border border-gray-200 rounded-lg"
+      >
+        <img
+          src={{doctor.img}}
+          alt={{doctor.name}}
+          class="w-20 h-20 mr-4 rounded-full"
+        />
+        <div>
+          <h3 class="text-lg font-semibold text-gray-800">
+            {{doctor.name}}
+          </h3>
+          <p class="font-openSans mt-2 text-sm leading-relaxed text-gray-600">
+            {{doctor.bio}}
+          </p>
+        </div>
+      </li>
+    {{/each}}
+  </ul>
+</section>
+
+<hr class="my-10" />
+
+<section class="space-y-5" aria-labelledby="noteHeader">
+  <h2 id="noteHeader" class="text-2xl font-semibold">
+    {{t "description.dev.note.header"}}
+  </h2>
+  <p class="font-openSans">
+    {{t "description.dev.note.text"}}
+  </p>
 </section>
 
 <hr class="my-10" />
@@ -152,23 +119,15 @@
       </a>
     </li>
     <li>
-      {{t "description.dev.cta.1"}}
+      <LinkTo
+        @route="specialists"
+        class="hover:no-underline text-blue-light underline"
+      >
+        {{t "description.dev.cta.1"}}
+      </LinkTo>
     </li>
     <li>
       {{t "description.dev.cta.2"}}
-    </li>
-    <li>
-      {{t "description.dev.cta.3"}}
-      <a
-        href="https://github.com/Brain-up/brn"
-        target="_blank"
-        rel="noopener noreferrer" class="hover:no-underline text-blue-light underline"
-      >
-        https://github.com/Brain-up/brn
-      </a>
-    </li>
-    <li>
-      {{t "description.dev.cta.4"}}
       <a
         href="https://t.me/ElenaBrainUp"
         target="_blank"
@@ -179,16 +138,3 @@
     </li>
   </ol>
 </section>
-
-<hr class="my-10" />
-
-<section>
-  <p class="my-10 text-2xl font-semibold text-center">
-    {{t "description.dev.closing"}}
-  </p>
-  <p class="font-openSans text-center">
-    {{t "description.dev.signature"}}
-  </p>
-</section>
-
-<hr class="my-10" />
