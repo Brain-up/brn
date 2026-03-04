@@ -91,7 +91,7 @@ class UserAccountServiceImpl(
         pageable: Pageable,
         role: String,
     ): List<UserAccountDto> = userAccountRepository
-        .findUsersAccountsByRole(role)
+        .findUsersAccountsByRole(role, pageable)
         .map { it.toDto() }
 
     override fun updateAvatarForCurrentUser(avatarUrl: String): UserAccountDto {
