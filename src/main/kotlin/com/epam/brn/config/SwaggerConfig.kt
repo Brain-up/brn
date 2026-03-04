@@ -28,18 +28,16 @@ class SwaggerConfig {
     fun rolesAllowedCustomizer(): OperationCustomizer? = OperationCustomizer { operation, handlerMethod ->
         var allowedRoles: Array<String>? = null
         var rolesAllowedAnnotation = handlerMethod.getMethodAnnotation(RolesAllowed::class.java)
-        if (rolesAllowedAnnotation != null) {
+        if (rolesAllowedAnnotation != null)
             allowedRoles = rolesAllowedAnnotation.value
-        } else {
+         else
             rolesAllowedAnnotation = handlerMethod.method.declaringClass.getAnnotation(RolesAllowed::class.java)
-            if (rolesAllowedAnnotation != null)
-                allowedRoles = rolesAllowedAnnotation.value
-        }
+            if (rolesAllowedAnnotation != null) allowedRoles = rolesAllowedAnnotation.value
 
         val sb = StringBuilder("Roles: ")
         if (allowedRoles != null)
             sb.append("**${allowedRoles.joinToString(",")}**")
-        else
+         else
             sb.append("**PUBLIC**")
 
         operation.description?.let {
