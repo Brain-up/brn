@@ -1,9 +1,8 @@
 package com.epam.brn.webclient.property
 
 import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.boot.context.properties.ConstructorBinding
 
-@ConstructorBinding
+// @ConstructorBinding
 @ConfigurationProperties(prefix = "github.api")
 data class GitHubApiClientProperty(
     val token: String,

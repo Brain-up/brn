@@ -2,9 +2,9 @@ package com.epam.brn.dto.request.contributor
 
 import com.epam.brn.enums.ContactType
 import com.epam.brn.model.Contact
+import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotNull
 import org.hibernate.validator.constraints.Length
-import javax.validation.constraints.NotBlank
-import javax.validation.constraints.NotNull
 
 data class ContactRequest(
     @field:NotNull

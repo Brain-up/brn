@@ -4,23 +4,16 @@ import com.epam.brn.model.Exercise
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.UserAccount
 import java.time.LocalDateTime
-import javax.validation.constraints.NotNull
 
 data class StudyHistoryDto(
     var id: Long?,
-    @field:NotNull
-    var exerciseId: Long?,
-    @field:NotNull
+    var exerciseId: Long,
     var startTime: LocalDateTime,
     var endTime: LocalDateTime?,
-    @field:NotNull
-    var executionSeconds: Int?,
-    @field:NotNull
-    var tasksCount: Short?,
-    @field:NotNull
-    var replaysCount: Int?, // -- count of replays.  --
-    @field:NotNull
-    var wrongAnswers: Int?, // -- wrong answers count --
+    var executionSeconds: Int,
+    var tasksCount: Short,
+    var replaysCount: Int, // -- count of replays.  --
+    var wrongAnswers: Int, // -- wrong answers count --
 ) {
     override fun toString(): String = "StudyHistoryDto(" +
         "exerciseId=$exerciseId, " +

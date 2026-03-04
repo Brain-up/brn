@@ -5,21 +5,15 @@ import com.epam.brn.model.AudiometryTask
 import com.epam.brn.model.Headphones
 import com.epam.brn.model.UserAccount
 import java.time.LocalDateTime
-import javax.validation.constraints.NotNull
 
 data class AudiometryHistoryRequest(
-    @field:NotNull
-    var audiometryTaskId: Long?,
-    @field:NotNull
+    var audiometryTaskId: Long,
     var startTime: LocalDateTime,
     var endTime: LocalDateTime?,
-    @field:NotNull
-    var executionSeconds: Int?,
-    @field:NotNull
-    var tasksCount: Short?,
+    var executionSeconds: Int,
+    var tasksCount: Short,
     var rightAnswers: Int? = 0,
-    @field:NotNull
-    var headphones: Long?,
+    var headphones: Long,
     var sinAudiometryResults: Map<Int, Int>? = mutableMapOf(),
 ) {
     fun toEntity(

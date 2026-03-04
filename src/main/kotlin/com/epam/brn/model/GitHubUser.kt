@@ -2,9 +2,9 @@ package com.epam.brn.model
 
 import com.epam.brn.dto.GitHubUserDto
 import org.hibernate.annotations.DynamicUpdate
-import javax.persistence.Entity
-import javax.persistence.Id
-import javax.persistence.Table
+import jakarta.persistence.Entity
+import jakarta.persistence.Id
+import jakarta.persistence.Table
 
 @Entity
 @Table(name = "github_user")

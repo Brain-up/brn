@@ -16,7 +16,7 @@ import com.epam.brn.upload.csv.RecordProcessor
 import com.epam.brn.upload.toStringWithoutBraces
 import org.apache.commons.lang3.StringUtils
 import org.springframework.stereotype.Component
-import javax.transaction.Transactional
+import jakarta.transaction.Transactional
 
 @Component
 class SeriesMatrixRecordProcessor(

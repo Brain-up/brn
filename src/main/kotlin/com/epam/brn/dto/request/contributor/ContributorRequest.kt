@@ -2,11 +2,10 @@ package com.epam.brn.dto.request.contributor
 
 import com.epam.brn.enums.ContributorType
 import com.epam.brn.model.Contributor
+import jakarta.validation.Valid
+import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.Positive
 import org.hibernate.validator.constraints.Length
-import javax.validation.Valid
-import javax.validation.constraints.NotBlank
-import javax.validation.constraints.NotNull
-import javax.validation.constraints.Positive
 
 data class ContributorRequest(
     @field:NotBlank
@@ -27,12 +26,9 @@ data class ContributorRequest(
     val companyEn: String?,
     @field:Length(max = 255)
     val pictureUrl: String?,
-    @field:NotNull
     @field:Positive
-    val contribution: Long?,
-    @field:NotNull
-    val type: ContributorType?,
-    @field:NotNull
+    val contribution: Long,
+    val type: ContributorType,
     val active: Boolean,
     val contacts: Set<@Valid ContactRequest> = mutableSetOf(),
 ) {

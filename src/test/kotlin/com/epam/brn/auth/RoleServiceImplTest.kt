@@ -16,7 +16,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.util.Optional
-import kotlin.test.assertEquals
+import org.amshove.kluent.shouldBeEqualTo
 import kotlin.test.assertFailsWith
 
 @ExtendWith(MockKExtension::class)
@@ -44,7 +44,7 @@ internal class RoleServiceImplTest {
 
         // THEN
         verify(exactly = 1) { roleRepository.findById(roleIdLong) }
-        assertEquals(roleById, role)
+        roleById shouldBeEqualTo role
     }
 
     @Test
@@ -63,7 +63,7 @@ internal class RoleServiceImplTest {
 
         // THEN
         verify(exactly = 1) { roleRepository.findByName(roleName) }
-        assertEquals(foundRole, role)
+        foundRole shouldBeEqualTo role
     }
 
     @Test
@@ -73,9 +73,11 @@ internal class RoleServiceImplTest {
         every { roleRepository.findById(roleId) } returns Optional.empty()
 
         // WHEN
-        assertFailsWith<EntityNotFoundException> {
-            roleServiceImpl.findById(roleId)
-        }
+        (
+            assertFailsWith<EntityNotFoundException> {
+                roleServiceImpl.findById(roleId)
+            }
+        )
     }
 
     @Test
@@ -98,12 +100,12 @@ internal class RoleServiceImplTest {
                 id = 1L,
                 name = "FirstName",
             )
-        every { roleRepository.save(role) } returns (role)
+        every { roleRepository.save(role) } returnsArgument 0
         // WHEN
         val resultSaving = roleServiceImpl.save(role)
         // THEN
         verify(exactly = 1) { roleRepository.save(role) }
-        assertEquals(role, resultSaving)
+        role shouldBeEqualTo resultSaving
     }
 
     @Test
@@ -120,7 +122,7 @@ internal class RoleServiceImplTest {
         val allRoles = roleServiceImpl.findAll()
         // THEN
         verify(exactly = 1) { roleRepository.findAll() }
-        assertEquals(1, allRoles.size)
+        allRoles.size shouldBe 1
     }
 
     @Test

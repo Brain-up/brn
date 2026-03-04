@@ -1,12 +1,10 @@
 package com.epam.brn.dto
 
 import com.epam.brn.enums.ExerciseType
-import javax.validation.constraints.NotBlank
-import javax.validation.constraints.NotNull
+import jakarta.validation.constraints.NotBlank
 
 data class SeriesDto(
-    @field:NotNull
-    val group: Long?,
+    val group: Long,
     val id: Long?,
     val type: ExerciseType,
     @field:NotBlank

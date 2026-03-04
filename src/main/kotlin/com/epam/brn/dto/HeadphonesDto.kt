@@ -2,7 +2,7 @@ package com.epam.brn.dto
 
 import com.epam.brn.enums.HeadphonesType
 import com.epam.brn.model.Headphones
-import javax.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotBlank
 
 data class HeadphonesDto(
     var id: Long? = null,

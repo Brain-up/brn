@@ -6,7 +6,6 @@ import com.epam.brn.webclient.property.GitHubApiClientProperty
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.HttpHeaders
-import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 import reactor.core.publisher.Mono
@@ -72,7 +71,7 @@ class GitHubApiClient
                         "${gitHubApiClientProperty.typeToken} ${gitHubApiClientProperty.token}",
                     )
             }.retrieve()
-            .onStatus(HttpStatus::isError) { Mono.empty() }
+            .onStatus({ it.is4xxClientError || it.is5xxServerError }) { Mono.empty() }
             .bodyToMono(GitHubUserDto::class.java)
             .onErrorResume { Mono.empty() }
             .block()

@@ -154,7 +154,7 @@ internal class AudiometryHistoryServiceTest {
         every { userAccountService.getCurrentUser() } returns userAccount
         every { audiometryHistoryRequest.audiometryTaskId } returns 1L
         every { audiometryTaskRepository.findById(1L) } returns Optional.of(audiometryTask)
-        every { audiometryHistoryRequest.headphones } returns null
+        every { audiometryHistoryRequest.headphones } returns 1L
 
         assertFailsWith<IllegalArgumentException> {
             audiometryHistoryService.save(audiometryHistoryRequest)
