@@ -3,6 +3,7 @@ package com.epam.brn.service.impl
 import com.epam.brn.dto.AudioFileMetaData
 import com.epam.brn.dto.response.UserWithAnalyticsResponse
 import com.epam.brn.dto.statistics.DayStudyStatistics
+import com.epam.brn.dto.statistics.UserExercisingPeriod
 import com.epam.brn.enums.ExerciseType
 import com.epam.brn.enums.Voice
 import com.epam.brn.exception.EntityNotFoundException
@@ -17,7 +18,7 @@ import com.epam.brn.service.TimeService
 import com.epam.brn.service.UserAccountService
 import com.epam.brn.service.UserAnalyticsService
 import com.epam.brn.service.WordsService
-import com.epam.brn.service.statistics.UserPeriodStatisticsService
+import com.epam.brn.service.statistics.progress.status.ProgressStatusManager
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import java.io.InputStream
@@ -33,12 +34,12 @@ class UserAnalyticsServiceImpl(
     private val userAccountRepository: UserAccountRepository,
     private val studyHistoryRepository: StudyHistoryRepository,
     private val exerciseRepository: ExerciseRepository,
-    private val userDayStatisticsService: UserPeriodStatisticsService<DayStudyStatistics>,
     private val timeService: TimeService,
     private val textToSpeechService: TextToSpeechService,
     private val userAccountService: UserAccountService,
     private val exerciseService: ExerciseService,
     private val wordsService: WordsService,
+    private val progressManager: ProgressStatusManager<List<StudyHistory>>,
 ) : UserAnalyticsService {
     private val listTextExercises = listOf(ExerciseType.SENTENCE, ExerciseType.PHRASES)
 
@@ -46,7 +47,10 @@ class UserAnalyticsServiceImpl(
         pageable: Pageable,
         role: String,
     ): List<UserWithAnalyticsResponse> {
-        val users = userAccountRepository.findUsersAccountsByRole(role).map { it.toAnalyticsDto() }
+        val users = userAccountRepository.findUsersAccountsByRole(role, pageable).map { it.toAnalyticsDto() }
+        if (users.isEmpty()) return emptyList()
+
+        val userIds = users.mapNotNull { it.id }
 
         val now = timeService.now()
         val firstWeekDay = WeekFields.of(Locale.getDefault()).dayOfWeek()
@@ -55,22 +59,50 @@ class UserAnalyticsServiceImpl(
         val to = startDay.plusDays(7L).with(LocalTime.MAX)
         val startOfCurrentMonth = now.withDayOfMonth(1).with(LocalTime.MIN)
 
-        users.onEach { user ->
-            user.lastWeek = userDayStatisticsService.getStatisticsForPeriod(from, to, user.id)
-            user.studyDaysInCurrentMonth =
-                countWorkDaysForMonth(
-                    userDayStatisticsService.getStatisticsForPeriod(startOfCurrentMonth, now, user.id),
-                )
+        val weekHistoriesByUserId =
+            studyHistoryRepository
+                .getHistoriesByUserIds(userIds, from, to)
+                .groupBy { it.userAccount.id }
 
-            val userStatistic = studyHistoryRepository.getStatisticsByUserAccountId(user.id)
-            user.apply {
-                this.firstDone = userStatistic.firstStudy
-                this.lastDone = userStatistic.lastStudy
-                this.spentTime = userStatistic.spentTime.toDuration(DurationUnit.SECONDS)
-                this.doneExercises = userStatistic.doneExercises
+        val monthHistoriesByUserId =
+            studyHistoryRepository
+                .getHistoriesByUserIds(userIds, startOfCurrentMonth, now)
+                .groupBy { it.userAccount.id }
+
+        val statisticsByUserId =
+            studyHistoryRepository
+                .getStatisticsByUserIds(userIds)
+                .associateBy { it.userId }
+
+        users.onEach { user ->
+            val weekHistories = weekHistoriesByUserId[user.id] ?: emptyList()
+            user.lastWeek = computeDayStatistics(weekHistories)
+
+            val monthHistories = monthHistoriesByUserId[user.id] ?: emptyList()
+            user.studyDaysInCurrentMonth = countWorkDaysForMonth(computeDayStatistics(monthHistories))
+
+            val userStatistic = statisticsByUserId[user.id]
+            if (userStatistic != null) {
+                user.apply {
+                    this.firstDone = userStatistic.firstStudy
+                    this.lastDone = userStatistic.lastStudy
+                    this.spentTime = userStatistic.spentTime.toDuration(DurationUnit.SECONDS)
+                    this.doneExercises = userStatistic.doneExercises
+                }
             }
         }
         return users
+    }
+
+    private fun computeDayStatistics(histories: List<StudyHistory>): List<DayStudyStatistics> {
+        val byDate = histories.groupBy { it.startTime.toLocalDate() }
+        return byDate.map { (_, dayHistories) ->
+            DayStudyStatistics(
+                exercisingTimeSeconds = dayHistories.sumOf { it.executionSeconds },
+                date = dayHistories.first().startTime,
+                progress = progressManager.getStatus(UserExercisingPeriod.DAY, dayHistories),
+            )
+        }
     }
 
     override fun prepareAudioStreamForUser(

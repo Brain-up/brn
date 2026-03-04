@@ -499,7 +499,7 @@ internal class UserAccountServiceTest {
         fun `should return all users`() {
             // GIVEN
             val usersList = listOf(userAccount, userAccount, userAccount)
-            every { userAccountRepository.findUsersAccountsByRole(BrnRole.USER) } returns usersList
+            every { userAccountRepository.findUsersAccountsByRole(BrnRole.USER, pageable) } returns usersList
             // WHEN
             val userAccountDtos = userAccountService.getUsers(pageable = pageable, BrnRole.USER)
             // THEN

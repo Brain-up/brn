@@ -9,12 +9,12 @@ import com.epam.brn.enums.ExerciseType
 import com.epam.brn.enums.Voice
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.UserAccount
-import com.epam.brn.model.projection.UserStatisticView
+import com.epam.brn.model.projection.UserStatisticsWithIdView
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.service.impl.UserAnalyticsServiceImpl
-import com.epam.brn.service.statistics.UserPeriodStatisticsService
+import com.epam.brn.service.statistics.progress.status.ProgressStatusManager
 import com.epam.brn.exception.EntityNotFoundException
 import io.kotest.matchers.shouldBe
 import io.mockk.every
@@ -46,9 +46,6 @@ internal class UserAnalyticsServiceTest {
     lateinit var exerciseRepository: ExerciseRepository
 
     @MockK
-    lateinit var userDayStatisticService: UserPeriodStatisticsService<DayStudyStatistics>
-
-    @MockK
     lateinit var timeService: TimeService
 
     @MockK
@@ -70,7 +67,7 @@ internal class UserAnalyticsServiceTest {
     lateinit var dayStudyStatistics: DayStudyStatistics
 
     @MockK
-    lateinit var userStatisticView: UserStatisticView
+    lateinit var progressManager: ProgressStatusManager<List<StudyHistory>>
 
     @MockK
     lateinit var wordsService: WordsService
@@ -78,16 +75,17 @@ internal class UserAnalyticsServiceTest {
     @Test
     fun `should return all users with analytics`() {
         val usersList = listOf(doctorAccount, doctorAccount)
-        val dayStatisticList = listOf(dayStudyStatistics, dayStudyStatistics)
+        val userStatisticView = mockk<UserStatisticsWithIdView>()
+        every { userStatisticView.userId } returns 1L
         every { userStatisticView.firstStudy } returns LocalDateTime.now()
         every { userStatisticView.lastStudy } returns LocalDateTime.now()
         every { userStatisticView.spentTime } returns 10000L
         every { userStatisticView.doneExercises } returns 1
 
-        every { userAccountRepository.findUsersAccountsByRole(BrnRole.ADMIN) } returns usersList
-        every { userDayStatisticService.getStatisticsForPeriod(any(), any(), any()) } returns dayStatisticList
+        every { userAccountRepository.findUsersAccountsByRole(BrnRole.ADMIN, pageable) } returns usersList
         every { timeService.now() } returns LocalDateTime.now()
-        every { studyHistoryRepository.getStatisticsByUserAccountId(any()) } returns userStatisticView
+        every { studyHistoryRepository.getHistoriesByUserIds(any(), any(), any()) } returns emptyList()
+        every { studyHistoryRepository.getStatisticsByUserIds(any()) } returns listOf(userStatisticView)
 
         val userAnalyticsDtos = userAnalyticsService.getUsersWithAnalytics(pageable, BrnRole.ADMIN)
 
@@ -97,16 +95,17 @@ internal class UserAnalyticsServiceTest {
     @Test
     fun `should not return user with analytics`() {
         val usersList = listOf(doctorAccount)
-        val dayStatisticList = emptyList<DayStudyStatistics>()
+        val userStatisticView = mockk<UserStatisticsWithIdView>()
+        every { userStatisticView.userId } returns 1L
         every { userStatisticView.firstStudy } returns LocalDateTime.now()
         every { userStatisticView.lastStudy } returns LocalDateTime.now()
         every { userStatisticView.spentTime } returns 10000L
         every { userStatisticView.doneExercises } returns 1
 
-        every { userAccountRepository.findUsersAccountsByRole(BrnRole.ADMIN) } returns usersList
-        every { userDayStatisticService.getStatisticsForPeriod(any(), any(), any()) } returns dayStatisticList
+        every { userAccountRepository.findUsersAccountsByRole(BrnRole.ADMIN, pageable) } returns usersList
         every { timeService.now() } returns LocalDateTime.now()
-        every { studyHistoryRepository.getStatisticsByUserAccountId(any()) } returns userStatisticView
+        every { studyHistoryRepository.getHistoriesByUserIds(any(), any(), any()) } returns emptyList()
+        every { studyHistoryRepository.getStatisticsByUserIds(any()) } returns emptyList()
 
         val userAnalyticsDtos = userAnalyticsService.getUsersWithAnalytics(pageable, BrnRole.ADMIN)
 

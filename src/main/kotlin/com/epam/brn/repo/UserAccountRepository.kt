@@ -53,6 +53,14 @@ interface UserAccountRepository : JpaRepository<UserAccount, Long> {
     )
     fun findUsersAccountsByRole(roleName: String): List<UserAccount>
 
+    @Query(
+        """select u FROM UserAccount u join u.roleSet roles where roles.name = :roleName""",
+    )
+    fun findUsersAccountsByRole(
+        roleName: String,
+        pageable: Pageable,
+    ): List<UserAccount>
+
     @Transactional
     @Modifying
     @Query(
