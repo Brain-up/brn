@@ -1,194 +1,172 @@
+# Brain Up
+
 [![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/Brain-up/brn)
+[![GitHub Stars](https://img.shields.io/github/stars/Brain-up/brn?style=flat-square)](https://github.com/Brain-up/brn)
+[![License: CC0-1.0](https://img.shields.io/badge/License-CC0_1.0-lightgrey.svg?style=flat-square)](https://creativecommons.org/publicdomain/zero/1.0/)
+[![Website](https://img.shields.io/website?url=https%3A%2F%2Fbrainup.site&style=flat-square&label=brainup.site)](https://brainup.site)
 
-# Brain Up!
-This project is a web-application being developed to support people with a deficit in their central auditory skills with or without hearing loss, i.e. users of cochlear implant or hearing aids. Intended to be used by children older than 7 years, adults, elderly subjects;  anyone who wants to improve their auditory skills, training their brain to improve the understanding of what is heard. 
-It is projected to contain several series of media exercises, which should be added incrementally. 
+**[Brain Up](https://brainup.site)** is a web application for auditory training, designed to help people with central auditory processing deficits (with or without hearing loss) improve their listening skills. It targets children (7+), adults, and elderly users — including cochlear implant and hearing aid wearers — through progressive series of audio exercises.
 
-Our current version is here : https://brainup.site (test user: default@default.ru/password, test specialist: default2@default.ru/password ).
-Now you as a user can register and start doing exercises.
+> **Try it now:** https://brainup.site
+> Test user: `default@default.ru` / `password` | Test specialist: `default2@default.ru` / `password`
 
-Very useful schema of platform structure and features: https://github.com/Brain-up/brn/wiki/Some-platform-organization-description
+---
 
-Our road map https://github.com/Brain-up/brn/blob/master/roadmap.md.
-Product Vision: [https://github.com/Brain-up/brn/wiki/Product-Vision](https://github.com/Brain-up/brn/wiki/BRN:-Product-Vision).
+## Project Structure
 
-## SCIENTIFIC SOURCES
-- Additional description with links to analogous applications: https://docs.google.com/document/d/1UKPE9ykj16JG6FZKoxqCoXI6ehWRhyXZnDNxPcaFLWQ/edit
-- Scientific basis of the project: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6417420/
-
-## Published ARTICLES about our project 
-- https://wearecommunity.io/communities/community-platform/articles/753 01.12.2020 russian 
-- https://habr.com/ru/company/epam_systems/blog/530824 01.12.2020
-
-Closed for public:
-- https://aw.club/global/en/blog/volunteer/brain-up?utm_source=telegram&utm_medium=social&utm_campaign=ongoing 11.08.2022 (russian, english) will be fixed soon
-- https://anywhere.epam.com/volunteer/pages-1/brainApp.html (will be fixed soon) 05.05.2020
-
-Only for Epamers:
-- https://info.epam.com/content/infoepam/topics/locations/russia/articles/2020/may/pro-bono-volunteers_ru.html 
-- https://info.epam.com/topics/global/industries/articles/2020/jul/brain-up_en.html 
-
-## WE ARE LOOKING FOR
-1. Front-end developers: Ember, Angular. 
-2. Server-side developers: Kotlin and Java. Components, REST and algorithms.
-3. IoS developers.
-4. Android developers.
-5. DevOps: Continuous integration and delivery.
-6. UX: Creative designers for UX research and prototype testing. Your ideas how to improve user retention are welcome.
-7. Paintest: for creation pictures for exercises. 
-8. Sign language specialist to create/improve content.
-9. QA engineers.
-10. Russian-speech specialists to help us with content.
-11. English-speech specialists to help us with content.
-    
-Join us! Learn something new, try your skills, prove yourself, get experience and get ahead!
-
-## HOW TO JOIN?
-Project on Epam Plus (for Epamers only): https://plus.epam.com/projects/21598/overview
-You can write directly in Telegram to Elena Moshnikova (project founder and tech lead) [https://t.me/ElenaBrainUp](https://t.me/ElenaBrainUp)
-or to project email [brainupspbproject@gmail.com](mailto:brainupspbproject@gmail.com) describing your interests or any questions you may have.  
-Also we have project chats:
-dev team Telegram chat: https://t.me/+R-6ThlxgP5QyZmMy  
-QA team Telegram chat: ask Elena
-Autotest Python team chat: ask Elena
-
-## TOOLS WE USE
-- Back-end: KOTLIN + Spring boot. Rest api as integration layer.
-- Front-end : TBD - Ember, Angular.
-- DB: Postgres13.
-- TestContainers for running integration tests.
-
-# GETTING STARTED!
-## Resources:
-### Documentation
-https://github.com/Brain-up/brn/wiki  (old Epam resourse https://awclub.atlassian.net/wiki/spaces/EPMLABSBRN/overview)
-### Product Vision: 
-https://github.com/Brain-up/brn/wiki/BRN:-Product-Vision (old one https://awclub.atlassian.net/wiki/spaces/EPMLABSBRN/pages/2130224/BRN+Product+Vision)
-(old one RoadMap: https://awclub.atlassian.net/wiki/spaces/EPMLABSBRN/pages/2130452/Roadmap)
-### Project Issues
-https://github.com/Brain-up/brn/issues
-### Coding standards
-https://github.com/Brain-up/brn/wiki/Coding-Standards  
-
-## Development:
-
-### FE Development prerequisites
-1. FrontEnd: Install node v12 or above https://nodejs.org/en/download/
-2. FrontEnd: Install yarn 1.19 or above https://yarnpkg.com/lang/en/docs/install
-3. FrontEnd: In order to make any commit you need Husky dependency be installed (you can use frontend build to get it)
-4. BackEnd: Install Docker https://hub.docker.com/search/?type=edition&offering=community 
-5. BackEnd: Idea
-
-### Start Front Angular Part - admin application
-Go to location where the project is download for example C:\brn\brn\frontend-angular
-
-📄 [See here](./frontend-angular/README.md)
-
-### Start Front Ember Part - user application
-📄 [See here](./frontend/README.md)
-
-### Database running:
-1. Install docker to your machine.
-The project uses postgres 11.5. [Documentation](https://www.postgresql.org/docs/11/index.html)
-Currently for local development we use [postgres docker image](https://hub.docker.com/_/postgres)
-To install docker use:
-* [on windows](https://docs.docker.com/docker-for-windows/install/)
-* [on mac](https://docs.docker.com/docker-for-mac/install/)
-* [on ubuntu](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
-* [debian](https://docs.docker.com/install/linux/docker-ce/debian/)
-* [centos](https://docs.docker.com/install/linux/docker-ce/centos/)
-
-2.1 To run docker db image use the following command:
-* on linux\windows:
 ```
-docker run --name postgres_dev -d -p 5432:5432 -e POSTGRES_DB=brn -e POSTGRES_PASSWORD=$PG_PASSWORD -e POSTGRES_USER=$PG_USER postgres:13
+brn/
+├── frontend/             # User-facing SPA (Ember.js / TypeScript)
+├── frontend-angular/     # Admin panel (Angular)
+├── src/                  # Backend API (Kotlin / Spring Boot)
+├── api-contract/         # REST API contract (RAML)
+├── docker-compose.yml    # Full-stack local setup
+└── .github/workflows/    # CI/CD pipelines
 ```
-`$PG_PASSWORD` and `$PG_USER` are environment variables and  could be replaced directly or added to your operating system. 
-[how to add in win10](https://www.architectryan.com/2018/03/17/add-to-the-path-on-windows-10). 
 
-2.2 Alternatively, you can just replace the variables by "admin", the default user and password for development:
+## Tech Stack
+
+| Layer | Technology |
+|-------|------------|
+| **Backend** | Kotlin + Spring Boot, REST API |
+| **Frontend (user)** | Ember.js 4.12 (Octane), TypeScript, Tailwind CSS |
+| **Frontend (admin)** | Angular |
+| **Database** | PostgreSQL 13 |
+| **Auth** | Firebase |
+| **CI/CD** | GitHub Actions, Docker |
+| **Testing** | JUnit + TestContainers (BE), QUnit + Mirage (Ember FE), Jasmine + Karma (Angular admin) |
+
+## Quick Start
+
+### Prerequisites
+
+- [Docker](https://docs.docker.com/get-docker/)
+- [Node.js](https://nodejs.org/) >= 22 (via [Volta](https://volta.sh/)) — for frontend
+- [JDK 17+](https://adoptium.net/) — for backend
+- [Yarn](https://yarnpkg.com/) 1.x — for frontend
+
+### Run Everything with Docker Compose
+
 ```bash
-docker run --name postgres_dev -d -p 5432:5432 -e POSTGRES_DB=brn -e POSTGRES_PASSWORD=admin -e POSTGRES_USER=admin postgres:13
-```
-
-### Back-end Kotlin Part:
-1. Run command 'gradle build' from main project folder to build project with tests.
-2. Application.kt is the main class to run application from Idea for example.
-3. Get Postman Collection from [https://www.postman.com/koylubaevNT/workspace/brainup/collection/2686902-d91ba307-e131-4d4f-a308-0a272e063c95 and environment from https://www.postman.com/koylubaevNT/workspace/brainup/environment/2686902-95b2c495-82a1-4244-83c7-dad7f8efebd7](https://brnteam.postman.co/workspace/My-Workspace~d7a4e69a-0ba8-4c56-8fc0-4e27e1998f7c/collection/2464717-96455e8c-ba11-49ed-a299-5c1b77b31db8?action=share&creator=2464717).
-You can directly login on www.brainup.site with some user, for example default2@default.ru / password, than use his token in postamn in Authorization tab use Bearer Token and put here yours.
-4. Make post request from "Firebase" folder "Get Authorization Token" using credentials. 
-5. Then you can call all other end-points from this Postman collection
-end-point specification is here: https://github.com/Brain-up/brn/blob/master/api-contract/api.raml
-6. use https://brainup.site/admin/swagger
-
-Note that if you are using IntelliJ, you may want to use version 2019.2 and later to avoid issues with new kotlin plugin.
-
-#### Useful Postman scripts:
-- [Script](./postman_scripts/generate_month_history.js) to generate month tasks statistics (you can use it with `brnlogin` request in `Test` tab)
-
-### Deploy Application USING DOCKER COMPOSE:
-(back-end part and front-end parts, but it is rather slow. it is better to use GitPod)
-From console, from project's folder, execute:
-```bash
+git clone https://github.com/Brain-up/brn.git
+cd brn
 docker compose up --build
-```
-Alternatively, use daemon mode (no console output):
-```bash
+# Or in daemon mode (no console output):
 docker compose up --build -d
 ```
-Local REST API will be accessible at http://localhost:8081/api/swagger-ui.html 
-Public is always here https://brainup.site/admin/swagger (login with ADMIN role user)
 
-docker useful command:
-```shell
-docker ps -a # for show all containers
-docker stop idContainer # for stop running container
-docker rm $(docker ps -a -q) # Remove all stopped containers
+- **API + Swagger:** http://localhost:8081/api/swagger-ui.html
+- **Public Swagger:** https://brainup.site/admin/swagger (login with ADMIN role user)
+
+### Run Frontend Only
+
+```bash
+cd frontend
+yarn install
+yarn local     # → localhost:4200, proxies API to localhost:8081
+yarn mirage    # → localhost:4200, mocked API (no backend needed)
 ```
-## Development tips:
-1. Get a task assigned in JIRA (for epamers) or issue (https://github.com/Brain-up/brn/issues) you chose and discussed it with @ElenaSpb, send your githubnick to her.
-2. Create branch from dev with the codename of your task, i.e. #GitHub_TaskNumber#.
-3. Implement your task, do not forget to write tests. Remember to follow project's coding standards: https://github.com/Brain-up/brn/wiki/Coding-Standards.
-4. Create pull request with task name and description about what was done. 
-5. Notify the team in our skype chat and wait for reviews. At least one reviewer is necessary, but more can be added in a case by case basis.
-6. The task gets merged by a project maintainer. 
-7. check that build job on jenkins passes successfully.
-8. Before load config files check them with https://orfogrammka.ru/ service.
-9. Integration tests does not run in build process, it can/should be run locally with run job verification/integrationTests.
 
-### Code style:
-1. Please refer for details to kb resources: https://github.com/Brain-up/brn/wiki/Coding-Standards
-2. Always use Ctrl+Alt+L in IDEA to update code formatting before committing!
-3. Use `gradlew ktlint` command to check code style. If this task fails, the related report with error details can be found in the 'build\reports\ktlint' folder. 
-4. It is also possible to use `gradlew ktlintFormat` command to fix code style errors automatically.
-5. Please note that if `gradlew ktlint` task fails, project build will fail also.
-6. For `api.raml` validation, you can use [Api Designer] (https://rawgit.com/mulesoft/api-designer/v0.4.2/dist/index.html).
+See [frontend/README.md](./frontend/README.md) for full details.
 
-### Kotlin input dto validation:
-https://github.com/Brain-up/brn/wiki/Kotlin-request-dto-validation-with-annotations
+### Run Backend Only
 
-### Flyway scripts naming
-use `V2yearmonthday_taskNumber`
-for example `V220210804_899`.
+```bash
+# Start PostgreSQL
+docker run --name postgres_dev -d -p 5432:5432 \
+  -e POSTGRES_DB=brn -e POSTGRES_PASSWORD=admin -e POSTGRES_USER=admin postgres:13
 
-### Branches:
-Use format '#GitHub_TaskNumber-# issue description' or 'Merge description'. Issue number must be in range [0-1999]
+# Build and run
+./gradlew build
+# Run Application.kt from your IDE
+```
 
-### Sonar:
-1. https://sonarcloud.io/code?id=Brain-up_brn our project sonar cloud.
-2. To view test coverage locally  
- 2.1 use jacoco gradle task locally `jacocoTestReport`  
- 2.2 command line: `gradle jacocoTestReport`
-3. Pay attention that main local metric would be a little bit different from the one in Sonar cloud.
+**API testing:** Use the [Postman collection](https://brnteam.postman.co/workspace/My-Workspace~d7a4e69a-0ba8-4c56-8fc0-4e27e1998f7c/collection/2464717-96455e8c-ba11-49ed-a299-5c1b77b31db8?action=share&creator=2464717). Login on brainup.site, then use the Bearer token from your session in Postman's Authorization tab. Endpoint specification: [`api-contract/api.raml`](./api-contract/api.raml).
 
-### Thanks companies for support
-- EPAM for Jira/Confluence, test instance and Jenkins, for contribution support program.
-- JetBrains for IDEA licenses
-- Selectel for public instance
-- GitHub for code place and actions where we run CI/CD
-- Yandex for Yandex Speech Kit service and free account to use it
+Useful Postman scripts: [generate month task statistics](./postman_scripts/generate_month_history.js) (use with `brnlogin` request in the `Test` tab).
 
-### Thanks all volunteers for contribution!
+### Run Admin Panel
 
-### License
-CC0 1.0 Universal https://joinup.ec.europa.eu/licence/cc0-10-universal-cc0-10-public-domain-dedication  
+See [frontend-angular/README.md](./frontend-angular/README.md).
+
+---
+
+## Resources
+
+| Resource | Link |
+|----------|------|
+| Documentation (Wiki) | https://github.com/Brain-up/brn/wiki |
+| Product Vision | [Product Vision](https://github.com/Brain-up/brn/wiki/BRN:-Product-Vision) |
+| Platform Structure | [Platform Schema](https://github.com/Brain-up/brn/wiki/Some-platform-organization-description) |
+| Roadmap | [roadmap.md](./roadmap.md) |
+| Issues | https://github.com/Brain-up/brn/issues |
+| Coding Standards | [Coding Standards](https://github.com/Brain-up/brn/wiki/Coding-Standards) |
+| Kotlin DTO Validation | [Request DTO validation with annotations](https://github.com/Brain-up/brn/wiki/Kotlin-request-dto-validation-with-annotations) |
+| API Contract | [`api-contract/api.raml`](./api-contract/api.raml) |
+| Sonar | https://sonarcloud.io/code?id=Brain-up_brn |
+
+### Scientific Background
+
+- [Scientific basis (PubMed)](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6417420/)
+- [Analogous applications overview](https://docs.google.com/document/d/1UKPE9ykj16JG6FZKoxqCoXI6ehWRhyXZnDNxPcaFLWQ/edit)
+
+### Articles About the Project
+
+- [WeAreCommunity (2020)](https://wearecommunity.io/communities/community-platform/articles/753)
+- [Habr (2020)](https://habr.com/ru/company/epam_systems/blog/530824)
+
+---
+
+## Contributing
+
+We welcome contributors of all skill levels! Join us — learn something new, try your skills, get experience and get ahead!
+
+### How to Join
+
+- **Telegram:** Contact Elena Moshnikova (project founder) — [https://t.me/ElenaBrainUp](https://t.me/ElenaBrainUp)
+- **Email:** [brainupspbproject@gmail.com](mailto:brainupspbproject@gmail.com)
+- **Dev chat:** https://t.me/+R-6ThlxgP5QyZmMy
+
+### We Are Looking For
+
+- **Frontend developers** (Ember.js, Angular)
+- **Backend developers** (Kotlin, Java)
+- **Mobile developers** (iOS, Android)
+- **DevOps engineers** (CI/CD, Docker)
+- **UX designers** (research, prototyping, user retention)
+- **QA engineers** (manual and automation)
+- **Content specialists** (Russian, English, sign language)
+- **Artists** for exercise illustrations
+
+### Development Workflow
+
+1. Pick an [issue](https://github.com/Brain-up/brn/issues) and discuss with [@ElenaSpb](https://github.com/ElenaSpb)
+2. Create a branch: `#issue_number-short-description`
+3. Implement with tests, follow [coding standards](https://github.com/Brain-up/brn/wiki/Coding-Standards)
+4. Open a pull request — at least one review required
+5. Maintainer merges after approval
+
+### Code Style
+
+- **Backend:** Run `./gradlew ktlintCheck` before committing (if it fails, the build fails too — check `build/reports/ktlint` for details). Auto-fix with `./gradlew ktlintFormat`
+- **Frontend:** Pre-commit hooks handle formatting automatically (Husky + lint-staged)
+- **Flyway migrations:** Name as `V2yearmonthday_taskNumber` (e.g. `V220210804_899`)
+- **Content files:** Validate Russian text with [orfogrammka.ru](https://orfogrammka.ru/) before committing
+- **Integration tests** don't run in the default build — run them locally with `./gradlew integrationTest`
+- **Local test coverage:** Run `./gradlew jacocoTestReport` (note: local metrics may differ slightly from [Sonar](https://sonarcloud.io/code?id=Brain-up_brn))
+
+---
+
+## Thanks
+
+- **EPAM** — infrastructure support and volunteer program
+- **JetBrains** — IDE licenses
+- **Selectel** — hosting
+- **GitHub** — code hosting and CI/CD
+- **Yandex** — Speech Kit service
+
+And thanks to all [volunteers](https://brainup.site/contributors) for their contributions!
+
+## License
+
+[CC0 1.0 Universal](https://creativecommons.org/publicdomain/zero/1.0/) — public domain dedication.

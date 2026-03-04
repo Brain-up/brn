@@ -2,9 +2,9 @@
   "name": "brn",
   "version": "0.0.0",
   "private": true,
-  "description": "Small description for brn goes here",
-  "repository": "",
-  "license": "MIT",
+  "description": "Web application for auditory training — frontend (Ember.js)",
+  "repository": "https://github.com/Brain-up/brn",
+  "license": "CC0-1.0",
   "author": "",
   "directories": {
     "doc": "doc",
