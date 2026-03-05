@@ -5,11 +5,13 @@ import {
 } from 'brn/components/statistics/bar-chart/component';
 import {
   PROGRESS,
-  UserExercisingProgressStatusType,
-} from 'brn/models/user-weekly-statistics';
+  type UserExercisingProgressStatusType,
+} from 'brn/schemas/user-weekly-statistics-types';
 import { DateTime } from 'luxon';
-import UserWeeklyStatisticsModel from 'brn/models/user-weekly-statistics';
+import type { UserWeeklyStatistics as UserWeeklyStatisticsModel } from 'brn/schemas/user-weekly-statistics';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { action } from '@ember/object';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { tracked } from '@glimmer/tracking';
 import { secondsTo } from 'brn/utils/seconds-to';
 import { isNone } from '@ember/utils';
@@ -42,8 +44,11 @@ export default class WeekTimeTrackComponent extends Component<IWeekTimeTrackComp
   get barOptions(): BarOptionsType {
     return {
       colors: {
-        data: (dataItem) =>
-          PROGRESS_COLORS[this.chartData[dataItem.index].progress],
+        data: (dataItem) => {
+          const index = dataItem.index ?? 0;
+          const chartItem = this.chartData?.[index];
+          return chartItem ? PROGRESS_COLORS[chartItem.progress] : PROGRESS_COLORS.BAD;
+        },
       },
       labels: {
         format: (seconds) => (seconds ? secondsTo(seconds, 'm:s') : ''),
@@ -51,8 +56,10 @@ export default class WeekTimeTrackComponent extends Component<IWeekTimeTrackComp
       axis: {
         x: {
           tick: {
-            format: (i: number) =>
-              `${this.chartData[i].x.toUpperCase()}\n${i + 1}`,
+            format: (i: number) => {
+              const chartItem = this.chartData?.[i];
+              return chartItem ? `${chartItem.x.toUpperCase()}\n${i + 1}` : `${i + 1}`;
+            },
             culling: false,
             show: false,
           },

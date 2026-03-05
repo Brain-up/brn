@@ -6,17 +6,17 @@
   class="series-container sm:flex-row flex flex-col items-center justify-center mt-3"
 >
   <li class="list-item sm:mr-6 mr-0">
-    <LinkTo @route="group" @model={{@model.lastObject}} title={{@model.lastObject.description}}>
+    <LinkTo @route="group" @model={{array-last @model}} title={{get (array-last @model) "description"}}>
       <ExerciseType
-        @initial={{@model.lastObject.name}}
+        @initial={{get (array-last @model) "name"}}
         @img="speech-exercises"
       />
     </LinkTo>
   </li>
   <li class="list-item sm:mt-0 mt-3">
-    <LinkTo @route="group" @model={{@model.firstObject}} title={{@model.firstObject.description}}>
+    <LinkTo @route="group" @model={{array-first @model}} title={{get (array-first @model) "description"}}>
       <ExerciseType
-        @initial={{@model.firstObject.name}}
+        @initial={{get (array-first @model) "name"}}
         @img="non-speech-exercises"
       />
     </LinkTo>

@@ -22,10 +22,8 @@ module(
       this.owner.register('service:audio', MockAudio);
 
       const store = this.owner.lookup('service:store');
-      const model = store.createRecord('task/words-sequences');
-      model.setProperties({
+      const model = store.createRecord('task/words-sequences', {
         exerciseMechanism: 'MATRIX',
-        type: 'task/MATRIX',
         name: '',
         wrongAnswers: [],
         template: '<OBJECT OBJECT_ACTION>',
@@ -175,10 +173,8 @@ module(
 
     test('renders with many columns (6 word types)', async function (assert) {
       const store = this.owner.lookup('service:store');
-      const model = store.createRecord('task/words-sequences');
-      model.setProperties({
+      const model = store.createRecord('task/words-sequences', {
         exerciseMechanism: 'MATRIX',
-        type: 'task/MATRIX',
         name: '',
         wrongAnswers: [],
         template: '<TYPE1 TYPE2 TYPE3 TYPE4 TYPE5 TYPE6>',
@@ -246,7 +242,6 @@ module(
         },
       });
       this.set('model', model);
-
       await render(hbs`
         <TaskPlayer::WordsSequences
           @task={{this.model}}

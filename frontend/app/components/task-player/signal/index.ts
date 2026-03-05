@@ -1,16 +1,20 @@
 import Component from '@glimmer/component';
-import TaskSignalModel from 'brn/models/task/signal';
-import { MODES } from 'brn/utils/task-modes';
+import type { TaskSignal as TaskSignalModel } from 'brn/schemas/task/signal';
+import { MODES, type Mode } from 'brn/utils/task-modes';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { action } from '@ember/object';
-import SignalModel from 'brn/models/signal';
+import type { Signal as SignalModel } from 'brn/schemas/signal';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { inject as service } from '@ember/service';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import StatsService, { StatEvents } from 'brn/services/stats';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { task, Task as TaskGenerator } from 'ember-concurrency';
 import AudioService from 'brn/services/audio';
 
 interface ISignalComponentArgs {
   task: TaskSignalModel;
-  mode: keyof typeof MODES;
+  mode: Mode;
   disableAnswers: boolean;
   activeWord: string;
   disableAudioPlayer: boolean;
@@ -23,7 +27,8 @@ export default class TaskPlayerSignalComponent extends Component<ISignalComponen
   @service('stats') stats!: StatsService;
   @service('audio') audio!: AudioService;
   get tasksCopy() {
-    return this.task?.get('parent').get('tasks').toArray() || [];
+    const tasks = this.task?.parent?.tasks;
+    return tasks ? Array.from(tasks) : [];
   }
 
   get onWrongAnswer() {
@@ -69,8 +74,8 @@ export default class TaskPlayerSignalComponent extends Component<ISignalComponen
 
   startTask() {
     if (this.args.mode === MODES.TASK) {
-      // @ts-expect-error SignalModel
-      this.audio.startPlayTask(this.audioFileUrl);
+      // @ts-expect-error SignalModel — audioFileUrl is a signal record, not a string
+      this.audio.startPlayTask([this.audioFileUrl]);
     }
   }
 

@@ -1,15 +1,19 @@
 import Component from 'brn/components/task-player/words-sequences/component';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { tracked } from '@glimmer/tracking';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import deepEqual from 'brn/utils/deep-equal';
 import customTimeout from 'brn/utils/custom-timeout';
 import { urlForAudio } from 'brn/utils/file-url';
 import deepCopy from 'brn/utils/deep-copy';
 import { TaskItem } from 'brn/utils/task-item';
 import { MODES } from 'brn/utils/task-modes';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { task, Task as TaskGenerator } from 'ember-concurrency';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { StatEvents } from 'brn/services/stats';
 import AnswerOption from 'brn/utils/answer-option';
-import SingleSimpleWordTask from 'brn/models/task/single-simple-words';
+import type { TaskSingleSimpleWords as SingleSimpleWordTask } from 'brn/schemas/task/single-simple-words';
 export default class SingleSimpleWordsComponent extends Component<SingleSimpleWordTask> {
   @tracked currentAnswer: string[] = [];
   willDestroy(): void {
@@ -32,7 +36,7 @@ export default class SingleSimpleWordsComponent extends Component<SingleSimpleWo
     const useGeneratedUrl =
       this.args.task.usePreGeneratedAudio && answer.audioFileUrl;
     const url = useGeneratedUrl
-      ? urlForAudio(answer.audioFileUrl)
+      ? urlForAudio(answer.audioFileUrl as string | null)
       : this.audio.audioUrlForText(
           task.answer.map((e: AnswerOption) => e.wordPronounce || e.word).join(' '),
         );
@@ -51,9 +55,13 @@ export default class SingleSimpleWordsComponent extends Component<SingleSimpleWo
   }
   get sortedAnswerOptions() {
     const opts = this.task.answerOptions;
+    // If all options have unassigned columns (-1), skip column sorting entirely
+    if (opts.every((o: AnswerOption) => (o.columnNumber ?? 0) < 0)) {
+      return opts;
+    }
     type Answers = typeof this.task.answerOptions;
     const acc: Record<string, Answers> = {};
-    const groupedOptions = opts.reduce((acc, option) => {
+    const groupedOptions = opts.reduce((acc: Record<string, Answers>, option: AnswerOption) => {
       const colId = (option.columnNumber ?? 0).toString();
       if (!acc[colId]) {
         acc[colId] = [];
@@ -91,7 +99,10 @@ export default class SingleSimpleWordsComponent extends Component<SingleSimpleWo
     return results;
   }
   get amountOfColumns() {
-    return this.task.exercise.wordsColumns;
+    const cols = this.task.exercise.wordsColumns;
+    const optCount = this.task.answerOptions?.length ?? 0;
+    // Don't use more columns than there are options
+    return optCount > 0 ? Math.min(cols, optCount) : cols;
   }
   get showTip() {
     if (!this.firstUncompletedTask) {
@@ -103,12 +114,12 @@ export default class SingleSimpleWordsComponent extends Component<SingleSimpleWo
   }
   updateLocalTasks() {
     const completedOrders = this.tasksCopy
-      .filterBy('completedInCurrentCycle', true)
-      .mapBy('order');
+      .filter((t) => t.completedInCurrentCycle)
+      .map((t) => t.order);
     const tasksCopy = deepCopy(this.task.tasksToSolve).map(
-      (copy: { order: string }) => {
+      (copy: { order: number }) => {
         const completedInCurrentCycle = completedOrders.includes(copy.order);
-        const copyEquivalent: any = this.tasksCopy.findBy('order', copy.order);
+        const copyEquivalent = this.tasksCopy.find((t: TaskItem) => t.order === copy.order);
         return new TaskItem({
           ...copy,
           completedInCurrentCycle,

@@ -51,14 +51,14 @@ class SeriesRepositoryTest {
     }
 
     @Test
-    fun `findDistinctByExerciseGroupIdAndActiveTrue should return correct data`() {
+    fun `findByExerciseGroupIdWithSubGroups should return correct data`() {
         // GIVEN
         val group = insertGroup()
         val series1 = insertSeries(group, "series one", true)
         val series2 = insertSeries(group, "series two", false)
 
         // WHEN
-        val result = seriesRepository.findDistinctByExerciseGroupIdAndActiveTrue(group.id!!)
+        val result = seriesRepository.findByExerciseGroupIdWithSubGroups(group.id!!)
 
         // THEN
         assertNotNull(result)

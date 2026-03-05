@@ -1,6 +1,3 @@
-import {
-  discoverEmberDataModels,
-} from 'ember-cli-mirage';
 import { createServer } from 'miragejs';
 
 
@@ -9,17 +6,13 @@ export default function(config) {
 
   let finalConfig = {
     ...config,
-    models: {
-      ...discoverEmberDataModels(config.store),
-      ...config.models
-    },
     routes,
   };
 
   return createServer(finalConfig);
 
 }
-export function routes() {
+function routes() {
    this.passthrough('/write-coverage');
 
   // These comments are here to help you get started. Feel free to delete them.

@@ -10,12 +10,16 @@ import com.epam.brn.dto.request.exercise.SetOfWords
 import com.epam.brn.dto.response.ExerciseWithWordsResponse
 import com.epam.brn.enums.BrnLocale
 import com.epam.brn.enums.BrnRole
+import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.ExerciseGroup
+import com.epam.brn.model.Role
 import com.epam.brn.model.Series
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.SubGroup
 import com.epam.brn.model.UserAccount
+import com.epam.brn.model.projection.ExerciseAvailabilityView
+import com.epam.brn.model.projection.ExerciseLastAttemptView
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.upload.csv.RecordProcessor
@@ -37,6 +41,7 @@ import io.mockk.verify
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.test.util.ReflectionTestUtils
+import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 import java.util.Optional
 import java.util.stream.Stream
@@ -109,7 +114,7 @@ internal class ExerciseServiceTest {
         val exercise2 = Exercise(id = 2, name = "pets", level = 100)
         val noiseUrl = "noiseUrl"
         every { userAccountService.getCurrentUserRoles() } returns setOf(BrnRole.ADMIN)
-        every { exerciseRepository.findExercisesBySubGroupId(subGroupId) } returns listOf(exercise1, exercise2)
+        every { exerciseRepository.findExercisesWithSubGroupBySubGroupId(subGroupId) } returns listOf(exercise1, exercise2)
         every { urlConversionService.makeUrlForNoise(ofType(String::class)) } returns noiseUrl
 
         // WHEN
@@ -118,7 +123,7 @@ internal class ExerciseServiceTest {
         // THEN
         actualResult shouldHaveSize 2
         actualResult.filter { it.available } shouldHaveSize 2
-        verify(exactly = 1) { exerciseRepository.findExercisesBySubGroupId(subGroupId) }
+        verify(exactly = 1) { exerciseRepository.findExercisesWithSubGroupBySubGroupId(subGroupId) }
         actualResult[0].level shouldBe 2
         actualResult[1].level shouldBe 100
     }
@@ -134,7 +139,7 @@ internal class ExerciseServiceTest {
         val exercise2 = Exercise(id = 2, name = "pets", level = 100)
         val noiseUrl = "noiseUrl"
         every { userAccountService.getCurrentUserRoles() } returns setOf(BrnRole.SPECIALIST, BrnRole.USER)
-        every { exerciseRepository.findExercisesBySubGroupId(subGroupId) } returns listOf(exercise1, exercise2)
+        every { exerciseRepository.findExercisesWithSubGroupBySubGroupId(subGroupId) } returns listOf(exercise1, exercise2)
         every { urlConversionService.makeUrlForNoise(ofType(String::class)) } returns noiseUrl
 
         // WHEN
@@ -143,7 +148,7 @@ internal class ExerciseServiceTest {
         // THEN
         actualResult shouldHaveSize 2
         actualResult.filter { it.available } shouldHaveSize 2
-        verify(exactly = 1) { exerciseRepository.findExercisesBySubGroupId(subGroupId) }
+        verify(exactly = 1) { exerciseRepository.findExercisesWithSubGroupBySubGroupId(subGroupId) }
         actualResult[0].level shouldBe 2
         actualResult[1].level shouldBe 100
     }
@@ -160,7 +165,7 @@ internal class ExerciseServiceTest {
         val exercise3 = Exercise(id = 3, name = "pets", level = 100)
         val noiseUrl = "noiseUrl"
         every { studyHistoryRepository.getDoneExercises(subGroupId, userId) } returns listOf(exercise1)
-        every { exerciseRepository.findExercisesBySubGroupId(subGroupId) } returns
+        every { exerciseRepository.findExercisesWithSubGroupBySubGroupId(subGroupId) } returns
             listOf(
                 exercise1,
                 exercise2,
@@ -176,7 +181,7 @@ internal class ExerciseServiceTest {
         // THEN
         actualResult shouldHaveSize 3
         actualResult.filter { it.available } shouldHaveSize 1
-        verify(exactly = 1) { exerciseRepository.findExercisesBySubGroupId(subGroupId) }
+        verify(exactly = 1) { exerciseRepository.findExercisesWithSubGroupBySubGroupId(subGroupId) }
         verify(exactly = 1) { studyHistoryRepository.getDoneExercises(ofType(Long::class), ofType(Long::class)) }
         verify(exactly = 1) {
             studyHistoryRepository.findLastBySubGroupAndUserAccount(
@@ -206,7 +211,7 @@ internal class ExerciseServiceTest {
         every { lastStudyHistoryMockk.replaysCount } returns 2
         every { lastStudyHistoryMockk.wrongAnswers } returns 5
         every { studyHistoryRepository.getDoneExercises(subGroupId, userId) } returns listOf(exercise1)
-        every { exerciseRepository.findExercisesBySubGroupId(subGroupId) } returns
+        every { exerciseRepository.findExercisesWithSubGroupBySubGroupId(subGroupId) } returns
             listOf(
                 exercise1,
                 exercise2,
@@ -225,7 +230,7 @@ internal class ExerciseServiceTest {
         // THEN
         actualResult shouldHaveSize 3
         actualResult.filter { it.available } shouldHaveSize 1
-        verify(exactly = 1) { exerciseRepository.findExercisesBySubGroupId(subGroupId) }
+        verify(exactly = 1) { exerciseRepository.findExercisesWithSubGroupBySubGroupId(subGroupId) }
         verify(exactly = 1) { studyHistoryRepository.getDoneExercises(ofType(Long::class), ofType(Long::class)) }
         verify(exactly = 1) {
             studyHistoryRepository.findLastBySubGroupAndUserAccount(
@@ -248,7 +253,7 @@ internal class ExerciseServiceTest {
         val allExercises = listOf(exercise1, exercise2, exercise3)
         val noiseUrl = "noiseUrl"
         every { studyHistoryRepository.getDoneExercises(subGroupId, userId) } returns allExercises
-        every { exerciseRepository.findExercisesBySubGroupId(subGroupId) } returns allExercises
+        every { exerciseRepository.findExercisesWithSubGroupBySubGroupId(subGroupId) } returns allExercises
         every { urlConversionService.makeUrlForNoise(ofType(String::class)) } returns noiseUrl
         every { userAccountService.getCurrentUserRoles() } returns setOf(BrnRole.USER)
 
@@ -258,8 +263,171 @@ internal class ExerciseServiceTest {
         // THEN
         actualResult shouldHaveSize 3
         actualResult.filter { it.available } shouldHaveSize 3
-        verify(exactly = 1) { exerciseRepository.findExercisesBySubGroupId(subGroupId) }
+        verify(exactly = 1) { exerciseRepository.findExercisesWithSubGroupBySubGroupId(subGroupId) }
         verify(exactly = 1) { studyHistoryRepository.getDoneExercises(ofType(Long::class), ofType(Long::class)) }
+    }
+
+    @Test
+    fun `should get available exercise ids without loading exercise DTOs for user`() {
+        // GIVEN
+        ReflectionTestUtils.setField(exerciseService, "minRepetitionIndex", 0.8)
+        ReflectionTestUtils.setField(exerciseService, "minRightAnswersIndex", 0.8)
+        val requestedExerciseId = 1L
+        val subGroupId = 2L
+        val userId = 3L
+        val currentUser = UserAccount(id = userId, email = "user@example.com", fullName = "User")
+        currentUser.roleSet.add(Role(id = 1L, name = BrnRole.USER))
+
+        val exercise1 = exerciseAvailabilityView(id = 1L, name = "pets", level = 1)
+        val exercise2 = exerciseAvailabilityView(id = 2L, name = "pets", level = 2)
+        val exercise3 = exerciseAvailabilityView(id = 3L, name = "pets", level = 3)
+
+        val lastAttempt = exerciseLastAttemptView(exerciseId = 1L, replaysCount = 0, wrongAnswers = 0)
+
+        every { exerciseRepository.findSubGroupIdByExerciseId(requestedExerciseId) } returns subGroupId
+        every { userAccountService.getCurrentUser() } returns currentUser
+        every { exerciseRepository.findExerciseAvailabilityBySubGroupId(subGroupId) } returns listOf(exercise1, exercise2, exercise3)
+        every { studyHistoryRepository.getDoneExerciseIds(subGroupId, userId) } returns listOf(1L)
+        every { studyHistoryRepository.findLastAttemptBySubGroupAndUserAccount(subGroupId, userId) } returns listOf(lastAttempt)
+
+        // WHEN
+        val actualResult = exerciseService.getAvailableExerciseIds(listOf(requestedExerciseId))
+
+        // THEN
+        actualResult shouldBe listOf(1L, 2L)
+        verify(exactly = 1) { exerciseRepository.findSubGroupIdByExerciseId(requestedExerciseId) }
+        verify(exactly = 1) { exerciseRepository.findExerciseAvailabilityBySubGroupId(subGroupId) }
+        verify(exactly = 1) { studyHistoryRepository.getDoneExerciseIds(subGroupId, userId) }
+        verify(exactly = 1) { studyHistoryRepository.findLastAttemptBySubGroupAndUserAccount(subGroupId, userId) }
+        verify(exactly = 0) { exerciseRepository.findExercisesWithSubGroupBySubGroupId(any()) }
+        verify(exactly = 0) { studyHistoryRepository.getDoneExercises(any(), any()) }
+    }
+
+    @Test
+    fun `should get all subgroup exercise ids for admin without loading exercise DTOs`() {
+        // GIVEN
+        val requestedExerciseId = 1L
+        val subGroupId = 2L
+        val currentUser = UserAccount(id = 3L, email = "admin@example.com", fullName = "Admin")
+        currentUser.roleSet.add(Role(id = 1L, name = BrnRole.ADMIN))
+
+        every { exerciseRepository.findSubGroupIdByExerciseId(requestedExerciseId) } returns subGroupId
+        every { userAccountService.getCurrentUser() } returns currentUser
+        every { exerciseRepository.findExerciseIdsBySubGroupId(subGroupId) } returns listOf(1L, 2L, 3L)
+
+        // WHEN
+        val actualResult = exerciseService.getAvailableExerciseIds(listOf(requestedExerciseId))
+
+        // THEN
+        actualResult shouldBe listOf(1L, 2L, 3L)
+        verify(exactly = 1) { exerciseRepository.findSubGroupIdByExerciseId(requestedExerciseId) }
+        verify(exactly = 1) { exerciseRepository.findExerciseIdsBySubGroupId(subGroupId) }
+        verify(exactly = 0) { exerciseRepository.findExerciseAvailabilityBySubGroupId(any()) }
+        verify(exactly = 0) { studyHistoryRepository.getDoneExerciseIds(any(), any()) }
+        verify(exactly = 0) { studyHistoryRepository.findLastAttemptBySubGroupAndUserAccount(any(), any()) }
+        verify(exactly = 0) { exerciseRepository.findExercisesWithSubGroupBySubGroupId(any()) }
+    }
+
+    @Test
+    fun `should preserve level order when available exercise names are interleaved`() {
+        // GIVEN
+        ReflectionTestUtils.setField(exerciseService, "minRepetitionIndex", 0.8)
+        ReflectionTestUtils.setField(exerciseService, "minRightAnswersIndex", 0.8)
+        val requestedExerciseId = 1L
+        val subGroupId = 2L
+        val userId = 3L
+        val currentUser = UserAccount(id = userId, email = "user@example.com", fullName = "User")
+        currentUser.roleSet.add(Role(id = 1L, name = BrnRole.USER))
+
+        val exercise1 = exerciseAvailabilityView(id = 1L, name = "alpha", level = 1)
+        val exercise2 = exerciseAvailabilityView(id = 2L, name = "beta", level = 2)
+        val exercise3 = exerciseAvailabilityView(id = 3L, name = "alpha", level = 3)
+        val exercise4 = exerciseAvailabilityView(id = 4L, name = "beta", level = 4)
+        val lastAttempt1 = exerciseLastAttemptView(exerciseId = 1L, replaysCount = 0, wrongAnswers = 0)
+        val lastAttempt2 = exerciseLastAttemptView(exerciseId = 2L, replaysCount = 0, wrongAnswers = 0)
+
+        every { exerciseRepository.findSubGroupIdByExerciseId(requestedExerciseId) } returns subGroupId
+        every { userAccountService.getCurrentUser() } returns currentUser
+        every {
+            exerciseRepository.findExerciseAvailabilityBySubGroupId(subGroupId)
+        } returns
+            listOf(
+                exercise1,
+                exercise2,
+                exercise3,
+                exercise4,
+            )
+        every { studyHistoryRepository.getDoneExerciseIds(subGroupId, userId) } returns listOf(1L, 2L)
+        every {
+            studyHistoryRepository.findLastAttemptBySubGroupAndUserAccount(subGroupId, userId)
+        } returns
+            listOf(
+                lastAttempt1,
+                lastAttempt2,
+            )
+
+        // WHEN
+        val actualResult = exerciseService.getAvailableExerciseIds(listOf(requestedExerciseId))
+
+        // THEN
+        actualResult shouldBe listOf(1L, 2L, 3L, 4L)
+    }
+
+    @Test
+    fun `should not unlock next exercise when last attempt is missing`() {
+        // GIVEN
+        ReflectionTestUtils.setField(exerciseService, "minRepetitionIndex", 0.8)
+        ReflectionTestUtils.setField(exerciseService, "minRightAnswersIndex", 0.8)
+        val requestedExerciseId = 1L
+        val subGroupId = 2L
+        val userId = 3L
+        val currentUser = UserAccount(id = userId, email = "user@example.com", fullName = "User")
+        currentUser.roleSet.add(Role(id = 1L, name = BrnRole.USER))
+
+        val exercise1 = exerciseAvailabilityView(id = 1L, name = "pets", level = 1)
+        val exercise2 = exerciseAvailabilityView(id = 2L, name = "pets", level = 2)
+        val exercise3 = exerciseAvailabilityView(id = 3L, name = "pets", level = 3)
+
+        every { exerciseRepository.findSubGroupIdByExerciseId(requestedExerciseId) } returns subGroupId
+        every { userAccountService.getCurrentUser() } returns currentUser
+        every { exerciseRepository.findExerciseAvailabilityBySubGroupId(subGroupId) } returns listOf(exercise1, exercise2, exercise3)
+        every { studyHistoryRepository.getDoneExerciseIds(subGroupId, userId) } returns listOf(1L)
+        every { studyHistoryRepository.findLastAttemptBySubGroupAndUserAccount(subGroupId, userId) } returns emptyList()
+
+        // WHEN
+        val actualResult = exerciseService.getAvailableExerciseIds(listOf(requestedExerciseId))
+
+        // THEN
+        actualResult shouldBe listOf(1L)
+    }
+
+    @Test
+    fun `should not unlock next exercise when last attempt is not done well`() {
+        // GIVEN
+        ReflectionTestUtils.setField(exerciseService, "minRepetitionIndex", 0.8)
+        ReflectionTestUtils.setField(exerciseService, "minRightAnswersIndex", 0.8)
+        val requestedExerciseId = 1L
+        val subGroupId = 2L
+        val userId = 3L
+        val currentUser = UserAccount(id = userId, email = "user@example.com", fullName = "User")
+        currentUser.roleSet.add(Role(id = 1L, name = BrnRole.USER))
+
+        val exercise1 = exerciseAvailabilityView(id = 1L, name = "pets", level = 1)
+        val exercise2 = exerciseAvailabilityView(id = 2L, name = "pets", level = 2)
+        val exercise3 = exerciseAvailabilityView(id = 3L, name = "pets", level = 3)
+        val lastAttempt = exerciseLastAttemptView(exerciseId = 1L, replaysCount = 2, wrongAnswers = 5)
+
+        every { exerciseRepository.findSubGroupIdByExerciseId(requestedExerciseId) } returns subGroupId
+        every { userAccountService.getCurrentUser() } returns currentUser
+        every { exerciseRepository.findExerciseAvailabilityBySubGroupId(subGroupId) } returns listOf(exercise1, exercise2, exercise3)
+        every { studyHistoryRepository.getDoneExerciseIds(subGroupId, userId) } returns listOf(1L)
+        every { studyHistoryRepository.findLastAttemptBySubGroupAndUserAccount(subGroupId, userId) } returns listOf(lastAttempt)
+
+        // WHEN
+        val actualResult = exerciseService.getAvailableExerciseIds(listOf(requestedExerciseId))
+
+        // THEN
+        actualResult shouldBe listOf(1L)
     }
 
     @Test
@@ -269,7 +437,7 @@ internal class ExerciseServiceTest {
         val noiseUrl = "noiseUrl"
         val exerciseDtoMock = ExerciseDto(2, 1, "name", 1, NoiseDto(0, noiseUrl))
         every { exerciseMock.toDto() } returns exerciseDtoMock
-        every { exerciseRepository.findById(ofType(Long::class)) } returns Optional.of(exerciseMock)
+        every { exerciseRepository.findByIdWithSubGroup(ofType(Long::class)) } returns exerciseMock
         every { urlConversionService.makeUrlForNoise(noiseUrl) }.returns(noiseUrl)
 
         // WHEN
@@ -277,7 +445,20 @@ internal class ExerciseServiceTest {
 
         // THEN
         actualResult shouldBe exerciseDtoMock
-        verify(exactly = 1) { exerciseRepository.findById(ofType(Long::class)) }
+        verify(exactly = 1) { exerciseRepository.findByIdWithSubGroup(ofType(Long::class)) }
+    }
+
+    @Test
+    fun `should throw EntityNotFoundException when exercise not found by id`() {
+        // GIVEN
+        val exerciseId = 999L
+        every { exerciseRepository.findByIdWithSubGroup(exerciseId) } returns null
+
+        // WHEN & THEN
+        shouldThrow<EntityNotFoundException> {
+            exerciseService.findExerciseById(exerciseId)
+        }
+        verify(exactly = 1) { exerciseRepository.findByIdWithSubGroup(exerciseId) }
     }
 
     @Test
@@ -303,7 +484,7 @@ internal class ExerciseServiceTest {
         val exerciseMock: Exercise = mockkClass(Exercise::class)
         val subGroupId = 1L
         val exerciseDto = ExerciseDto(id = 1, seriesId = 1, name = "name", noise = NoiseDto(url = "url"))
-        every { exerciseRepository.findExercisesBySubGroupId(subGroupId) } returns listOf(exerciseMock)
+        every { exerciseRepository.findExercisesWithSubGroupBySubGroupId(subGroupId) } returns listOf(exerciseMock)
         every { exerciseMock.toDto() } returns (exerciseDto)
         every { urlConversionService.makeUrlForNoise(ofType(String::class)) } returns "updatedNoiseUrl"
         // WHEN
@@ -311,7 +492,7 @@ internal class ExerciseServiceTest {
         // THEN
         actualResults shouldContain exerciseDto
         exerciseDto.noise.url shouldBe "updatedNoiseUrl"
-        verify(exactly = 1) { exerciseRepository.findExercisesBySubGroupId(subGroupId) }
+        verify(exactly = 1) { exerciseRepository.findExercisesWithSubGroupBySubGroupId(subGroupId) }
     }
 
     @Test
@@ -327,6 +508,31 @@ internal class ExerciseServiceTest {
         // THEN
         actualResults shouldContain exerciseWithWordsResponseMock
         verify(exactly = 1) { exerciseRepository.findExercisesByWord(word) }
+    }
+
+    @Test
+    fun `should keep lazy-loading read methods transactional`() {
+        val transactionalReadMethods =
+            setOf(
+                "findExerciseById",
+                "findExercisesByUserId",
+                "findExercisesBySubGroupForCurrentUser",
+                "findExercisesByUserIdAndSubGroupId",
+                "getAvailableExerciseIds",
+                "findExercisesWithTasksBySubGroup",
+                "findExercisesByWord",
+            )
+
+        val methodsByName = ExerciseService::class.java.declaredMethods.associateBy { it.name }
+
+        transactionalReadMethods.forEach { methodName ->
+            val method = checkNotNull(methodsByName[methodName]) { "Method $methodName is missing" }
+            val annotation =
+                checkNotNull(method.getAnnotation(Transactional::class.java)) {
+                    "Method $methodName must remain transactional"
+                }
+            annotation.readOnly shouldBe true
+        }
     }
 
     @Test
@@ -723,5 +929,31 @@ internal class ExerciseServiceTest {
         verify(exactly = 1) { seriesMatrixRecordProcessor.isApplicable(any()) }
         verify(exactly = 1) { seriesMatrixRecordProcessor.process(any(), any()) }
         exception.message shouldBe "Exercise with this name (${exerciseSentencesCreateDto.exerciseName}) already exist"
+    }
+
+    private fun exerciseAvailabilityView(
+        id: Long,
+        name: String,
+        level: Int,
+    ): ExerciseAvailabilityView {
+        val exercise = mockk<ExerciseAvailabilityView>()
+        every { exercise.id } returns id
+        every { exercise.name } returns name
+        every { exercise.level } returns level
+        return exercise
+    }
+
+    private fun exerciseLastAttemptView(
+        exerciseId: Long,
+        tasksCount: Short = 10,
+        replaysCount: Int,
+        wrongAnswers: Int,
+    ): ExerciseLastAttemptView {
+        val lastAttempt = mockk<ExerciseLastAttemptView>()
+        every { lastAttempt.exerciseId } returns exerciseId
+        every { lastAttempt.tasksCount } returns tasksCount
+        every { lastAttempt.replaysCount } returns replaysCount
+        every { lastAttempt.wrongAnswers } returns wrongAnswers
+        return lastAttempt
     }
 }

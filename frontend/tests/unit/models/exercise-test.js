@@ -10,7 +10,7 @@ module('Unit | Model | exercise', function (hooks) {
     let taskManager = this.owner.lookup('service:tasks-manager');
     let model = store.createRecord('exercise', {});
 
-    [1, 2]
+    ['1', '2']
       .map((id) => store.createRecord('task', { exercise: model, id }))
       .map((task) => taskManager.saveAsCompleted(task));
     assert.ok(model.isCompleted, 'works fine');

@@ -8,6 +8,8 @@ import com.epam.brn.model.Contact
 import com.epam.brn.model.Contributor
 import com.epam.brn.model.GitHubUser
 import com.epam.brn.repo.ContributorRepository
+import org.springframework.cache.annotation.CacheEvict
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -15,27 +17,29 @@ import org.springframework.transaction.annotation.Transactional
 class ContributorServiceImpl(
     val contributorRepository: ContributorRepository,
 ) : ContributorService {
+    @Cacheable("allContributors")
     @Transactional(readOnly = true)
     override fun getAllContributors(): List<ContributorResponse> = contributorRepository
-        .findAll()
-        .stream()
-        .map { e -> e.toContributorResponse() }
-        .toList()
+        .findAllWithAssociations()
+        .map { it.toContributorResponse() }
 
+    // Cache key intentionally excludes `locale` because the response always includes both
+    // RU and EN fields, so the locale parameter does not affect the cached result.
+    @Cacheable(value = ["contributorsByType"], key = "#type")
     @Transactional(readOnly = true)
     override fun getContributors(
         locale: String,
         type: ContributorType,
     ): List<ContributorResponse> = contributorRepository
         .findAllByType(type)
-        .stream()
-        .map { e -> e.toContributorResponse(locale) }
-        .toList()
+        .map { it.toContributorResponse(locale) }
 
+    @CacheEvict(value = ["allContributors", "contributorsByType"], allEntries = true)
     @Transactional
     override fun createContributor(request: ContributorRequest): ContributorResponse =
         contributorRepository.save(request.toEntity()).toContributorResponse()
 
+    @CacheEvict(value = ["allContributors", "contributorsByType"], allEntries = true)
     @Transactional
     override fun updateContributor(
         id: Long,
@@ -60,6 +64,7 @@ class ContributorServiceImpl(
         return contributorRepository.save(contributor).toContributorResponse()
     }
 
+    @CacheEvict(value = ["allContributors", "contributorsByType"], allEntries = true)
     @Transactional
     override fun createOrUpdateByGitHubUser(
         gitHubUser: GitHubUser,

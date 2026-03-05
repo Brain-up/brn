@@ -54,9 +54,10 @@ internal class SubGroupServiceTest {
         every { subGroupRepository.findBySeriesId(seriesId) } returns
             listOf(subGroupMockk, subGroupMockkWithPictures2, subGroupMockkWithPictures1)
         every { urlConversionService.makeUrlForSubGroupPicture("code") } returns pictureUrl
-        every { subGroupMockk.toResponse(pictureUrl) } returns subGroupResponse
-        every { subGroupMockkWithPictures1.toResponse(pictureUrl) } returns subGroupResponseWithPictures1
-        every { subGroupMockkWithPictures2.toResponse(pictureUrl) } returns subGroupResponseWithPictures2
+        every { exerciseRepository.findExerciseIdsBySubGroupId(any()) } returns emptyList()
+        every { subGroupMockk.toResponse(pictureUrl, any()) } returns subGroupResponse
+        every { subGroupMockkWithPictures1.toResponse(pictureUrl, any()) } returns subGroupResponseWithPictures1
+        every { subGroupMockkWithPictures2.toResponse(pictureUrl, any()) } returns subGroupResponseWithPictures2
         every { subGroupMockk.code } returns "code"
         every { subGroupMockkWithPictures1.code } returns "code"
         every { subGroupMockkWithPictures2.code } returns "code"
@@ -111,7 +112,8 @@ internal class SubGroupServiceTest {
         val subGroupId = 1L
         val subGroupResponse = SubGroupResponse(subGroupId, 1L, 5, "name", "url/code", "description", false)
         every { subGroupRepository.findById(subGroupId) } returns Optional.of(subGroupMockk)
-        every { subGroupMockk.toResponse("url/code") } returns subGroupResponse
+        every { exerciseRepository.findExerciseIdsBySubGroupId(any()) } returns emptyList()
+        every { subGroupMockk.toResponse("url/code", any()) } returns subGroupResponse
         every { urlConversionService.makeUrlForSubGroupPicture("code") } returns "url/code"
         every { subGroupMockk.code } returns "code"
         // WHEN
@@ -140,12 +142,13 @@ internal class SubGroupServiceTest {
         val subGroup = spyk(SubGroup(1, "", code = code, 2, "", false, seriesMockk))
         val subGroupResponse = SubGroupResponse(2, 2, 2, "name", pictureUrl, "description", false)
         every { seriesMockk.id } returns seriesId
-        every { subGroup.toResponse(pictureUrl) } returns subGroupResponse
+        every { exerciseRepository.findExerciseIdsBySubGroupId(any()) } returns emptyList()
+        every { subGroup.toResponse(pictureUrl, any()) } returns subGroupResponse
         every { urlConversionService.makeUrlForSubGroupPicture(code) } returns pictureUrl
         // WHEN
         val resultSubGroupDto = subGroupService.toSubGroupResponse(subGroup)
         // THEN
-        verify(exactly = 1) { subGroup.toResponse(pictureUrl) }
+        verify(exactly = 1) { subGroup.toResponse(pictureUrl, any()) }
         resultSubGroupDto.pictureUrl shouldBe "url/code"
     }
 
@@ -160,7 +163,9 @@ internal class SubGroupServiceTest {
         every { seriesRepository.findById(seriesId) } returns Optional.of(seriesMockk)
         every { subGroupRepository.save(subGroupRequest.toModel(seriesMockk)) } returns subGroupMockk
         every { subGroupMockk.code } returns "code"
+        every { subGroupMockk.id } returns 1L
         every { urlConversionService.makeUrlForSubGroupPicture("code") } returns "url/code"
+        every { exerciseRepository.findExerciseIdsBySubGroupId(any()) } returns emptyList()
         // WHEN
         subGroupService.addSubGroupToSeries(seriesId = seriesId, subGroupRequest = subGroupRequest)
         // THEN
@@ -203,6 +208,29 @@ internal class SubGroupServiceTest {
     }
 
     @Test
+    fun `should return subgroup dto with exercise ids populated`() {
+        // GIVEN
+        val code = "code"
+        val pictureUrl = "url/code"
+        val seriesMockk = mockkClass(Series::class)
+        val seriesId = 1L
+        val subGroupId = 10L
+        val exerciseIds = listOf(100L, 200L, 300L)
+        val subGroup = spyk(SubGroup(subGroupId, "", code = code, 2, "", false, seriesMockk))
+        val subGroupResponse = SubGroupResponse(2, 2, 2, "name", pictureUrl, "description", false, exercises = exerciseIds.toMutableList())
+        every { seriesMockk.id } returns seriesId
+        every { exerciseRepository.findExerciseIdsBySubGroupId(subGroupId) } returns exerciseIds
+        every { subGroup.toResponse(pictureUrl, exerciseIds) } returns subGroupResponse
+        every { urlConversionService.makeUrlForSubGroupPicture(code) } returns pictureUrl
+        // WHEN
+        val resultSubGroupDto = subGroupService.toSubGroupResponse(subGroup)
+        // THEN
+        verify(exactly = 1) { exerciseRepository.findExerciseIdsBySubGroupId(subGroupId) }
+        verify(exactly = 1) { subGroup.toResponse(pictureUrl, exerciseIds) }
+        resultSubGroupDto.exercises shouldBe exerciseIds.toMutableList()
+    }
+
+    @Test
     fun `updateSubGroupById should update existing subgroup`() {
         // GIVEN
         val subGroupId = 1L
@@ -213,7 +241,8 @@ internal class SubGroupServiceTest {
         every { subGroupRepository.save(subGroupMockk) } returns subGroupMockk
         every { subGroupMockk.code } returns "code"
         every { urlConversionService.makeUrlForSubGroupPicture("code") } returns "someUrl"
-        every { subGroupMockk.toResponse("someUrl") } returns subGroupResponseMockk
+        every { exerciseRepository.findExerciseIdsBySubGroupId(any()) } returns emptyList()
+        every { subGroupMockk.toResponse("someUrl", any()) } returns subGroupResponseMockk
         // THEN
         subGroupService.updateSubGroupById(subGroupId, subGroupChangeRequest) shouldBe subGroupResponseMockk
     }

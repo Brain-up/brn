@@ -17,6 +17,7 @@ export default class PasswordRecoveryController extends Controller {
   @tracked code = '';
   @tracked newPassword = '';
   @tracked error = '';
+  @tracked isSubmitting = false;
 
   enableRecoveryCodeProcessing = false;
 
@@ -35,21 +36,27 @@ export default class PasswordRecoveryController extends Controller {
   @action
   async sendRecoveryLink() {
     this.resetErrors();
+    this.isSubmitting = true;
     try {
       await this.firebase.resetPassword(this.email.trim());
       this.router.transitionTo('login');
     } catch (e) {
       this.error = e.message;
+    } finally {
+      this.isSubmitting = false;
     }
   }
 
   @action
   async changePassword() {
     this.resetErrors();
+    this.isSubmitting = true;
     try {
       await this.firebase.confirmPasswordReset(this.code, this.newPassword);
     } catch (e) {
       this.error = e.message;
+    } finally {
+      this.isSubmitting = false;
     }
   }
 

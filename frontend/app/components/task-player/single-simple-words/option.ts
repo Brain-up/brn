@@ -1,12 +1,12 @@
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
-import { MODES } from 'brn/utils/task-modes';
+import { MODES, type Mode } from 'brn/utils/task-modes';
 import { inject as service } from '@ember/service';
 import ImageLocatorService from 'brn/services/image-locator';
 import StudyConfigService from 'brn/services/study-config';
 
 interface ITaskPlayerSingleWordsOptionComponentArguments {
-  mode: keyof typeof MODES;
+  mode: Mode;
   disableAnswers: boolean;
   isCorrect: boolean;
   activeWord: string;

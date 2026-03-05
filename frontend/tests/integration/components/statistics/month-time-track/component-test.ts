@@ -4,10 +4,10 @@ import { setupIntl } from 'ember-intl/test-support';import { setupRenderingTest 
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
 import { DateTime } from 'luxon';
-import { PROGRESS } from 'brn/models/user-weekly-statistics';
+import { PROGRESS } from 'brn/schemas/user-weekly-statistics-types';
 import sinon from 'sinon';
 import click from '@ember/test-helpers/dom/click';
-import Store from '@ember-data/store';
+import { type Store } from '@warp-drive/core';
 
 const generateTrackData = (
   store: Store,
@@ -22,7 +22,7 @@ const generateTrackData = (
   for (let i = 0; i < months.length; i++) {
     const month = months[i];
     const mm: string = (month < 10 ? '0' : '') + month;
-    const trackItemData = store.createRecord('UserYearlyStatistics', {
+    const trackItemData = store.createRecord('user-yearly-statistics', {
       progress: PROGRESS.GREAT,
       date: DateTime.fromFormat(`${year}-${mm}-03`, 'yyyy-MM-dd'),
       exercisingDays: 5,

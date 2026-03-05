@@ -239,8 +239,8 @@ class UserSubGroupStatisticsControllerV2IT : BaseIT() {
         userDailyDetailStatisticsDto1.seriesName shouldBe seriesName1
         userDailyDetailStatisticsDto1.allDoneExercises shouldBe 4
         userDailyDetailStatisticsDto1.uniqueDoneExercises shouldBe 3
-        userDailyDetailStatisticsDto1.repeatedExercises shouldBe 2
-        userDailyDetailStatisticsDto1.doneExercisesSuccessfullyFromFirstTime shouldBe 2
+        userDailyDetailStatisticsDto1.repeatedExercises shouldBe 1
+        userDailyDetailStatisticsDto1.doneExercisesSuccessfullyFromFirstTime shouldBe 3
         userDailyDetailStatisticsDto1.listenWordsCount shouldBe 12
 
         userDailyDetailStatisticsDto2.seriesName shouldBe seriesName2
@@ -304,8 +304,8 @@ class UserSubGroupStatisticsControllerV2IT : BaseIT() {
         userDailyDetailStatisticsDto1.seriesName shouldBe seriesName1
         userDailyDetailStatisticsDto1.allDoneExercises shouldBe 4
         userDailyDetailStatisticsDto1.uniqueDoneExercises shouldBe 3
-        userDailyDetailStatisticsDto1.repeatedExercises shouldBe 2
-        userDailyDetailStatisticsDto1.doneExercisesSuccessfullyFromFirstTime shouldBe 2
+        userDailyDetailStatisticsDto1.repeatedExercises shouldBe 1
+        userDailyDetailStatisticsDto1.doneExercisesSuccessfullyFromFirstTime shouldBe 3
         userDailyDetailStatisticsDto1.listenWordsCount shouldBe 12
 
         userDailyDetailStatisticsDto2.seriesName shouldBe seriesName2

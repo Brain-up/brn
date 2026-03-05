@@ -1,7 +1,7 @@
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
-import { MODES } from 'brn/utils/task-modes';
+import { MODES, type Mode } from 'brn/utils/task-modes';
 
 const BUTTONS = {
   ACTIVE: 'active',
@@ -9,17 +9,15 @@ const BUTTONS = {
   DISABLED: 'disabled',
 };
 
-type ValueOf<T> = T[keyof T];
-
 interface IExerciseStepsComponentArgs {
-  activeStep: ValueOf<typeof MODES>;
+  activeStep: Mode;
   visible: boolean;
   onClick: (key: string) => unknown;
 }
 
 export default class ExerciseStepsComponent extends Component<IExerciseStepsComponentArgs> {
-  @tracked modes: ValueOf<typeof MODES>[] = [];
-  MODES: Record<keyof typeof MODES, string> = MODES;
+  @tracked modes: Mode[] = [];
+  MODES = MODES;
   get modeForListen() {
     if (this.args.activeStep === MODES.LISTEN) {
       return BUTTONS.ACTIVE;
@@ -47,7 +45,7 @@ export default class ExerciseStepsComponent extends Component<IExerciseStepsComp
     }
     this.args.onClick(key);
   }
-  @action setLastMode(_: unknown, [mode]: string[]) {
+  @action setLastMode(_: unknown, [mode]: Mode[]) {
     if (mode === MODES.LISTEN) {
       this.modes = [mode];
     } else if (!this.modes.includes(mode)) {

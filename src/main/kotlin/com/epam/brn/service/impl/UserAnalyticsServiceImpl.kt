@@ -5,6 +5,7 @@ import com.epam.brn.dto.response.UserWithAnalyticsResponse
 import com.epam.brn.dto.statistics.DayStudyStatistics
 import com.epam.brn.enums.ExerciseType
 import com.epam.brn.enums.Voice
+import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.ExerciseRepository
@@ -83,7 +84,11 @@ class UserAnalyticsServiceImpl(
         exerciseId: Long,
         audioFileMetaData: AudioFileMetaData,
     ): AudioFileMetaData {
-        val seriesType = ExerciseType.valueOf(exerciseRepository.findTypeByExerciseId(exerciseId))
+        val seriesType =
+            ExerciseType.valueOf(
+                exerciseRepository.findTypeByExerciseId(exerciseId)
+                    ?: throw EntityNotFoundException("No exercise found for id=$exerciseId"),
+            )
         val text = audioFileMetaData.text
         if (!listTextExercises.contains(seriesType))
             audioFileMetaData.text = text.replace(" ", ", ")

@@ -1,12 +1,17 @@
 import Route from '@ember/routing/route';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { inject as service } from '@ember/service';
-import Store from '@ember-data/store';
+import type Store from 'brn/services/store';
+import type { Contributor } from 'brn/schemas/contributor';
 
 
 export default class SpecialistsRoute extends Route {
     @service('store') store!: Store;
     async model() {
-        const request = await this.store.findAll('contributor');
-        return request.filterBy('kind', 'SPECIALIST').filterBy('isActive', true).sortBy('contribution').reverse();
+        const request = await this.store.findAll<Contributor>('contributor');
+        return request
+            .filter((e) => e.kind === 'SPECIALIST')
+            .filter((e) => e.isActive)
+            .sort((a, b) => b.contribution - a.contribution);
     }
 }

@@ -1,17 +1,24 @@
 import LoginFormComponent from 'brn/components/login-form/component';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { action } from '@ember/object';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { task, Task } from 'ember-concurrency';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { tracked } from '@glimmer/tracking';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { getOwner } from '@ember/application';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import FirebaseAuthenticator from 'brn/authenticators/firebase';
 import { isBornYearValid } from 'brn/utils/validators';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const ERRORS_MAP = {
   'The user already exists!': 'registration_form.email_exists',
   PASSWORD_MUST_BE_BETWEEN_6_AND_20_CHARACTERS_LONG:
     'registration_form.password_length',
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface LatestUserDTO {
   name: string;
   email: string;
@@ -98,7 +105,7 @@ export default class RegistrationFormComponent extends LoginFormComponent {
   set login(value) {
     this.email = value;
   }
-  @(task(function* (this: RegistrationFormComponent) {
+  @(task(function* (this: RegistrationFormComponent): Generator<unknown, void, any> {
     const user: LatestUserDTO = {
       name: this.firstName.trim(),
       email: this.email,
@@ -113,7 +120,8 @@ export default class RegistrationFormComponent extends LoginFormComponent {
       ) as FirebaseAuthenticator;
       yield auth.registerUser(user.email, user.password);
     } catch (e) {
-      this.serverErrorMessage = e.message;
+      const error = e as Error;
+      this.serverErrorMessage = error.message;
       yield this.registrationTask.cancelAll();
       return;
     }
@@ -171,7 +179,7 @@ export default class RegistrationFormComponent extends LoginFormComponent {
   }
 
   @action
-  setBirthday(e: Event) {
+  setBirthday(e: KeyboardEvent) {
     const key = e.key;
     const allowedKeys = [
       'Backspace',
