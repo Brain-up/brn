@@ -43,7 +43,9 @@ class WordsService {
 
         val selectedVoice =
             getVoiceForLocale(locale, voice)
-                ?: throw IllegalArgumentException("Locale $locale does not support voice $voice, only ${localeVoices.map { it.name }}.")
+                ?: throw IllegalArgumentException(
+                    "Locale $locale does not support voice $voice, only ${localeVoices.map { it.name }}.",
+                )
 
         runtimeDefaultVoices[locale.lowercase()] = selectedVoice
         return selectedVoice

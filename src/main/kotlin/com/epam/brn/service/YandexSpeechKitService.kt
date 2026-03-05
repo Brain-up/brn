@@ -60,6 +60,7 @@ class YandexSpeechKitService(
         return iamToken
     }
 
+    @ExcludeFromJacocoGeneratedReport
     private fun requestIamToken(): YandexIamTokenDto = yandexIamTokenWebClient
         .post()
         .bodyValue(mapOf("yandexPassportOauthToken" to yandexTtsProperties.authToken))
@@ -68,7 +69,11 @@ class YandexSpeechKitService(
             response
                 .bodyToMono(String::class.java)
                 .defaultIfEmpty("no body")
-                .map { body -> YandexServiceException("Can't get Yandex IAM token, status=${response.statusCode()}: $body") }
+                .map { body ->
+                    YandexServiceException(
+                        "Can't get Yandex IAM token, status=${response.statusCode()}: $body",
+                    )
+                }
         }.bodyToMono(YandexIamTokenDto::class.java)
         .block() ?: throw YandexServiceException("Failed to get IAM token from Yandex Cloud")
 

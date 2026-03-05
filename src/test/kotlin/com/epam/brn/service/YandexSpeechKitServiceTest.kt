@@ -463,4 +463,121 @@ internal class YandexSpeechKitServiceTest {
             )
         }
     }
+
+    @Test
+    fun `should resolve voice when blank voice falls back to default`() {
+        val audioContent = "audio".toByteArray()
+        val ndjson = buildNdjsonResponse(Base64.getEncoder().encodeToString(audioContent))
+        setValidToken()
+        every { wordsService.getDefaultVoiceForLocale("ru-ru") } returns Voice.FILIPP.name
+        every { wordsService.getVoiceForLocale("ru-ru", Voice.FILIPP.name) } returns Voice.FILIPP
+        mockTtsWebClient(Mono.just(ndjson))
+
+        val result =
+            yandexSpeechKitService.generateAudioStream(
+                AudioFileMetaData(text = "test", locale = "ru-ru", voice = "", speedFloat = "1.0"),
+            )
+
+        result.readBytes() shouldBe audioContent
+        verify { wordsService.getDefaultVoiceForLocale("ru-ru") }
+    }
+
+    @Test
+    fun `should throw when blank voice default lookup returns null`() {
+        setValidToken()
+        every { wordsService.getDefaultVoiceForLocale("ru-ru") } returns Voice.FILIPP.name
+        every { wordsService.getVoiceForLocale("ru-ru", Voice.FILIPP.name) } returns null
+
+        assertThrows<IllegalArgumentException> {
+            yandexSpeechKitService.generateAudioStream(
+                AudioFileMetaData(text = "test", locale = "ru-ru", voice = "", speedFloat = "1.0"),
+            )
+        }
+    }
+
+    @Test
+    fun `should throw when explicit voice lookup returns null`() {
+        setValidToken()
+        every { wordsService.getVoiceForLocale("ru-ru", "unknown") } returns null
+
+        assertThrows<IllegalArgumentException> {
+            yandexSpeechKitService.generateAudioStream(
+                AudioFileMetaData(text = "test", locale = "ru-ru", voice = "unknown", speedFloat = "1.0"),
+            )
+        }
+    }
+
+    @Test
+    fun `should build hints without speed when speed is blank`() {
+        val audioContent = "audio".toByteArray()
+        val ndjson = buildNdjsonResponse(Base64.getEncoder().encodeToString(audioContent))
+        setValidToken()
+        every { wordsService.getVoicesForLocale("ru-ru") } returns Voice.getVoicesForLocale("ru-ru").map { it.name }
+        every { wordsService.getVoiceForLocale("ru-ru", Voice.ZAHAR.name) } returns Voice.ZAHAR
+        every { wordsService.getVoiceForLocale("ru-ru", Voice.ZAHAR.name.lowercase()) } returns Voice.ZAHAR
+        every { yandexTtsProperties.preferredRole } returns null
+
+        val requestBodyUriSpec = mockk<WebClient.RequestBodyUriSpec>()
+        val requestHeadersSpec = mockk<WebClient.RequestHeadersSpec<*>>()
+        val responseSpec = mockk<WebClient.ResponseSpec>()
+        val bodySlot = slot<YandexTtsRequest>()
+
+        every { yandexTtsWebClient.post() } returns requestBodyUriSpec
+        every { requestBodyUriSpec.header(any(), any()) } returns requestBodyUriSpec
+        every { requestBodyUriSpec.bodyValue(capture(bodySlot)) } returns requestHeadersSpec
+        every { requestHeadersSpec.retrieve() } returns responseSpec
+        every { responseSpec.onStatus(any(), any()) } returns responseSpec
+        every { responseSpec.bodyToMono(String::class.java) } returns Mono.just(ndjson)
+
+        yandexSpeechKitService.generateAudioStream(
+            AudioFileMetaData(text = "test", locale = "ru-ru", voice = Voice.ZAHAR.name, speedFloat = ""),
+        )
+
+        bodySlot.captured.hints.size shouldBe 1
+        bodySlot.captured.hints[0].voice shouldBe "zahar"
+    }
+
+    @Test
+    fun `should return first supported role when preferredRole is null`() {
+        every { yandexTtsProperties.preferredRole } returns null
+
+        val result = yandexSpeechKitService.resolvePreferredRole(Voice.FILIPP)
+
+        result shouldBe VoiceRole.NEUTRAL
+    }
+
+    @Test
+    fun `should return null when preferredRole is blank`() {
+        every { yandexTtsProperties.preferredRole } returns "   "
+
+        val result = yandexSpeechKitService.resolvePreferredRole(Voice.FILIPP)
+
+        result shouldBe VoiceRole.NEUTRAL
+    }
+
+    @Test
+    fun `should return null when voice has no roles and preferredRole is null`() {
+        every { yandexTtsProperties.preferredRole } returns null
+
+        val result = yandexSpeechKitService.resolvePreferredRole(Voice.ZAHAR)
+
+        result shouldBe null
+    }
+
+    @Test
+    fun `should skip chunks with null result in NDJSON response`() {
+        val audioContent = "audio".toByteArray()
+        val base64Audio = Base64.getEncoder().encodeToString(audioContent)
+        val lineWithData =
+            objectMapper.writeValueAsString(
+                YandexTtsResponse(result = YandexTtsResult(audioChunk = AudioChunk(data = base64Audio))),
+            )
+        val lineWithoutData = objectMapper.writeValueAsString(YandexTtsResponse(result = null))
+        val ndjson = "$lineWithoutData\n$lineWithData"
+
+        val chunks = yandexSpeechKitService.parseAudioChunks(ndjson)
+
+        chunks.size shouldBe 1
+        chunks[0] shouldBe audioContent
+    }
 }
