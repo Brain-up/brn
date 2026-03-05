@@ -13,5 +13,6 @@ class YandexTtsProperties {
     lateinit var generationAudioLink: String
     lateinit var folderId: String
     var preferredRole: String? = null
+    var enableWiretap: Boolean = false
     lateinit var folderForFiles: String
 }

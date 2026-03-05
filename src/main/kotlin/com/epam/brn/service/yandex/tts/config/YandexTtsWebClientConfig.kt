@@ -35,10 +35,14 @@ class YandexTtsWebClientConfig(
         .clientConnector(reactorClientHttpConnector())
         .build()
 
-    private fun reactorClientHttpConnector() = ReactorClientHttpConnector(
-        HttpClient
-            .create()
-            .responseTimeout(Duration.ofSeconds(15))
-            .wiretap("reactor.netty.client.HttpClient", DEBUG, TEXTUAL),
-    )
+    private fun reactorClientHttpConnector() = ReactorClientHttpConnector(httpClient())
+
+    private fun httpClient(): HttpClient {
+        val client = HttpClient.create().responseTimeout(Duration.ofSeconds(15))
+
+        return if (yandexTtsProperties.enableWiretap)
+            client.wiretap("reactor.netty.client.HttpClient", DEBUG, TEXTUAL)
+        else
+            client
+    }
 }

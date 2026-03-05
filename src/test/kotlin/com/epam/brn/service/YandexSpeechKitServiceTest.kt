@@ -121,7 +121,7 @@ internal class YandexSpeechKitServiceTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = ["ruru", "en-en", "tr-tr"])
+    @ValueSource(strings = ["ruru", "en-en", "fr-fr"])
     fun `should fail on locale validation when v3 has no voices for locale`(locale: String) {
         every { wordsService.getVoicesForLocale(locale) } returns emptyList()
 
@@ -237,23 +237,22 @@ internal class YandexSpeechKitServiceTest {
     }
 
     @Test
-    fun `parseAudioChunks should skip malformed lines`() {
-        val validAudio = "valid".toByteArray()
-        val base64Valid = Base64.getEncoder().encodeToString(validAudio)
+    fun `parseAudioChunks should throw on malformed lines`() {
+        val ndjson = "not-json"
+
+        assertThrows<YandexServiceException> { yandexSpeechKitService.parseAudioChunks(ndjson) }
+    }
+
+    @Test
+    fun `parseAudioChunks should throw on invalid base64 audio chunk`() {
         val ndjson =
-            listOf(
-                "not-json",
-                objectMapper.writeValueAsString(
-                    YandexTtsResponse(
-                        result = YandexTtsResult(audioChunk = AudioChunk(data = base64Valid)),
-                    ),
+            objectMapper.writeValueAsString(
+                YandexTtsResponse(
+                    result = YandexTtsResult(audioChunk = AudioChunk(data = "###not-base64###")),
                 ),
-            ).joinToString("\n")
+            )
 
-        val chunks = yandexSpeechKitService.parseAudioChunks(ndjson)
-
-        chunks.size shouldBe 1
-        chunks[0] shouldBe validAudio
+        assertThrows<YandexServiceException> { yandexSpeechKitService.parseAudioChunks(ndjson) }
     }
 
     @Test
@@ -456,11 +455,11 @@ internal class YandexSpeechKitServiceTest {
 
     @Test
     fun `should throw on invalid locale in generateAudioOggStreamWithValidation`() {
-        every { wordsService.getVoicesForLocale("tr-tr") } returns emptyList()
+        every { wordsService.getVoicesForLocale("fr-fr") } returns emptyList()
 
         assertThrows<IllegalArgumentException> {
             yandexSpeechKitService.generateAudioOggStreamWithValidation(
-                AudioFileMetaData(text = "test", locale = "tr-tr", voice = "", speedFloat = "1.0"),
+                AudioFileMetaData(text = "test", locale = "fr-fr", voice = "", speedFloat = "1.0"),
             )
         }
     }

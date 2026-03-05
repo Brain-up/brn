@@ -112,17 +112,31 @@ class YandexSpeechKitService(
         }.bodyToMono(String::class.java)
         .block() ?: throw YandexServiceException("Yandex Cloud did not return audio response")
 
-    internal fun parseAudioChunks(responseBody: String): List<ByteArray> = responseBody
-        .lines()
-        .filter { it.isNotBlank() }
-        .mapNotNull { line ->
-            runCatching { objectMapper.readValue(line, YandexTtsResponse::class.java) }
-                .getOrNull()
-                ?.result
-                ?.audioChunk
-                ?.data
-                ?.let { Base64.getDecoder().decode(it) }
-        }
+    internal fun parseAudioChunks(responseBody: String): List<ByteArray> {
+        val chunks = mutableListOf<ByteArray>()
+
+        responseBody
+            .lines()
+            .filter { it.isNotBlank() }
+            .forEachIndexed { index, line ->
+                val parsed =
+                    try {
+                        objectMapper.readValue(line, YandexTtsResponse::class.java)
+                    } catch (e: Exception) {
+                        throw YandexServiceException("Failed to parse Yandex audio chunk at line ${index + 1}.")
+                    }
+
+                val audioData = parsed.result?.audioChunk?.data ?: return@forEachIndexed
+
+                try {
+                    chunks.add(Base64.getDecoder().decode(audioData))
+                } catch (e: IllegalArgumentException) {
+                    throw YandexServiceException("Yandex audio chunk at line ${index + 1} has invalid base64 content.")
+                }
+            }
+
+        return chunks
+    }
 
     internal fun resolvePreferredRole(voice: Voice): VoiceRole? {
         val preferredRole =
