@@ -8,7 +8,7 @@ import { LinkTo } from '@ember/routing';
 import UiIconHeadphones from 'brn/components/ui/icon/headphones';
 import { trackedRef } from 'ember-ref-bucket';
 import { action } from '@ember/object';
-import { debounce, cancel } from '@ember/runloop';
+import { debounce, cancel, type Timer } from '@ember/runloop';
 import { tracked } from '@glimmer/tracking';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { on } from '@ember/modifier';
@@ -34,7 +34,7 @@ export default class BreadcrumbsComponent extends Component {
   @service('store') store!: Store;
   @trackedRef('breadcrumbs-list') listEl!: HTMLUListElement;
   @tracked scrollIteration = 0;
-  debounceTimer: unknown = 0;
+  debounceTimer: Timer | undefined = undefined;
 
   modelFor(routeName: string) {
     const owner = getOwner(this);
