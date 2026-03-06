@@ -31,7 +31,11 @@
     "local": "cross-env PROXY_URL=http://localhost:8081 vite",
     "develop": "cross-env FIREBASE_PROJECT_ID=brainup-spb-dev-bb6d0 FIREBASE_AUTH_DOMAIN=brainup-spb-dev-bb6d0.firebaseapp.com FIREBASE_API_KEY=AIzaSyB03Q4ZCxdqaKuN7cJqCQGhkibYD4Q-qsc PROXY_URL=http://localhost:8081 vite",
     "remote": "cross-env PROXY_URL=https://www.brainup.site vite",
-    "postinstall": "patch-package"
+    "postinstall": "patch-package",
+    "test:visual": "npx playwright test",
+    "test:visual:update": "npx playwright test --update-snapshots",
+    "test:visual:ui": "npx playwright test --ui",
+    "test:visual:report": "npx playwright show-report e2e/playwright-report"
   },
   "lint-staged": {
     "./{app,tests,config}/**/*.{js,ts,gjs,gts}": [
@@ -68,6 +72,7 @@
     "@glint/environment-ember-loose": "^1.5.2",
     "@glint/template": "^1.7.4",
     "@mswjs/interceptors": "^0.41.2",
+    "@playwright/test": "^1.58.2",
     "@rollup/plugin-babel": "^6.0.4",
     "@tailwindcss/vite": "^4.2.1",
     "@types/idle-js": "^1.2.1",
