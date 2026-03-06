@@ -4,41 +4,79 @@
 @source "../../app/**/*.gts";
 @source "../../app/**/*.gjs";
 
-/* Custom theme extending Tailwind defaults */
+/*
+ * Theme: matches the old Tailwind v1.9.6 config (app/styles/tailwind.js).
+ *
+ * The old config spread ...colors.<group> (Tailwind v1 defaults) then overrode
+ * specific shades. Tailwind v4 has different default palettes (OKLCH-based),
+ * so we pin ALL used shades to their Tailwind v1 hex values for consistency.
+ * Custom app-specific values are marked with "custom".
+ */
 @theme {
   --font-openSans: 'Open Sans';
 
   --text-xss: .5rem;
 
+  /* --- PROGRESS (custom) --- */
   --color-PROGRESS-BAD: #F38698;
   --color-PROGRESS-GOOD: #FBD051;
   --color-PROGRESS-GREAT: #47CD8A;
 
-  --color-blue-100: #DAF0FC;
-  --color-blue-300: #EDF8FE;
-  --color-blue-500: #81D5F9;
-  --color-blue-700: #5E6EED;
-  --color-blue-900: #001274;
-  --color-blue-light: #428DFC;
-  --color-blue-dark: #5A6BFF;
-  --color-blue-1100: #428DFC;
+  /* --- Gray (Tailwind v1 defaults) --- */
+  --color-gray-100: #f7fafc;
+  --color-gray-200: #edf2f7;
+  --color-gray-300: #e2e8f0;
+  --color-gray-400: #cbd5e0;
+  --color-gray-500: #a0aec0;
+  --color-gray-600: #718096;
+  --color-gray-700: #4a5568;
+  --color-gray-800: #2d3748;
+  --color-gray-900: #1a202c;
 
-  --color-pink-200: #FBEDFE;
-  --color-pink-500: #FF6373;
-  --color-pink-secondary: #F38698;
+  /* --- Red (Tailwind v1 defaults) --- */
+  --color-red-500: #f56565;
 
-  --color-yellow-500: #F68820;
-  --color-yellow-secondary: #FBD051;
+  /* --- Blue (Tailwind v1 defaults + custom overrides) --- */
+  --color-blue-100: #DAF0FC;   /* custom */
+  --color-blue-200: #bee3f8;   /* Tailwind v1 default */
+  --color-blue-300: #EDF8FE;   /* custom */
+  --color-blue-400: #63b3ed;   /* Tailwind v1 default */
+  /* --color-blue-500: #81D5F9;   custom */
+  --color-blue-600: #3182ce;   /* Tailwind v1 default */
+  --color-blue-700: #5E6EED;   /* custom */
+  --color-blue-800: #2c5282;   /* Tailwind v1 default */
+  --color-blue-900: #001274;   /* custom */
+  --color-blue-light: #428DFC; /* custom */
+  --color-blue-dark: #5A6BFF;  /* custom */
+  --color-blue-1100: #428DFC;  /* custom */
 
-  --color-purple-700: #2A165B;
-  --color-purple-primary: #503DAD;
-  --color-purple-left: #7979f2;
-  --color-purple-right: #a179f2;
+  /* --- Pink (Tailwind v1 defaults + custom overrides) --- */
+  --color-pink-200: #FBEDFE;      /* custom */
+  --color-pink-500: #FF6373;      /* custom */
+  --color-pink-secondary: #F38698; /* custom */
 
-  --color-indigo-200: #EDF0FE;
-  --color-indigo-500: #63BBEB;
+  /* --- Yellow (Tailwind v1 defaults + custom overrides) --- */
+  --color-yellow-500: #F68820;      /* custom */
+  --color-yellow-secondary: #FBD051; /* custom */
 
-  --color-green-secondary: #47CD8A;
+  /* --- Purple (Tailwind v1 defaults + custom overrides) --- */
+  --color-purple-100: #faf5ff;    /* Tailwind v1 default */
+  --color-purple-500: #9f7aea;    /* Tailwind v1 default */
+  --color-purple-700: #2A165B;    /* custom */
+  --color-purple-primary: #503DAD; /* custom */
+  --color-purple-left: #7979f2;   /* custom */
+  --color-purple-right: #a179f2;  /* custom */
+
+  /* --- Indigo (Tailwind v1 defaults + custom overrides) --- */
+  --color-indigo-200: #EDF0FE;  /* custom */
+  --color-indigo-400: #7f9cf5;  /* Tailwind v1 default */
+  --color-indigo-500: #63BBEB;  /* custom */
+  --color-indigo-600: #5a67d8;  /* Tailwind v1 default */
+  --color-indigo-700: #4c51bf;  /* Tailwind v1 default */
+
+  /* --- Green (Tailwind v1 defaults + custom overrides) --- */
+  --color-green-500: #48bb78;      /* Tailwind v1 default */
+  --color-green-secondary: #47CD8A; /* custom */
 
   --radius-large: 1.25rem;
 
@@ -64,6 +102,31 @@
 }
 @utility bg-pink-secondary {
   background-color: var(--color-pink-secondary);
+}
+
+/*
+ * FontAwesome SVG inline icon base styles.
+ *
+ * FA v7's CSS is NOT imported via @import because node_modules resolution
+ * through Tailwind v4's pipeline is unreliable. Instead we inline the
+ * essential rules here, matching FA v1 behaviour from master:
+ *
+ * - box-sizing: content-box — padding adds to width/height (required for
+ *   icons with inline style="width:24px;height:24px;padding:4px")
+ * - height: 1em — icon scales with parent font-size
+ * - width: auto — uses viewBox aspect ratio (FA v1 used per-icon fa-w-* classes,
+ *   FA v7 uses a fixed 1.25em which is wrong for non-square icons)
+ * - font-size: inherit — explicit inheritance (FA v1 had this, v7 omits it)
+ */
+.svg-inline--fa {
+  box-sizing: border-box;
+  display: inline-block;
+  height: 1em;
+  overflow: visible;
+  vertical-align: -0.125em;
+  width: auto;
+  font-size: inherit;
+  fill: currentColor;
 }
 
 html {

@@ -5,6 +5,7 @@ import loadInitializers from 'ember-load-initializers';
 import config from 'brn/config/environment';
 import '@warp-drive/ember/install';
 import './styles/app.css';
+import './font-awesome';
 
 export default class App extends Application {
   modulePrefix = config.modulePrefix;

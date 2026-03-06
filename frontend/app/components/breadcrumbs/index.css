@@ -1,9 +1,21 @@
 /*! purgecss start ignore */
 
+.breadcrumbs-container {
+  position: relative;
+  overflow: hidden;
+}
+
 .breadcrumbs {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
+  overflow-x: auto;
+  scrollbar-width: none;
+  scroll-behavior: smooth;
+}
+
+.breadcrumbs::-webkit-scrollbar {
+  display: none;
 }
 
 .breadcrumbs li {
@@ -11,8 +23,7 @@
   align-items: center;
   margin-right: 6px;
   position: relative;
-  max-width: 100%;
-  min-width: 0;
+  flex-shrink: 0;
 }
 
 .breadcrumbs li:not(:first-child):before {
@@ -22,8 +33,6 @@
 }
 
 .breadcrumbs li a {
-  overflow: hidden;
-  text-overflow: ellipsis;
   white-space: nowrap;
   display: block;
 }

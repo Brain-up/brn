@@ -6,7 +6,7 @@ import FaIcon from '@fortawesome/ember-fontawesome/components/fa-icon';
 
 export default class ExerciseStudyConfigComponent extends Component {
     @service('study-config') studyConfig!: StudyConfigService;
-    
+
 
   <template>
     {{#if this.studyConfig.showImageToggler}}
@@ -14,10 +14,10 @@ export default class ExerciseStudyConfigComponent extends Component {
         <button
           data-test-toggle-image-visibility
           type="button"
-          class="btn-press hover:bg-blue-700 hover:text-white focus:ring-4 focus:outline-hidden focus:ring-blue-300 p-2.5 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:focus:ring-blue-800 inline-flex items-center mt-2 text-sm font-medium text-center text-blue-700 border border-blue-700 rounded-full"
+          class="btn-press hover:bg-blue-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:focus:ring-blue-800 inline-flex items-center mt-2 text-sm font-medium text-center text-blue-700 border border-blue-700 rounded-full"
           {{on "click" this.studyConfig.toggleImageVisibility}}
         >
-    
+
           <FaIcon
             {{! template-lint-disable no-inline-styles }}
             style="width:24px;height:24px;padding:4px"
