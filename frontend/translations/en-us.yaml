@@ -75,6 +75,7 @@ navigation:
   come_back: Back
 
 exercise:
+  clear_selection: Clear
   progress: completed
 
 exercise_messages:
@@ -339,6 +340,23 @@ specialists:
   title: Specialists
   subtitle: The BrainUp training program was developed jointly with the best specialists in the field of deaf education from Russia and Belarus
   all: all specialists
+
+gamification:
+  xp_earned: XP earned
+  accuracy: Accuracy
+  streak: Streak
+  days: days
+  level: Level
+  streak_days: day streak
+  summary_excellent: Excellent work! You're a star!
+  summary_good: Great job! Keep it up!
+  summary_keep_going: Keep going! Practice makes perfect!
+  xp_badge_start: Start!
+  listens: Listens
+  total_exercises: Total done
+  perfect_exercises: Perfect runs
+  xp_to_next_level: to next level
+  longest_streak: Best streak
 
 contributors:
   title: "Our Team"

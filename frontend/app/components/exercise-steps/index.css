@@ -1,10 +1,223 @@
 /*! purgecss start ignore */
 
 .c-exercise-steps {
-  .chevron {
-    margin-top: 12px;
-    margin-left: 4px;
-    margin-right: 4px;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  width: 100%;
+  padding: 4px 0;
+}
+
+/* ===== Step button (structural only — colors via Tailwind utilities) ===== */
+.c-exercise-steps .exercise-step-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  padding: 6px 12px;
+  border-radius: 12px;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  min-height: 44px;
+  font-family: inherit;
+  font-size: 13px;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.c-exercise-steps .exercise-step-btn:focus-visible {
+  box-shadow: 0 0 0 3px rgba(66, 141, 252, 0.3);
+}
+
+/* ===== Badge (number / check circle) ===== */
+.c-exercise-steps .exercise-step-btn__badge {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 800;
+  background: #e5e7eb;
+  color: #9ca3af;
+  flex-shrink: 0;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+/* ===== Label ===== */
+.c-exercise-steps .exercise-step-btn__label {
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ===== Checkmark SVG ===== */
+.c-exercise-steps .exercise-step-btn__check {
+  width: 14px;
+  height: 14px;
+  display: block;
+}
+
+/* ===== Active state (animations) ===== */
+.c-exercise-steps .exercise-step-btn--active .exercise-step-btn__badge {
+  background: linear-gradient(135deg, #428dfc, #7c5cf0);
+  color: white;
+  box-shadow: 0 2px 6px rgba(66, 141, 252, 0.35);
+  animation: badge-pulse 2.5s ease-in-out infinite;
+}
+
+/* ===== Completed state (animations) ===== */
+.c-exercise-steps .exercise-step-btn--completed .exercise-step-btn__badge {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: white;
+  box-shadow: 0 2px 6px rgba(34, 197, 94, 0.3);
+  animation: badge-complete 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ===== Next step (animations) ===== */
+.c-exercise-steps .exercise-step-btn--next .exercise-step-btn__badge {
+  background: linear-gradient(135deg, #dbeafe, #e0e7ff);
+  color: #3b82f6;
+  box-shadow: 0 1px 4px rgba(59, 130, 246, 0.2);
+}
+
+/* ===== Locked state (badge) ===== */
+.c-exercise-steps .exercise-step-btn--locked .exercise-step-btn__badge {
+  background: #f3f4f6;
+  color: #d1d5db;
+}
+
+/* ===== Connector line between steps ===== */
+.c-exercise-steps .exercise-connector {
+  flex: 0 0 auto;
+  width: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.c-exercise-steps .exercise-connector__line {
+  width: 100%;
+  height: 3px;
+  background: #e5e7eb;
+  border-radius: 99px;
+  position: relative;
+  overflow: hidden;
+  transition: background-color 0.5s ease;
+}
+
+.c-exercise-steps .exercise-connector--filled .exercise-connector__line {
+  background: linear-gradient(90deg, #22c55e, #4ade80);
+}
+
+.c-exercise-steps .exercise-connector--filled .exercise-connector__line::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.6),
+    transparent
+  );
+  animation: connector-shimmer 0.8s ease-out forwards;
+}
+
+/* ===== Keyframes ===== */
+@keyframes badge-pulse {
+  0%, 100% {
+    box-shadow: 0 2px 6px rgba(66, 141, 252, 0.35);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 2px 10px rgba(66, 141, 252, 0.5);
+    transform: scale(1.08);
+  }
+}
+
+@keyframes badge-complete {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.25); }
+  100% { transform: scale(1); }
+}
+
+@keyframes connector-shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); opacity: 0; }
+}
+
+/* ===== Responsive: small screens ===== */
+@media (max-width: 480px) {
+  .c-exercise-steps .exercise-step-btn {
+    padding: 5px 8px;
+    gap: 5px;
+    min-height: 38px;
+    font-size: 11px;
+    border-radius: 10px;
+  }
+
+  .c-exercise-steps .exercise-step-btn__badge {
+    width: 22px;
+    height: 22px;
+    font-size: 10px;
+  }
+
+  .c-exercise-steps .exercise-step-btn__check {
+    width: 12px;
+    height: 12px;
+  }
+
+  .c-exercise-steps .exercise-connector {
+    width: 12px;
+  }
+
+  .c-exercise-steps .exercise-connector__line {
+    height: 2px;
+  }
+}
+
+@media (max-width: 340px) {
+  .c-exercise-steps .exercise-step-btn__label {
+    display: none;
+  }
+
+  .c-exercise-steps .exercise-step-btn {
+    justify-content: center;
+    padding: 5px;
+    min-width: 36px;
+    flex: 0 1 auto;
+  }
+
+  .c-exercise-steps .exercise-connector {
+    flex: 1;
+    width: auto;
+    min-width: 8px;
+  }
+}
+
+/* ===== Reduced motion ===== */
+@media (prefers-reduced-motion: reduce) {
+  .c-exercise-steps .exercise-step-btn {
+    transition: none;
+  }
+
+  .c-exercise-steps .exercise-step-btn__badge {
+    transition: none;
+  }
+
+  .c-exercise-steps .exercise-step-btn--active .exercise-step-btn__badge,
+  .c-exercise-steps .exercise-step-btn--completed .exercise-step-btn__badge {
+    animation: none;
+  }
+
+  .c-exercise-steps .exercise-connector--filled .exercise-connector__line::after {
+    animation: none;
   }
 }
 

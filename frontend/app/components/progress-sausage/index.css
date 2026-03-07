@@ -1,22 +1,233 @@
 /*! purgecss start ignore */
 
 .c-progress-sausage {
+  position: relative;
+
+  /* ===== Bar track ===== */
   .progress-bar {
     width: 100%;
-    height: 16px;
+    height: 18px;
     background-color: #e6e4f0;
     position: relative;
-    border-radius: 8px;
+    border-radius: 9px;
+    overflow: hidden;
+    transition: box-shadow 0.4s ease;
   }
 
+  /* Glow burst on XP gain */
+  .progress-bar--xp-burst {
+    box-shadow: 0 0 12px rgba(124, 58, 237, 0.5), 0 0 24px rgba(124, 58, 237, 0.2);
+    animation: bar-glow 0.6s ease-out;
+  }
+
+  /* Glow when 100% */
+  .progress-bar--complete {
+    box-shadow: 0 0 16px rgba(99, 102, 241, 0.4), 0 0 32px rgba(34, 197, 94, 0.15);
+  }
+
+  /* ===== Bar fill ===== */
   .progress-bar__value {
     position: absolute;
-    height: 16px;
-    border-radius: 8px;
-    background-color: #47cd8a;
-    transition: width 0.5s;
-    transition-timing-function: ease-in-out;
+    height: 100%;
+    border-radius: 9px;
+    background: linear-gradient(90deg, #6366f1, #8b5cf6, #a78bfa);
+    transition: width 0.5s ease-in-out;
     width: 1%;
+  }
+
+  /* Subtle shine on fill */
+  .progress-bar__value::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    border-radius: 9px 9px 0 0;
+    background: linear-gradient(180deg, rgba(255,255,255,0.3), transparent);
+    pointer-events: none;
+  }
+
+  /* Pulse effect on XP gain */
+  .progress-bar__value--pulse {
+    animation: value-pulse 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .progress-bar__value--pulse::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 9px;
+    background: linear-gradient(
+      90deg,
+      transparent 60%,
+      rgba(124, 58, 237, 0.5),
+      rgba(255, 255, 255, 0.6),
+      rgba(124, 58, 237, 0.5),
+      transparent
+    );
+    animation: xp-shimmer 0.8s ease-out;
+  }
+
+  /* Celebration gradient at 100% */
+  .progress-bar__value--complete {
+    background: linear-gradient(90deg, #6366f1, #8b5cf6, #22c55e, #34d399, #6366f1);
+    background-size: 200% 100%;
+    animation: complete-flow 2s ease-in-out infinite;
+  }
+
+  /* ===== Inline XP badge (outside .progress-bar to avoid overflow clip) ===== */
+  .progress-bar__xp-badge {
+    position: absolute;
+    right: 8px;
+    top: 0;
+    transform: translateY(-50%) scale(0);
+    color: #5b21b6;
+    font-weight: 800;
+    font-size: 12px;
+    white-space: nowrap;
+    pointer-events: none;
+    text-shadow:
+      0 1px 3px rgba(255, 255, 255, 0.9),
+      0 0 8px rgba(91, 33, 182, 0.3);
+    z-index: 2;
+    animation: xp-badge-pop 2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    letter-spacing: 0.04em;
+  }
+
+  /* Sparkle particles */
+  .progress-bar__xp-badge::before,
+  .progress-bar__xp-badge::after {
+    content: '';
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    pointer-events: none;
+    opacity: 0;
+  }
+
+  .progress-bar__xp-badge::before {
+    top: -2px;
+    left: -6px;
+    background: #a78bfa;
+    animation: sparkle-left 0.7s ease-out 0.1s forwards;
+    box-shadow: -8px -10px 0 #c4b5fd, -14px 2px 0 #7c3aed;
+  }
+
+  .progress-bar__xp-badge::after {
+    top: -2px;
+    right: -6px;
+    background: #a78bfa;
+    animation: sparkle-right 0.7s ease-out 0.15s forwards;
+    box-shadow: 8px -10px 0 #7c3aed, 14px 2px 0 #c4b5fd;
+  }
+}
+
+/* ===== Keyframes ===== */
+@keyframes bar-glow {
+  0% { box-shadow: 0 0 0 rgba(124, 58, 237, 0), 0 0 0 rgba(124, 58, 237, 0); }
+  40% { box-shadow: 0 0 16px rgba(124, 58, 237, 0.7), 0 0 32px rgba(124, 58, 237, 0.3); }
+  100% { box-shadow: 0 0 12px rgba(124, 58, 237, 0.5), 0 0 24px rgba(124, 58, 237, 0.2); }
+}
+
+@keyframes value-pulse {
+  0% { transform: scaleY(1); }
+  30% { transform: scaleY(1.4); }
+  60% { transform: scaleY(0.85); }
+  100% { transform: scaleY(1); }
+}
+
+@keyframes xp-shimmer {
+  0% { transform: translateX(-100%); opacity: 1; }
+  100% { transform: translateX(100%); opacity: 0; }
+}
+
+@keyframes complete-flow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes xp-badge-pop {
+  0% { transform: translateY(-50%) scale(0); opacity: 0; }
+  12% { transform: translateY(-50%) scale(1.3); opacity: 1; }
+  20% { transform: translateY(-50%) scale(1); opacity: 1; }
+  70% { transform: translateY(-50%) scale(1); opacity: 1; }
+  100% { transform: translateY(-180%) scale(0.8); opacity: 0; }
+}
+
+@keyframes sparkle-left {
+  0% { opacity: 1; transform: scale(0.5); }
+  50% { opacity: 1; transform: scale(1.2); }
+  100% { opacity: 0; transform: scale(0) translateX(-10px) translateY(-8px); }
+}
+
+@keyframes sparkle-right {
+  0% { opacity: 1; transform: scale(0.5); }
+  50% { opacity: 1; transform: scale(1.2); }
+  100% { opacity: 0; transform: scale(0) translateX(10px) translateY(-8px); }
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 480px) {
+  .c-progress-sausage .progress-bar {
+    height: 14px;
+    border-radius: 7px;
+  }
+
+  .c-progress-sausage .progress-bar__value {
+    border-radius: 7px;
+  }
+
+  .c-progress-sausage .progress-bar__value::after {
+    border-radius: 7px 7px 0 0;
+  }
+
+  .c-progress-sausage .progress-bar__xp-badge {
+    font-size: 10px;
+    right: 4px;
+  }
+}
+
+/* ===== Reduced motion ===== */
+@media (prefers-reduced-motion: reduce) {
+  .c-progress-sausage .progress-bar {
+    transition: none;
+  }
+
+  .c-progress-sausage .progress-bar--xp-burst {
+    animation: none;
+  }
+
+  .c-progress-sausage .progress-bar__value {
+    transition: none;
+  }
+
+  .c-progress-sausage .progress-bar__value--pulse {
+    animation: none;
+  }
+
+  .c-progress-sausage .progress-bar__value--pulse::before {
+    animation: none;
+    display: none;
+  }
+
+  .c-progress-sausage .progress-bar__value--complete {
+    animation: none;
+    background: #6366f1;
+  }
+
+  .c-progress-sausage .progress-bar__xp-badge {
+    animation: none;
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+  }
+
+  .c-progress-sausage .progress-bar__xp-badge::before,
+  .c-progress-sausage .progress-bar__xp-badge::after {
+    animation: none;
+    display: none;
   }
 }
 

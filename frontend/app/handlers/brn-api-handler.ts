@@ -60,6 +60,10 @@ const ATTR_REMAP: Record<string, Record<string, string>> = {
   'task/signal': { serialNumber: 'order' },
   'task/single-simple-words': { serialNumber: 'order' },
   'task/words-sequences': { serialNumber: 'order' },
+  'task/environmental-sounds': { serialNumber: 'order' },
+  'task/phoneme-pairs': { serialNumber: 'order' },
+  'task/auditory-sequence': { serialNumber: 'order' },
+  'task/prosody': { serialNumber: 'order' },
 };
 
 // Model attrs that should be aliased from another raw key.
@@ -79,6 +83,10 @@ const MECHANISM_TO_TYPE: Record<string, string> = {
   MATRIX: 'task/words-sequences',
   SIGNALS: 'task/signal',
   WORDS: 'task/single-simple-words',
+  ENVIRONMENTAL_SOUNDS: 'task/environmental-sounds',
+  PHONEME_PAIRS: 'task/phoneme-pairs',
+  AUDITORY_SEQUENCE: 'task/auditory-sequence',
+  PROSODY: 'task/prosody',
 };
 
 // Derive RELATIONSHIPS, EXCLUDE_FROM_ATTRS, and BELONGS_TO_ID_MAP from the schema definitions.

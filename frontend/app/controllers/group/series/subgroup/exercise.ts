@@ -9,6 +9,7 @@ import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import type StatsService from 'brn/services/stats';
 import type { IStatsExerciseStats } from 'brn/services/stats';
+import type GamificationService from 'brn/services/gamification';
 import Router from '@ember/routing/router-service';
 import type TasksManagerService from 'brn/services/tasks-manager';
 import type StudyingTimerService from 'brn/services/studying-timer';
@@ -23,6 +24,7 @@ export default class GroupSeriesSubgroupExerciseController extends Controller {
   @service('tasks-manager') tasksManager!: TasksManagerService;
   @service('studying-timer') studyingTimer!: StudyingTimerService;
   @service('stats') stats!: StatsService;
+  @service('gamification') gamification!: GamificationService;
 
   @tracked correctnessWidgetIsShown = false;
   @tracked showExerciseStats = false;
@@ -46,6 +48,10 @@ export default class GroupSeriesSubgroupExerciseController extends Controller {
     this.studyingTimer.pause();
     this.model.trackTime('end');
     this.model.postHistory(this.modelStats);
+    this.gamification.completeExercise({
+      wrongAnswersCount: this.modelStats.wrongAnswersCount,
+      countedSeconds: this.modelStats.countedSeconds,
+    });
     return this.modelStats;
   }
 
@@ -66,6 +72,7 @@ export default class GroupSeriesSubgroupExerciseController extends Controller {
 
   @action startStatsTracking(_element: unknown, [model]: [Exercise]) {
     this.stats.registerModel(model);
+    this.gamification.resetSession();
   }
 
   @action stopStatsTracking(_element: unknown, [model]: [Exercise]) {
@@ -92,6 +99,7 @@ export default class GroupSeriesSubgroupExerciseController extends Controller {
     await subgroupController.exerciseAvailabilityCalculationTask.perform();
     this.showExerciseStats = false;
     this.exerciseStats = {};
+    this.gamification.flashBadge();
     this.goToSeries();
   }
 
