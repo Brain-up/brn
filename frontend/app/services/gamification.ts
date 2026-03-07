@@ -281,7 +281,7 @@ export default class GamificationService extends Service {
   clearStorage(): void {
     try {
       localStorage.removeItem(this.storageKey);
-    } catch (e) {
+    } catch (_e) {
       // ignore
     }
     this._state = { ...DEFAULT_STATE, badges: { ...DEFAULT_STATE.badges } };

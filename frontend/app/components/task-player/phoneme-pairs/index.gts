@@ -3,7 +3,6 @@ import Component from '@glimmer/component';
 import { set, action } from '@ember/object';
 import { service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
-import deepEqual from 'brn/utils/deep-equal';
 import deepCopy from 'brn/utils/deep-copy';
 import customTimeout from 'brn/utils/custom-timeout';
 import { urlForAudio } from 'brn/utils/file-url';
