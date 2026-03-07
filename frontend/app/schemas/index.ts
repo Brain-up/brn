@@ -9,7 +9,7 @@
  * types without schemas continue using Model classes via the DelegatingSchemaService.
  */
 
-import type { LegacyResourceSchema } from '@warp-drive/core/types/schema/fields';
+import type { LegacyResourceSchema, LegacyModeFieldSchema } from '@warp-drive/core/types/schema/fields';
 import type { CAUTION_MEGA_DANGER_ZONE_Extension } from '@warp-drive/core/reactive';
 import { SignalSchema } from './signal';
 import { HeadphoneSchema } from './headphone';
@@ -26,6 +26,42 @@ import { TaskSignalSchema } from './task/signal';
 import { TaskSingleSimpleWordsSchema, TaskSingleSimpleWordsExtension } from './task/single-simple-words';
 import { TaskWordsSequencesSchema, TaskWordsSequencesExtension } from './task/words-sequences';
 
+/**
+ * Fields that the Ember Inspector accesses on records via its object inspector.
+ * SchemaRecord uses a strict Proxy that throws on unknown field access,
+ * so we register these as @local fields returning undefined.
+ *
+ * Already handled by withDefaults() legacy derivations:
+ *   isNew, hasDirtyAttributes, isDeleted, isDestroying, isDestroyed,
+ *   constructor, currentState, errors, etc.
+ *
+ * Already handled by the Proxy itself:
+ *   toString, toJSON, toHTML, constructor, length, nodeType, then, symbols
+ */
+const INSPECTOR_FIELDS: LegacyModeFieldSchema[] = [
+  // object-inspector.js getDebugInfo() — reads record._debugInfo for property grouping
+  { kind: '@local', name: '_debugInfo' },
+  // object-inspector.js isInternalProperty() — container key lookup
+  { kind: '@local', name: '_debugContainerKey' },
+  // object-inspector.js mixinsForObject() — ObjectProxy content unwrapping check
+  { kind: '@local', name: 'content' },
+  // object-inspector.js mixinsForObject() — proxy detail display toggle
+  { kind: '@local', name: '_showProxyDetails' },
+  // object-inspector.js calculateCP() — optional chained record.get?.()
+  { kind: '@local', name: 'get' },
+  // object-inspector.js saveProperty() — record.set for property editing
+  { kind: '@local', name: 'set' },
+];
+
+function withInspectorFields(schema: LegacyResourceSchema): LegacyResourceSchema {
+  for (const field of INSPECTOR_FIELDS) {
+    if (!schema.fields.some((f) => f.name === field.name)) {
+      schema.fields.push(field);
+    }
+  }
+  return schema;
+}
+
 export const ALL_SCHEMAS: LegacyResourceSchema[] = [
   SignalSchema,
   HeadphoneSchema,
@@ -41,7 +77,7 @@ export const ALL_SCHEMAS: LegacyResourceSchema[] = [
   TaskSignalSchema,
   TaskSingleSimpleWordsSchema,
   TaskWordsSequencesSchema,
-];
+].map(withInspectorFields);
 
 export const ALL_EXTENSIONS: CAUTION_MEGA_DANGER_ZONE_Extension[] = [
   UserWeeklyStatisticsExtension,
