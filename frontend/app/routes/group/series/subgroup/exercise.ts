@@ -1,9 +1,9 @@
 import Route from '@ember/routing/route';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import type { Exercise } from 'brn/schemas/exercise';
 import type { TaskBase as Task } from 'brn/schemas/task';
-import type Transition from '@ember/routing/-private/transition';
+import type Transition from '@ember/routing/transition';
 import type TasksManagerService from 'brn/services/tasks-manager';
 import type NetworkService from 'brn/services/network';
 import { isTesting } from '@embroider/macros';
@@ -57,7 +57,7 @@ export default class GroupSeriesSubgroupExerciseRoute extends Route {
     const sortedTasks = exercise.sortedTasks as Task[] | null;
     const firstTask = sortedTasks?.[0];
     if (
-      to.name.endsWith('exercise.index') &&
+      to?.name.endsWith('exercise.index') &&
       firstTask &&
       !to.paramNames.includes('task_id')
     ) {

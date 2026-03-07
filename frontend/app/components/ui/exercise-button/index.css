@@ -1,0 +1,101 @@
+/*! purgecss start ignore */
+.c-exercise-button {
+  border: double 3px transparent;
+  border-radius: 12px;
+  background-image: linear-gradient(white, white),
+    radial-gradient(circle at top left, #428dfc, #ba75f1);
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+  padding: 0;
+  width: 100%;
+  max-width: 168px;
+  aspect-ratio: 1;
+  position: relative;
+
+  &::before {
+    content: '';
+  }
+
+  &:hover {
+    border: solid 6px transparent;
+  }
+
+  &:disabled {
+    color: rgb(128, 127, 127);
+    border: rgb(199, 199, 199) solid 1px;
+  }
+
+  &.locked {
+    background: #ffffff;
+    border: 3px solid #f4f4f4;
+    box-sizing: border-box;
+    color: rgb(128, 127, 127);
+  }
+
+  &.locked:active {
+    border: 6px solid #f4f4f4;
+  }
+
+  &.disabled {
+    background: #ffffff;
+    border: 3px solid #f4f4f4;
+  }
+
+  .c-exercise-button__title {
+    font-size: 60px;
+    color: #4691fd;
+    text-align: center;
+    min-width: 100%;
+  }
+
+  @media (max-width: 640px) {
+    .c-exercise-button__title {
+      font-size: 40px;
+      color: #4691fd;
+      text-align: center;
+      min-width: 100%;
+    }
+  }
+
+  .c-exercise-button__title:active {
+    color: white;
+  }
+
+  .c-exercise-button__title-locked,
+  .c-exercise-button__title-locked:active {
+    color: #bdbdbd;
+  }
+
+  .c-exercise-button__title-disabled,
+  .c-exercise-button__title-disabled:active {
+    color: #f4f4f4;
+  }
+
+  .c-exercise-button__check-container {
+    position: absolute;
+    right: -15px;
+    top: -10px;
+  }
+
+  &:active {
+    background: linear-gradient(
+      92.58deg,
+      rgba(70, 145, 253, 0.5) 54.88%,
+      rgba(213, 176, 255, 0.5) 94.38%
+    );
+    border: none;
+    color: white;
+  }
+
+  &:active .c-exercise-button__check-container {
+    right: -12px;
+    top: -7px;
+  }
+
+  &:hover .c-exercise-button__check-container {
+    right: -18px;
+    top: -13px;
+  }
+}
+
+/*! purgecss end ignore */

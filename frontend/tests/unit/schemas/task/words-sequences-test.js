@@ -1,7 +1,6 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import { ExerciseMechanism } from 'brn/utils/exercise-types';
-import { TaskWordsSequencesExtension } from 'brn/schemas/task/words-sequences';
 
 module('Unit | Schema | task/words-sequences', function (hooks) {
   setupTest(hooks);
@@ -19,13 +18,12 @@ module('Unit | Schema | task/words-sequences', function (hooks) {
     assert.strictEqual(record.order, 1);
   });
 
-  test('exerciseMechanism extension getter returns MATRIX', function (assert) {
-    const getter = Object.getOwnPropertyDescriptor(
-      TaskWordsSequencesExtension.features,
-      'exerciseMechanism',
-    );
-    assert.ok(getter, 'exerciseMechanism getter exists');
-    assert.strictEqual(getter.get.call({}), ExerciseMechanism.MATRIX);
+  test('exerciseMechanism attribute stores the value from createRecord', function (assert) {
+    const store = this.owner.lookup('service:store');
+    const record = store.createRecord('task/words-sequences', {
+      exerciseMechanism: 'MATRIX',
+    });
+    assert.strictEqual(record.exerciseMechanism, ExerciseMechanism.MATRIX);
   });
 
   test('selectedItemsOrder parses template correctly', function (assert) {

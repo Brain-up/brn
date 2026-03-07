@@ -1,0 +1,88 @@
+// @ts-nocheck -- QUnit test context typing not supported with @types/qunit v2.9
+import { module, test } from 'qunit';
+import { setupIntl } from 'ember-intl/test-support';
+import { setupRenderingTest } from 'ember-qunit';
+import { render } from '@ember/test-helpers';
+import { PROGRESS } from 'brn/schemas/user-weekly-statistics-types';
+import { DateTime } from 'luxon';
+import StatisticsMonthTimeTrackItem from 'brn/components/statistics/month-time-track-item';
+
+module(
+  'Integration | Component | statistics/month-time-track-item',
+  function (hooks) {
+    setupRenderingTest(hooks);
+    setupIntl(hooks, 'en-us');
+
+    test('it renders', async function (assert) {
+      // Set any properties with this.set('myProperty', 'value');
+      // Handle any actions with this.set('myAction', function(val) { ... });
+      const serviceIntl = this.owner.lookup('service:intl');
+
+      const itemData: any = {
+        progress: PROGRESS.BAD,
+        time: '02:45:23',
+        days: 5,
+        month: 'June',
+        year: 2021,
+        date: DateTime.fromISO('2021-06-23'),
+      };
+
+      this.set('itemData', itemData);
+
+      const self = this;
+
+
+
+
+      await render(
+        <template><StatisticsMonthTimeTrackItem @data={{self.itemData}} /></template>
+      );
+
+      assert
+        .dom('[data-test-month-track-item]')
+        .hasNoClass('selected', "doesn't selected by default");
+      assert.dom('[data-test-calendar]').hasClass('bg-PROGRESS-BAD');
+      assert.dom('.time').hasText('02:45:23');
+      assert.dom('.month').hasText('June');
+      assert.dom('.days').hasText(
+        serviceIntl.t('profile.statistics.month_time_track.days_period', {
+          days: 5,
+        }),
+      );
+    });
+
+    test('it can be selected', async function (assert) {
+      // Set any properties with this.set('myProperty', 'value');
+      // Handle any actions with this.set('myAction', function(val) { ... });
+
+      const itemData: any = {
+        progress: PROGRESS.BAD,
+        time: '02:45:23',
+        days: 5,
+        month: 'June',
+        year: 2021,
+        date: DateTime.fromISO('2021-06-23'),
+      };
+
+      this.set('itemData', itemData);
+      this.set('isSelected', true);
+
+      const self = this;
+
+
+
+
+      await render(<template><StatisticsMonthTimeTrackItem @data={{self.itemData}}
+      @isSelected={{self.isSelected}} /></template>);
+
+      assert
+        .dom('[data-test-month-track-item]')
+        .hasClass('selected', 'it is selected');
+
+      this.set('isSelected', false);
+      assert
+        .dom('[data-test-month-track-item]')
+        .hasNoClass('selected', 'it is unselected');
+    });
+  },
+);

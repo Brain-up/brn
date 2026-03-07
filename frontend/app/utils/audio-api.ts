@@ -166,7 +166,7 @@ export class BufferLoader {
           const fileClone = file.slice(0);
           try {
             result = await this.context.decodeAudioData(file);
-          } catch (e) {
+          } catch (_e) {
             hasOGGDecodingError = true;
             if (!hasFFmpegError) {
               try {
@@ -174,7 +174,7 @@ export class BufferLoader {
                 result = await this.context.decodeAudioData(
                   await transcodeFile(fileClone),
                 );
-              } catch (e) {
+              } catch (_e) {
                 hasFFmpegError = true;
               }
             }

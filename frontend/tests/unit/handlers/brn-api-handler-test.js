@@ -659,6 +659,10 @@ module('Unit | Handler | brn-api-handler', function (hooks) {
             {
               id: 100,
               name: 'Level 1',
+              level: 1,
+              pictureUrl: 'pictures/theme/family.svg',
+              description: 'First level subgroup',
+              withPictures: false,
               exercises: [50, 60],
               seriesId: '10',
             },

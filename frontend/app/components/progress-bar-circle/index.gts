@@ -1,0 +1,49 @@
+import './index.css';
+import Component from '@glimmer/component';
+
+interface ProgressBarCircleSignature {
+  Args: {
+  percent: number;
+  };
+  Element: HTMLElement;
+}
+
+export default class ProgressBarCircleComponent extends Component<ProgressBarCircleSignature> {
+  get dasharrayValue() {
+    let progress = this.args.percent;
+    if (isNaN(progress)) {
+      progress = 100;
+    } else {
+      if (progress < 0) {
+        progress = 0;
+      }
+      if (progress > 100) {
+        progress = 100;
+      }
+    }
+    return Math.floor(progress);
+  }
+
+  <template>
+    <div class="c-progress-bar-circle">
+      <svg viewBox="0 0 40 40" class="circular-chart blue">
+        <path
+          class="circle-bg"
+          d="M20 4.0845  
+                a 15.9155 15.9155 0 0 1 0 31.831
+                a 15.9155 15.9155 0 0 1 0 -31.831"
+        ></path>
+        <path
+          class="circle"
+          stroke-dasharray="{{this.dasharrayValue}} 100"
+          d="M20 4.0845  
+                a 15.9155 15.9155 0 0 1 0 31.831
+                a 15.9155 15.9155 0 0 1 0 -31.831"
+        ></path>
+        <text x="20" y="23.50" class="percentage">
+          {{this.dasharrayValue}}%
+        </text>
+      </svg>
+    </div>
+  </template>
+}

@@ -1,3 +1,15 @@
+// QUnit module declaration for ES module imports.
+// The @types/qunit package (v2.9.x) only declares global types; this ambient
+// module lets `import { module, test } from 'qunit'` resolve correctly.
+declare module 'qunit' {
+  export const module: typeof QUnit.module;
+  export const test: typeof QUnit.test;
+  export const skip: typeof QUnit.skip;
+  export const only: typeof QUnit.only;
+  export const todo: typeof QUnit.todo;
+  export default QUnit;
+}
+
 // Types for compiled templates
 declare module 'brn/templates/*' {
   import { TemplateFactory } from 'htmlbars-inline-precompile';
@@ -74,18 +86,37 @@ declare module 'ember-simple-auth/authenticators/oauth2-password-grant' {
   }
 }
 
-declare module 'ember-component-css/pod-names' {
-  const podNames: Record<string, string>;
-  export default podNames;
+
+declare module 'ember-ref-bucket/modifiers/create-ref' {
+  import type { ModifierLike } from '@glint/template';
+  const createRef: ModifierLike<{
+    Args: {
+      Named: Record<string, unknown>;
+      Positional: [string];
+    };
+    Element: Element;
+  }>;
+  export default createRef;
 }
 
-declare module 'ember-macro-helpers/computed' {
-  export default function computed(...args: [...deps: string[], fn: (...values: unknown[]) => unknown]): unknown;
-}
-
-declare module 'fetch' {
-  const fetch: typeof globalThis.fetch;
-  export default fetch;
+declare module 'ember-modal-dialog/components/modal-dialog' {
+  import Component from '@glimmer/component';
+  interface ModalDialogSignature {
+    Args: {
+      onClose?: () => void;
+      overlayClass?: string;
+      containerClass?: string;
+      wrapperClass?: string;
+      targetAttachment?: string;
+      translucentOverlay?: boolean;
+      [key: string]: unknown;
+    };
+    Blocks: {
+      default: [];
+    };
+    Element: HTMLDivElement;
+  }
+  export default class ModalDialog extends Component<ModalDialogSignature> {}
 }
 
 declare module 'sinon' {

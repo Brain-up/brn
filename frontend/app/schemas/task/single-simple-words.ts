@@ -34,10 +34,6 @@ export const TaskSingleSimpleWordsExtension: CAUTION_MEGA_DANGER_ZONE_Extension 
   kind: 'object',
   name: 'task-single-simple-words-ext',
   features: {
-    get exerciseMechanism() {
-      return ExerciseMechanism.WORDS;
-    },
-
     get tasksToSolve() {
       const self = this as unknown as {
         answerOptions: IRawAnswerOption[];

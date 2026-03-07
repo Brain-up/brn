@@ -1,0 +1,391 @@
+import './index.css';
+import Component from '@glimmer/component';
+import { service } from '@ember/service';
+import { tracked } from '@glimmer/tracking';
+import { action } from '@ember/object';
+import { timeout, keepLatestTask, TaskInstance } from 'ember-concurrency';
+import { MODES, type Mode } from 'brn/utils/task-modes';
+import { isTesting } from '@embroider/macros';
+import StatsService, { StatEvents } from 'brn/services/stats';
+import AudioService from 'brn/services/audio';
+import StudyingTimerService from 'brn/services/studying-timer';
+import type { TaskBase as TaskModel } from 'brn/schemas/task';
+import type { TaskWordsSequences as WordsSequencesModel } from 'brn/schemas/task/words-sequences';
+import type AnswerOption from 'brn/utils/answer-option';
+import { ExerciseMechanism } from 'brn/utils/exercise-types';
+import didInsert from '@ember/render-modifiers/modifiers/did-insert';
+import didUpdate from '@ember/render-modifiers/modifiers/did-update';
+import { concat } from '@ember/helper';
+import { not } from 'ember-truth-helpers';
+import { notEq } from 'ember-truth-helpers';
+import htmlSafe from 'brn/helpers/html-safe';
+import SlotTo from 'brn/components/slot-to';
+import Timer from 'brn/components/timer';
+import ExerciseStudyConfig from 'brn/components/exercise-study-config';
+import ProgressSausage from 'brn/components/progress-sausage';
+import ExerciseSteps from 'brn/components/exercise-steps';
+import AudioPlayer from 'brn/components/audio-player';
+import UiBottomContainer from 'brn/components/ui/bottom-container';
+import StartTaskButton from 'brn/components/start-task-button';
+import TaskPlayerSignal from 'brn/components/task-player/signal';
+import TaskPlayerSingleSimpleWords from 'brn/components/task-player/single-simple-words';
+import TaskPlayerWordsSequences from 'brn/components/task-player/words-sequences';
+
+interface TaskPlayerSignature {
+  Args: {
+    task: TaskModel;
+    onRightAnswer?: () => void;
+  };
+  Blocks: {};
+  Element: HTMLDivElement;
+}
+
+export default class TaskPlayerComponent extends Component<TaskPlayerSignature> {
+  @service('audio') declare audio: AudioService;
+  @service('stats') declare stats: StatsService;
+  @service('studying-timer') declare studyingTimer: StudyingTimerService;
+  @tracked justEnteredTask = true;
+  @tracked
+  activeWord: string | null = null;
+  @tracked
+  textToPlay: string | null = null;
+  activeTask: null | TaskInstance<any> = null;
+
+  willDestroy() {
+    super.willDestroy();
+    this.audio.stopNoise();
+  }
+
+  @tracked mode = '' as Mode; // listen, interact, task
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  get componentType(): any {
+    const mechanism = this.args.task.exerciseMechanism;
+
+    if (mechanism === ExerciseMechanism.SIGNALS) {
+      return TaskPlayerSignal;
+    } else if (mechanism === ExerciseMechanism.MATRIX) {
+      return TaskPlayerWordsSequences;
+    } else if (mechanism === ExerciseMechanism.WORDS) {
+      return TaskPlayerSingleSimpleWords;
+    } else {
+      throw new Error('Unknown mechanism: ' + mechanism);
+    }
+  }
+  get disableAnswers() {
+    if (this.mode === MODES.INTERACT) {
+      // Intentionally using isPlaying (not isBusy) here: in interact mode,
+      // users explore by clicking words to hear them, so they should be able
+      // to click other words while audio is still loading/decoding.
+      return this.audio.isPlaying;
+    }
+    return this.audio.isBusy || this.disableAudioPlayer;
+  }
+
+  @action
+  onTaskChanged() {
+    if (this.justEnteredTask === false) {
+      if (isTesting()) {
+        this.setMode(MODES.TASK);
+      } else {
+        if (
+          this.taskModelName !== ExerciseMechanism.MATRIX &&
+          this.taskModelName !== ExerciseMechanism.SIGNALS
+        ) {
+          this.setMode(MODES.LISTEN);
+        }
+      }
+    }
+  }
+
+  get disableAudioPlayer(): boolean {
+    return (
+      this.args.task.pauseExecution ||
+      !this.studyingTimer.isStarted ||
+      this.justEnteredTask
+    );
+  }
+
+  @action async onWrongAnswer({ skipRetry } = { skipRetry: false }) {
+    await this.taskModeTask.cancelAll();
+    if (!skipRetry) {
+      this.audio.startPlayTask();
+    }
+  }
+
+  @action onShuffled(words: string[]) {
+    // we need this callback, because of singlw-words component shuffle logic
+    const sortedWords = this.args.task.normalizedAnswerOptions.sort((a, b) => {
+      return words.indexOf(a.word) - words.indexOf(b.word);
+    });
+    this.args.task.normalizedAnswerOptions = sortedWords;
+  }
+  get taskModelName() {
+    return this.args.task.exerciseMechanism;
+  }
+  get orderedPlaylist(): AnswerOption[] {
+    const { answerOptions, normalizedAnswerOptions } =
+      this.args.task;
+    // for ordered tasks we need to align audio stream with object order;
+
+
+    if (this.args.task.exerciseMechanism === ExerciseMechanism.SIGNALS) {
+      return answerOptions;
+    }
+    if (this.args.task.exerciseMechanism === ExerciseMechanism.WORDS) {
+      return normalizedAnswerOptions;
+    }
+
+    if (this.args.task.exerciseMechanism === ExerciseMechanism.MATRIX) {
+      const matrixTask = this.args.task as WordsSequencesModel;
+      const { selectedItemsOrder: itemsOrder } = matrixTask;
+      const sortedItems: any[] = [];
+      const length = answerOptions[itemsOrder[0]].length;
+      for (let i = 0; i < length; i++) {
+        itemsOrder.forEach((key: string) => {
+          sortedItems.push(
+            this.args.task.normalizedAnswerOptions.find(
+              ({ word }: any) => word === answerOptions[key][i].word,
+            ),
+          );
+        });
+      }
+      return sortedItems;
+    }
+
+    throw new Error(`Unknown task type - ${this.args.task.exerciseMechanism}`);
+  }
+
+  listenModeTask = keepLatestTask(async () => {
+    try {
+      this.mode = MODES.LISTEN;
+      for (const option of this.orderedPlaylist) {
+        this.activeWord = option.word;
+        // tone object case
+        if (typeof option.audioFileUrl === 'object' && option.audioFileUrl !== null) {
+          await this.audio.setAudioElements([option.audioFileUrl]);
+        } else {
+          const useGeneratedUrl =
+            option.audioFileUrl && this.args.task.usePreGeneratedAudio;
+          await this.audio.setAudioElements([
+            useGeneratedUrl
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              ? option.audioFileUrl!
+              : this.audio.audioUrlForText(option.wordPronounce ?? option.word),
+          ]);
+        }
+
+        await this.audio.playAudio();
+        await timeout(1500);
+        this.activeWord = null;
+      }
+    } catch (_e) {
+      // EOL
+    } finally {
+      this.activeWord = null;
+      this.audio.stop();
+    }
+  });
+
+  maybeStartExercise() {
+    if (!this.args.task.exercise?.isStarted) {
+      this.stats.addEvent(StatEvents.Start);
+      this.args.task.exercise.trackTime('start');
+    }
+    this.audio.startNoise();
+  }
+
+  taskModeTask = keepLatestTask(async () => {
+    try {
+      this.mode = MODES.TASK;
+      await this.audio.startPlayTask();
+    } catch (_e) {
+      // EOL
+    } finally {
+      // EOL
+    }
+  });
+
+  interactModeTask = keepLatestTask(async () => {
+    try {
+      this.mode = MODES.INTERACT;
+      while (this.mode === MODES.INTERACT) {
+        const playText = this.textToPlay;
+        if (playText) {
+          this.activeWord = playText;
+          this.textToPlay = null;
+          const option = this.args.task.normalizedAnswerOptions.find(
+            ({ word }: any) => word === playText,
+          );
+          if (option) {
+
+            if (typeof option.audioFileUrl === 'object' && option.audioFileUrl !== null) {
+              await this.audio.setAudioElements([option.audioFileUrl]);
+            } else {
+              const useGeneratedUrl =
+              option.audioFileUrl && this.args.task.usePreGeneratedAudio;
+
+              await this.audio.setAudioElements([
+                useGeneratedUrl
+                  ? (option.audioFileUrl as string)
+                  : this.audio.audioUrlForText(option.wordPronounce),
+              ]);
+            }
+
+            await this.audio.playAudio();
+          }
+        }
+        await timeout(250);
+        this.activeWord = null;
+      }
+    } catch (_e) {
+      // EOL
+    } finally {
+      this.audio.stop();
+      this.activeWord = null;
+      this.textToPlay = null;
+    }
+  });
+
+  get isProgressBarVisible() {
+    return this.mode === 'task';
+  }
+
+  @action playText(text: string) {
+    this.textToPlay = text;
+  }
+
+  @action
+  onModeChange(mode: any) {
+    this.setMode(mode);
+  }
+
+  @action async setMode(mode: string, ...args: any) {
+    try {
+      if (this.activeTask) {
+        try {
+          this.activeTask.cancel();
+        } catch (_e) {
+          // EOL
+        } finally {
+          try {
+            await this.activeTask;
+          } catch (_e) {
+            // EOL
+          }
+        }
+      }
+      this.audio.stop();
+      if (mode === MODES.INTERACT) {
+        this.activeTask = this.interactModeTask.perform(...args);
+      } else if (mode === MODES.TASK) {
+        this.activeTask = this.taskModeTask.perform(...args);
+      } else if (mode === MODES.LISTEN) {
+        this.activeTask = this.listenModeTask.perform(...args);
+      }
+      (this.activeTask as any).catch(() => {
+        // EOL
+      });
+      return this.activeTask;
+    } catch (_e) {
+      // EOLS
+    }
+  }
+
+  @action async preloadNoise() {
+    await this.audio.preloadNoiseAudio();
+  }
+
+  @action
+  async startTask() {
+    this.justEnteredTask = false;
+    this.maybeStartExercise();
+    this.studyingTimer.runTimer();
+    if (isTesting()) {
+      await this.setMode(MODES.TASK);
+    } else {
+      try {
+        await this.setMode(MODES.LISTEN);
+        // Let's switch to interact right after listen if not stopped
+      } catch (_e) {
+        // EOL
+      } finally {
+        try {
+          await this.setMode(MODES.INTERACT);
+        } catch (_e) {
+          // EOL
+        }
+      }
+    }
+  }
+
+  <template>
+    <SlotTo @selector="#exercise-timer-slot">
+      <Timer @hideControls={{this.justEnteredTask}} />
+    </SlotTo>
+    <SlotTo @selector="#exercise-config-slot">
+      <ExerciseStudyConfig />
+    </SlotTo>
+    <div
+      {{didInsert this.preloadNoise @task}}
+      {{didUpdate this.preloadNoise @task}}
+      {{didUpdate this.onTaskChanged @task}}
+      class="flex flex-1" ...attributes>
+
+      {{#let
+        (component
+          this.componentType
+          onRightAnswer=@onRightAnswer
+          onWrongAnswer=this.onWrongAnswer
+          onShuffled=this.onShuffled
+          task=@task
+          disableAnswers=this.disableAnswers
+          disableAudioPlayer=this.disableAudioPlayer
+          activeWord=this.activeWord
+          onPlayText=this.playText
+          onModeChange=this.onModeChange
+          justEnteredTask=this.justEnteredTask
+          mode=this.mode
+        )
+        as |Player|
+      }}
+
+        <Player>
+          <:header as |context|>
+            <SlotTo @selector="#progress-slot">
+              <ProgressSausage
+                style={{htmlSafe
+                  (concat
+                    "visibility:"
+                    (if this.isProgressBarVisible "visible" "hidden")
+                    ";"
+                  )
+                }}
+                @progressItems={{context.tasks}}
+              />
+            </SlotTo>
+          </:header>
+
+          <:footer as |content|>
+            <UiBottomContainer>
+              <ExerciseSteps
+                @visible={{not this.justEnteredTask}}
+                @activeStep={{this.mode}}
+                @onClick={{this.onModeChange}}
+                class="sm:ml-2 flex mb-3 mr-2"
+              />
+              <AudioPlayer
+                @audioFileUrl={{content.audioFileUrl}}
+                @transparent={{notEq this.mode "task"}}
+              />
+            </UiBottomContainer>
+          </:footer>
+        </Player>
+
+      {{/let}}
+
+      {{#if this.justEnteredTask}}
+        <StartTaskButton @startTask={{this.startTask}} />
+      {{/if}}
+    </div>
+  </template>
+}

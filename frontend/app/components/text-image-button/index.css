@@ -1,0 +1,101 @@
+/*! purgecss start ignore */
+
+.c-text-image-button {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  button {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 100px;
+    overflow: hidden;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-image: var(--word-picture-url);
+    background-position: center center;
+    image-rendering: -webkit-optimize-contrast;
+    transition: 0.1s;
+  }
+
+  .c-text-image-button__word {
+    background: #fff;
+    padding: 2px 3px;
+    bottom: 0;
+    left: 0;
+    box-shadow: 0px -5px 10px 0px white;
+    color: #111;
+    position: absolute;
+    font-weight: bold;
+    width: 100%;
+    line-height: 18px;
+    font-size: 18px;
+    display: inline-block;
+  }
+
+  button:disabled {
+    cursor: default;
+  }
+
+  .c-text-image-button__selected {
+    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
+  }
+
+  .c-text-image-button__correctness-indicator {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 20px;
+    background: #fff;
+    border-radius: 50%;
+  }
+
+  .c-text-image-button__correctness-indicator.right {
+    color: #46cb18;
+  }
+
+  .c-text-image-button__correctness-indicator.wrong {
+    color: #ff0100;
+  }
+
+  &.text-mode button {
+    background-image: none;
+    min-height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 12px;
+  }
+
+  &.text-mode .c-text-image-button__word {
+    position: static;
+    box-shadow: none;
+    background: transparent;
+    width: auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .c-text-image-button {
+    button {
+      min-height: 60px;
+    }
+
+    .c-text-image-button__word {
+      font-size: 14px;
+      line-height: 16px;
+    }
+  }
+}
+
+@media (max-width: 640px) and (orientation: landscape) {
+  .c-text-image-button {
+    button {
+      min-height: 40px;
+    }
+  }
+}
+
+/*! purgecss end ignore */

@@ -1,0 +1,59 @@
+import './index.css';
+import { t } from 'ember-intl';
+
+<template>
+  <footer
+    class="c-footer relative z-10 p-2 sm:p-4 text-white"
+    ...attributes
+  >
+    <div class="sm:text-base flex flex-wrap items-center justify-between text-sm">
+      <div class="sm:mr-10 sm:text-base md:mr-28 lg:mr-40 mr-2">
+        <a
+          href="mailto:brainupproject@yandex.ru?subject=BrainUp"
+          title="brainupproject@yandex.ru"
+          class="md:leading-10 leading-6 text-blue-900 underline"
+        >{{t "footer.contact_us"}}</a>
+      </div>
+      <div class="flex flex-wrap items-center">
+        <div class="sm:ml-10 md:ml-28 lg:ml-40 sm:mr-4 flex ml-0 mr-2">
+          <span
+            data-test-support-message
+            class="sm:mr-2 sm:leading-6 md:leading-10 mr-0 leading-4 text-blue-900 opacity-50"
+          >
+            {{t "footer.info_about"}}
+          </span>
+        </div>
+        <div>
+          <ul class="c-footer__sponsors min-width-10 flex items-center">
+            <li data-test-support-logo>
+              <a href="https://www.jetbrains.com/" target="blank" rel="noopener">
+                <img src="/logos/jetbrains-variant-4_.png" alt="JetBrains" />
+              </a>
+            </li>
+            <li data-test-support-logo>
+              <a href="https://reg.ru/" target="blank" rel="noopener">
+                <img src="/logos/reg-ru.svg" alt="Регистратор доменных имен РЕГ.РУ" />
+              </a>
+            </li>
+            <li data-test-support-logo>
+              <a href="https://arasaac.org/" target="blank" rel="noopener">
+               <img src="/logos/logo_ARASAAC_black.png" alt="ARASAAC" />
+              </a>
+            </li>
+            <li data-test-support-logo>
+              <a href="https://selectel.ru/" target="blank" rel="noopener">
+                <img src="/logos/selectel.png" alt="Selectel" />
+              </a>
+            </li>
+            <li data-test-support-logo>
+              <a href="https://epam.com/" target="blank" rel="noopener">
+                <img src="/logos/epam.png" alt="EPAM" />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </footer>
+</template>

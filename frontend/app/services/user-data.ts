@@ -1,4 +1,4 @@
-import Service, { inject as service } from '@ember/service';
+import Service, { service } from '@ember/service';
 import Session from 'ember-simple-auth/services/session';
 import Router from '@ember/routing/router-service';
 import NetworkService, { UserDTO } from 'brn/services/network';
@@ -38,7 +38,7 @@ export default class UserDataService extends Service {
   }
 
   shouldUpdateRoute() {
-    const prefix = this.router.currentRouteName.split('.')[0];
+    const prefix = this.router.currentRouteName?.split('.')[0];
 
     return prefix === 'groups' || prefix === 'group';
   }

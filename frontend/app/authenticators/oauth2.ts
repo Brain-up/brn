@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 
 import OAuth2PasswordGrant from 'ember-simple-auth/authenticators/oauth2-password-grant';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import type NetworkService from 'brn/services/network';
 
 export default class OAuth2Authenticator extends OAuth2PasswordGrant {

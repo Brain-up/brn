@@ -1,0 +1,66 @@
+/*! purgecss start ignore */
+
+.task-player__options {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.task-player__option {
+  flex-basis: 33.33%;
+  padding: 0 1px 1px 1px;
+  box-sizing: border-box;
+}
+
+.task-player__option[data-cols="1"] {
+  flex-basis: 100%;
+}
+.task-player__option[data-cols="2"] {
+  flex-basis: 50%;
+}
+.task-player__option[data-cols="3"] {
+  flex-basis: 33.33%;
+}
+.task-player__option[data-cols="4"] {
+  flex-basis: 25%;
+}
+.task-player__option[data-cols="5"] {
+  flex-basis: 20%;
+}
+
+.task-player__option-button {
+  width: 100%;
+  display: block;
+  font-size: 12px;
+  line-height: 18px;
+  text-transform: uppercase;
+  transition: all 0.5s ease;
+  font-weight: 600;
+}
+@media (min-width: 768px) {
+  .task-player__option-button {
+    font-size: 20px;
+    line-height: 25px;
+  }
+}
+
+.task-player__option-button:active {
+  font-weight: bold;
+}
+
+.task-player__option-button:disabled {
+  opacity: 50%;
+  cursor: default;
+}
+
+@keyframes fade-out {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/*! purgecss end ignore */

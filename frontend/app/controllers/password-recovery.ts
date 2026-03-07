@@ -4,7 +4,7 @@ import { getOwner } from '@ember/application';
 import type FirebaseAuthenticator from 'brn/authenticators/firebase';
 import { tracked } from '@glimmer/tracking';
 import type Router from '@ember/routing/router-service';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import UserDataService from 'brn/services/user-data';
 
 export default class PasswordRecoveryController extends Controller {
@@ -22,7 +22,7 @@ export default class PasswordRecoveryController extends Controller {
   enableRecoveryCodeProcessing = false;
 
   get firebase(): FirebaseAuthenticator {
-    return getOwner(this).lookup(
+    return getOwner(this)!.lookup(
       'authenticator:firebase',
     ) as FirebaseAuthenticator;
   }

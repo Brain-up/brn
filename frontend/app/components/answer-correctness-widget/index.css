@@ -1,0 +1,49 @@
+/*! purgecss start ignore */
+
+.c-answer-correctness-widget {
+  background-color: #edf8fe;
+  border-radius: 10px;
+  padding-bottom: 1.6rem;
+
+  svg {
+    margin-left: calc(50% - 170px);
+  }
+
+  .c-answer-correctness-widget__content {
+    animation: fade-out 0.5s;
+    min-width: 350px;
+    min-height: 350px;
+    max-height: 100%;
+    height: 100%;
+    width: 100%;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+}
+
+@media (max-width: 640px) {
+  .c-answer-correctness-widget {
+    svg {
+      margin-left: auto;
+      margin-right: auto;
+      display: block;
+    }
+
+    .c-answer-correctness-widget__content {
+      min-width: 0;
+      min-height: 200px;
+    }
+  }
+}
+
+@keyframes fade-in-out {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/*! purgecss end ignore */

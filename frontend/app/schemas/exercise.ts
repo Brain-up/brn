@@ -123,6 +123,15 @@ export const ExerciseExtension: CAUTION_MEGA_DANGER_ZONE_Extension = {
   kind: 'object',
   name: 'exercise-ext',
   features: {
+    /**
+     * Ember's <LinkTo> component accesses `isQueryParams` to check if a model
+     * is actually a QueryParams object. SchemaRecord's strict proxy throws
+     * on unknown fields, so we expose this to prevent that error.
+     */
+    get isQueryParams() {
+      return undefined;
+    },
+
     get sortChildrenBy() {
       return 'order';
     },
@@ -326,6 +335,7 @@ export type Exercise = WithLegacy<{
   allSiblings: unknown[];
   isFirst: boolean;
   canInteract: boolean;
+  isQueryParams: undefined;
   isStarted: boolean;
   stats: { startTime: Date; endTime: Date; exerciseId: string | null | undefined };
   trackTime: (type?: string) => void;

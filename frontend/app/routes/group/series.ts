@@ -1,7 +1,7 @@
 import Route from '@ember/routing/route';
 import type { Subgroup } from 'brn/schemas/subgroup';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import type Store from 'brn/services/store';
 
 export default class GroupSeriesRoute extends Route {

@@ -2,6 +2,7 @@ header:
   groups: Groups
   statistics: Statistics
   logout: Logout
+  sign_out: Sign out
   about: About
   more: More...
   donate: Donate

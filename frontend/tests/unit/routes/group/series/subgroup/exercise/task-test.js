@@ -33,7 +33,7 @@ module('Unit | Route | group/series/subgroup/exercise/task', function (hooks) {
     assert.strictEqual(transitionArgs.length, 0, 'no redirect');
   });
 
-  test('model redirects when task not found', function (assert) {
+  test('model redirects to first sorted task when task not found', function (assert) {
     let transitionArgs = [];
 
     const route = this.owner.lookup('route:group/series/subgroup/exercise/task');
@@ -45,6 +45,28 @@ module('Unit | Route | group/series/subgroup/exercise/task', function (hooks) {
 
     route.modelFor = () => ({
       tasks: [{ id: '100', name: 'Task 1' }],
+      sortedTasks: [{ id: '100', name: 'Task 1' }],
+    });
+
+    const result = route.model({ task_id: '999' });
+    assert.strictEqual(result, undefined, 'returns undefined');
+    assert.strictEqual(transitionArgs[0], 'group.series.subgroup.exercise.task');
+    assert.strictEqual(transitionArgs[1], '100', 'redirects to first task');
+  });
+
+  test('model falls back to exercise route when no sorted tasks', function (assert) {
+    let transitionArgs = [];
+
+    const route = this.owner.lookup('route:group/series/subgroup/exercise/task');
+    route.router = {
+      transitionTo(...args) {
+        transitionArgs = args;
+      },
+    };
+
+    route.modelFor = () => ({
+      tasks: [],
+      sortedTasks: null,
     });
 
     route.paramsFor = () => ({ exercise_id: '50' });
@@ -65,7 +87,7 @@ module('Unit | Route | group/series/subgroup/exercise/task', function (hooks) {
       },
     };
 
-    route.modelFor = () => ({ tasks: [] });
+    route.modelFor = () => ({ tasks: [], sortedTasks: [] });
     route.paramsFor = () => ({ exercise_id: '50' });
 
     const result = route.model({ task_id: '100' });
@@ -83,7 +105,7 @@ module('Unit | Route | group/series/subgroup/exercise/task', function (hooks) {
       },
     };
 
-    route.modelFor = () => ({ tasks: null });
+    route.modelFor = () => ({ tasks: null, sortedTasks: null });
     route.paramsFor = () => ({ exercise_id: '50' });
 
     const result = route.model({ task_id: '100' });

@@ -1,0 +1,40 @@
+/*! purgecss start ignore */
+
+.breadcrumbs-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.breadcrumbs {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  overflow-x: auto;
+  scrollbar-width: none;
+  scroll-behavior: smooth;
+}
+
+.breadcrumbs::-webkit-scrollbar {
+  display: none;
+}
+
+.breadcrumbs li {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 6px;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.breadcrumbs li:not(:first-child):before {
+  content: '/';
+  margin-right: 6px;
+  flex-shrink: 0;
+}
+
+.breadcrumbs li a {
+  white-space: nowrap;
+  display: block;
+}
+
+/*! purgecss end ignore */

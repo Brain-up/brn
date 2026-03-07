@@ -5,11 +5,11 @@ import { getServerResponses } from '../general-helpers';
 import { getTestData } from './test-suport/data-storage';
 import { authenticateSession } from 'ember-simple-auth/test-support';
 import pageObject from './test-suport/page-object';
-import { setupMirage } from "ember-cli-mirage/test-support";
+import { setupMSW } from '../../helpers/msw';
 
 module('Acceptance | active seria highlighting test', function (hooks) {
   setupApplicationTest(hooks);
-  setupMirage(hooks);
+  setupMSW(hooks);
 
   hooks.beforeEach(async () => {
     await authenticateSession();

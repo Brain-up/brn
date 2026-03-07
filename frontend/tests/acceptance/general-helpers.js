@@ -8,7 +8,6 @@ export function getServerResponses({
   exercises,
   availableExercises,
 }) {
-  /* eslint-disable no-undef */
   server.get('groups', () => {
     return { data: groups };
   });
@@ -17,15 +16,17 @@ export function getServerResponses({
     return { data: subgroups };
   });
 
-  server.get('series', (schema, request) => {
+  server.get('series', (request) => {
     const targetGroup = request.queryParams.groupId;
-    const seriesIds = groups.findBy('id', targetGroup).series;
+    const group = groups.find((g) => g.id === targetGroup);
+    const seriesIds = group ? group.series : [];
     return { data: series.filter((s) => seriesIds.includes(s.id)) };
   });
 
-  server.get('exercises', (schema, request) => {
+  server.get('exercises', (request) => {
     const targetSeries = request.queryParams.subGroupId;
-    const exercisesIds = subgroups.findBy('id', targetSeries).exercises;
+    const subgroup = subgroups.find((sg) => sg.id === targetSeries);
+    const exercisesIds = subgroup ? subgroup.exercises : [];
     return { data: exercises.filter((e) => exercisesIds.includes(e.id)) };
   });
 
@@ -33,20 +34,20 @@ export function getServerResponses({
     return { data: tasks };
   });
 
-  server.get('tasks/:id', (schema, request) => {
-    return { data: tasks.findBy('id', request.params.id) };
+  server.get('tasks/:id', (request) => {
+    return { data: tasks.find((t) => t.id === request.params.id) };
   });
 
-  server.get('groups/:id', (schema, request) => {
-    return { data: groups.findBy('id', request.params.id) };
+  server.get('groups/:id', (request) => {
+    return { data: groups.find((g) => g.id === request.params.id) };
   });
 
-  server.get('series/:id', (schema, request) => {
-    return { data: series.findBy('id', request.params.id) };
+  server.get('series/:id', (request) => {
+    return { data: series.find((s) => s.id === request.params.id) };
   });
 
-  server.get('exercises/:id', (schema, request) => {
-    return { data: exercises.findBy('id', request.params.id) };
+  server.get('exercises/:id', (request) => {
+    return { data: exercises.find((e) => e.id === request.params.id) };
   });
 
   server.post('exercises/byIds', () => {

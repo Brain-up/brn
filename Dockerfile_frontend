@@ -8,7 +8,7 @@ ENV FIREBASE_API_KEY ${FIREBASE_API_KEY:-}
 COPY frontend/ /src/
 WORKDIR /src
 RUN yarn
-RUN node node_modules/ember-cli/bin/ember deploy production
+RUN node node_modules/ember-cli/bin/ember build --environment=production
 
 FROM node:20 AS build-frontend-angular
 COPY frontend-angular/ /src/
@@ -19,6 +19,6 @@ RUN npm run build
 
 FROM nginx:alpine
 COPY default.conf /etc/nginx/conf.d/
-COPY --from=build-frontend /src/tmp/deploy-dist /usr/share/nginx/html/
+COPY --from=build-frontend /src/dist /usr/share/nginx/html/
 COPY --from=build-frontend-angular /src/dist/frontend-angular /usr/share/nginx/html/admin/
 

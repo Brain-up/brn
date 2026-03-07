@@ -1,5 +1,5 @@
 import Controller from '@ember/controller';
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import PersonsService from 'brn/services/persons';
 
 export default class DescriptionDevelopersController extends Controller {

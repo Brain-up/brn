@@ -5,7 +5,7 @@ import { EnableHydration } from '@warp-drive/core/types/request';
 import type { StructuredDataDocument } from '@warp-drive/core/types/request';
 import type { Store as WarpDriveStore } from '@warp-drive/core';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import { AuthHandler } from 'brn/handlers/auth-handler';
 import { BrnApiHandler } from 'brn/handlers/brn-api-handler';
 import type AuthTokenService from 'brn/services/auth-token';

@@ -18,15 +18,15 @@ jobs:
       - name: Lint *.js files
         working-directory: ./frontend
         run: yarn lint:js
-      - name: Lint *.hbs files
+      - name: Lint *.gts/*.gjs templates
         working-directory: ./frontend
         run: yarn lint:hbs
       - name: Run tests
         working-directory: ./frontend
         run: yarn test
-      - name: Run test deploy
+      - name: Run test build
         working-directory: ./frontend
-        run: node node_modules/ember-cli/bin/ember deploy production
+        run: yarn build
 
   coverage:
     name: Test coverage changes
@@ -40,13 +40,55 @@ jobs:
       - name: Install dependencies
         working-directory: ./frontend
         run: yarn install
-      - uses: umedvedev/ember-cli-code-coverage-action@2b49e784fb8ed85b30572fca2a9cb5c00f6a1446
+      - name: Run coverage on PR branch
+        working-directory: ./frontend
+        run: yarn test:coverage
+      - name: Save PR coverage
+        id: pr_coverage
+        run: |
+          coverage=$(node -e "const c=require('./frontend/coverage/coverage-summary.json'); console.log(c.total.statements.pct)")
+          echo "value=$coverage" >> "$GITHUB_OUTPUT"
+          echo "PR coverage: $coverage%"
+      - name: Checkout base branch for reference coverage
+        run: |
+          git fetch origin ${{ github.event.pull_request.base.ref }}
+          git checkout origin/${{ github.event.pull_request.base.ref }}
+      - name: Install base branch dependencies
+        working-directory: ./frontend
+        run: yarn install
+      - name: Run coverage on base branch
+        id: base_coverage
+        working-directory: ./frontend
+        run: |
+          rm -rf coverage
+          yarn test:coverage || true
+          if [ -f coverage/coverage-summary.json ]; then
+            coverage=$(node -e "const c=require('./coverage/coverage-summary.json'); console.log(c.total.statements.pct)")
+          else
+            coverage=0
+          fi
+          echo "value=$coverage" >> "$GITHUB_OUTPUT"
+          echo "Base coverage: $coverage%"
+      - name: Post coverage comment
+        uses: actions/github-script@v7
         with:
-          working-directory: ./frontend
-          test-command: "yarn test:coverage"
-          coverage-file: "./frontend/coverage/coverage-summary.json"
-          repo-token: "${{ secrets.GITHUB_TOKEN }}"
-          message: "Frontend test coverage: {testCoverage}%"
+          script: |
+            const prCoverage = '${{ steps.pr_coverage.outputs.value }}';
+            const baseCoverage = '${{ steps.base_coverage.outputs.value }}';
+            const diff = (parseFloat(prCoverage) - parseFloat(baseCoverage)).toFixed(2);
+            const sign = diff >= 0 ? '+' : '';
+            const body = `Frontend test coverage: **${prCoverage}%** (${sign}${diff}% compared to ${baseCoverage}% on base)`;
+            try {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body,
+              });
+            } catch (e) {
+              console.log('Could not post comment:', e.message);
+              console.log(body);
+            }
 
 #  build:
 #    name: App build

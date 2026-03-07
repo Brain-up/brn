@@ -51,10 +51,6 @@ export const TaskWordsSequencesExtension: CAUTION_MEGA_DANGER_ZONE_Extension = {
   kind: 'object',
   name: 'task-words-sequences-ext',
   features: {
-    get exerciseMechanism() {
-      return ExerciseMechanism.MATRIX;
-    },
-
     get selectedItemsOrder(): string[] {
       const self = this as unknown as { template: string; exercise: { template: string } };
       // template lives on the exercise, not the task

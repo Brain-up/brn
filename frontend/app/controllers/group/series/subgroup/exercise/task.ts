@@ -1,24 +1,30 @@
 import Controller from '@ember/controller';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { action } from '@ember/object';
 import { getOwner } from '@ember/application';
 import Router from '@ember/routing/router-service';
+import type GroupSeriesSubgroupController from 'brn/controllers/group/series/subgroup';
+import type { TaskBase } from 'brn/schemas/task';
 
 export default class GroupSeriesSubgroupExerciseTaskController extends Controller {
+  declare model: TaskBase;
+
   @service router!: Router;
   @action nextTaskTransition() {
-    getOwner(this)
-      .lookup(`controller:group.series.subgroup`)
-      .exerciseAvailabilityCalculationTask.perform();
+    const subgroupController = getOwner(this)!.lookup(`controller:group.series.subgroup`) as GroupSeriesSubgroupController;
+    subgroupController.exerciseAvailabilityCalculationTask.perform();
 
     if (!this.model.isLastTask) {
-      this.router.transitionTo(
-        'group.series.subgroup.exercise.task',
-        this.model.nextTask?.exercise?.id,
-        this.model.nextTask?.id,
-      );
+      const nextTask = this.model.nextTask as { exercise?: { id?: string }; id?: string } | null;
+      if (nextTask?.exercise?.id && nextTask?.id) {
+        this.router.transitionTo(
+          'group.series.subgroup.exercise.task',
+          nextTask.exercise.id,
+          nextTask.id,
+        );
+      }
     }
   }
 }

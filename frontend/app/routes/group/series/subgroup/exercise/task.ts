@@ -2,7 +2,7 @@ import Route from '@ember/routing/route';
 import type { TaskBase as Task } from 'brn/schemas/task';
 import type { Exercise } from 'brn/schemas/exercise';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import type Store from 'brn/services/store';
 import type Router from '@ember/routing/router-service';
 
@@ -15,10 +15,22 @@ export default class GroupSeriesSubgroupExerciseTaskRoute extends Route {
     const tasks = exercise.tasks || [];
     const task = Array.from(tasks).find((t) => task_id === t.id);
     if (!task) {
-      // Task not found — redirect to the exercise route which will
-      // pick the first available task via its own redirect logic.
-      const { exercise_id } = this.paramsFor('group.series.subgroup.exercise') as { exercise_id: string };
-      this.router.transitionTo('group.series.subgroup.exercise', exercise_id);
+      // Task not found in this exercise — redirect to the first task
+      // of the exercise. We redirect directly to the task route rather
+      // than the exercise route because the exercise's redirect hook
+      // may not fire when the exercise model hasn't changed.
+      const sortedTasks = exercise.sortedTasks as Task[] | null;
+      const firstTask = sortedTasks?.[0];
+      if (firstTask) {
+        this.router.transitionTo(
+          'group.series.subgroup.exercise.task',
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          firstTask.id!,
+        );
+      } else {
+        const { exercise_id } = this.paramsFor('group.series.subgroup.exercise') as { exercise_id: string };
+        this.router.transitionTo('group.series.subgroup.exercise', exercise_id);
+      }
       return;
     }
     return task;

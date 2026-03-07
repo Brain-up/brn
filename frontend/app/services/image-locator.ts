@@ -1,4 +1,4 @@
-import Service, { inject as service } from '@ember/service';
+import Service, { service } from '@ember/service';
 import UserDataService from 'brn/services/user-data';
 
 export default class ImageLocatorService extends Service {
@@ -91,7 +91,7 @@ export default class ImageLocatorService extends Service {
       }
       const data = await request.json();
       return data.def[0].tr.map((e: any) => e.text);
-    } catch (e) {
+    } catch (_e) {
       return [];
     }
   }
@@ -179,7 +179,7 @@ export default class ImageLocatorService extends Service {
         return `https://static.arasaac.org/pictograms/${id}/${id}_500.png`;
       }
       return null;
-    } catch (e) {
+    } catch (_e) {
       return null;
     }
   }
@@ -199,7 +199,7 @@ export default class ImageLocatorService extends Service {
         return data[0].image_url;
       }
       return null;
-    } catch (e) {
+    } catch (_e) {
       return null;
     }
   }

@@ -2,11 +2,10 @@ import { isTesting } from '@embroider/macros';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { action } from '@ember/object';
 import {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   task,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  enqueueTask,
+  keepLatestTask,
   timeout,
-  Task as TaskGenerator,
   TaskInstance,
 } from 'ember-concurrency';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -26,11 +25,11 @@ import {
   preloadAudioFile,
 } from 'brn/utils/audio-api';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import Service, { inject as service } from '@ember/service';
-import TimerComponent from 'brn/components/timer/component';
+import Service, { service } from '@ember/service';
+import TimerComponent from 'brn/components/timer';
 import NetworkService from './network';
 import StatsService, { StatEvents } from './stats';
-import { ToneObject } from 'brn/components/audio-player/component';
+import { ToneObject } from 'brn/components/audio-player';
 import type { Signal as SignalModel } from 'brn/schemas/signal';
 import Intl from 'ember-intl/services/intl';
 import { PolySynth, Synth, SynthOptions } from 'tone';
@@ -83,17 +82,17 @@ export default class AudioService extends Service {
 
   @tracked audioFileUrl: null | string | string[] | ToneObject = null;
 
-  @(task(function* (this: AudioService) {
+  trackProgress = enqueueTask(async () => {
     try {
       this.startTime = Date.now();
       this.setProgress(0);
       while (this.isPlaying) {
         this.updatePlayingProgress();
-        yield timeout(32);
+        await timeout(32);
       }
-      yield timeout(100);
+      await timeout(100);
       this.setProgress(0);
-    } catch (e) {
+    } catch (_e) {
       // NOP
     } finally {
       if (!this.isDestroyed && !this.isDestroying) {
@@ -101,8 +100,7 @@ export default class AudioService extends Service {
         this.startTime = null;
       }
     }
-  }).enqueue())
-  trackProgress!: TaskGenerator<any, any>;
+  });
 
   // for tests
   _lastText: null | string = null;
@@ -150,9 +148,8 @@ export default class AudioService extends Service {
     if (isTesting()) {
       return null;
     }
-    const owner = getOwner(this);
-    const model = owner
-      .lookup('route:application')
+    const owner = getOwner(this)!;
+    const model = (owner.lookup('route:application') as any)
       .modelFor('group.series.subgroup.exercise');
     if (!model) {
       return null;
@@ -211,7 +208,7 @@ export default class AudioService extends Service {
       if (this.noiseNode) {
         this.noiseNode.source.stop();
       }
-    } catch (e) {
+    } catch (_e) {
       // EOL
     }
     if (this.noiseTaskInstance) {
@@ -227,7 +224,7 @@ export default class AudioService extends Service {
       } else {
         await this.fakePlayTask.perform();
       }
-    } catch (e) {
+    } catch (_e) {
       // EOL
     }
   }
@@ -353,7 +350,7 @@ export default class AudioService extends Service {
     }, 0);
   }
 
-  @task(function* playNoise(this: AudioService) {
+  startNoiseTask = task(async () => {
     let noise = null;
     const timeInSeconds = 10;
     try {
@@ -364,13 +361,13 @@ export default class AudioService extends Service {
       if (!level) {
         return;
       }
-      noise = yield this.getNoise(timeInSeconds, level, url);
+      noise = await this.getNoise(timeInSeconds, level, url);
       noise.source.start(0);
       this.noiseNode = noise;
       if (url) {
-        yield timeout(toMilliseconds(6000));
+        await timeout(toMilliseconds(6000));
       } else {
-        yield timeout(toMilliseconds(timeInSeconds) - 3);
+        await timeout(toMilliseconds(timeInSeconds) - 3);
         this.startNoise();
       }
     } finally {
@@ -378,8 +375,7 @@ export default class AudioService extends Service {
         noise.source.stop();
       }
     }
-  })
-  startNoiseTask!: TaskGenerator<any, any>;
+  });
 
   nativePlayText(txt: string) {
     const lang = this.userData.activeLocale;
@@ -399,27 +395,27 @@ export default class AudioService extends Service {
     return p;
   }
 
-  @(task(function* playAudio(this: AudioService, noizeSeconds = 0) {
+  playTask = keepLatestTask({ maxConcurrency: 1 }, async (noizeSeconds = 0) => {
     const startedSources = [];
     const hasNoize = false;
     if (hasNoize) {
       noizeSeconds = 0.3;
     }
     try {
-      this.sources = yield this.createSources(this.context, this.buffers || []);
+      this.sources = await this.createSources(this.context, this.buffers || []);
       this.totalDuration =
         this.calcDurationForSources(this.sources) +
         toMilliseconds(noizeSeconds);
       this.isPlaying = true;
       this.trackProgress.perform();
       if (hasNoize) {
-        const noize: any = yield this.getNoise(
+        const noize: any = await this.getNoise(
           noizeSeconds ? toSeconds(this.totalDuration) : 0,
           this.currentExerciseNoiseLevel,
         );
         noize.source.start(0);
         startedSources.push(noize);
-        yield timeout(toMilliseconds(noizeSeconds / 2));
+        await timeout(toMilliseconds(noizeSeconds / 2));
       }
       let index = -1;
       for (const item of this.sources) {
@@ -429,7 +425,7 @@ export default class AudioService extends Service {
             const duration = toMilliseconds(item.source.buffer.duration);
             item.source.start(0);
             startedSources.push(item);
-            yield timeout(duration);
+            await timeout(duration);
           } else {
             console.error('there is no buffer for source');
           }
@@ -441,7 +437,7 @@ export default class AudioService extends Service {
               this.audioElements[index] as string,
             ).searchParams.get('text');
             if (text) {
-              yield this.nativePlayText(text);
+              await this.nativePlayText(text);
             } else {
               // wrong url;
             }
@@ -451,9 +447,9 @@ export default class AudioService extends Service {
         }
       }
       if (hasNoize) {
-        yield timeout(toMilliseconds(noizeSeconds / 2));
+        await timeout(toMilliseconds(noizeSeconds / 2));
       }
-      yield timeout(10);
+      await timeout(10);
       this.isPlaying = false;
     } catch (e) {
       console.error(e);
@@ -467,20 +463,16 @@ export default class AudioService extends Service {
         this.totalDuration = 0;
       }
     }
-  })
-    .keepLatest()
-    .maxConcurrency(1))
-  playTask!: TaskGenerator<any, any>;
+  });
 
-  @(task(function* fakePlayAudio(this: AudioService) {
+  fakePlayTask = enqueueTask(async () => {
     this.totalDuration = TIMINGS.FAKE_AUDIO;
     this.isPlaying = true;
     this.trackProgress.perform();
-    yield timeout(TIMINGS.FAKE_AUDIO);
+    await timeout(TIMINGS.FAKE_AUDIO);
     this.isPlaying = false;
     this.totalDuration = 0;
-  }).enqueue())
-  fakePlayTask!: TaskGenerator<any, any>;
+  });
 
   setProgress(progress: number) {
     this.audioPlayingProgress = progress;

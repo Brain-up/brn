@@ -1,0 +1,31 @@
+.c-series-navigation {
+  .exercise-block__level {
+    flex-direction: initial;
+    align-items: center;
+    position: relative;
+    width: 168px;
+    height: 168px;
+  }
+
+  @media (max-width: 640px) {
+    .exercise-block__level {
+      width: 85px;
+      height: 85px;
+    }
+  }
+
+  @media (min-width: 640px) and (max-width: 1024px) {
+    .exercise-block__level {
+      width: 115px;
+      height: 115px;
+    }
+  }
+
+  .navigation-block__header {
+    color: #001274;
+  }
+
+  h3 {
+    margin-bottom: 20px;
+  }
+}

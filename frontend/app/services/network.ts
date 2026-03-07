@@ -1,10 +1,8 @@
-import Service from '@ember/service';
-import fetch from 'fetch';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { inject as service } from '@ember/service';
+import Service, { service } from '@ember/service';
 import Session from 'ember-simple-auth/services/session';
 import AuthTokenService from './auth-token';
 import UserDataService from './user-data';
+import { waitForPromise } from '@ember/test-waiters';
 
 export interface UserDTO {
   firstName: string;
@@ -62,24 +60,30 @@ export default class NetworkService extends Service {
     );
   }
   postRequest(entry: string, data: unknown) {
-    return fetch(`${this.prefix}/${entry}`, {
-      body: JSON.stringify(data),
-      headers: this._headers,
-      method: 'POST',
-    });
+    return waitForPromise(
+      fetch(`${this.prefix}/${entry}`, {
+        body: JSON.stringify(data),
+        headers: this._headers,
+        method: 'POST',
+      }),
+    );
   }
   request(entry: string) {
-    return fetch(`${this.prefix}/${entry}`, {
-      headers: this._headers,
-      method: 'GET',
-    });
+    return waitForPromise(
+      fetch(`${this.prefix}/${entry}`, {
+        headers: this._headers,
+        method: 'GET',
+      }),
+    );
   }
   patch(entry: string, data: unknown) {
-    return fetch(`${this.prefix}/${entry}`, {
-      headers: this._headers,
-      method: 'PATCH',
-      body: JSON.stringify(data),
-    });
+    return waitForPromise(
+      fetch(`${this.prefix}/${entry}`, {
+        headers: this._headers,
+        method: 'PATCH',
+        body: JSON.stringify(data),
+      }),
+    );
   }
   async cloudUrl() {
     const result = await this.request('cloud/baseFileUrl');
@@ -113,7 +117,7 @@ export default class NetworkService extends Service {
       )}`.toUpperCase();
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       this.userData!.userModel = user;
-    } catch (e) {
+    } catch (_e) {
       this.router.transitionTo('login');
       const error: Error & { code?: number } = new Error('Unable to login');
       error.message = 'Unable to login';

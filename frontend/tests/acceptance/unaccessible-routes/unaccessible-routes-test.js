@@ -1,61 +1,66 @@
-import { module, skip } from 'qunit';
-import { currentURL } from '@ember/test-helpers';
-import { setupMirage } from "ember-cli-mirage/test-support";
+import { module, test } from 'qunit';
+import { visit, currentURL, settled } from '@ember/test-helpers';
+import { setupMSW } from '../../helpers/msw';
 import { setupApplicationTest } from 'ember-qunit';
-import pageObject from './test-support/page-object';
 import { authenticateSession } from 'ember-simple-auth/test-support';
 
 import {
   getUnaccessibleTaskScenario,
   getUnaccessibleExerciseScenario,
-  getUnaccessibleSeriesScenario,
 } from './test-support/helpers';
 
 module('Acceptance | unaccessible routes', function (hooks) {
   setupApplicationTest(hooks);
-  setupMirage(hooks);
+  setupMSW(hooks);
 
   hooks.beforeEach(async () => {
     await authenticateSession();
   });
 
-  skip('visiting unaccessible task', async function (assert) {
+  test('visiting unaccessible task redirects to the first task', async function (assert) {
     getUnaccessibleTaskScenario();
 
-    await pageObject.goToAccessibleTask();
+    await visit('/groups/1/series/1/subgroup/1/exercise/1/task/1');
 
-    assert.ok(pageObject.taskPlayerIsPresent, 'task player is shown');
+    assert.dom('[data-test-task-player]').exists('task player is shown');
 
-    const firstSiblingUrl = currentURL();
+    const firstTaskUrl = currentURL();
 
-    // await pageObject.goToUnaccessibleTask();
+    // Task 2 is not interactable (task 1 hasn't been completed), so the
+    // route guard in task.ts afterModel should redirect back to task 1.
+    try {
+      await visit('/groups/1/series/1/subgroup/1/exercise/1/task/2');
+    } catch (_e) {
+      // TransitionAborted is expected when the route redirects
+      await settled();
+    }
 
-    assert.equal(currentURL(), firstSiblingUrl);
+    assert.equal(currentURL(), firstTaskUrl, 'URL stays on the first task');
   });
 
-  skip('visiting task that is not in the current exercise( using non-first exercise )', async function (assert) {
+  test('visiting task that is not in the current exercise redirects to the correct task', async function (assert) {
     getUnaccessibleExerciseScenario();
 
-    await pageObject.goToRightTaskInTheExercise();
+    await visit('/groups/1/series/1/subgroup/1/exercise/2/task/3');
 
-    assert.ok(pageObject.taskPlayerIsPresent, 'task player is shown');
+    assert.dom('[data-test-task-player]').exists('task player is shown');
 
-    const firstSiblingUrl = currentURL();
+    const correctTaskUrl = currentURL();
 
-    await pageObject.goToWrongTaskInTheExercise();
+    // Task 1 is not in exercise 2 (exercise 2 only has task 3), so the
+    // route guard in task.ts model() should redirect to exercise 2's first task.
+    try {
+      await visit('/groups/1/series/1/subgroup/1/exercise/2/task/1');
+    } catch (_e) {
+      // TransitionAborted is expected when the route redirects
+      await settled();
+    }
 
-    assert.equal(currentURL(), firstSiblingUrl);
+    assert.equal(currentURL(), correctTaskUrl, 'URL stays on the correct task');
   });
 
-  skip('visiting unaccessible series', async function (assert) {
-    getUnaccessibleSeriesScenario();
-
-    await pageObject.goToAccessibleSeries();
-
-    assert.ok(pageObject.taskPlayerIsPresent, 'task player is shown');
-
-    await pageObject.goToUnaccessibleSeries();
-
-    assert.equal(currentURL(), '/groups/1');
-  });
+  // 'visiting unaccessible series' test was removed: no route-level guard for
+  // series accessibility exists in the codebase. The exercise availability
+  // redirect is explicitly disabled during testing (via isTesting()), and
+  // series routes have no access-control logic.
 });

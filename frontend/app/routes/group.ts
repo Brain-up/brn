@@ -1,9 +1,9 @@
 import Route from '@ember/routing/route';
 import type { Group as GroupModel } from 'brn/schemas/group';
 import type { Series as SeriesModel } from 'brn/schemas/series';
-import type Transition from '@ember/routing/-private/transition';
+import type Transition from '@ember/routing/transition';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { inject as service } from '@ember/service';
+import { service } from '@ember/service';
 import type NetworkService from 'brn/services/network';
 import type Store from 'brn/services/store';
 import type Router from '@ember/routing/router-service';
@@ -54,7 +54,7 @@ export default class GroupRoute extends Route {
       this.router.transitionTo('groups');
       return;
     }
-    if (to.name === 'group.index') {
+    if (to?.name === 'group.index') {
       this.router.transitionTo(
         'group.series.index',
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

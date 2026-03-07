@@ -1,16 +1,16 @@
 import { module, test } from 'qunit';
-import { visit, currentURL } from '@ember/test-helpers';
+import { visit, currentURL, settled } from '@ember/test-helpers';
 import { setupApplicationTest } from 'ember-qunit';
 import {
   currentSession,
   authenticateSession,
   invalidateSession,
 } from 'ember-simple-auth/test-support';
-import { setupMirage } from "ember-cli-mirage/test-support";
+import { setupMSW } from '../../helpers/msw';
 
 module('Acceptance | app test', function (hooks) {
   setupApplicationTest(hooks);
-  setupMirage(hooks);
+  setupMSW(hooks);
 
   // hooks.beforeEach(async function () {
   //   // this.server.get('users/current', () => {
@@ -27,7 +27,12 @@ module('Acceptance | app test', function (hooks) {
       authToken: '12345',
       otherData: 'some-data',
     });
-    await visit('/');
+    try {
+      await visit('/');
+    } catch (_e) {
+      // TransitionAborted is expected: IndexRoute redirects authenticated users to /groups
+    }
+    await settled();
 
     assert.equal(currentURL(), '/groups');
 
