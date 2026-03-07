@@ -44,21 +44,20 @@
   }
 }
 
-/* Star icon in empty state */
+/* Star polygon in empty state */
 .xp-badge__star-icon {
-  fill: #fbbf24;
-  font-size: 14px;
+  transform-origin: 18px 18px;
   animation: star-twinkle 2s ease-in-out infinite;
 }
 
 @keyframes star-twinkle {
   0%, 100% {
     opacity: 0.7;
-    transform: scale(1);
+    transform: scale(1) rotate(0deg);
   }
   50% {
     opacity: 1;
-    transform: scale(1.15);
+    transform: scale(1.1) rotate(8deg);
   }
 }
 

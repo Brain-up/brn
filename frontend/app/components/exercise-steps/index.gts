@@ -11,7 +11,6 @@ import { on } from '@ember/modifier';
 import { fn } from '@ember/helper';
 import { t } from 'ember-intl';
 import ExerciseStepsStep from 'brn/components/exercise-steps/step';
-import UiChevron from 'brn/components/ui/chevron';
 
 const BUTTONS = {
   ACTIVE: 'active' as const,
@@ -31,6 +30,7 @@ interface ExerciseStepsSignature {
 export default class ExerciseStepsComponent extends Component<ExerciseStepsSignature> {
   @tracked modes: Mode[] = [];
   MODES = MODES;
+
   get modeForListen() {
     if (this.args.activeStep === MODES.LISTEN) {
       return BUTTONS.ACTIVE;
@@ -52,6 +52,46 @@ export default class ExerciseStepsComponent extends Component<ExerciseStepsSigna
       ? BUTTONS.ENABLED
       : BUTTONS.DISABLED;
   }
+
+  get isListenCompleted() {
+    return this.modes.includes(MODES.LISTEN) && this.args.activeStep !== MODES.LISTEN;
+  }
+  get isInteractCompleted() {
+    return this.modes.includes(MODES.INTERACT) && this.args.activeStep !== MODES.INTERACT;
+  }
+
+  get listenStepClass() {
+    const classes = ['exercise-step'];
+    if (this.modeForListen === BUTTONS.ACTIVE) classes.push('exercise-step--active');
+    if (this.isListenCompleted) classes.push('exercise-step--completed');
+    return classes.join(' ');
+  }
+  get interactStepClass() {
+    const classes = ['exercise-step'];
+    if (this.modeForInteract === BUTTONS.ACTIVE) classes.push('exercise-step--active');
+    if (this.isInteractCompleted) classes.push('exercise-step--completed');
+    if (this.isListenCompleted && this.modeForInteract !== BUTTONS.ACTIVE) {
+      classes.push('exercise-step--next');
+    }
+    return classes.join(' ');
+  }
+  get taskStepClass() {
+    const classes = ['exercise-step'];
+    if (this.modeForTask === BUTTONS.ACTIVE) classes.push('exercise-step--active');
+    if (this.modeForTask === BUTTONS.DISABLED) classes.push('exercise-step--locked');
+    if (this.isInteractCompleted && this.modeForTask !== BUTTONS.ACTIVE && this.modeForTask !== BUTTONS.DISABLED) {
+      classes.push('exercise-step--next');
+    }
+    return classes.join(' ');
+  }
+
+  get connector1Class() {
+    return this.isListenCompleted ? 'exercise-connector exercise-connector--filled' : 'exercise-connector';
+  }
+  get connector2Class() {
+    return this.isInteractCompleted ? 'exercise-connector exercise-connector--filled' : 'exercise-connector';
+  }
+
   @action onClick(key: string, mode: string) {
     if (mode === BUTTONS.DISABLED || mode === BUTTONS.ACTIVE) {
       return;
@@ -81,30 +121,62 @@ export default class ExerciseStepsComponent extends Component<ExerciseStepsSigna
       {{didUpdate this.setLastMode @activeStep}}
       ...attributes
     >
-      <ExerciseStepsStep
-        @mode={{this.modeForListen}}
-        {{on "click" (fn this.onClick this.MODES.LISTEN this.modeForListen)}}
-      >
-        {{t "control_exercises.listen"}}
-      </ExerciseStepsStep>
-      <div class="chevron-container flex justify-center flex-1"><UiChevron
-          class="chevron"
-        /></div>
-      <ExerciseStepsStep
-        @mode={{this.modeForInteract}}
-        {{on "click" (fn this.onClick this.MODES.INTERACT this.modeForInteract)}}
-      >
-        {{t "control_exercises.interact"}}
-      </ExerciseStepsStep>
-      <div class="chevron-container flex justify-center flex-1"><UiChevron
-          class="chevron"
-        /></div>
-      <ExerciseStepsStep
-        @mode={{this.modeForTask}}
-        {{on "click" (fn this.onClick this.MODES.TASK this.modeForTask)}}
-      >
-        {{t "control_exercises.solve"}}
-      </ExerciseStepsStep>
+      {{!-- Step 1: Listen --}}
+      <div class={{this.listenStepClass}}>
+        <div class="exercise-step__indicator">
+          {{#if this.isListenCompleted}}
+            <svg class="exercise-step__check" viewBox="0 0 16 16" fill="none"><path d="M3 8.5L6.5 12L13 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          {{else}}
+            <span class="exercise-step__number">1</span>
+          {{/if}}
+        </div>
+        <ExerciseStepsStep
+          @mode={{this.modeForListen}}
+          {{on "click" (fn this.onClick this.MODES.LISTEN this.modeForListen)}}
+        >
+          {{t "control_exercises.listen"}}
+        </ExerciseStepsStep>
+      </div>
+
+      {{!-- Connector 1 --}}
+      <div class={{this.connector1Class}}>
+        <div class="exercise-connector__line"></div>
+      </div>
+
+      {{!-- Step 2: Interact --}}
+      <div class={{this.interactStepClass}}>
+        <div class="exercise-step__indicator">
+          {{#if this.isInteractCompleted}}
+            <svg class="exercise-step__check" viewBox="0 0 16 16" fill="none"><path d="M3 8.5L6.5 12L13 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          {{else}}
+            <span class="exercise-step__number">2</span>
+          {{/if}}
+        </div>
+        <ExerciseStepsStep
+          @mode={{this.modeForInteract}}
+          {{on "click" (fn this.onClick this.MODES.INTERACT this.modeForInteract)}}
+        >
+          {{t "control_exercises.interact"}}
+        </ExerciseStepsStep>
+      </div>
+
+      {{!-- Connector 2 --}}
+      <div class={{this.connector2Class}}>
+        <div class="exercise-connector__line"></div>
+      </div>
+
+      {{!-- Step 3: Solve --}}
+      <div class={{this.taskStepClass}}>
+        <div class="exercise-step__indicator">
+          <span class="exercise-step__number">3</span>
+        </div>
+        <ExerciseStepsStep
+          @mode={{this.modeForTask}}
+          {{on "click" (fn this.onClick this.MODES.TASK this.modeForTask)}}
+        >
+          {{t "control_exercises.solve"}}
+        </ExerciseStepsStep>
+      </div>
     </div>
   </template>
 }

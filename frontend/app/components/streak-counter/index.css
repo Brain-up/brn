@@ -10,11 +10,17 @@
   font-size: 0.875rem;
 }
 
-/* Fire emoji with subtle flicker animation */
+/* Fire SVG with subtle flicker animation */
 .streak-counter__flame {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
   animation: flame-flicker 1.5s ease-in-out infinite alternate;
   transform-origin: bottom center;
+}
+
+.streak-counter__flame-svg {
+  width: 18px;
+  height: 18px;
 }
 
 @keyframes flame-flicker {

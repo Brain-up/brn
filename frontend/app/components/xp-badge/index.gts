@@ -66,11 +66,12 @@ export default class XpBadgeComponent extends Component {
           stroke-dasharray={{this.circumference}} stroke-dashoffset={{this.strokeDashoffset}}
           stroke-linecap="round" transform="rotate(-90 18 18)"
           class="xp-badge__progress" />
-        {{!-- Star icon for empty state, level number otherwise --}}
+        {{!-- Star SVG for empty state, level number otherwise --}}
         {{#if this.isEmpty}}
-          <text x="18" y="22" text-anchor="middle" class="xp-badge__star-icon">★</text>
+          <polygon points="18,8 20.5,14.5 27,15 22,19.5 23.5,26 18,22.5 12.5,26 14,19.5 9,15 15.5,14.5"
+            fill="#fbbf24" class="xp-badge__star-icon" />
         {{else}}
-          <text x="18" y="20" text-anchor="middle" class="xp-badge__level-text">
+          <text x="18" y="18" text-anchor="middle" dominant-baseline="central" class="xp-badge__level-text">
             {{this.gamification.level}}
           </text>
         {{/if}}

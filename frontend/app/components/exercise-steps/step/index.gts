@@ -12,7 +12,7 @@ interface Signature {
 }
 
 const ExerciseStepsStep: TOC<Signature> = <template>
-  <div class="flex flex-1">
+  <div class="flex flex-1 w-full">
     <UiTabButton ...attributes @mode={{@mode}}>{{yield}}</UiTabButton>
   </div>
 </template>;
