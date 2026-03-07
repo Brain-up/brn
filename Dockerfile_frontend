@@ -7,7 +7,7 @@ ARG FIREBASE_API_KEY
 ENV FIREBASE_API_KEY ${FIREBASE_API_KEY:-}
 COPY frontend/ /src/
 WORKDIR /src
-RUN yarn
+RUN corepack enable && pnpm install
 RUN node node_modules/ember-cli/bin/ember build --environment=production
 
 FROM node:20 AS build-frontend-angular

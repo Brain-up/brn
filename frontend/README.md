@@ -26,22 +26,21 @@ You will need the following things properly installed on your computer.
 
 * [Git](https://git-scm.com/)
 * [Node.js](https://nodejs.org/) (>= 22)
-* [Yarn](https://yarnpkg.com/) (1.x)
+* [pnpm](https://pnpm.io/) (or use `corepack enable` with Node 22+)
 * [Ember CLI](https://ember-cli.com/)
 * [Google Chrome](https://google.com/chrome/)
 
 ## Installation
 
-* install [volta.sh](https://volta.sh/)
 * install [watchman](https://facebook.github.io/watchman/docs/install.html)
 * `git clone <repository-url>` this repository
 * `cd brn/frontend`
-* `yarn install`
+* `pnpm install`
 
 ## Running / Development
 
-* `yarn local` starts DEV incremental build pointed to localhost:8081 as API
-* `yarn remote` starts DEV build pointing to production BE
+* `pnpm local` starts DEV incremental build pointed to localhost:8081 as API
+* `pnpm remote` starts DEV build pointing to production BE
 
 * Visit your app at [http://localhost:4200](http://localhost:4200).
 * Visit your tests at [http://localhost:4200/tests](http://localhost:4200/tests).
@@ -52,14 +51,14 @@ You will need the following things properly installed on your computer.
 * `ember test --server`
 
 #### Test coverage report
-* `yarn test:coverage`
+* `pnpm test:coverage`
 * open `./coverage/index.html` to see detailed report
 
 ### Linting
 
-* `yarn lint:hbs`
-* `yarn lint:js`
-* `yarn lint:js --fix`
+* `pnpm lint:hbs`
+* `pnpm lint:js`
+* `pnpm lint:js --fix`
 
 ### Building
 

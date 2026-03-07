@@ -151,13 +151,12 @@
     "idle-js": "^1.2.0",
     "luxon": "^1.28.1",
     "patch-package": "6.4.7",
-    "postinstall-postinstall": "^2.1.0",
     "tailwindcss": "^4.2.1",
     "tone": "^14.7.60"
   },
+  "packageManager": "pnpm@10.6.4",
   "volta": {
-    "node": "22.22.0",
-    "yarn": "1.22.10"
+    "node": "22.22.0"
   },
   "ember-addon": {
     "paths": [
