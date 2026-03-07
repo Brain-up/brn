@@ -48,45 +48,6 @@
   }
 }
 
-/* Bounce animation for when streak increases */
-.streak-counter--updated {
-  animation: streak-bounce 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.streak-counter--updated .streak-counter__text {
-  animation: streak-text-pop 0.4s ease-out;
-}
-
-@keyframes streak-bounce {
-  0% {
-    transform: scale(1);
-  }
-  40% {
-    transform: scale(1.25);
-  }
-  70% {
-    transform: scale(0.95);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-@keyframes streak-text-pop {
-  0% {
-    transform: scale(1);
-    color: white;
-  }
-  50% {
-    transform: scale(1.2);
-    color: #fbbf24;
-  }
-  100% {
-    transform: scale(1);
-    color: white;
-  }
-}
-
 /* High streak celebration (5+ days) - more energetic flame */
 .streak-counter--high .streak-counter__flame {
   animation: flame-flicker-intense 1s ease-in-out infinite alternate;
@@ -116,11 +77,6 @@
 
 @media (prefers-reduced-motion: reduce) {
   .streak-counter__flame {
-    animation: none;
-  }
-
-  .streak-counter--updated,
-  .streak-counter--updated .streak-counter__text {
     animation: none;
   }
 

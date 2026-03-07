@@ -105,7 +105,8 @@ export default class ExerciseStatsComponent extends Component<ExerciseStatsSigna
         {{!-- ===== Accuracy ring (hero visual) ===== --}}
         <div class="exercise-stats__hero">
           <div class="exercise-stats__ring-wrap">
-            <svg viewBox="0 0 96 96" class="exercise-stats__accuracy-ring">
+            <svg viewBox="0 0 96 96" class="exercise-stats__accuracy-ring"
+            role="img" aria-label="{{t "gamification.accuracy"}} {{this.accuracy}}%">
               <circle cx="48" cy="48" r="40" fill="none" stroke="#e5e7eb" stroke-width="6"/>
               <circle cx="48" cy="48" r="40" fill="none"
                 stroke={{this.accuracyRingColor}} stroke-width="6"

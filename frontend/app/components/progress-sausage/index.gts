@@ -61,7 +61,8 @@ export default class ProgressSausageComponent extends Component<ProgressSausageS
 
   <template>
     <div class="c-progress-sausage" ...attributes>
-      <div class={{this.barClasses}}>
+      <div class={{this.barClasses}} role="progressbar"
+        aria-valuenow={{this.progressPercent}} aria-valuemin="0" aria-valuemax="100">
         {{! template-lint-disable no-inline-styles style-concatenation }}
         <div
           class={{this.valueClasses}}

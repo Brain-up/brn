@@ -130,6 +130,7 @@ export default class ExerciseStepsComponent extends Component<ExerciseStepsSigna
       <button
         type="button"
         class={{this.listenBtnClass}}
+        aria-label={{t "control_exercises.listen"}}
         disabled={{false}}
         {{on "click" (fn this.onClick this.MODES.LISTEN this.modeForListen)}}
       >
@@ -150,6 +151,7 @@ export default class ExerciseStepsComponent extends Component<ExerciseStepsSigna
       <button
         type="button"
         class={{this.interactBtnClass}}
+        aria-label={{t "control_exercises.interact"}}
         disabled={{false}}
         {{on "click" (fn this.onClick this.MODES.INTERACT this.modeForInteract)}}
       >
@@ -170,6 +172,7 @@ export default class ExerciseStepsComponent extends Component<ExerciseStepsSigna
       <button
         type="button"
         class={{this.taskBtnClass}}
+        aria-label={{t "control_exercises.solve"}}
         disabled={{eq this.modeForTask "disabled"}}
         {{on "click" (fn this.onClick this.MODES.TASK this.modeForTask)}}
       >

@@ -155,29 +155,6 @@
   }
 }
 
-/* ===== Level-up celebration ===== */
-.xp-badge--level-up .xp-badge__ring {
-  animation: xp-level-up-burst 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-@keyframes xp-level-up-burst {
-  0% {
-    transform: scale(1);
-    filter: drop-shadow(0 0 0 rgba(251, 191, 36, 0));
-  }
-  30% {
-    transform: scale(1.4);
-    filter: drop-shadow(0 0 12px rgba(251, 191, 36, 0.8));
-  }
-  60% {
-    transform: scale(0.9);
-  }
-  100% {
-    transform: scale(1);
-    filter: drop-shadow(0 0 0 rgba(251, 191, 36, 0));
-  }
-}
-
 /* ===== Reduced motion ===== */
 @media (prefers-reduced-motion: reduce) {
   .xp-badge__progress {
@@ -196,8 +173,7 @@
 
   .xp-badge--pulse .xp-badge__ring,
   .xp-badge--pulse .xp-badge__xp-text,
-  .xp-badge--near-levelup .xp-badge__progress,
-  .xp-badge--level-up .xp-badge__ring {
+  .xp-badge--near-levelup .xp-badge__progress {
     animation: none;
   }
 }

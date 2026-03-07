@@ -42,8 +42,8 @@
 }
 
 .prosody__option-button:hover:not(:disabled) {
-  transform: scale(1.03);
-  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.15);
+  transform: scale(1.04);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
 }
 
 .prosody__option-button:active:not(:disabled) {

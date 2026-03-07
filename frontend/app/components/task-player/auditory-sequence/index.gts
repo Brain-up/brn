@@ -245,7 +245,7 @@ export default class AuditorySequenceComponent extends Component<AuditorySequenc
                   aria-label={{answerOption.word}}
                   disabled={{this.isDisabled}}
                   type="button"
-                  class="auditory-sequence__option-button btn-press py-2 px-2 rounded
+                  class="auditory-sequence__option-button btn-press rounded
                     {{if
                       (eq @activeWord answerOption.word)
                       "border-2 text-white bg-purple-primary"

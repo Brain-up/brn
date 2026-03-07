@@ -132,16 +132,16 @@ export default class TaskPlayerSignalComponent extends Component<TaskPlayerSigna
                   disabled={{@disableAnswers}}
                   title={{answerOption.word}}
                   type="button"
-                  class="btn-press task-player__option-button py-2 px-4 rounded text-black
+                  class="btn-press task-player__option-button py-2 px-4 rounded text-purple-primary
                     {{if
                       (eq @activeWord answerOption.word)
-                      "border bg-blue-500"
-                      "border border-blue-500 bg-transparent"
+                      "border-2 text-white bg-purple-primary"
+                      "border-2 border-purple-primary/25 bg-transparent"
                     }}
                     {{if
                       @disableAnswers
                       "opacity-50 cursor-default"
-                      "hover:bg-blue-500 hover:text-white hover:border-transparent"
+                      "hover:bg-purple-primary hover:text-white hover:border-transparent"
                     }}"
                   {{on
                     "click"
@@ -153,7 +153,7 @@ export default class TaskPlayerSignalComponent extends Component<TaskPlayerSigna
                   }}
                 >
                   {{!-- template-lint-disable no-nested-interactive --}}
-                  <canvas {{frequencyVisualizer answerOption}}></canvas>
+                  <canvas aria-label={{answerOption.word}} {{frequencyVisualizer answerOption}}></canvas>
                 </button>
               </li>
             {{/each}}

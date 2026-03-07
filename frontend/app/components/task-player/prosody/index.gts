@@ -218,7 +218,7 @@ export default class ProsodyComponent extends Component<ProsodySignature> {
                   aria-label={{answerOption.word}}
                   disabled={{this.isDisabled}}
                   type="button"
-                  class="prosody__option-button btn-press py-4 px-6 rounded
+                  class="prosody__option-button btn-press rounded
                     {{if
                       (eq @activeWord answerOption.word)
                       "border-2 text-white bg-purple-primary"
