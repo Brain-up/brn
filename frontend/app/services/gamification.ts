@@ -33,8 +33,10 @@ export default class GamificationService extends Service {
   @tracked sessionXp = 0;
   @tracked lastXpGain = 0;
   @tracked showXpPopup = false;
+  @tracked showBadgeFlash = false;
 
   private _popupTimer: ReturnType<typeof setTimeout> | null = null;
+  private _badgeFlashTimer: ReturnType<typeof setTimeout> | null = null;
 
   private get storageKey(): string {
     const userId = this.session?.data?.authenticated?.user?.uid;
@@ -262,6 +264,20 @@ export default class GamificationService extends Service {
     this.sessionXp = 0;
   }
 
+  /**
+   * Triggers a pulse animation on the XP badge (e.g., after exercise stats dismissed).
+   */
+  flashBadge(): void {
+    this.showBadgeFlash = true;
+    if (this._badgeFlashTimer) {
+      clearTimeout(this._badgeFlashTimer);
+    }
+    this._badgeFlashTimer = setTimeout(() => {
+      this.showBadgeFlash = false;
+      this._badgeFlashTimer = null;
+    }, 1000);
+  }
+
   clearStorage(): void {
     try {
       localStorage.removeItem(this.storageKey);
@@ -282,7 +298,12 @@ export default class GamificationService extends Service {
     const newState = { ...this._state };
     newState.totalXp = this._state.totalXp + amount;
     this.sessionXp = this.sessionXp + amount;
-    this.lastXpGain = amount;
+    // Accumulate XP gain if popup is already visible (rapid correct answers)
+    if (this.showXpPopup) {
+      this.lastXpGain = this.lastXpGain + amount;
+    } else {
+      this.lastXpGain = amount;
+    }
     this.schedulePopupDismiss();
     this._state = newState;
     this.saveState(newState);
@@ -307,7 +328,7 @@ export default class GamificationService extends Service {
     this._popupTimer = setTimeout(() => {
       this.showXpPopup = false;
       this._popupTimer = null;
-    }, 2000);
+    }, 2500);
   }
 
   private updateStreak(state: GamificationState): void {

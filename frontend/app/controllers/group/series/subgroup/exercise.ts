@@ -99,6 +99,7 @@ export default class GroupSeriesSubgroupExerciseController extends Controller {
     await subgroupController.exerciseAvailabilityCalculationTask.perform();
     this.showExerciseStats = false;
     this.exerciseStats = {};
+    this.gamification.flashBadge();
     this.goToSeries();
   }
 

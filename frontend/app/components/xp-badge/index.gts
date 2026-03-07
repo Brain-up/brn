@@ -34,7 +34,7 @@ export default class XpBadgeComponent extends Component {
     if (this.isEmpty) {
       classes.push('xp-badge--empty');
     }
-    if (this.gamification.showXpPopup) {
+    if (this.gamification.showXpPopup || this.gamification.showBadgeFlash) {
       classes.push('xp-badge--pulse');
     }
     if (this.isNearLevelUp) {
