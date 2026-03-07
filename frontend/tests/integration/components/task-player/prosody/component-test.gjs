@@ -49,28 +49,6 @@ const task = {
   ],
 };
 
-// Wrap a store record with custom tasksToSolve that uses single-element answers
-// so that the deepEqual check in the component can match a single clicked word.
-function wrapModelWithSingleAnswers(model) {
-  const answerOptions = model.answerOptions;
-  const proxy = new Proxy(model, {
-    get(target, prop) {
-      if (prop === 'tasksToSolve') {
-        return answerOptions.map((option, index) => ({
-          answer: [option],
-          order: index,
-        }));
-      }
-      const value = Reflect.get(target, prop);
-      if (typeof value === 'function') {
-        return value.bind(target);
-      }
-      return value;
-    },
-  });
-  return proxy;
-}
-
 module(
   'Integration | Component | task-player/prosody',
   function (hooks) {
@@ -102,7 +80,6 @@ module(
         exercise: store.createRecord('exercise'),
       });
       this.set('model', model);
-      this.set('wrappedModel', wrapModelWithSingleAnswers(model));
       this.set('onRightAnswer', function () {});
       this.set('onWrongAnswer', function () {});
     });
@@ -122,7 +99,7 @@ module(
       const self = this;
 
       await render(
-        <template><Prosody @task={{self.wrappedModel}} @mode="task" @onRightAnswer={{self.onRightAnswer}} @onWrongAnswer={{self.onWrongAnswer}} /></template>
+        <template><Prosody @task={{self.model}} @mode="task" @onRightAnswer={{self.onRightAnswer}} @onWrongAnswer={{self.onWrongAnswer}} /></template>
       );
 
       const correctAnswer = document.body.dataset.correctAnswer;
@@ -139,7 +116,7 @@ module(
       const self = this;
 
       await render(
-        <template><Prosody @task={{self.wrappedModel}} @mode="task" @onRightAnswer={{self.onRightAnswer}} @onWrongAnswer={{self.onWrongAnswer}} /></template>
+        <template><Prosody @task={{self.model}} @mode="task" @onRightAnswer={{self.onRightAnswer}} @onWrongAnswer={{self.onWrongAnswer}} /></template>
       );
 
       const correctAnswer = document.body.dataset.correctAnswer;

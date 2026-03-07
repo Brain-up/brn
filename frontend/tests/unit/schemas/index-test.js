@@ -3,11 +3,11 @@ import { ALL_SCHEMAS, ALL_EXTENSIONS } from 'brn/schemas/index';
 
 module('Unit | Schema | index', function () {
   test('ALL_SCHEMAS contains the expected number of schemas', function (assert) {
-    assert.strictEqual(ALL_SCHEMAS.length, 14);
+    assert.strictEqual(ALL_SCHEMAS.length, 18);
   });
 
   test('ALL_EXTENSIONS contains the expected number of extensions', function (assert) {
-    assert.strictEqual(ALL_EXTENSIONS.length, 10);
+    assert.strictEqual(ALL_EXTENSIONS.length, 14);
   });
 
   test('ALL_SCHEMAS contains all expected schema types', function (assert) {
@@ -26,6 +26,10 @@ module('Unit | Schema | index', function () {
     assert.true(types.includes('task/signal'), 'includes task/signal');
     assert.true(types.includes('task/single-simple-words'), 'includes task/single-simple-words');
     assert.true(types.includes('task/words-sequences'), 'includes task/words-sequences');
+    assert.true(types.includes('task/environmental-sounds'), 'includes task/environmental-sounds');
+    assert.true(types.includes('task/phoneme-pairs'), 'includes task/phoneme-pairs');
+    assert.true(types.includes('task/auditory-sequence'), 'includes task/auditory-sequence');
+    assert.true(types.includes('task/prosody'), 'includes task/prosody');
   });
 
   test('ALL_EXTENSIONS contains all expected extension names', function (assert) {
@@ -34,6 +38,10 @@ module('Unit | Schema | index', function () {
     assert.true(names.includes('user-yearly-statistics-ext'), 'includes user-yearly-statistics-ext');
     assert.true(names.includes('task-single-simple-words-ext'), 'includes task-single-simple-words-ext');
     assert.true(names.includes('task-words-sequences-ext'), 'includes task-words-sequences-ext');
+    assert.true(names.includes('task-environmental-sounds-ext'), 'includes task-environmental-sounds-ext');
+    assert.true(names.includes('task-phoneme-pairs-ext'), 'includes task-phoneme-pairs-ext');
+    assert.true(names.includes('task-auditory-sequence-ext'), 'includes task-auditory-sequence-ext');
+    assert.true(names.includes('task-prosody-ext'), 'includes task-prosody-ext');
   });
 
   test('all schemas have a type property', function (assert) {

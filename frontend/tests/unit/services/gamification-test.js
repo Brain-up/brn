@@ -548,13 +548,16 @@ module('Unit | Service | gamification', function (hooks) {
   });
 
   test('state is loaded from localStorage on service initialization', function (assert) {
+    // Use today's date so refreshStreak() does not reset currentStreak
+    const today = new Date().toISOString().split('T')[0];
+
     localStorage.setItem(
       'brn-gamification',
       JSON.stringify({
         totalXp: 500,
         currentStreak: 7,
         longestStreak: 14,
-        lastActiveDate: '2025-01-15',
+        lastActiveDate: today,
         exercisesCompleted: 20,
         perfectExercises: 12,
         badges: { first_exercise: '2025-01-01T00:00:00.000Z' },

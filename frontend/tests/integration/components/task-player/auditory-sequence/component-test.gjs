@@ -2,7 +2,7 @@
 import { module, test } from 'qunit';
 import { setupIntl } from 'ember-intl/test-support';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, click, settled } from '@ember/test-helpers';
+import { render, click } from '@ember/test-helpers';
 import AudioService from 'brn/services/audio';
 import StatsService, { StatEvents } from 'brn/services/stats';
 import AuditorySequence from 'brn/components/task-player/auditory-sequence';
@@ -48,27 +48,6 @@ const task = {
   ],
 };
 
-// Wrap a store record with custom tasksToSolve that uses a fixed sequence
-// so the sequence order is deterministic regardless of shuffleArray randomness.
-function wrapModelWithFixedSequence(model, sequence) {
-  const proxy = new Proxy(model, {
-    get(target, prop) {
-      if (prop === 'tasksToSolve') {
-        return [
-          { answer: sequence, order: 0 },
-          { answer: [...sequence].reverse(), order: 1 },
-        ];
-      }
-      const value = Reflect.get(target, prop);
-      if (typeof value === 'function') {
-        return value.bind(target);
-      }
-      return value;
-    },
-  });
-  return proxy;
-}
-
 module(
   'Integration | Component | task-player/auditory-sequence',
   function (hooks) {
@@ -100,14 +79,6 @@ module(
         exercise: store.createRecord('exercise', { playWordsCount: 2 }),
       });
       this.set('model', model);
-
-      // Build the fixed sequence from the raw answer options
-      const fixedSequence = task.answerOptions.map((o) => ({
-        ...o,
-        audioFileUrl: o.audioFileUrl || null,
-        pictureFileUrl: o.pictureFileUrl || null,
-      }));
-      this.set('wrappedModel', wrapModelWithFixedSequence(model, fixedSequence));
       this.set('onRightAnswer', function () {});
       this.set('onWrongAnswer', function () {});
     });
@@ -127,17 +98,12 @@ module(
       const self = this;
 
       await render(
-        <template><AuditorySequence @task={{self.wrappedModel}} @mode="task" @onRightAnswer={{self.onRightAnswer}} @onWrongAnswer={{self.onWrongAnswer}} /></template>
+        <template><AuditorySequence @task={{self.model}} @mode="task" @onRightAnswer={{self.onRightAnswer}} @onWrongAnswer={{self.onWrongAnswer}} /></template>
       );
 
-      // The fixed sequence for the first task is [кот, дом]
-      const correctSequence = task.answerOptions.map((o) => o.word);
+      const correctAnswer = document.body.dataset.correctAnswer;
 
-      // Click options in the correct order to complete the sequence
-      for (const word of correctSequence) {
-        await click(`[data-test-task-answer-option="${word}"]`);
-      }
-      await settled();
+      await click(`[data-test-task-answer-option="${correctAnswer}"]`);
 
       assert.true(
         recordedEvents.includes(StatEvents.RightAnswer),
@@ -149,18 +115,13 @@ module(
       const self = this;
 
       await render(
-        <template><AuditorySequence @task={{self.wrappedModel}} @mode="task" @onRightAnswer={{self.onRightAnswer}} @onWrongAnswer={{self.onWrongAnswer}} /></template>
+        <template><AuditorySequence @task={{self.model}} @mode="task" @onRightAnswer={{self.onRightAnswer}} @onWrongAnswer={{self.onWrongAnswer}} /></template>
       );
 
-      // The fixed sequence for the first task is [кот, дом]
-      const correctSequence = task.answerOptions.map((o) => o.word);
+      const correctAnswer = document.body.dataset.correctAnswer;
+      const wrongOption = task.answerOptions.find((o) => o.word !== correctAnswer);
 
-      // Click options in reversed order to produce a wrong answer
-      const wrongSequence = [...correctSequence].reverse();
-      for (const word of wrongSequence) {
-        await click(`[data-test-task-answer-option="${word}"]`);
-      }
-      await settled();
+      await click(`[data-test-task-answer-option="${wrongOption.word}"]`);
 
       assert.true(
         recordedEvents.includes(StatEvents.WrongAnswer),

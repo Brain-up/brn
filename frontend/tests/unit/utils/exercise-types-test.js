@@ -14,9 +14,17 @@ module('Unit | Utility | exercise-types', function () {
     assert.strictEqual(ExerciseMechanism.SIGNALS, 'SIGNALS');
   });
 
-  test('ExerciseMechanism contains exactly three members', function (assert) {
+  test('ExerciseMechanism contains exactly seven members', function (assert) {
     const values = Object.values(ExerciseMechanism);
-    assert.strictEqual(values.length, 3);
-    assert.deepEqual(values.sort(), ['MATRIX', 'SIGNALS', 'WORDS']);
+    assert.strictEqual(values.length, 7);
+    assert.deepEqual(values.sort(), [
+      'AUDITORY_SEQUENCE',
+      'ENVIRONMENTAL_SOUNDS',
+      'MATRIX',
+      'PHONEME_PAIRS',
+      'PROSODY',
+      'SIGNALS',
+      'WORDS',
+    ]);
   });
 });
