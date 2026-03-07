@@ -352,6 +352,11 @@ gamification:
   summary_good: Great job! Keep it up!
   summary_keep_going: Keep going! Practice makes perfect!
   xp_badge_start: Start!
+  listens: Listens
+  total_exercises: Total done
+  perfect_exercises: Perfect runs
+  xp_to_next_level: to next level
+  longest_streak: Best streak
 
 contributors:
   title: "Our Team"

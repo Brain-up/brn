@@ -10,7 +10,7 @@ import didUpdate from '@ember/render-modifiers/modifiers/did-update';
 import { on } from '@ember/modifier';
 import { fn } from '@ember/helper';
 import { t } from 'ember-intl';
-import ExerciseStepsStep from 'brn/components/exercise-steps/step';
+import { eq } from 'ember-truth-helpers';
 
 const BUTTONS = {
   ACTIVE: 'active' as const,
@@ -60,29 +60,34 @@ export default class ExerciseStepsComponent extends Component<ExerciseStepsSigna
     return this.modes.includes(MODES.INTERACT) && this.args.activeStep !== MODES.INTERACT;
   }
 
-  get listenStepClass() {
-    const classes = ['exercise-step'];
-    if (this.modeForListen === BUTTONS.ACTIVE) classes.push('exercise-step--active');
-    if (this.isListenCompleted) classes.push('exercise-step--completed');
-    return classes.join(' ');
+  // Base Tailwind classes for all step buttons
+  static BASE_BTN = 'exercise-step-btn border-2 border-solid cursor-pointer';
+  // State-specific Tailwind classes (colors that must override Tailwind preflight)
+  static STATE_DEFAULT = 'border-[#e5e7eb] bg-white text-[#6b7280]';
+  static STATE_ACTIVE = 'exercise-step-btn--active border-[#428dfc] bg-[#eef4ff] text-[#2d4adb] shadow-[0_0_0_3px_rgba(66,141,252,0.15),0_2px_8px_rgba(66,141,252,0.2)]';
+  static STATE_COMPLETED = 'exercise-step-btn--completed border-[#86efac] bg-[#f0fdf4] text-[#16a34a]';
+  static STATE_NEXT = 'exercise-step-btn--next border-[#93c5fd] bg-[#f0f7ff] text-[#3b82f6]';
+  static STATE_LOCKED = 'exercise-step-btn--locked border-[#f3f4f6] bg-[#fafafa] text-[#d1d5db] cursor-not-allowed opacity-70';
+
+  get listenBtnClass() {
+    const base = ExerciseStepsComponent.BASE_BTN;
+    if (this.modeForListen === BUTTONS.ACTIVE) return `${base} ${ExerciseStepsComponent.STATE_ACTIVE}`;
+    if (this.isListenCompleted) return `${base} ${ExerciseStepsComponent.STATE_COMPLETED}`;
+    return `${base} ${ExerciseStepsComponent.STATE_DEFAULT}`;
   }
-  get interactStepClass() {
-    const classes = ['exercise-step'];
-    if (this.modeForInteract === BUTTONS.ACTIVE) classes.push('exercise-step--active');
-    if (this.isInteractCompleted) classes.push('exercise-step--completed');
-    if (this.isListenCompleted && this.modeForInteract !== BUTTONS.ACTIVE) {
-      classes.push('exercise-step--next');
-    }
-    return classes.join(' ');
+  get interactBtnClass() {
+    const base = ExerciseStepsComponent.BASE_BTN;
+    if (this.modeForInteract === BUTTONS.ACTIVE) return `${base} ${ExerciseStepsComponent.STATE_ACTIVE}`;
+    if (this.isInteractCompleted) return `${base} ${ExerciseStepsComponent.STATE_COMPLETED}`;
+    if (this.isListenCompleted) return `${base} ${ExerciseStepsComponent.STATE_NEXT}`;
+    return `${base} ${ExerciseStepsComponent.STATE_DEFAULT}`;
   }
-  get taskStepClass() {
-    const classes = ['exercise-step'];
-    if (this.modeForTask === BUTTONS.ACTIVE) classes.push('exercise-step--active');
-    if (this.modeForTask === BUTTONS.DISABLED) classes.push('exercise-step--locked');
-    if (this.isInteractCompleted && this.modeForTask !== BUTTONS.ACTIVE && this.modeForTask !== BUTTONS.DISABLED) {
-      classes.push('exercise-step--next');
-    }
-    return classes.join(' ');
+  get taskBtnClass() {
+    const base = ExerciseStepsComponent.BASE_BTN;
+    if (this.modeForTask === BUTTONS.ACTIVE) return `${base} ${ExerciseStepsComponent.STATE_ACTIVE}`;
+    if (this.modeForTask === BUTTONS.DISABLED) return `${base} ${ExerciseStepsComponent.STATE_LOCKED}`;
+    if (this.isInteractCompleted) return `${base} ${ExerciseStepsComponent.STATE_NEXT}`;
+    return `${base} ${ExerciseStepsComponent.STATE_DEFAULT}`;
   }
 
   get connector1Class() {
@@ -122,61 +127,55 @@ export default class ExerciseStepsComponent extends Component<ExerciseStepsSigna
       ...attributes
     >
       {{!-- Step 1: Listen --}}
-      <div class={{this.listenStepClass}}>
-        <div class="exercise-step__indicator">
+      <button
+        type="button"
+        class={{this.listenBtnClass}}
+        disabled={{false}}
+        {{on "click" (fn this.onClick this.MODES.LISTEN this.modeForListen)}}
+      >
+        <span class="exercise-step-btn__badge">
           {{#if this.isListenCompleted}}
-            <svg class="exercise-step__check" viewBox="0 0 16 16" fill="none"><path d="M3 8.5L6.5 12L13 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <svg class="exercise-step-btn__check" viewBox="0 0 16 16" fill="none"><path d="M3 8.5L6.5 12L13 4" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
           {{else}}
-            <span class="exercise-step__number">1</span>
+            1
           {{/if}}
-        </div>
-        <ExerciseStepsStep
-          @mode={{this.modeForListen}}
-          {{on "click" (fn this.onClick this.MODES.LISTEN this.modeForListen)}}
-        >
-          {{t "control_exercises.listen"}}
-        </ExerciseStepsStep>
-      </div>
+        </span>
+        <span class="exercise-step-btn__label">{{t "control_exercises.listen"}}</span>
+      </button>
 
       {{!-- Connector 1 --}}
-      <div class={{this.connector1Class}}>
-        <div class="exercise-connector__line"></div>
-      </div>
+      <div class={{this.connector1Class}}><div class="exercise-connector__line"></div></div>
 
       {{!-- Step 2: Interact --}}
-      <div class={{this.interactStepClass}}>
-        <div class="exercise-step__indicator">
+      <button
+        type="button"
+        class={{this.interactBtnClass}}
+        disabled={{false}}
+        {{on "click" (fn this.onClick this.MODES.INTERACT this.modeForInteract)}}
+      >
+        <span class="exercise-step-btn__badge">
           {{#if this.isInteractCompleted}}
-            <svg class="exercise-step__check" viewBox="0 0 16 16" fill="none"><path d="M3 8.5L6.5 12L13 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <svg class="exercise-step-btn__check" viewBox="0 0 16 16" fill="none"><path d="M3 8.5L6.5 12L13 4" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
           {{else}}
-            <span class="exercise-step__number">2</span>
+            2
           {{/if}}
-        </div>
-        <ExerciseStepsStep
-          @mode={{this.modeForInteract}}
-          {{on "click" (fn this.onClick this.MODES.INTERACT this.modeForInteract)}}
-        >
-          {{t "control_exercises.interact"}}
-        </ExerciseStepsStep>
-      </div>
+        </span>
+        <span class="exercise-step-btn__label">{{t "control_exercises.interact"}}</span>
+      </button>
 
       {{!-- Connector 2 --}}
-      <div class={{this.connector2Class}}>
-        <div class="exercise-connector__line"></div>
-      </div>
+      <div class={{this.connector2Class}}><div class="exercise-connector__line"></div></div>
 
       {{!-- Step 3: Solve --}}
-      <div class={{this.taskStepClass}}>
-        <div class="exercise-step__indicator">
-          <span class="exercise-step__number">3</span>
-        </div>
-        <ExerciseStepsStep
-          @mode={{this.modeForTask}}
-          {{on "click" (fn this.onClick this.MODES.TASK this.modeForTask)}}
-        >
-          {{t "control_exercises.solve"}}
-        </ExerciseStepsStep>
-      </div>
+      <button
+        type="button"
+        class={{this.taskBtnClass}}
+        disabled={{eq this.modeForTask "disabled"}}
+        {{on "click" (fn this.onClick this.MODES.TASK this.modeForTask)}}
+      >
+        <span class="exercise-step-btn__badge">3</span>
+        <span class="exercise-step-btn__label">{{t "control_exercises.solve"}}</span>
+      </button>
     </div>
   </template>
 }

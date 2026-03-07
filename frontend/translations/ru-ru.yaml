@@ -354,6 +354,11 @@ gamification:
   summary_good: Хорошая работа! Так держать!
   summary_keep_going: Продолжай! Практика ведёт к совершенству!
   xp_badge_start: Начни!
+  listens: Прослушиваний
+  total_exercises: Всего пройдено
+  perfect_exercises: Без ошибок
+  xp_to_next_level: до след. уровня
+  longest_streak: Лучшая серия
 
 contributors:
   title: "Наша команда"

@@ -86,11 +86,11 @@ export default class TaskPlayerSingleWordsOptionComponent extends Component<Task
         disabled={{this.isDisabled}}
         type="button"
         {{didUpdate this.handleAnswer @isCorrect}}
-        class="btn-press task-player__option-button bg-transparent py-1 sm:px-2 rounded
+        class="btn-press task-player__option-button py-1 sm:px-2 rounded
           {{if
             (eq @activeWord @answerOption.word)
             "border-2 text-white bg-purple-primary"
-            " border-2 border-purple-primary/25 text-purple-primary"
+            "border-2 border-purple-primary/25 text-purple-primary bg-transparent"
           }}
           {{if
             @disableAnswers

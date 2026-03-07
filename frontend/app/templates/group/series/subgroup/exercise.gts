@@ -18,7 +18,6 @@ import ModalDialog from 'ember-modal-dialog/components/modal-dialog';
 import AnswerCorrectnessWidget from 'brn/components/answer-correctness-widget';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import ExerciseStats from 'brn/components/exercise-stats';
-import XpPopup from 'brn/components/xp-popup';
 import type GroupSeriesSubgroupExerciseController from 'brn/controllers/group/series/subgroup/exercise';
 import type { Exercise } from 'brn/schemas/exercise';
 
@@ -76,7 +75,6 @@ const tpl: TOC<Signature> = <template>
           </div>
         {{/if}}
         <div class="exercise-container relative">
-          <XpPopup />
           {{#if
             (and
               @controller.exerciseIsCompletedInCurrentCycle (not @controller.showExerciseStats)

@@ -1,3 +1,5 @@
+/*! purgecss start ignore */
+
 .xp-badge {
   display: flex;
   align-items: center;
@@ -199,3 +201,5 @@
     animation: none;
   }
 }
+
+/*! purgecss end ignore */

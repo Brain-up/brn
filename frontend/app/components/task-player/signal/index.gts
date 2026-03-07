@@ -132,11 +132,11 @@ export default class TaskPlayerSignalComponent extends Component<TaskPlayerSigna
                   disabled={{@disableAnswers}}
                   title={{answerOption.word}}
                   type="button"
-                  class="btn-press task-player__option-button bg-transparent py-2 px-4 rounded text-black
+                  class="btn-press task-player__option-button py-2 px-4 rounded text-black
                     {{if
                       (eq @activeWord answerOption.word)
                       "border bg-blue-500"
-                      "border border-blue-500"
+                      "border border-blue-500 bg-transparent"
                     }}
                     {{if
                       @disableAnswers

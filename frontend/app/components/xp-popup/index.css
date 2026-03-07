@@ -1,3 +1,5 @@
+/*! purgecss start ignore */
+
 .xp-popup {
   position: fixed;
   top: 30%;
@@ -124,3 +126,5 @@
     display: none;
   }
 }
+
+/*! purgecss end ignore */

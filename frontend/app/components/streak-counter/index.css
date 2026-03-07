@@ -1,3 +1,5 @@
+/*! purgecss start ignore */
+
 .streak-counter {
   display: flex;
   align-items: center;
@@ -127,3 +129,5 @@
     filter: none;
   }
 }
+
+/*! purgecss end ignore */

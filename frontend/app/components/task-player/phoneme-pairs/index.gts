@@ -218,11 +218,11 @@ export default class PhonemePairsComponent extends Component<PhonemePairsSignatu
                   aria-label={{answerOption.word}}
                   disabled={{this.isDisabled}}
                   type="button"
-                  class="phoneme-pairs__option-button btn-press bg-transparent py-2 px-4 rounded
+                  class="phoneme-pairs__option-button btn-press py-2 px-4 rounded
                     {{if
                       (eq @activeWord answerOption.word)
                       "border-2 text-white bg-purple-primary"
-                      "border-2 border-purple-primary/25 text-purple-primary"
+                      "border-2 border-purple-primary/25 text-purple-primary bg-transparent"
                     }}
                     {{if
                       @disableAnswers

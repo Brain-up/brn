@@ -1,53 +1,38 @@
 /*! purgecss start ignore */
 .c-tab-button {
-  color: #4b5563;
-  background: white;
-  border: 1.5px solid #e5e7eb;
-  padding: 0 12px;
+  color: rgba(19, 19, 18, 0.5);
+  border: double 1px transparent;
+  background-image: linear-gradient(white, white),
+    radial-gradient(circle at top left, #428dfc, #ba75f1);
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+  padding: 0;
   min-width: 70px;
   max-width: 260px;
   text-decoration: none;
   cursor: pointer;
-  font-weight: 600;
-  letter-spacing: 0.03em;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
-  transition:
-    background-color 0.3s ease,
-    border-color 0.3s ease,
-    color 0.3s ease,
-    box-shadow 0.3s ease,
-    transform 0.15s ease;
 
-  /* ---- Active: current step - bold & prominent ---- */
+  &::before {
+    content: '';
+  }
+
   &:active,
   &.active {
-    background: linear-gradient(135deg, #eff6ff, #eef2ff);
-    border-color: #93b4f8;
-    font-weight: 800;
-    color: #1e40af;
-    box-shadow:
-      0 0 0 2.5px rgba(66, 141, 252, 0.15),
-      0 2px 8px rgba(66, 141, 252, 0.12);
+    background: #ebf4ff;
+    font-weight: bold;
+    color: #131312;
   }
 
-  /* ---- Hover: subtle lift ---- */
-  &:hover:not(:disabled):not(.disabled) {
-    color: #1f2937;
-    border-color: #c7d2fe;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    transform: translateY(-1px);
+  &:hover {
+    color: #131312;
   }
 
-  /* ---- Disabled: locked & muted ---- */
   &:disabled,
   &.disabled {
-    color: #c9c9c9;
-    background: #fafafa;
-    border: 1.5px dashed #e0e0e0;
+    color: rgb(128, 127, 127);
+    border: rgb(199, 199, 199) solid 1px;
     pointer-events: none;
     cursor: default;
-    box-shadow: none;
-    opacity: 0.75;
   }
 }
 
