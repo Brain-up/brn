@@ -44,6 +44,7 @@ export default class AnswerCorrectnessWidgetComponent extends Component<AnswerCo
   <template>
     <div
       class="c-answer-correctness-widget
+        {{if @isCorrect 'c-answer-correctness-widget--correct' 'c-answer-correctness-widget--incorrect'}}
         flex flex-wrap flex-1 flex-col text-center justify-evenly pb-0 items-center rounded-large"
       ...attributes
     >

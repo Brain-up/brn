@@ -101,9 +101,11 @@ module(
         <template><AuditorySequence @task={{self.model}} @mode="task" @onRightAnswer={{self.onRightAnswer}} @onWrongAnswer={{self.onWrongAnswer}} /></template>
       );
 
-      const correctAnswer = document.body.dataset.correctAnswer;
-
-      await click(`[data-test-task-answer-option="${correctAnswer}"]`);
+      // The correct sequence is stored as comma-separated words
+      const correctSequence = document.body.dataset.correctAnswer.split(',');
+      for (const word of correctSequence) {
+        await click(`[data-test-task-answer-option="${word}"]`);
+      }
 
       assert.true(
         recordedEvents.includes(StatEvents.RightAnswer),
@@ -118,10 +120,12 @@ module(
         <template><AuditorySequence @task={{self.model}} @mode="task" @onRightAnswer={{self.onRightAnswer}} @onWrongAnswer={{self.onWrongAnswer}} /></template>
       );
 
-      const correctAnswer = document.body.dataset.correctAnswer;
-      const wrongOption = task.answerOptions.find((o) => o.word !== correctAnswer);
-
-      await click(`[data-test-task-answer-option="${wrongOption.word}"]`);
+      // Click words in reverse order to produce a wrong sequence
+      const correctSequence = document.body.dataset.correctAnswer.split(',');
+      const wrongSequence = [...correctSequence].reverse();
+      for (const word of wrongSequence) {
+        await click(`[data-test-task-answer-option="${word}"]`);
+      }
 
       assert.true(
         recordedEvents.includes(StatEvents.WrongAnswer),

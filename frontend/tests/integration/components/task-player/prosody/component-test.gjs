@@ -102,7 +102,7 @@ module(
         <template><Prosody @task={{self.model}} @mode="task" @onRightAnswer={{self.onRightAnswer}} @onWrongAnswer={{self.onWrongAnswer}} /></template>
       );
 
-      const correctAnswer = document.body.dataset.correctAnswer;
+      const correctAnswer = task.correctAnswer;
 
       await click(`[data-test-task-answer-option="${correctAnswer}"]`);
 
@@ -119,7 +119,7 @@ module(
         <template><Prosody @task={{self.model}} @mode="task" @onRightAnswer={{self.onRightAnswer}} @onWrongAnswer={{self.onWrongAnswer}} /></template>
       );
 
-      const correctAnswer = document.body.dataset.correctAnswer;
+      const correctAnswer = task.correctAnswer;
       const wrongOption = task.answerOptions.find((o) => o.word !== correctAnswer);
 
       await click(`[data-test-task-answer-option="${wrongOption.word}"]`);

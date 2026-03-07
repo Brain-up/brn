@@ -20,6 +20,7 @@ import { on } from '@ember/modifier';
 import { fn } from '@ember/helper';
 import { eq } from 'ember-truth-helpers';
 import UiTaskContent from 'brn/components/ui/task-content';
+import { t } from 'ember-intl';
 
 export interface AuditorySequenceSignature {
   Args: {
@@ -141,7 +142,6 @@ export default class AuditorySequenceComponent extends Component<AuditorySequenc
       return null;
     }
     const answer = task.answer[0] as AnswerOption;
-    document.body.dataset.correctAnswer = answer.word;
     const useGeneratedUrl =
       this.args.task.usePreGeneratedAudio && answer.audioFileUrl;
     const url = useGeneratedUrl
@@ -242,6 +242,7 @@ export default class AuditorySequenceComponent extends Component<AuditorySequenc
                 <button
                   data-test-task-answer
                   data-test-task-answer-option={{answerOption.word}}
+                  aria-label={{answerOption.word}}
                   disabled={{this.isDisabled}}
                   type="button"
                   class="auditory-sequence__option-button btn-press bg-transparent py-2 px-2 rounded
@@ -302,7 +303,7 @@ export default class AuditorySequenceComponent extends Component<AuditorySequenc
                   class="auditory-sequence__clear-button px-3 py-1 text-sm rounded border border-red-400 text-red-500 hover:bg-red-50"
                   {{on "click" this.clearSequence}}
                 >
-                  Clear
+                  {{t "exercise.clear_selection"}}
                 </button>
               </div>
             </div>

@@ -23,7 +23,11 @@
   font-size: 16px;
   line-height: 22px;
   text-transform: uppercase;
-  transition: all 0.5s ease;
+  transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1),
+              background-color 0.25s ease,
+              color 0.25s ease,
+              border-color 0.25s ease,
+              box-shadow 0.25s ease;
   font-weight: 600;
   padding: 16px 8px;
   min-height: 120px;
@@ -39,8 +43,15 @@
   }
 }
 
-.phoneme-pairs__option-button:active {
+.phoneme-pairs__option-button:hover:not(:disabled) {
+  transform: scale(1.04);
+  box-shadow: 0 6px 16px rgba(99, 102, 241, 0.15);
+}
+
+.phoneme-pairs__option-button:active:not(:disabled) {
+  transform: scale(0.95);
   font-weight: bold;
+  box-shadow: 0 2px 6px rgba(99, 102, 241, 0.1);
 }
 
 .phoneme-pairs__option-button:disabled {
@@ -53,11 +64,38 @@
   height: auto;
   object-fit: contain;
   margin-bottom: 12px;
+  transition: transform 0.2s ease;
+}
+
+.phoneme-pairs__option-button:hover:not(:disabled) .phoneme-pairs__image {
+  transform: scale(1.05);
 }
 
 .phoneme-pairs__label {
   display: block;
   text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .phoneme-pairs__option-button {
+    transition: background-color 0.25s ease,
+                color 0.25s ease,
+                border-color 0.25s ease;
+  }
+
+  .phoneme-pairs__option-button:hover:not(:disabled) {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .phoneme-pairs__option-button:active:not(:disabled) {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .phoneme-pairs__option-button:hover:not(:disabled) .phoneme-pairs__image {
+    transform: none;
+  }
 }
 
 /*! purgecss end ignore */

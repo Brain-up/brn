@@ -1,0 +1,133 @@
+/*! purgecss start ignore */
+
+/* Container slides in from bottom with fade */
+.exercise-stats__container {
+  animation: stats-slide-in 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes stats-slide-in {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Staggered fade-in for stat items */
+.exercise-stats__item {
+  opacity: 0;
+  animation: stats-item-appear 0.4s ease-out forwards;
+}
+
+.exercise-stats__item:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.exercise-stats__item:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.exercise-stats__item:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+.exercise-stats__item:nth-child(4) {
+  animation-delay: 0.4s;
+}
+
+@keyframes stats-item-appear {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Right-side gamification stats get slightly later stagger */
+.exercise-stats__gamification .exercise-stats__item:nth-child(1) {
+  animation-delay: 0.3s;
+}
+
+.exercise-stats__gamification .exercise-stats__item:nth-child(2) {
+  animation-delay: 0.4s;
+}
+
+.exercise-stats__gamification .exercise-stats__item:nth-child(3) {
+  animation-delay: 0.5s;
+}
+
+.exercise-stats__gamification .exercise-stats__item:nth-child(4) {
+  animation-delay: 0.6s;
+}
+
+/* Growth message fades in last with a gentle scale */
+.exercise-stats__message {
+  opacity: 0;
+  animation: stats-message-appear 0.5s ease-out 0.7s forwards;
+}
+
+@keyframes stats-message-appear {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  60% {
+    transform: scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Continue button slides up last */
+.exercise-stats__action {
+  opacity: 0;
+  animation: stats-action-appear 0.4s ease-out 0.9s forwards;
+}
+
+@keyframes stats-action-appear {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .exercise-stats__container {
+    animation: none;
+    opacity: 1;
+  }
+
+  .exercise-stats__item {
+    animation: none;
+    opacity: 1;
+  }
+
+  .exercise-stats__gamification .exercise-stats__item {
+    animation: none;
+    opacity: 1;
+  }
+
+  .exercise-stats__message {
+    animation: none;
+    opacity: 1;
+  }
+
+  .exercise-stats__action {
+    animation: none;
+    opacity: 1;
+  }
+}
+
+/*! purgecss end ignore */

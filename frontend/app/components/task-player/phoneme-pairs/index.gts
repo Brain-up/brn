@@ -172,10 +172,7 @@ export default class PhonemePairsComponent extends Component<PhonemePairsSignatu
   showTaskResult = dropTask(async (selectedWord: string) => {
     this.currentAnswer = selectedWord;
 
-    const isCorrect = deepEqual(
-      this.currentAnswer,
-      this.firstUncompletedTask?.answer.map((e) => e.word).join(''),
-    );
+    const isCorrect = this.currentAnswer === this.task.correctAnswer;
 
     this.isCorrect = isCorrect;
 
@@ -218,6 +215,7 @@ export default class PhonemePairsComponent extends Component<PhonemePairsSignatu
                 <button
                   data-test-task-answer
                   data-test-task-answer-option={{answerOption.word}}
+                  aria-label={{answerOption.word}}
                   disabled={{this.isDisabled}}
                   type="button"
                   class="phoneme-pairs__option-button btn-press bg-transparent py-2 px-4 rounded

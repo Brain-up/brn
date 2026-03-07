@@ -22,7 +22,11 @@
   justify-content: center;
   font-size: 18px;
   line-height: 26px;
-  transition: all 0.5s ease;
+  transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1),
+              background-color 0.25s ease,
+              color 0.25s ease,
+              border-color 0.25s ease,
+              box-shadow 0.25s ease;
   font-weight: 600;
   padding: 16px 24px;
   min-height: 64px;
@@ -37,8 +41,15 @@
   }
 }
 
-.prosody__option-button:active {
+.prosody__option-button:hover:not(:disabled) {
+  transform: scale(1.03);
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.15);
+}
+
+.prosody__option-button:active:not(:disabled) {
+  transform: scale(0.95);
   font-weight: bold;
+  box-shadow: 0 1px 4px rgba(99, 102, 241, 0.1);
 }
 
 .prosody__option-button:disabled {
@@ -49,6 +60,24 @@
 .prosody__label {
   display: block;
   text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .prosody__option-button {
+    transition: background-color 0.25s ease,
+                color 0.25s ease,
+                border-color 0.25s ease;
+  }
+
+  .prosody__option-button:hover:not(:disabled) {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .prosody__option-button:active:not(:disabled) {
+    transform: none;
+    box-shadow: none;
+  }
 }
 
 /*! purgecss end ignore */

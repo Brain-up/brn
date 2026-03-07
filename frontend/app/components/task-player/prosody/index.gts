@@ -172,10 +172,7 @@ export default class ProsodyComponent extends Component<ProsodySignature> {
   showTaskResult = dropTask(async (selectedLabel: string) => {
     this.currentAnswer = selectedLabel;
 
-    const isCorrect = deepEqual(
-      this.currentAnswer,
-      this.firstUncompletedTask?.answer.map((e) => e.word).join(''),
-    );
+    const isCorrect = this.currentAnswer === this.task.correctAnswer;
 
     this.isCorrect = isCorrect;
 
@@ -218,6 +215,7 @@ export default class ProsodyComponent extends Component<ProsodySignature> {
                 <button
                   data-test-task-answer
                   data-test-task-answer-option={{answerOption.word}}
+                  aria-label={{answerOption.word}}
                   disabled={{this.isDisabled}}
                   type="button"
                   class="prosody__option-button btn-press bg-transparent py-4 px-6 rounded

@@ -46,33 +46,150 @@
   }
 }
 
+/* Playful bounce-in with more overshoot for a celebratory feel */
 @keyframes bounce-in {
-  0% { transform: scale(0.3); opacity: 0; }
-  50% { transform: scale(1.05); }
-  70% { transform: scale(0.9); }
-  100% { transform: scale(1); opacity: 1; }
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  40% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  55% {
+    transform: scale(0.85);
+  }
+  70% {
+    transform: scale(1.1);
+  }
+  85% {
+    transform: scale(0.97);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  20% { transform: translateX(-10px); }
-  40% { transform: translateX(10px); }
-  60% { transform: translateX(-10px); }
-  80% { transform: translateX(10px); }
+/* Subtle green success pulse that fades in behind the widget */
+@keyframes success-glow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 20px 8px rgba(74, 222, 128, 0.2);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(74, 222, 128, 0);
+  }
 }
 
+/* Gentle wobble instead of harsh shake - encouraging, not punitive */
+@keyframes gentle-wobble {
+  0%, 100% {
+    transform: translateX(0) rotate(0deg);
+  }
+  20% {
+    transform: translateX(-4px) rotate(-1deg);
+  }
+  40% {
+    transform: translateX(4px) rotate(1deg);
+  }
+  60% {
+    transform: translateX(-3px) rotate(-0.5deg);
+  }
+  80% {
+    transform: translateX(2px) rotate(0.5deg);
+  }
+}
+
+/* Success sparkle particles via pseudo-elements */
 .c-answer-correctness-widget--correct {
-  animation: bounce-in 0.5s ease-out;
+  animation: bounce-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
+             success-glow 1s ease-out 0.3s;
+  position: relative;
+  overflow: visible;
+}
+
+.c-answer-correctness-widget--correct::before,
+.c-answer-correctness-widget--correct::after {
+  content: '';
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.c-answer-correctness-widget--correct::before {
+  top: 15%;
+  left: 10%;
+  background: #fbbf24;
+  animation: confetti-particle-1 0.8s ease-out 0.2s forwards;
+  box-shadow:
+    30px -10px 0 #34d399,
+    60px 5px 0 #fbbf24,
+    -10px 30px 0 #60a5fa,
+    80px 20px 0 #f472b6;
+}
+
+.c-answer-correctness-widget--correct::after {
+  top: 20%;
+  right: 10%;
+  background: #34d399;
+  animation: confetti-particle-2 0.8s ease-out 0.35s forwards;
+  box-shadow:
+    -20px -15px 0 #f472b6,
+    -50px 10px 0 #fbbf24,
+    10px 25px 0 #34d399,
+    -30px -30px 0 #60a5fa;
+}
+
+@keyframes confetti-particle-1 {
+  0% {
+    opacity: 1;
+    transform: scale(0) translateY(0);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2) translateY(-15px);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0) translateY(-30px);
+  }
+}
+
+@keyframes confetti-particle-2 {
+  0% {
+    opacity: 1;
+    transform: scale(0) translateY(0);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1) translateY(-10px);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0) translateY(-25px);
+  }
 }
 
 .c-answer-correctness-widget--incorrect {
-  animation: shake 0.5s ease-out;
+  animation: gentle-wobble 0.6s ease-in-out;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .c-answer-correctness-widget--correct,
   .c-answer-correctness-widget--incorrect {
     animation: none;
+  }
+
+  .c-answer-correctness-widget--correct::before,
+  .c-answer-correctness-widget--correct::after {
+    animation: none;
+    display: none;
   }
 }
 

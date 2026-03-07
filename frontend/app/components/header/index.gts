@@ -17,10 +17,12 @@ import GlobalTimer from 'brn/components/global-timer';
 import LoadingSpinner from 'brn/components/loading-spinner';
 import XpBadge from 'brn/components/xp-badge';
 import StreakCounter from 'brn/components/streak-counter';
+import GamificationService from 'brn/services/gamification';
 
 export default class HeaderComponent extends Component {
   @service('session') session!: Session;
   @service('user-data') userData!: UserDataService;
+  @service('gamification') declare gamification: GamificationService;
 
   @tracked isLoggingOut = false;
 
@@ -39,6 +41,7 @@ export default class HeaderComponent extends Component {
   @action async logout() {
     this.isLoggingOut = true;
     try {
+      this.gamification.clearStorage();
       await this.session.invalidate();
       window.location.reload();
     } finally {

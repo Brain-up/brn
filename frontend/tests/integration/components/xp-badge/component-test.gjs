@@ -27,14 +27,15 @@ module('Integration | Component | xp-badge', function (hooks) {
     assert.dom('.xp-badge__ring circle').exists('SVG circles are rendered');
   });
 
-  test('it displays level 1 in initial state', async function (assert) {
+  test('it displays star icon in empty state', async function (assert) {
     await render(<template><XpBadge /></template>);
-    assert.dom('.xp-badge__level-text').hasText('1');
+    assert.dom('.xp-badge__star-icon').exists('Star icon shown for empty state');
+    assert.dom('.xp-badge--empty').exists('Empty modifier class applied');
   });
 
-  test('it displays 0 XP in initial state', async function (assert) {
+  test('it displays start label in empty state', async function (assert) {
     await render(<template><XpBadge /></template>);
-    assert.dom('.xp-badge__xp-text').hasText('0 XP');
+    assert.dom('.xp-badge__xp-text').hasText('t:gamification.xp_badge_start');
   });
 
   test('it displays updated XP after addRightAnswerXp', async function (assert) {
@@ -42,6 +43,13 @@ module('Integration | Component | xp-badge', function (hooks) {
     gamification.addRightAnswerXp();
     await render(<template><XpBadge /></template>);
     assert.dom('.xp-badge__xp-text').hasText('10 XP');
+    assert.dom('.xp-badge__level-text').hasText('1', 'Shows level number after earning XP');
+    assert.dom('.xp-badge__star-icon').doesNotExist('Star icon hidden after earning XP');
+  });
+
+  test('it shows tooltip with level and XP progress', async function (assert) {
+    await render(<template><XpBadge /></template>);
+    assert.dom('[data-test-xp-badge]').hasAttribute('title', 't:gamification.level 1 — 0/100 XP');
   });
 
   test('it displays correct level for higher XP', async function (assert) {

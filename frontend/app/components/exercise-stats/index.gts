@@ -1,3 +1,4 @@
+import './index.css';
 import Component from '@glimmer/component';
 import { service } from '@ember/service';
 import { IStatsExerciseStats } from 'brn/services/stats';
@@ -59,7 +60,7 @@ export default class ExerciseStatsComponent extends Component<ExerciseStatsSigna
 
   <template>
     <div
-      class="rounded-large column flex flex-col items-center justify-between w-full h-full"
+      class="exercise-stats__container rounded-large column flex flex-col items-center justify-between w-full h-full"
     >
       <div
         data-test-exercise-stats
@@ -67,29 +68,31 @@ export default class ExerciseStatsComponent extends Component<ExerciseStatsSigna
         class="justify-evenly flex flex-col flex-1 w-full"
       >
         <UiStatsIcon class="flex items-center justify-around w-full mb-1" />
-        <div class="flex items-center justify-around w-full mb-6">
-          <ul class="leading-10 text-center">
-            <li>{{t "statistics.time_board"}}:
-              {{or this.timeStats.min 0}}
-              {{t "statistics.time_min"}},
-              {{or this.timeStats.sec 0}}
-              {{t "statistics.time_sec"}}</li>
-            <li>{{t "statistics.tasks"}}: {{or this.stats.rightAnswersCount 0}}</li>
-            <li>{{t "statistics.repeats"}}: {{or this.stats.repeatsCount 0}}</li>
-            <li>{{t "statistics.wrong_answers"}}:
-              {{or this.stats.wrongAnswersCount}}</li>
-          </ul>
-          <ul class="leading-10 text-center mt-4">
-            <li>{{t "gamification.xp_earned"}}: {{this.sessionXp}}</li>
-            <li>{{t "gamification.accuracy"}}: {{this.accuracy}}%</li>
-            <li>{{t "gamification.streak"}}: {{this.streakStatus}} {{t "gamification.days"}}</li>
-            <li>{{t "gamification.level"}}: {{this.currentLevel}}</li>
-          </ul>
-          <p class="text-center mt-2 text-lg font-semibold text-indigo-600">
+        <div class="flex flex-col items-center w-full mb-6">
+          <div class="flex items-start justify-around w-full">
+            <ul class="leading-10 text-center">
+              <li class="exercise-stats__item">{{t "statistics.time_board"}}:
+                {{or this.timeStats.min 0}}
+                {{t "statistics.time_min"}},
+                {{or this.timeStats.sec 0}}
+                {{t "statistics.time_sec"}}</li>
+              <li class="exercise-stats__item">{{t "statistics.tasks"}}: {{or this.stats.rightAnswersCount 0}}</li>
+              <li class="exercise-stats__item">{{t "statistics.repeats"}}: {{or this.stats.repeatsCount 0}}</li>
+              <li class="exercise-stats__item">{{t "statistics.wrong_answers"}}:
+                {{or this.stats.wrongAnswersCount 0}}</li>
+            </ul>
+            <ul class="exercise-stats__gamification leading-10 text-center mt-4">
+              <li class="exercise-stats__item">{{t "gamification.xp_earned"}}: {{this.sessionXp}}</li>
+              <li class="exercise-stats__item">{{t "gamification.accuracy"}}: {{this.accuracy}}%</li>
+              <li class="exercise-stats__item">{{t "gamification.streak"}}: {{this.streakStatus}} {{t "gamification.days"}}</li>
+              <li class="exercise-stats__item">{{t "gamification.level"}}: {{this.currentLevel}}</li>
+            </ul>
+          </div>
+          <p class="exercise-stats__message text-center mt-2 text-lg font-semibold text-indigo-600">
             {{t this.growthMessageKey}}
           </p>
         </div>
-        <div class="flex items-center justify-center">
+        <div class="exercise-stats__action flex items-center justify-center">
           <UiButton
             data-test-continue
             class="w-auto px-8"

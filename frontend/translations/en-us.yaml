@@ -75,6 +75,7 @@ navigation:
   come_back: Back
 
 exercise:
+  clear_selection: Clear
   progress: completed
 
 exercise_messages:
@@ -350,6 +351,7 @@ gamification:
   summary_excellent: Excellent work! You're a star!
   summary_good: Great job! Keep it up!
   summary_keep_going: Keep going! Practice makes perfect!
+  xp_badge_start: Start!
 
 contributors:
   title: "Our Team"

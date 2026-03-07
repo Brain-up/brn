@@ -214,6 +214,7 @@ export default class EnvironmentalSoundsComponent extends Component<Environmenta
                 <button
                   data-test-task-answer
                   data-test-task-answer-option={{answerOption.word}}
+                  aria-label={{answerOption.word}}
                   disabled={{this.isDisabled}}
                   type="button"
                   class="environmental-sounds__option-button btn-press bg-transparent py-2 px-2 rounded

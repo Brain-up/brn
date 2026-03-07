@@ -1,7 +1,5 @@
-import Service from '@ember/service';
+import Service, { service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
-
-const STORAGE_KEY = 'brn-gamification';
 
 interface GamificationState {
   totalXp: number;
@@ -29,6 +27,8 @@ const XP_PERFECT_BONUS = 15;
 const MAX_STREAK_BONUS = 50;
 
 export default class GamificationService extends Service {
+  @service session!: any;
+
   @tracked private _state: GamificationState = DEFAULT_STATE;
   @tracked sessionXp = 0;
   @tracked lastXpGain = 0;
@@ -36,8 +36,18 @@ export default class GamificationService extends Service {
 
   private _popupTimer: ReturnType<typeof setTimeout> | null = null;
 
+  private get storageKey(): string {
+    const userId = this.session?.data?.authenticated?.user?.uid;
+    return userId ? `brn-gamification-${userId}` : 'brn-gamification';
+  }
+
   constructor(properties?: ConstructorParameters<typeof Service>[0]) {
     super(properties);
+    this._state = this.loadState();
+    this.refreshStreak();
+  }
+
+  initializeForUser(): void {
     this._state = this.loadState();
     this.refreshStreak();
   }
@@ -81,7 +91,7 @@ export default class GamificationService extends Service {
   get level(): number {
     let cumulative = 0;
     let n = 1;
-    while (true) {
+    while (n < 1000) {
       const nextLevelCost = (n + 1) * 50;
       if (cumulative + nextLevelCost > this.totalXp) {
         return n;
@@ -89,6 +99,7 @@ export default class GamificationService extends Service {
       cumulative += nextLevelCost;
       n++;
     }
+    return n;
   }
 
   /**
@@ -225,10 +236,12 @@ export default class GamificationService extends Service {
       badges['sound_master'] = now;
     }
 
-    // Placeholder badges remain null
-    if (badges['series_explorer'] === undefined) {
-      badges['series_explorer'] = null;
+    // series_explorer - completed exercises across multiple days
+    if (!badges['series_explorer'] && newState.exercisesCompleted >= 5 && newState.currentStreak >= 2) {
+      badges['series_explorer'] = now;
     }
+
+    // comeback_kid placeholder (awarded in updateStreak when gap >= 3 days)
     if (badges['comeback_kid'] === undefined) {
       badges['comeback_kid'] = null;
     }
@@ -247,6 +260,18 @@ export default class GamificationService extends Service {
 
   resetSession(): void {
     this.sessionXp = 0;
+  }
+
+  clearStorage(): void {
+    try {
+      localStorage.removeItem(this.storageKey);
+    } catch (e) {
+      // ignore
+    }
+    this._state = { ...DEFAULT_STATE, badges: { ...DEFAULT_STATE.badges } };
+    this.sessionXp = 0;
+    this.lastXpGain = 0;
+    this.showXpPopup = false;
   }
 
   // ---------------------------------------------------------------------------
@@ -299,6 +324,15 @@ export default class GamificationService extends Service {
       state.currentStreak = state.currentStreak + 1;
     } else {
       // Gap in activity, reset streak
+      // Award comeback_kid badge if the gap was 3+ days
+      if (lastActive && !state.badges['comeback_kid']) {
+        const lastDate = new Date(lastActive);
+        const today = new Date(this.todayDateString());
+        const diffDays = Math.floor((today.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24));
+        if (diffDays >= 3) {
+          state.badges = { ...state.badges, comeback_kid: new Date().toISOString() };
+        }
+      }
       state.currentStreak = 1;
     }
 
@@ -312,7 +346,7 @@ export default class GamificationService extends Service {
   private computeLevel(totalXp: number): number {
     let cumulative = 0;
     let n = 1;
-    while (true) {
+    while (n < 1000) {
       const nextLevelCost = (n + 1) * 50;
       if (cumulative + nextLevelCost > totalXp) {
         return n;
@@ -320,6 +354,7 @@ export default class GamificationService extends Service {
       cumulative += nextLevelCost;
       n++;
     }
+    return n;
   }
 
   private todayDateString(): string {
@@ -338,7 +373,7 @@ export default class GamificationService extends Service {
 
   private loadState(): GamificationState {
     try {
-      const raw = localStorage.getItem(STORAGE_KEY);
+      const raw = localStorage.getItem(this.storageKey);
       if (!raw) {
         return { ...DEFAULT_STATE, badges: { ...DEFAULT_STATE.badges } };
       }
@@ -378,7 +413,7 @@ export default class GamificationService extends Service {
 
   private saveState(state: GamificationState): void {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      localStorage.setItem(this.storageKey, JSON.stringify(state));
     } catch {
       // Storage full or unavailable; silently ignore
     }

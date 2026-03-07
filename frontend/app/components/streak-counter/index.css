@@ -9,3 +9,115 @@
   font-weight: 600;
   font-size: 0.875rem;
 }
+
+/* Fire emoji with subtle flicker animation */
+.streak-counter__flame {
+  display: inline-block;
+  animation: flame-flicker 1.5s ease-in-out infinite alternate;
+  transform-origin: bottom center;
+}
+
+@keyframes flame-flicker {
+  0% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+  25% {
+    transform: scale(1.05) rotate(-2deg);
+    opacity: 0.9;
+  }
+  50% {
+    transform: scale(0.95) rotate(1deg);
+    opacity: 1;
+  }
+  75% {
+    transform: scale(1.08) rotate(-1deg);
+    opacity: 0.85;
+  }
+  100% {
+    transform: scale(1) rotate(2deg);
+    opacity: 0.95;
+  }
+}
+
+/* Bounce animation for when streak increases */
+.streak-counter--updated {
+  animation: streak-bounce 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.streak-counter--updated .streak-counter__text {
+  animation: streak-text-pop 0.4s ease-out;
+}
+
+@keyframes streak-bounce {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.25);
+  }
+  70% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes streak-text-pop {
+  0% {
+    transform: scale(1);
+    color: white;
+  }
+  50% {
+    transform: scale(1.2);
+    color: #fbbf24;
+  }
+  100% {
+    transform: scale(1);
+    color: white;
+  }
+}
+
+/* High streak celebration (5+ days) - more energetic flame */
+.streak-counter--high .streak-counter__flame {
+  animation: flame-flicker-intense 1s ease-in-out infinite alternate;
+  filter: drop-shadow(0 0 4px rgba(251, 146, 60, 0.5));
+}
+
+@keyframes flame-flicker-intense {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+  20% {
+    transform: scale(1.1) rotate(-3deg);
+  }
+  40% {
+    transform: scale(0.95) rotate(2deg);
+  }
+  60% {
+    transform: scale(1.12) rotate(-2deg);
+  }
+  80% {
+    transform: scale(0.97) rotate(1deg);
+  }
+  100% {
+    transform: scale(1.05) rotate(-1deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .streak-counter__flame {
+    animation: none;
+  }
+
+  .streak-counter--updated,
+  .streak-counter--updated .streak-counter__text {
+    animation: none;
+  }
+
+  .streak-counter--high .streak-counter__flame {
+    animation: none;
+    filter: none;
+  }
+}
