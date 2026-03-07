@@ -46,4 +46,34 @@
   }
 }
 
+@keyframes bounce-in {
+  0% { transform: scale(0.3); opacity: 0; }
+  50% { transform: scale(1.05); }
+  70% { transform: scale(0.9); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-10px); }
+  40% { transform: translateX(10px); }
+  60% { transform: translateX(-10px); }
+  80% { transform: translateX(10px); }
+}
+
+.c-answer-correctness-widget--correct {
+  animation: bounce-in 0.5s ease-out;
+}
+
+.c-answer-correctness-widget--incorrect {
+  animation: shake 0.5s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .c-answer-correctness-widget--correct,
+  .c-answer-correctness-widget--incorrect {
+    animation: none;
+  }
+}
+
 /*! purgecss end ignore */

@@ -15,6 +15,8 @@ import UiIconLogo from 'brn/components/ui/icon/logo';
 import UiButton from 'brn/components/ui/button';
 import GlobalTimer from 'brn/components/global-timer';
 import LoadingSpinner from 'brn/components/loading-spinner';
+import XpBadge from 'brn/components/xp-badge';
+import StreakCounter from 'brn/components/streak-counter';
 
 export default class HeaderComponent extends Component {
   @service('session') session!: Session;
@@ -153,10 +155,12 @@ export default class HeaderComponent extends Component {
               </div>
             </div>
           </div>
-          <div class="sm:ml-4 flex items-center shrink-0 ml-1">
+          <div class="sm:ml-4 flex items-center shrink-0 ml-1 gap-2 sm:gap-3">
             <LinkTo @route="profile.statistics" class="shrink-0">
               <GlobalTimer />
             </LinkTo>
+            <XpBadge />
+            <StreakCounter />
             <LinkTo
               @route="profile"
               class="hover:text-white/50 focus:underline flex items-center font-medium text-white transition duration-150 ease-in-out"

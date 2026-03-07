@@ -1,0 +1,22 @@
+.xp-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.xp-badge__ring {
+  width: 36px;
+  height: 36px;
+}
+
+.xp-badge__level-text {
+  fill: white;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.xp-badge__xp-text {
+  font-size: 0.75rem;
+  color: white;
+  font-weight: 600;
+}

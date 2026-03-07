@@ -1,0 +1,63 @@
+/*! purgecss start ignore */
+
+.phoneme-pairs__options {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.phoneme-pairs__option {
+  display: flex;
+}
+
+.phoneme-pairs__option-button {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 16px;
+  line-height: 22px;
+  text-transform: uppercase;
+  transition: all 0.5s ease;
+  font-weight: 600;
+  padding: 16px 8px;
+  min-height: 120px;
+  justify-content: center;
+}
+
+@media (min-width: 768px) {
+  .phoneme-pairs__option-button {
+    font-size: 24px;
+    line-height: 30px;
+    padding: 24px 16px;
+    min-height: 160px;
+  }
+}
+
+.phoneme-pairs__option-button:active {
+  font-weight: bold;
+}
+
+.phoneme-pairs__option-button:disabled {
+  opacity: 50%;
+  cursor: default;
+}
+
+.phoneme-pairs__image {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  margin-bottom: 12px;
+}
+
+.phoneme-pairs__label {
+  display: block;
+  text-align: center;
+}
+
+/*! purgecss end ignore */

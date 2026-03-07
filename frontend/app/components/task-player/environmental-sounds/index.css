@@ -1,0 +1,64 @@
+/*! purgecss start ignore */
+
+.environmental-sounds__options {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+@media (min-width: 640px) {
+  .environmental-sounds__options {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+}
+
+.environmental-sounds__option {
+  display: flex;
+}
+
+.environmental-sounds__option-button {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 12px;
+  line-height: 18px;
+  text-transform: uppercase;
+  transition: all 0.5s ease;
+  font-weight: 600;
+  padding: 8px;
+}
+
+@media (min-width: 768px) {
+  .environmental-sounds__option-button {
+    font-size: 16px;
+    line-height: 22px;
+    padding: 12px;
+  }
+}
+
+.environmental-sounds__option-button:active {
+  font-weight: bold;
+}
+
+.environmental-sounds__option-button:disabled {
+  opacity: 50%;
+  cursor: default;
+}
+
+.environmental-sounds__image {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  margin-bottom: 8px;
+}
+
+.environmental-sounds__label {
+  display: block;
+  text-align: center;
+}
+
+/*! purgecss end ignore */

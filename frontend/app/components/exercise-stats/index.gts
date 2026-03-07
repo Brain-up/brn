@@ -1,5 +1,7 @@
 import Component from '@glimmer/component';
+import { service } from '@ember/service';
 import { IStatsExerciseStats } from 'brn/services/stats';
+import type GamificationService from 'brn/services/gamification';
 import { on } from '@ember/modifier';
 import { t } from 'ember-intl';
 import { or } from 'ember-truth-helpers';
@@ -15,8 +17,35 @@ interface ExerciseStatsSignature {
 }
 
 export default class ExerciseStatsComponent extends Component<ExerciseStatsSignature> {
+  @service('gamification') declare gamification: GamificationService;
+
   get stats(): IStatsExerciseStats {
     return this.args.stats || {};
+  }
+
+  get sessionXp() {
+    return this.gamification.sessionXp;
+  }
+
+  get accuracy() {
+    const { rightAnswersCount, wrongAnswersCount } = this.stats;
+    const total = (rightAnswersCount || 0) + (wrongAnswersCount || 0);
+    if (total === 0) return 100;
+    return Math.round(((rightAnswersCount || 0) / total) * 100);
+  }
+
+  get streakStatus() {
+    return this.gamification.currentStreak;
+  }
+
+  get currentLevel() {
+    return this.gamification.level;
+  }
+
+  get growthMessageKey() {
+    if (this.accuracy >= 90) return 'gamification.summary_excellent';
+    if (this.accuracy >= 60) return 'gamification.summary_good';
+    return 'gamification.summary_keep_going';
   }
 
   get timeStats() {
@@ -50,6 +79,15 @@ export default class ExerciseStatsComponent extends Component<ExerciseStatsSigna
             <li>{{t "statistics.wrong_answers"}}:
               {{or this.stats.wrongAnswersCount}}</li>
           </ul>
+          <ul class="leading-10 text-center mt-4">
+            <li>{{t "gamification.xp_earned"}}: {{this.sessionXp}}</li>
+            <li>{{t "gamification.accuracy"}}: {{this.accuracy}}%</li>
+            <li>{{t "gamification.streak"}}: {{this.streakStatus}} {{t "gamification.days"}}</li>
+            <li>{{t "gamification.level"}}: {{this.currentLevel}}</li>
+          </ul>
+          <p class="text-center mt-2 text-lg font-semibold text-indigo-600">
+            {{t this.growthMessageKey}}
+          </p>
         </div>
         <div class="flex items-center justify-center">
           <UiButton

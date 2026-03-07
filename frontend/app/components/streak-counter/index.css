@@ -1,0 +1,11 @@
+.streak-counter {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.streak-counter__text {
+  color: white;
+  font-weight: 600;
+  font-size: 0.875rem;
+}

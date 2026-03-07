@@ -1,0 +1,30 @@
+.xp-popup {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #fbbf24;
+  font-weight: 700;
+  font-size: 1.25rem;
+  pointer-events: none;
+  z-index: 50;
+  animation: xp-float-up 2s ease-out forwards;
+}
+
+@keyframes xp-float-up {
+  0% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-60px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .xp-popup {
+    animation: none;
+  }
+}

@@ -340,6 +340,17 @@ specialists:
   subtitle: The BrainUp training program was developed jointly with the best specialists in the field of deaf education from Russia and Belarus
   all: all specialists
 
+gamification:
+  xp_earned: XP earned
+  accuracy: Accuracy
+  streak: Streak
+  days: days
+  level: Level
+  streak_days: day streak
+  summary_excellent: Excellent work! You're a star!
+  summary_good: Great job! Keep it up!
+  summary_keep_going: Keep going! Practice makes perfect!
+
 contributors:
   title: "Our Team"
   subtitle: "We are all here to make your life easier!"
