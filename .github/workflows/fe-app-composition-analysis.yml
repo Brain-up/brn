@@ -17,18 +17,22 @@ on:
       - master
 
 jobs:
-  yarn_audit_scan:
-    name: yarn audit
+  pnpm_audit_scan:
+    name: pnpm audit
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - uses: rwjblue/setup-volta@v1
-      - name: Install dependencies via yarn
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 22
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: frontend/package.json
+      - name: Install dependencies
         working-directory: ./frontend
-        run: yarn install
-      - name: yarn audit
+        run: pnpm install
+      - name: pnpm audit
         working-directory: ./frontend
-        run: yarn audit --groups dependencies
-
+        run: pnpm audit --prod

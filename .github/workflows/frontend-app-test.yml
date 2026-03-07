@@ -11,22 +11,24 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 22
-      - uses: rwjblue/setup-volta@v1
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: frontend/package.json
       - name: Install dependencies
         working-directory: ./frontend
-        run: yarn install
+        run: pnpm install
       - name: Lint *.js files
         working-directory: ./frontend
-        run: yarn lint:js
+        run: pnpm lint:js
       - name: Lint *.gts/*.gjs templates
         working-directory: ./frontend
-        run: yarn lint:hbs
+        run: pnpm lint:hbs
       - name: Run tests
         working-directory: ./frontend
-        run: yarn test
+        run: pnpm test
       - name: Run test build
         working-directory: ./frontend
-        run: yarn build
+        run: pnpm build
 
   coverage:
     name: Test coverage changes
@@ -36,13 +38,15 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 22
-      - uses: rwjblue/setup-volta@v1
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: frontend/package.json
       - name: Install dependencies
         working-directory: ./frontend
-        run: yarn install
+        run: pnpm install
       - name: Run coverage on PR branch
         working-directory: ./frontend
-        run: yarn test:coverage
+        run: pnpm test:coverage
       - name: Save PR coverage
         id: pr_coverage
         run: |
@@ -55,13 +59,13 @@ jobs:
           git checkout origin/${{ github.event.pull_request.base.ref }}
       - name: Install base branch dependencies
         working-directory: ./frontend
-        run: yarn install
+        run: pnpm install
       - name: Run coverage on base branch
         id: base_coverage
         working-directory: ./frontend
         run: |
           rm -rf coverage
-          yarn test:coverage || true
+          pnpm test:coverage || true
           if [ -f coverage/coverage-summary.json ]; then
             coverage=$(node -e "const c=require('./coverage/coverage-summary.json'); console.log(c.total.statements.pct)")
           else

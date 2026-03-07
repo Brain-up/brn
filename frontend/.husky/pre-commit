@@ -1,1 +1,1 @@
-yarn on:precommit
+pnpm on:precommit

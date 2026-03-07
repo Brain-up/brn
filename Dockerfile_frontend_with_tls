@@ -1,7 +1,7 @@
 FROM node:22 AS build-frontend
 COPY frontend/ /src/
 WORKDIR /src
-RUN yarn
+RUN corepack enable && pnpm install
 RUN node node_modules/ember-cli/bin/ember build --environment=production
 
 FROM node:20 AS build-frontend-angular
