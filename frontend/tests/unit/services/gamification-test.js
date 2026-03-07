@@ -93,8 +93,6 @@ module('Unit | Service | gamification', function (hooks) {
   });
 
   test('completeExercise includes streak bonus when streak is active', function (assert) {
-    const service = this.owner.lookup('service:gamification');
-
     // Set up state with an existing streak by pre-seeding localStorage
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
@@ -132,8 +130,6 @@ module('Unit | Service | gamification', function (hooks) {
   });
 
   test('streak bonus is capped at 50', function (assert) {
-    const service = this.owner.lookup('service:gamification');
-
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
     const yesterdayStr = yesterday.toISOString().split('T')[0];
@@ -209,8 +205,6 @@ module('Unit | Service | gamification', function (hooks) {
   });
 
   test('consecutive day increments streak', function (assert) {
-    const service = this.owner.lookup('service:gamification');
-
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
     const yesterdayStr = yesterday.toISOString().split('T')[0];
@@ -240,8 +234,6 @@ module('Unit | Service | gamification', function (hooks) {
   });
 
   test('gap in activity resets streak to 1', function (assert) {
-    const service = this.owner.lookup('service:gamification');
-
     // Last active 3 days ago (not yesterday)
     const threeDaysAgo = new Date();
     threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
@@ -272,8 +264,6 @@ module('Unit | Service | gamification', function (hooks) {
   });
 
   test('longestStreak is preserved when streak resets', function (assert) {
-    const service = this.owner.lookup('service:gamification');
-
     const threeDaysAgo = new Date();
     threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
     const threeDaysAgoStr = threeDaysAgo.toISOString().split('T')[0];
@@ -362,8 +352,6 @@ module('Unit | Service | gamification', function (hooks) {
   });
 
   test('level is 1 at 99 XP (just below level 2 threshold)', function (assert) {
-    const service = this.owner.lookup('service:gamification');
-
     localStorage.setItem(
       'brn-gamification',
       JSON.stringify({
@@ -387,8 +375,6 @@ module('Unit | Service | gamification', function (hooks) {
   });
 
   test('level is 2 at 100 XP (level 2 threshold = 2 * 50 = 100)', function (assert) {
-    const service = this.owner.lookup('service:gamification');
-
     localStorage.setItem(
       'brn-gamification',
       JSON.stringify({
@@ -412,8 +398,6 @@ module('Unit | Service | gamification', function (hooks) {
   });
 
   test('level is 3 at 250 XP (100 + 150 = 250)', function (assert) {
-    const service = this.owner.lookup('service:gamification');
-
     localStorage.setItem(
       'brn-gamification',
       JSON.stringify({
@@ -437,8 +421,6 @@ module('Unit | Service | gamification', function (hooks) {
   });
 
   test('level is 2 at 249 XP (just below level 3 threshold)', function (assert) {
-    const service = this.owner.lookup('service:gamification');
-
     localStorage.setItem(
       'brn-gamification',
       JSON.stringify({
@@ -473,8 +455,6 @@ module('Unit | Service | gamification', function (hooks) {
   });
 
   test('xpProgress is 50 at midpoint of level', function (assert) {
-    const service = this.owner.lookup('service:gamification');
-
     // Level 1: xpForCurrentLevel = 0, xpForNextLevel = 100
     // At 50 XP: xpIntoLevel = 50, range = 100, progress = 50%
     localStorage.setItem(
@@ -500,8 +480,6 @@ module('Unit | Service | gamification', function (hooks) {
   });
 
   test('xpProgress resets at start of new level', function (assert) {
-    const service = this.owner.lookup('service:gamification');
-
     // Level 2 starts at 100 XP, next level at 250
     // At 100 XP: xpIntoLevel = 0, range = 150, progress = 0%
     localStorage.setItem(

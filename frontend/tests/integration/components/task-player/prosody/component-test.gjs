@@ -2,7 +2,7 @@
 import { module, test } from 'qunit';
 import { setupIntl } from 'ember-intl/test-support';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, click, settled } from '@ember/test-helpers';
+import { render, click } from '@ember/test-helpers';
 import AudioService from 'brn/services/audio';
 import StatsService, { StatEvents } from 'brn/services/stats';
 import Prosody from 'brn/components/task-player/prosody';
@@ -128,7 +128,6 @@ module(
       const correctAnswer = document.body.dataset.correctAnswer;
 
       await click(`[data-test-task-answer-option="${correctAnswer}"]`);
-      await settled();
 
       assert.true(
         recordedEvents.includes(StatEvents.RightAnswer),
@@ -147,7 +146,6 @@ module(
       const wrongOption = task.answerOptions.find((o) => o.word !== correctAnswer);
 
       await click(`[data-test-task-answer-option="${wrongOption.word}"]`);
-      await settled();
 
       assert.true(
         recordedEvents.includes(StatEvents.WrongAnswer),
