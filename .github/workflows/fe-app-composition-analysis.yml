@@ -35,4 +35,5 @@ jobs:
         run: pnpm install
       - name: pnpm audit
         working-directory: ./frontend
-        run: pnpm audit --prod || true
+        run: pnpm audit --prod
+        continue-on-error: true
