@@ -80,6 +80,12 @@ exercise:
 
 exercise_messages:
   successfully: Congratulations! Exercise completed!
+  successfully_1: Great job!
+  successfully_2: You did it! Well done!
+  successfully_3: Awesome! Keep it up!
+  successfully_4: Amazing! Another victory!
+  successfully_5: Hooray! Task complete!
+  successfully_6: Fantastic! You rock!
   unsuccessfully: Wrong. Try again!
   answer_successfully: Correct answer
 

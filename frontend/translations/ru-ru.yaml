@@ -80,6 +80,12 @@ exercise:
 
 exercise_messages:
   successfully: Поздравляем! Упражнение выполнено!
+  successfully_1: Отличная работа!
+  successfully_2: Ты справился! Молодец!
+  successfully_3: Супер! Так держать!
+  successfully_4: Великолепно! Ещё одна победа!
+  successfully_5: Ура! Задание выполнено!
+  successfully_6: Потрясающе! Ты молодец!
   unsuccessfully: Неверно. Попробуйте ещё раз!
   answer_successfully: Правильный ответ
 
