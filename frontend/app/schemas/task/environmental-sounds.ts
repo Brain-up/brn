@@ -28,17 +28,20 @@ export const TaskEnvironmentalSoundsSchema: LegacyResourceSchema = withDefaults(
 // Add tracked local fields
 TaskEnvironmentalSoundsSchema.fields.push(...LOCAL_TASK_FIELDS);
 
+const _tasksToSolveCache = new WeakMap<object, { answer: IRawAnswerOption[]; order: number }[]>();
+
 export const TaskEnvironmentalSoundsExtension: CAUTION_MEGA_DANGER_ZONE_Extension = {
   kind: 'object',
   name: 'task-environmental-sounds-ext',
   features: {
     get tasksToSolve() {
+      if (_tasksToSolveCache.has(this)) return _tasksToSolveCache.get(this)!;
       const self = this as unknown as {
         answerOptions: IRawAnswerOption[];
         exercise: { playWordsCount?: number };
       };
       const playWordsCount = self.exercise.playWordsCount ?? 1;
-      return [
+      const result = [
         ...shuffleArray(self.answerOptions, 1),
         ...shuffleArray(self.answerOptions, 2),
         ...shuffleArray(self.answerOptions, 3),
@@ -59,6 +62,8 @@ export const TaskEnvironmentalSoundsExtension: CAUTION_MEGA_DANGER_ZONE_Extensio
           order: index,
         };
       });
+      _tasksToSolveCache.set(this, result);
+      return result;
     },
   },
 };

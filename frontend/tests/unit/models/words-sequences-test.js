@@ -76,11 +76,13 @@ module('Unit | Model | task/words-sequences', function (hooks) {
     assert.ok(this.model.tasksToSolve.length === 9);
   });
 
-  test('tasksToSolve grows when wrongAnswers is mutated via push — documents why updateLocalTasks must not be called in handleWrongAnswer', function (assert) {
-    const initialLength = this.model.tasksToSolve.length;
-    assert.strictEqual(initialLength, 8, 'initial tasksToSolve has 8 items');
+  test('tasksToSolve is cached and stable across accesses', function (assert) {
+    const first = this.model.tasksToSolve;
+    const second = this.model.tasksToSolve;
+    assert.strictEqual(first, second, 'tasksToSolve returns the same cached array on repeated access');
 
-    // Simulate what handleWrongAnswer does: push a wrong answer onto the array
+    // Mutating wrongAnswers after first access does not change the cached result,
+    // preventing progress bar regressions when updateLocalTasks() re-reads tasksToSolve.
     this.model.wrongAnswers.push({
       answer: {
         OBJECT: TASK_DATA.answerOptions.OBJECT[0],
@@ -88,11 +90,7 @@ module('Unit | Model | task/words-sequences', function (hooks) {
       },
     });
 
-    // After push, tasksToSolve recalculates and grows by 1
-    // This is the root cause of the progress bar regression: if updateLocalTasks()
-    // is called after push, it rebuilds tasksCopy with the longer array, shrinking
-    // the progress ratio (completed / total).
-    const newLength = this.model.tasksToSolve.length;
-    assert.strictEqual(newLength, initialLength + 1, 'tasksToSolve grows by 1 after push to wrongAnswers');
+    const third = this.model.tasksToSolve;
+    assert.strictEqual(first, third, 'tasksToSolve remains stable after wrongAnswers mutation');
   });
 });

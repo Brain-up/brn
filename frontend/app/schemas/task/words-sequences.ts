@@ -47,6 +47,8 @@ export const TaskWordsSequencesSchema: LegacyResourceSchema = withDefaults({
 // Add tracked local fields
 TaskWordsSequencesSchema.fields.push(...LOCAL_TASK_FIELDS);
 
+const _tasksToSolveCache = new WeakMap<object, { answer: string[]; order: number }[]>();
+
 export const TaskWordsSequencesExtension: CAUTION_MEGA_DANGER_ZONE_Extension = {
   kind: 'object',
   name: 'task-words-sequences-ext',
@@ -93,11 +95,12 @@ export const TaskWordsSequencesExtension: CAUTION_MEGA_DANGER_ZONE_Extension = {
     },
 
     get tasksToSolve(): { answer: string[]; order: number }[] {
+      if (_tasksToSolveCache.has(this)) return _tasksToSolveCache.get(this)!;
       const self = this as unknown as {
         tasksSequence: { answer: string[]; order: number }[];
         wrongAnswers: { answer: string[]; order: number }[];
       };
-      return shuffleArray(self.tasksSequence, 10)
+      const result = shuffleArray(self.tasksSequence, 10)
         .concat(
           self.wrongAnswers.map((wrongAnswer, index: number) => {
             return {
@@ -107,6 +110,8 @@ export const TaskWordsSequencesExtension: CAUTION_MEGA_DANGER_ZONE_Extension = {
           }),
         )
         .slice(0, 30);
+      _tasksToSolveCache.set(this, result);
+      return result;
     },
   },
 };

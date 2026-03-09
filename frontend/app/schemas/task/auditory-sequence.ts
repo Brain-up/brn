@@ -28,11 +28,14 @@ export const TaskAuditorySequenceSchema: LegacyResourceSchema = withDefaults({
 // Add tracked local fields
 TaskAuditorySequenceSchema.fields.push(...LOCAL_TASK_FIELDS);
 
+const _tasksToSolveCache = new WeakMap<object, { answer: IRawAnswerOption[]; order: number }[]>();
+
 export const TaskAuditorySequenceExtension: CAUTION_MEGA_DANGER_ZONE_Extension = {
   kind: 'object',
   name: 'task-auditory-sequence-ext',
   features: {
     get tasksToSolve() {
+      if (_tasksToSolveCache.has(this)) return _tasksToSolveCache.get(this)!;
       const self = this as unknown as {
         answerOptions: IRawAnswerOption[];
         exercise: { playWordsCount?: number };
@@ -51,6 +54,7 @@ export const TaskAuditorySequenceExtension: CAUTION_MEGA_DANGER_ZONE_Extension =
         });
       }
 
+      _tasksToSolveCache.set(this, tasks);
       return tasks;
     },
   },

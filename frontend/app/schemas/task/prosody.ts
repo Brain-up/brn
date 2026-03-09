@@ -29,11 +29,14 @@ export const TaskProsodySchema: LegacyResourceSchema = withDefaults({
 // Add tracked local fields
 TaskProsodySchema.fields.push(...LOCAL_TASK_FIELDS);
 
+const _tasksToSolveCache = new WeakMap<object, { answer: IRawAnswerOption[]; order: number }[]>();
+
 export const TaskProsodyExtension: CAUTION_MEGA_DANGER_ZONE_Extension = {
   kind: 'object',
   name: 'task-prosody-ext',
   features: {
     get tasksToSolve() {
+      if (_tasksToSolveCache.has(this)) return _tasksToSolveCache.get(this)!;
       const self = this as unknown as {
         answerOptions: IRawAnswerOption[];
       };
@@ -67,7 +70,9 @@ export const TaskProsodyExtension: CAUTION_MEGA_DANGER_ZONE_Extension = {
         });
       }
 
-      return shuffleArray(tasks, 1);
+      const result = shuffleArray(tasks, 1);
+      _tasksToSolveCache.set(this, result);
+      return result;
     },
   },
 };
