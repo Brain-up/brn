@@ -261,6 +261,9 @@ export default class SingleSimpleWordsComponent extends Component<WordsSequences
     this.markNextAttempt(this.firstUncompletedTask as TaskItem);
     this.updateLocalTasks();
     await customTimeout(1000);
+    // Stop any in-flight audio so startPlayTask's isBusy guard
+    // does not block the replay of the current task's audio.
+    await this.audio.stop();
     this.startTask();
     this.onWrongAnswer({ skipRetry: true });
   }

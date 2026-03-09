@@ -205,6 +205,9 @@ export default class WordsSequencesComponent<
     wsTask.wrongAnswers.push(this.firstUncompletedTask?.serialize());
     this.markNextAttempt(this.firstUncompletedTask as TaskItem);
     await customTimeout(300);
+    // Stop any in-flight audio so startPlayTask's isBusy guard
+    // does not block the replay of the current task's audio.
+    await this.audio.stop();
     this.startTask();
     this.onWrongAnswer({ skipRetry: true });
   }
