@@ -1,6 +1,6 @@
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
-import { visit, settled } from '@ember/test-helpers';
+import { visit } from '@ember/test-helpers';
 import { setupMSW } from '../../helpers/msw';
 import { authenticateSession } from 'ember-simple-auth/test-support';
 
@@ -35,7 +35,7 @@ module('Acceptance | user loading', function (hooks) {
 
     await authenticateSession();
     await visit('/groups');
-    await settled();
+
 
     assert.strictEqual(
       userCurrentCallCount,
@@ -81,7 +81,7 @@ module('Acceptance | user loading', function (hooks) {
 
     await authenticateSession();
     await visit('/groups/1');
-    await settled();
+
 
     assert.strictEqual(
       userCurrentCallCount,
