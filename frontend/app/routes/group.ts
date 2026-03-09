@@ -4,7 +4,6 @@ import type { Series as SeriesModel } from 'brn/schemas/series';
 import type Transition from '@ember/routing/transition';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { service } from '@ember/service';
-import type NetworkService from 'brn/services/network';
 import type Store from 'brn/services/store';
 import type Router from '@ember/routing/router-service';
 import type Session from 'ember-simple-auth/services/session';
@@ -17,7 +16,6 @@ export interface GroupRouteModel {
 }
 
 export default class GroupRoute extends Route {
-  @service('network') network!: NetworkService;
   @service('store') store!: Store;
   @service('router') declare router: Router;
   @service('session') declare session: Session;
@@ -27,7 +25,6 @@ export default class GroupRoute extends Route {
   }
 
   async model({ group_id }: { group_id: string }): Promise<GroupRouteModel> {
-    await this.network.loadCurrentUser();
     const [group, series] = await Promise.all([
       this.store.findRecord<GroupModel>('group', group_id),
       this.store.query<SeriesModel>('series', { groupId: group_id }),

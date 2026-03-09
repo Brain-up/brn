@@ -61,14 +61,13 @@ export default class GlobalTimerComponent extends Component<GlobalTimerSignature
       try {
         if (!isTesting()) {
           if (this.session.isAuthenticated && this.isEnabled) {
-            if (!this.network.userData?.userModel) {
-              return;
+            if (this.network.userData?.userModel) {
+              const response = await this.network.request(
+                'study-history/todayTimer',
+              );
+              const { data } = await response.json();
+              this.seconds = data;
             }
-            const response = await this.network.request(
-              'study-history/todayTimer',
-            );
-            const { data } = await response.json();
-            this.seconds = data;
           }
         } else {
           break;
@@ -77,7 +76,7 @@ export default class GlobalTimerComponent extends Component<GlobalTimerSignature
         // ok
       }
       await timeout(10000);
-    } while (true);
+    } while (!this.isDestroying);
   });
 
   <template>
@@ -85,7 +84,7 @@ export default class GlobalTimerComponent extends Component<GlobalTimerSignature
       <span
         title={{this.minutes}}
         data-test-timer-container
-        class="flex items-center sm:w-32 w-auto justify-between sm:h-10 h-8 rounded-full py-1 sm:py-2 px-2 sm:px-5 text-blue-1100 sm:text-sm text-xs font-semibold leading-none text-center
+        class="flex items-center sm:w-32 w-auto justify-between sm:h-10 h-8 rounded-full py-1 sm:py-2 px-3 sm:px-5 text-blue-1100 sm:text-sm text-xs font-semibold leading-none text-center
           {{this.getColor}}"
       >
         <svg
