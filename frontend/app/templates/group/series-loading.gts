@@ -9,7 +9,7 @@ import SkeletonBlock from 'brn/components/skeleton/block';
 export default RouteTemplate(
   <template>
     <div class="skeleton-page w-full">
-      <div class="sm:grid-cols-4 gap-y-2 sm:gap-y-3 grid w-full grid-cols-3 mx-2 mb-4">
+      <div class="sm:grid-cols-4 gap-y-2 sm:gap-y-3 grid grid-cols-3 mx-2 mb-4">
         {{#each (array 1 2 3 4 5 6) as |_|}}
           <div class="sm:m-2 flex flex-col m-1 overflow-hidden border-2 border-gray-200 rounded-lg shadow-lg">
             <SkeletonBlock @class="sm:h-40 h-16 rounded-none" />

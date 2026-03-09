@@ -286,6 +286,7 @@ a[disabled] {
   animation: skeleton-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   background-color: #e2e8f0;
   border-radius: 9999px;
+  max-width: 100%;
 }
 @keyframes btn-spin {
   to { transform: rotate(360deg); }
@@ -358,6 +359,18 @@ a[disabled] {
   border-radius: 12px;
   box-sizing: border-box;
   position: relative;
+}
+@media (max-width: 640px) {
+  .skeleton-exercise-btn {
+    width: 85px;
+    height: 85px;
+  }
+}
+@media (min-width: 640px) and (max-width: 1024px) {
+  .skeleton-exercise-btn {
+    width: 115px;
+    height: 115px;
+  }
 }
 .skeleton-exercise-btn .skeleton-pulse {
   background-color: #f4f4f4;
