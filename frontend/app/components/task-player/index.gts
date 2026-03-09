@@ -149,6 +149,9 @@ export default class TaskPlayerComponent extends Component<TaskPlayerSignature> 
   @action async onWrongAnswer({ skipRetry } = { skipRetry: false }) {
     await this.taskModeTask.cancelAll();
     if (!skipRetry) {
+      // Stop any in-flight audio so the isBusy guard in startPlayTask
+      // does not block the replay of the current task's audio.
+      await this.audio.stop();
       this.audio.startPlayTask();
     }
   }

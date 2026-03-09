@@ -10,6 +10,7 @@ import { service } from '@ember/service';
 import StatsService, { StatEvents } from 'brn/services/stats';
 import { dropTask } from 'ember-concurrency';
 import AudioService from 'brn/services/audio';
+import customTimeout from 'brn/utils/custom-timeout';
 import didInsert from '@ember/render-modifiers/modifiers/did-insert';
 import { hash } from '@ember/helper';
 import { on } from '@ember/modifier';
@@ -52,13 +53,7 @@ export default class TaskPlayerSignalComponent extends Component<TaskPlayerSigna
   }
 
   @action checkMaybe(answerOption: { signal: SignalModel }) {
-    // console.log(answerOption);
     this.showTaskResult.perform(this.audioFileUrl === answerOption.signal);
-    // if (this.audioFileUrl === answerOption.signal) {
-    //   console.log('good', answerOption.signal, this.audioFileUrl);
-    // } else {
-    //   console.log('bad', answerOption.signal, this.audioFileUrl);
-    // }
   }
 
   showTaskResult = dropTask(async (isCorrect: boolean) => {
@@ -72,16 +67,7 @@ export default class TaskPlayerSignalComponent extends Component<TaskPlayerSigna
   });
 
   async handleCorrectAnswer() {
-    // await customTimeout(1000);
-    // this.startNewTask();
-    // if (!this.firstUncompletedTask) {
-    // await customTimeout(3000);
     this.onRightAnswer();
-    // }
-  }
-
-  startNewTask() {
-    this.startTask();
   }
 
   startTask() {
@@ -92,12 +78,12 @@ export default class TaskPlayerSignalComponent extends Component<TaskPlayerSigna
   }
 
   async handleWrongAnswer() {
-    // this.markNextAttempt(this.firstUncompletedTask);
-    // this.updateLocalTasks();
-    // await customTimeout(1000);
-    // this.startTask();
-    // { skipRetry: true }
-    this.onWrongAnswer();
+    await customTimeout(1000);
+    // Stop any in-flight audio so startPlayTask's isBusy guard
+    // does not block the replay of the current task's audio.
+    await this.audio.stop();
+    this.startTask();
+    this.onWrongAnswer({ skipRetry: true });
   }
 
   get task() {

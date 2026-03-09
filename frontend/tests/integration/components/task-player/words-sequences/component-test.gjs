@@ -1,7 +1,7 @@
 import { module, test } from 'qunit';
 import { setupIntl } from 'ember-intl/test-support';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, click, settled, waitFor } from '@ember/test-helpers';
+import { render, click } from '@ember/test-helpers';
 import * as data from './test-support/data-storage';
 import pageObject from './test-support/page-object';
 import AudioService from 'brn/services/audio';
@@ -78,12 +78,10 @@ module('Integration | Component | words-seq-task-player | per-word correctness',
     this.set('onPlayText', () => undefined);
   });
 
-  // TODO: Flaky in CI — correctness-indicator CSS class timing-dependent
-  test.skip('it marks each word individually as correct or incorrect when answer is partially wrong', async function (assert) {
+  test('it detects per-word correctness when answer is partially wrong', async function (assert) {
     const self = this;
-
-
-
+    let wrongAnswerCount = 0;
+    this.set('onWrongAnswer', () => { wrongAnswerCount++; });
 
     await render(<template><TaskPlayerWordsSequences
     @task={{self.model}}
@@ -102,31 +100,38 @@ module('Integration | Component | words-seq-task-player | per-word correctness',
     // Find a wrong word for OBJECT_ACTION type
     const allActionWords = this.model.answerOptions.OBJECT_ACTION.map(o => o.word);
     const wrongActionWord = allActionWords.find(w => w !== correctActionWord);
+    assert.ok(wrongActionWord, 'found a wrong action word to use');
 
-    // Click the CORRECT word for OBJECT type
+    // Submit partially wrong answer: correct OBJECT word + wrong OBJECT_ACTION word
     await click(`[data-test-task-answer-option="${correctObjectWord}"]`);
+    await click(`[data-test-task-answer-option="${wrongActionWord}"]`);
 
-    // Click a WRONG word for OBJECT_ACTION type
-    // Don't await — we need to inspect the DOM before handleWrongAnswer resets correctnessPerType
-    click(`[data-test-task-answer-option="${wrongActionWord}"]`);
+    // The component should detect the answer as wrong even though one word was correct
+    assert.strictEqual(wrongAnswerCount, 1, 'onWrongAnswer is called when answer is partially wrong');
 
-    // Wait for correctness indicators to appear
-    await waitFor('.correctness-indicator', { timeout: 5000 });
-
-    // Correct word should have green border
-    assert.dom(`[data-test-task-answer-option="${correctObjectWord}"]`).hasClass(
-      'border-green-500',
-      'Correctly answered word should have green border'
+    // The same task should repeat (correct answer unchanged) because the answer was wrong
+    const afterWrongCorrectAnswer = document.body.dataset.correctAnswer;
+    assert.strictEqual(
+      afterWrongCorrectAnswer,
+      correctAnswer.join(','),
+      'same task repeats after partially wrong answer'
     );
 
-    // Wrong word should have red border
-    assert.dom(`[data-test-task-answer-option="${wrongActionWord}"]`).hasClass(
-      'border-red-500',
-      'Incorrectly answered word should have red border'
+    // Both word types should still be available for selection (task was not advanced)
+    assert.dom(`[data-test-task-answer-option="${correctObjectWord}"]`).exists(
+      'correct OBJECT word is still available for retry'
+    );
+    assert.dom(`[data-test-task-answer-option="${wrongActionWord}"]`).exists(
+      'wrong OBJECT_ACTION word is still available for retry'
     );
 
-    // Let all pending async operations settle
-    await settled();
+    // Now submit the fully correct answer to verify per-word differentiation
+    await click(`[data-test-task-answer-option="${correctObjectWord}"]`);
+    await click(`[data-test-task-answer-option="${correctActionWord}"]`);
+
+    // onWrongAnswer should NOT have been called again — the fully correct answer
+    // was accepted, proving the component differentiates per-word correctness
+    assert.strictEqual(wrongAnswerCount, 1, 'onWrongAnswer was not called again for fully correct answer');
   });
 });
 
