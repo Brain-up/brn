@@ -68,13 +68,13 @@ module('Unit | Route | group', function (hooks) {
     assert.strictEqual(transitionArgs[0], 'groups');
   });
 
-  test('redirect does NOT auto-navigate to first series on group.index', function (assert) {
-    let transitioned = false;
+  test('redirect goes to first series on group.index', function (assert) {
+    let transitionArgs = [];
 
     const route = this.owner.lookup('route:group');
     route.router = {
-      transitionTo() {
-        transitioned = true;
+      transitionTo(...args) {
+        transitionArgs = args;
       },
     };
 
@@ -85,7 +85,9 @@ module('Unit | Route | group', function (hooks) {
       },
       { to: { name: 'group.index' } },
     );
-    assert.false(transitioned, 'should not auto-redirect to first series — user should choose exercise type');
+    assert.strictEqual(transitionArgs[0], 'group.series.index');
+    assert.strictEqual(transitionArgs[1], '5');
+    assert.strictEqual(transitionArgs[2], '10');
   });
 
   test('redirect does nothing when not on group.index', function (assert) {
@@ -218,6 +220,45 @@ module('Unit | Route | group', function (hooks) {
     assert.deepEqual(findRecordArgs, ['group', '42'], 'findRecord receives group_id');
     assert.strictEqual(queryArgs[0], 'series');
     assert.strictEqual(queryArgs[1].groupId, '42', 'query receives group_id as groupId');
+  });
+
+  test('redirect with bare GroupModel updates controller model to composite format', async function (assert) {
+    const mockSeries = [{ id: '3' }, { id: '1' }];
+
+    class MockStore extends Service {
+      query() {
+        return Promise.resolve(mockSeries);
+      }
+      cacheKeyManager = { getOrCreateRecordIdentifier: () => ({}) };
+    }
+
+    this.owner.register('service:store', MockStore);
+
+    const route = this.owner.lookup('route:group');
+    const controller = this.owner.lookup('controller:group');
+    let transitionArgs = [];
+    route.router = {
+      transitionTo(...args) {
+        transitionArgs = args;
+      },
+    };
+
+    // Pass a bare GroupModel (no 'group'/'series' keys in composite format)
+    const bareGroup = { id: '7', name: 'Bare' };
+    await route.redirect(bareGroup, { to: { name: 'group.index' } });
+
+    // Controller model should now be the composite format
+    assert.ok(controller.model.group, 'controller model has group');
+    assert.ok(controller.model.series, 'controller model has series');
+    assert.strictEqual(controller.model.group.id, '7', 'group is correct');
+    assert.strictEqual(controller.model.series.length, 2, 'series are populated');
+    // Series should be sorted by id
+    assert.strictEqual(controller.model.series[0].id, '1', 'series sorted by id');
+
+    // Should still redirect to first series
+    assert.strictEqual(transitionArgs[0], 'group.series.index');
+    assert.strictEqual(transitionArgs[1], '7');
+    assert.strictEqual(transitionArgs[2], '1');
   });
 
   test('model handles null series from query', async function (assert) {

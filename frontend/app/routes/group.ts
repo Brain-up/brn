@@ -51,17 +51,26 @@ export default class GroupRoute extends Route {
       const queriedSeries = await this.store.query<SeriesModel>('series', { groupId: group.id! });
       series = sortByKey(Array.from(queriedSeries || []), 'id');
 
-      // Update the controller model to the composite format so that
-      // the controller's series getter works correctly.
+      // When Ember skips the model() hook (e.g. <LinkTo @model={{record}}>),
+      // the controller still holds the bare GroupModel. Update it to the
+      // composite format so the controller's series getter works correctly
+      // and GroupNavigation receives the series data for its tabs.
       const controller = this.controllerFor('group') as GroupController;
       controller.model = { group, series };
     }
 
-    if (!series.length && to?.name === 'group.index') {
+    if (!series.length) {
       this.router.transitionTo('groups');
+      return;
     }
-    // Do NOT auto-redirect from group.index to the first series.
-    // The group.index template shows all series as exercise type cards,
-    // letting the user choose which exercise type they want.
+    if (to?.name === 'group.index') {
+      this.router.transitionTo(
+        'group.series.index',
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        group.id!,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        series[0]!.id!,
+      );
+    }
   }
 }
