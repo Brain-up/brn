@@ -29,11 +29,14 @@ export const TaskPhonemePairsSchema: LegacyResourceSchema = withDefaults({
 // Add tracked local fields
 TaskPhonemePairsSchema.fields.push(...LOCAL_TASK_FIELDS);
 
+const _tasksToSolveCache = new WeakMap<object, { answer: IRawAnswerOption[]; order: number }[]>();
+
 export const TaskPhonemePairsExtension: CAUTION_MEGA_DANGER_ZONE_Extension = {
   kind: 'object',
   name: 'task-phoneme-pairs-ext',
   features: {
     get tasksToSolve() {
+      if (_tasksToSolveCache.has(this)) return _tasksToSolveCache.get(this)!;
       const self = this as unknown as {
         answerOptions: IRawAnswerOption[];
       };
@@ -52,7 +55,9 @@ export const TaskPhonemePairsExtension: CAUTION_MEGA_DANGER_ZONE_Extension = {
           order: pairs.length,
         });
       }
-      return shuffleArray(pairs, 1);
+      const result = shuffleArray(pairs, 1);
+      _tasksToSolveCache.set(this, result);
+      return result;
     },
   },
 };
