@@ -130,7 +130,7 @@ export default class HeaderComponent extends Component {
                   type="button"
                 >{{t "header.more"}}</button>
                 <input type="checkbox" />
-                <div class="sm:text-base bottom absolute right-0 z-20 py-2 text-xs rounded">
+                <div class="sm:text-base bottom absolute z-20 py-2 text-xs rounded">
                   <LinkTo class="sm:hidden" @route="groups" @query={{hash locale=this.activeLocale}} {{on "click" this.closeMenu}}>{{t "header.groups"}}</LinkTo>
                   <LinkTo class="sm:hidden" @route="profile.statistics" {{on "click" this.closeMenu}}>{{t "header.statistics"}}</LinkTo>
                   <div class="md:hidden flex items-center px-5 py-1">
@@ -242,7 +242,7 @@ export default class HeaderComponent extends Component {
                   type="button"
                 >{{t "header.more"}}</button>
                 <input type="checkbox" />
-                <div class="sm:text-base bottom absolute right-0 z-20 py-2 text-xs rounded">
+                <div class="sm:text-base bottom absolute z-20 py-2 text-xs rounded">
                   <a target="_blank" href="https://opencollective.com/brainup" rel="noopener noreferrer">{{t "header.donate"}}</a>
                   <a target="_blank" href="https://github.com/Brain-up/brn" rel="noopener noreferrer">{{t "header.github"}}</a>
                   <LinkTo @route="contact" {{on "click" this.closeMenu}}>{{t "header.contact"}}</LinkTo>
