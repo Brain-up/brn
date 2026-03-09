@@ -53,6 +53,7 @@ export default class TaskPlayerComponent extends Component<TaskPlayerSignature> 
   activeWord: string | null = null;
   @tracked
   textToPlay: string | null = null;
+  @tracked heardWords: Set<string> = new Set();
   activeTask: null | TaskInstance<any> = null;
 
   willDestroy() {
@@ -61,6 +62,11 @@ export default class TaskPlayerComponent extends Component<TaskPlayerSignature> 
   }
 
   @tracked mode = '' as Mode; // listen, interact, task
+
+  get allOptionsHeard(): boolean {
+    const options = this.args.task.normalizedAnswerOptions;
+    return options.length > 0 && options.every((o: { word: string }) => this.heardWords.has(o.word));
+  }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   get componentType(): any {
     const mechanism = this.args.task.exerciseMechanism;
@@ -120,10 +126,16 @@ export default class TaskPlayerComponent extends Component<TaskPlayerSignature> 
     } catch (_e) {
       // Interact was interrupted
     }
+    try {
+      await this.setMode(MODES.TASK);
+    } catch (_e) {
+      // Task mode interrupted
+    }
   });
 
   @action
   onTaskChanged() {
+    this.heardWords = new Set();
     if (this.justEnteredTask === false) {
       if (isTesting()) {
         this.setMode(MODES.TASK);
@@ -293,6 +305,11 @@ export default class TaskPlayerComponent extends Component<TaskPlayerSignature> 
 
             await this.audio.playAudio();
           }
+          this.heardWords = new Set([...this.heardWords, playText]);
+          if (this.allOptionsHeard) {
+            await timeout(500);
+            return;
+          }
         }
         await timeout(250);
         this.activeWord = null;
@@ -357,6 +374,7 @@ export default class TaskPlayerComponent extends Component<TaskPlayerSignature> 
 
   @action
   async startTask() {
+    this.heardWords = new Set();
     this.justEnteredTask = false;
     this.maybeStartExercise();
     this.studyingTimer.runTimer();
@@ -395,6 +413,7 @@ export default class TaskPlayerComponent extends Component<TaskPlayerSignature> 
           onModeChange=this.onModeChange
           justEnteredTask=this.justEnteredTask
           mode=this.mode
+          heardWords=this.heardWords
         )
         as |Player|
       }}

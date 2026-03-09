@@ -9,6 +9,7 @@ import { on } from '@ember/modifier';
 import { fn } from '@ember/helper';
 import { eq } from 'ember-truth-helpers';
 import { and } from 'ember-truth-helpers';
+import { setHas } from 'brn/utils/set-has';
 
 interface TaskPlayerSingleWordsOptionSignature {
   Args: {
@@ -17,6 +18,7 @@ interface TaskPlayerSingleWordsOptionSignature {
   isCorrect: boolean | null;
   activeWord: string;
   answerOption: import('brn/utils/answer-option').default;
+  heardWords?: Set<string>;
   onPlayText: (word: string) => void;
   checkMaybe: (word: string) => void;
   };
@@ -90,7 +92,11 @@ export default class TaskPlayerSingleWordsOptionComponent extends Component<Task
           {{if
             (eq @activeWord @answerOption.word)
             "border-2 text-white bg-purple-primary"
-            "border-2 border-purple-primary/25 text-purple-primary bg-transparent"
+            (if
+              (and (eq @mode "interact") (setHas @heardWords @answerOption.word))
+              "border-2 border-green-400 text-green-700 bg-green-50"
+              "border-2 border-purple-primary/25 text-purple-primary bg-transparent"
+            )
           }}
           {{if
             @disableAnswers
