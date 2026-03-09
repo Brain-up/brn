@@ -45,7 +45,7 @@ export default class EnvironmentalSoundsComponent extends Component<Environmenta
 
   @tracked tasksCopy: TaskItem[] = [];
   @tracked isCorrect = false;
-  @tracked currentAnswer = '';
+  @tracked currentAnswer: string[] = [];
 
   get task() {
     return this.args.task;
@@ -166,11 +166,19 @@ export default class EnvironmentalSoundsComponent extends Component<Environmenta
   }
 
   showTaskResult = dropTask(async (selected: string) => {
-    this.currentAnswer = selected;
+    this.currentAnswer = [...this.currentAnswer, selected].filter(
+      (e) => e.length,
+    );
+
+    if (
+      this.currentAnswer.length !== this.firstUncompletedTask?.answer.length
+    ) {
+      return;
+    }
 
     const isCorrect = deepEqual(
-      this.currentAnswer,
-      this.firstUncompletedTask?.answer.map((e) => e.word).join(''),
+      this.currentAnswer.join(''),
+      this.firstUncompletedTask.answer.map((e) => e.word).join(''),
     );
 
     this.isCorrect = isCorrect;
@@ -183,7 +191,7 @@ export default class EnvironmentalSoundsComponent extends Component<Environmenta
       await this.handleWrongAnswer();
     }
 
-    this.currentAnswer = '';
+    this.currentAnswer = [];
   });
 
   async handleWrongAnswer() {

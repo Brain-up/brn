@@ -49,6 +49,16 @@ export default class GamificationService extends Service {
     this.refreshStreak();
   }
 
+  willDestroy(): void {
+    super.willDestroy();
+    if (this._popupTimer) {
+      clearTimeout(this._popupTimer);
+    }
+    if (this._badgeFlashTimer) {
+      clearTimeout(this._badgeFlashTimer);
+    }
+  }
+
   initializeForUser(): void {
     this._state = this.loadState();
     this.refreshStreak();
@@ -348,8 +358,8 @@ export default class GamificationService extends Service {
       // Award comeback_kid badge if the gap was 3+ days
       if (lastActive && !state.badges['comeback_kid']) {
         const lastDate = new Date(lastActive);
-        const today = new Date(this.todayDateString());
-        const diffDays = Math.floor((today.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24));
+        const todayDate = new Date(this.todayDateString());
+        const diffDays = Math.floor((todayDate.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24));
         if (diffDays >= 3) {
           state.badges = { ...state.badges, comeback_kid: new Date().toISOString() };
         }
