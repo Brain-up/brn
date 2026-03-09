@@ -2,7 +2,7 @@
 import { module, test } from 'qunit';
 import { setupIntl } from 'ember-intl/test-support';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, click, settled } from '@ember/test-helpers';
+import { render, click } from '@ember/test-helpers';
 import AudioService from 'brn/services/audio';
 import StatsService from 'brn/services/stats';
 import PhonemePairs from 'brn/components/task-player/phoneme-pairs';
@@ -96,7 +96,7 @@ module(
 
       // Click wrong answer
       await click('[data-test-task-answer-option="пак"]');
-      await settled();
+
 
       assert.true(
         this.startPlayTaskCalls > initialCalls,
@@ -113,7 +113,7 @@ module(
       const initialStopCalls = this.stopCalls;
 
       await click('[data-test-task-answer-option="пак"]');
-      await settled();
+
 
       assert.true(
         this.stopCalls > initialStopCalls,
@@ -131,7 +131,7 @@ module(
 
       // Wrong answer - task should stay
       await click('[data-test-task-answer-option="пак"]');
-      await settled();
+
 
       assert.dom('[data-test-task-answer-option="бак"]').exists(
         'correct answer option still visible after wrong answer (task not skipped)',
@@ -142,7 +142,7 @@ module(
 
       // Now give correct answer
       await click('[data-test-task-answer-option="бак"]');
-      await settled();
+
 
       assert.true(rightAnswerCalled, 'onRightAnswer was called after correct answer');
     });
@@ -215,7 +215,7 @@ module(
       const initialCalls = this.startPlayTaskCalls;
 
       await click('[data-test-task-answer-option="Question?"]');
-      await settled();
+
 
       assert.true(
         this.startPlayTaskCalls > initialCalls,
@@ -232,7 +232,7 @@ module(
       const initialStopCalls = this.stopCalls;
 
       await click('[data-test-task-answer-option="Question?"]');
-      await settled();
+
 
       assert.true(
         this.stopCalls > initialStopCalls,
@@ -250,7 +250,7 @@ module(
 
       // Wrong answer
       await click('[data-test-task-answer-option="Question?"]');
-      await settled();
+
 
       assert.dom('[data-test-task-answer-option="Statement."]').exists(
         'correct answer option still visible after wrong answer',
@@ -258,7 +258,7 @@ module(
 
       // Correct answer
       await click('[data-test-task-answer-option="Statement."]');
-      await settled();
+
 
       assert.true(rightAnswerCalled, 'onRightAnswer was called after correct answer');
     });
@@ -334,7 +334,7 @@ module(
       const initialCalls = this.startPlayTaskCalls;
 
       await click(`[data-test-task-answer-option="${wrongWord}"]`);
-      await settled();
+
 
       assert.true(
         this.startPlayTaskCalls > initialCalls,
@@ -355,7 +355,7 @@ module(
       const initialStopCalls = this.stopCalls;
 
       await click(`[data-test-task-answer-option="${wrongWord}"]`);
-      await settled();
+
 
       assert.true(
         this.stopCalls > initialStopCalls,
@@ -377,7 +377,7 @@ module(
 
       // Wrong answer - task should not complete, answer options should remain
       await click(`[data-test-task-answer-option="${wrongWord}"]`);
-      await settled();
+
 
       assert.dom('[data-test-task-answer]').exists(
         'answer option buttons still visible after wrong answer (task not completed)',
@@ -468,7 +468,7 @@ module(
       for (const word of wrongSequence) {
         await click(`[data-test-task-answer-option="${word}"]`);
       }
-      await settled();
+
 
       assert.true(
         this.startPlayTaskCalls > initialCalls,
@@ -496,7 +496,7 @@ module(
       for (const word of wrongSequence) {
         await click(`[data-test-task-answer-option="${word}"]`);
       }
-      await settled();
+
 
       assert.true(
         this.stopCalls > initialStopCalls,
@@ -524,7 +524,7 @@ module(
       for (const word of wrongSequence) {
         await click(`[data-test-task-answer-option="${word}"]`);
       }
-      await settled();
+
 
       assert.dom('[data-test-task-answer]').exists(
         'answer option buttons still visible after wrong sequence (task not completed)',
@@ -609,7 +609,7 @@ module(
       const initialCalls = this.startPlayTaskCalls;
 
       await click(`[data-test-task-answer-option="${wrongWord}"]`);
-      await settled();
+
 
       assert.true(
         this.startPlayTaskCalls > initialCalls,
@@ -629,7 +629,7 @@ module(
       const initialStopCalls = this.stopCalls;
 
       await click(`[data-test-task-answer-option="${wrongWord}"]`);
-      await settled();
+
 
       assert.true(
         this.stopCalls > initialStopCalls,
@@ -650,7 +650,7 @@ module(
 
       // Wrong answer - task should not complete, options should remain
       await click(`[data-test-task-answer-option="${wrongWord}"]`);
-      await settled();
+
 
       assert.dom('[data-test-task-answer]').exists(
         'answer option buttons still visible after wrong answer (task not completed)',
