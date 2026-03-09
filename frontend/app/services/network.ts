@@ -106,8 +106,15 @@ export default class NetworkService extends Service {
     userInfo: Partial<LatestUserDTO>,
   ): Promise<LatestUserDTO> {
     const result = await this.patch('users/current', userInfo);
-    const { data } = await result.json();
-    return data;
+    const json = await result.json();
+    if (!result.ok) {
+      const error: Error & { errors?: string[] } = new Error(
+        json.errors?.join(', ') ?? 'Failed to update user info',
+      );
+      error.errors = json.errors;
+      throw error;
+    }
+    return json.data;
   }
   async loadCurrentUser() {
     try {

@@ -25,7 +25,7 @@ module('Integration | Component | registration-form', function (hooks) {
   });
 
   test('it send register request if all fields filled', async function (assert) {
-    assert.expect(4);
+    assert.expect(6);
 
     // eslint-disable-next-line ember/no-classic-classes
     const MockFirebaseAuthenticator = EmberObject.extend({
@@ -34,15 +34,21 @@ module('Integration | Component | registration-form', function (hooks) {
       },
     });
 
+    let loadCurrentUserCallCount = 0;
+    let patchUserInfoCalled = false;
+
     class MockNetwork extends Service {
       loadCurrentUser() {
+        loadCurrentUserCallCount++;
+        if (patchUserInfoCalled) {
+          assert.ok(true, 'loadCurrentUser called after patchUserInfo to refresh profile data');
+        }
         return Promise.resolve();
       }
       patchUserInfo(fields) {
+        patchUserInfoCalled = true;
         assert.ok(fields, 'patchUserInfo called with user fields');
-        return {
-          ok: true,
-        };
+        return Promise.resolve(fields);
       }
     }
 
@@ -69,6 +75,8 @@ module('Integration | Component | registration-form', function (hooks) {
     await click('[name="agreement"]');
     await click('[id="male"]');
     await click('[data-test-submit-form]');
+
+    assert.strictEqual(loadCurrentUserCallCount, 2, 'loadCurrentUser called twice: once during login, once after patchUserInfo');
   });
 
   test('it able to handle registration error', async function (assert) {
@@ -87,7 +95,7 @@ module('Integration | Component | registration-form', function (hooks) {
         return Promise.resolve();
       }
       patchUserInfo() {
-        return { ok: true };
+        return Promise.resolve({});
       }
     }
 

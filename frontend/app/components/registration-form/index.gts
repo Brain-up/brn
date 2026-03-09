@@ -205,12 +205,12 @@ export default class RegistrationFormComponent extends Component {
 
     await this.loginTask.perform();
 
-    const result: any = await this.network.patchUserInfo(user);
-    if (result.ok) {
-      return;
-    } else {
-      const error = await result.json();
-      const key = error.errors.pop();
+    try {
+      await this.network.patchUserInfo(user);
+      await this.network.loadCurrentUser();
+    } catch (e) {
+      const error = e as Error & { errors?: string[] };
+      const key = error.errors?.pop() ?? error.message;
       if (this.intl.exists(`msg.validation.${key}`)) {
         this.errorMessage = this.intl.t(`msg.validation.${key}`);
       } else {
