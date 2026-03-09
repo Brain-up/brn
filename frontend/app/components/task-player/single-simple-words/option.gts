@@ -14,7 +14,7 @@ interface TaskPlayerSingleWordsOptionSignature {
   Args: {
   mode: Mode;
   disableAnswers: boolean;
-  isCorrect: boolean;
+  isCorrect: boolean | null;
   activeWord: string;
   answerOption: import('brn/utils/answer-option').default;
   onPlayText: (word: string) => void;
@@ -60,7 +60,7 @@ export default class TaskPlayerSingleWordsOptionComponent extends Component<Task
   get isDisabled() {
     return this.args.disableAnswers || this.args.mode === MODES.LISTEN || false;
   }
-  @action handleAnswer(node: HTMLButtonElement, [isCorrect]: [boolean]) {
+  @action handleAnswer(node: HTMLButtonElement, [isCorrect]: [boolean | null]) {
     if (this.args.mode !== MODES.TASK) {
       return;
     }
@@ -86,11 +86,11 @@ export default class TaskPlayerSingleWordsOptionComponent extends Component<Task
         disabled={{this.isDisabled}}
         type="button"
         {{didUpdate this.handleAnswer @isCorrect}}
-        class="btn-press task-player__option-button bg-transparent py-1 sm:px-2 rounded
+        class="btn-press task-player__option-button py-1 sm:px-2 rounded
           {{if
             (eq @activeWord @answerOption.word)
             "border-2 text-white bg-purple-primary"
-            " border-2 border-purple-primary/25 text-purple-primary"
+            "border-2 border-purple-primary/25 text-purple-primary bg-transparent"
           }}
           {{if
             @disableAnswers

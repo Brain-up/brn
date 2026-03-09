@@ -242,5 +242,5 @@ export type TaskBase = WithLegacy<{
   nextSiblings: unknown[];
   isFirst: boolean;
   canInteract: boolean;
-  [Type]: 'task' | 'task/signal' | 'task/single-simple-words' | 'task/words-sequences';
+  [Type]: 'task' | 'task/signal' | 'task/single-simple-words' | 'task/words-sequences' | 'task/environmental-sounds' | 'task/phoneme-pairs' | 'task/auditory-sequence' | 'task/prosody';
 }>;

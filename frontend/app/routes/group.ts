@@ -9,6 +9,7 @@ import type Store from 'brn/services/store';
 import type Router from '@ember/routing/router-service';
 import type Session from 'ember-simple-auth/services/session';
 import { sortByKey } from 'brn/utils/sort-by-key';
+import type GroupController from 'brn/controllers/group';
 
 export interface GroupRouteModel {
   group: GroupModel;
@@ -47,7 +48,16 @@ export default class GroupRoute extends Route {
       series = (model as GroupRouteModel).series;
     } else {
       group = model as GroupModel;
-      series = await this.store.query<SeriesModel>('series', { groupId: group.id! });
+      const queriedSeries = await this.store.query<SeriesModel>('series', { groupId: group.id! });
+      series = sortByKey(Array.from(queriedSeries || []), 'id');
+
+      // When Ember skips the model() hook (e.g. <LinkTo @model={{record}}>),
+      // the controller still holds the bare GroupModel. Update it to the
+      // composite format so the controller's series getter works correctly
+      // and GroupNavigation receives the series data for its tabs.
+      // eslint-disable-next-line ember/no-controller-access-in-routes
+      const controller = this.controllerFor('group') as GroupController;
+      controller.model = { group, series };
     }
 
     if (!series.length) {

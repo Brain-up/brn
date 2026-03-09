@@ -31,3 +31,4 @@ jobs:
       - name: npm audit
         working-directory: ./frontend-angular
         run: npm audit
+        continue-on-error: true

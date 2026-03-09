@@ -30,6 +30,10 @@ import StartTaskButton from 'brn/components/start-task-button';
 import TaskPlayerSignal from 'brn/components/task-player/signal';
 import TaskPlayerSingleSimpleWords from 'brn/components/task-player/single-simple-words';
 import TaskPlayerWordsSequences from 'brn/components/task-player/words-sequences';
+import TaskPlayerEnvironmentalSounds from 'brn/components/task-player/environmental-sounds';
+import TaskPlayerPhonemePairs from 'brn/components/task-player/phoneme-pairs';
+import TaskPlayerAuditorySequence from 'brn/components/task-player/auditory-sequence';
+import TaskPlayerProsody from 'brn/components/task-player/prosody';
 
 interface TaskPlayerSignature {
   Args: {
@@ -67,11 +71,22 @@ export default class TaskPlayerComponent extends Component<TaskPlayerSignature> 
       return TaskPlayerWordsSequences;
     } else if (mechanism === ExerciseMechanism.WORDS) {
       return TaskPlayerSingleSimpleWords;
+    } else if (mechanism === ExerciseMechanism.ENVIRONMENTAL_SOUNDS) {
+      return TaskPlayerEnvironmentalSounds;
+    } else if (mechanism === ExerciseMechanism.PHONEME_PAIRS) {
+      return TaskPlayerPhonemePairs;
+    } else if (mechanism === ExerciseMechanism.AUDITORY_SEQUENCE) {
+      return TaskPlayerAuditorySequence;
+    } else if (mechanism === ExerciseMechanism.PROSODY) {
+      return TaskPlayerProsody;
     } else {
       throw new Error('Unknown mechanism: ' + mechanism);
     }
   }
   get disableAnswers() {
+    if (this.args.task.pauseExecution) {
+      return true;
+    }
     if (this.mode === MODES.INTERACT) {
       // Intentionally using isPlaying (not isBusy) here: in interact mode,
       // users explore by clicking words to hear them, so they should be able
@@ -80,6 +95,32 @@ export default class TaskPlayerComponent extends Component<TaskPlayerSignature> 
     }
     return this.audio.isBusy || this.disableAudioPlayer;
   }
+
+  @action
+  onPauseStateChanged() {
+    if (this.studyingTimer.isPaused) {
+      this.audio.stop();
+    }
+  }
+
+  async waitWhilePaused() {
+    while (this.studyingTimer.isPaused) {
+      await timeout(200);
+    }
+  }
+
+  exerciseSequenceTask = keepLatestTask(async () => {
+    try {
+      await this.setMode(MODES.LISTEN);
+    } catch (_e) {
+      return;
+    }
+    try {
+      await this.setMode(MODES.INTERACT);
+    } catch (_e) {
+      // Interact was interrupted
+    }
+  });
 
   @action
   onTaskChanged() {
@@ -91,7 +132,7 @@ export default class TaskPlayerComponent extends Component<TaskPlayerSignature> 
           this.taskModelName !== ExerciseMechanism.MATRIX &&
           this.taskModelName !== ExerciseMechanism.SIGNALS
         ) {
-          this.setMode(MODES.LISTEN);
+          this.exerciseSequenceTask.perform();
         }
       }
     }
@@ -152,6 +193,15 @@ export default class TaskPlayerComponent extends Component<TaskPlayerSignature> 
       return sortedItems;
     }
 
+    if (
+      this.args.task.exerciseMechanism === ExerciseMechanism.ENVIRONMENTAL_SOUNDS ||
+      this.args.task.exerciseMechanism === ExerciseMechanism.PHONEME_PAIRS ||
+      this.args.task.exerciseMechanism === ExerciseMechanism.AUDITORY_SEQUENCE ||
+      this.args.task.exerciseMechanism === ExerciseMechanism.PROSODY
+    ) {
+      return normalizedAnswerOptions;
+    }
+
     throw new Error(`Unknown task type - ${this.args.task.exerciseMechanism}`);
   }
 
@@ -159,6 +209,7 @@ export default class TaskPlayerComponent extends Component<TaskPlayerSignature> 
     try {
       this.mode = MODES.LISTEN;
       for (const option of this.orderedPlaylist) {
+        await this.waitWhilePaused();
         this.activeWord = option.word;
         // tone object case
         if (typeof option.audioFileUrl === 'object' && option.audioFileUrl !== null) {
@@ -175,6 +226,7 @@ export default class TaskPlayerComponent extends Component<TaskPlayerSignature> 
         }
 
         await this.audio.playAudio();
+        await this.waitWhilePaused();
         await timeout(1500);
         this.activeWord = null;
       }
@@ -197,6 +249,7 @@ export default class TaskPlayerComponent extends Component<TaskPlayerSignature> 
   taskModeTask = keepLatestTask(async () => {
     try {
       this.mode = MODES.TASK;
+      await this.waitWhilePaused();
       await this.audio.startPlayTask();
     } catch (_e) {
       // EOL
@@ -209,6 +262,10 @@ export default class TaskPlayerComponent extends Component<TaskPlayerSignature> 
     try {
       this.mode = MODES.INTERACT;
       while (this.mode === MODES.INTERACT) {
+        if (this.studyingTimer.isPaused) {
+          await timeout(200);
+          continue;
+        }
         const playText = this.textToPlay;
         if (playText) {
           this.activeWord = playText;
@@ -303,18 +360,7 @@ export default class TaskPlayerComponent extends Component<TaskPlayerSignature> 
     if (isTesting()) {
       await this.setMode(MODES.TASK);
     } else {
-      try {
-        await this.setMode(MODES.LISTEN);
-        // Let's switch to interact right after listen if not stopped
-      } catch (_e) {
-        // EOL
-      } finally {
-        try {
-          await this.setMode(MODES.INTERACT);
-        } catch (_e) {
-          // EOL
-        }
-      }
+      await this.exerciseSequenceTask.perform();
     }
   }
 
@@ -329,6 +375,7 @@ export default class TaskPlayerComponent extends Component<TaskPlayerSignature> 
       {{didInsert this.preloadNoise @task}}
       {{didUpdate this.preloadNoise @task}}
       {{didUpdate this.onTaskChanged @task}}
+      {{didUpdate this.onPauseStateChanged this.studyingTimer.isPaused}}
       class="flex flex-1" ...attributes>
 
       {{#let

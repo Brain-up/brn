@@ -327,6 +327,7 @@ a[disabled] {
 }
 .btn-press {
   transition: transform 0.1s ease;
+  cursor: pointer;
 }
 .btn-press:not(:disabled):active {
   transform: scale(0.97);

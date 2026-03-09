@@ -25,6 +25,10 @@ import { TaskSchema, TaskExtension } from './task';
 import { TaskSignalSchema } from './task/signal';
 import { TaskSingleSimpleWordsSchema, TaskSingleSimpleWordsExtension } from './task/single-simple-words';
 import { TaskWordsSequencesSchema, TaskWordsSequencesExtension } from './task/words-sequences';
+import { TaskEnvironmentalSoundsSchema, TaskEnvironmentalSoundsExtension } from './task/environmental-sounds';
+import { TaskPhonemePairsSchema, TaskPhonemePairsExtension } from './task/phoneme-pairs';
+import { TaskAuditorySequenceSchema, TaskAuditorySequenceExtension } from './task/auditory-sequence';
+import { TaskProsodySchema, TaskProsodyExtension } from './task/prosody';
 
 /**
  * Fields that the Ember Inspector accesses on records via its object inspector.
@@ -77,6 +81,10 @@ export const ALL_SCHEMAS: LegacyResourceSchema[] = [
   TaskSignalSchema,
   TaskSingleSimpleWordsSchema,
   TaskWordsSequencesSchema,
+  TaskEnvironmentalSoundsSchema,
+  TaskPhonemePairsSchema,
+  TaskAuditorySequenceSchema,
+  TaskProsodySchema,
 ].map(withInspectorFields);
 
 export const ALL_EXTENSIONS: CAUTION_MEGA_DANGER_ZONE_Extension[] = [
@@ -90,4 +98,8 @@ export const ALL_EXTENSIONS: CAUTION_MEGA_DANGER_ZONE_Extension[] = [
   TaskExtension,
   TaskSingleSimpleWordsExtension,
   TaskWordsSequencesExtension,
+  TaskEnvironmentalSoundsExtension,
+  TaskPhonemePairsExtension,
+  TaskAuditorySequenceExtension,
+  TaskProsodyExtension,
 ];

@@ -75,10 +75,17 @@ navigation:
   come_back: Назад
 
 exercise:
+  clear_selection: Очистить
   progress: пройдено
 
 exercise_messages:
   successfully: Поздравляем! Упражнение выполнено!
+  successfully_1: Отличная работа!
+  successfully_2: Ты справился! Молодец!
+  successfully_3: Супер! Так держать!
+  successfully_4: Великолепно! Ещё одна победа!
+  successfully_5: Ура! Задание выполнено!
+  successfully_6: Потрясающе! Ты молодец!
   unsuccessfully: Неверно. Попробуйте ещё раз!
   answer_successfully: Правильный ответ
 
@@ -341,6 +348,23 @@ specialists:
   title: Специалисты
   subtitle: Обучающая программа BrainUp разработана совместно с лучшими специалистами в области сурдопедагогики из России и Беларуси
   all: все специалисты
+
+gamification:
+  xp_earned: Заработано XP
+  accuracy: Точность
+  streak: Серия
+  days: дн.
+  level: Уровень
+  streak_days: дн. подряд
+  summary_excellent: Отличная работа! Ты — звезда!
+  summary_good: Хорошая работа! Так держать!
+  summary_keep_going: Продолжай! Практика ведёт к совершенству!
+  xp_badge_start: Начни!
+  listens: Прослушиваний
+  total_exercises: Всего пройдено
+  perfect_exercises: Без ошибок
+  xp_to_next_level: до след. уровня
+  longest_streak: Лучшая серия
 
 contributors:
   title: "Наша команда"

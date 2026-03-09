@@ -74,7 +74,7 @@ const tpl: TOC<Signature> = <template>
             <div class="shrink-0" id="exercise-timer-slot"></div>
           </div>
         {{/if}}
-        <div class="exercise-container">
+        <div class="exercise-container relative">
           {{#if
             (and
               @controller.exerciseIsCompletedInCurrentCycle (not @controller.showExerciseStats)

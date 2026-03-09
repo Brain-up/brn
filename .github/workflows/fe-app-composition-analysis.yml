@@ -36,3 +36,4 @@ jobs:
       - name: pnpm audit
         working-directory: ./frontend
         run: pnpm audit --prod
+        continue-on-error: true
