@@ -2,7 +2,7 @@
 import { module, test } from 'qunit';
 import { setupIntl } from 'ember-intl/test-support';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, click, settled, waitUntil } from '@ember/test-helpers';
+import { render, click, waitUntil } from '@ember/test-helpers';
 import AudioService from 'brn/services/audio';
 import StatsService from 'brn/services/stats';
 import PhonemePairs from 'brn/components/task-player/phoneme-pairs';

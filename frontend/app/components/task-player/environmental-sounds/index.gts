@@ -18,7 +18,7 @@ import didUpdate from '@ember/render-modifiers/modifiers/did-update';
 import { hash } from '@ember/helper';
 import { on } from '@ember/modifier';
 import { fn } from '@ember/helper';
-import { eq, and } from 'ember-truth-helpers';
+import { eq } from 'ember-truth-helpers';
 import UiTaskContent from 'brn/components/ui/task-content';
 
 export interface EnvironmentalSoundsSignature {

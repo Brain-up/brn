@@ -55,6 +55,7 @@ export default class GroupRoute extends Route {
       // the controller still holds the bare GroupModel. Update it to the
       // composite format so the controller's series getter works correctly
       // and GroupNavigation receives the series data for its tabs.
+      // eslint-disable-next-line ember/no-controller-access-in-routes
       const controller = this.controllerFor('group') as GroupController;
       controller.model = { group, series };
     }
