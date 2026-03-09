@@ -8,9 +8,18 @@ export default class ApplicationRoute extends Route {
   @service('session') session;
   @service('intl') intl;
   @service('router') router;
+  @service('network') network;
 
   async beforeModel() {
     await this.session.setup();
+
+    if (this.session.isAuthenticated) {
+      try {
+        await this.network.loadCurrentUser();
+      } catch {
+        // handled by loadCurrentUser (redirects to login)
+      }
+    }
 
     this.intl.addTranslations('ru-ru', translationsForRuRu);
     this.intl.addTranslations('en-us', translationsForEnUs);

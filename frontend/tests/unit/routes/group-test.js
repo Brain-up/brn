@@ -29,14 +29,7 @@ module('Unit | Route | group', function (hooks) {
       cacheKeyManager = { getOrCreateRecordIdentifier: () => ({}) };
     }
 
-    class MockNetwork extends Service {
-      loadCurrentUser() {
-        return Promise.resolve();
-      }
-    }
-
     this.owner.register('service:store', MockStore);
-    this.owner.register('service:network', MockNetwork);
 
     const route = this.owner.lookup('route:group');
     const result = await route.model({ group_id: '1' });
@@ -121,14 +114,7 @@ module('Unit | Route | group', function (hooks) {
       cacheKeyManager = { getOrCreateRecordIdentifier: () => ({}) };
     }
 
-    class MockNetwork extends Service {
-      loadCurrentUser() {
-        return Promise.resolve();
-      }
-    }
-
     this.owner.register('service:store', MockStore);
-    this.owner.register('service:network', MockNetwork);
 
     const route = this.owner.lookup('route:group');
 
@@ -151,14 +137,7 @@ module('Unit | Route | group', function (hooks) {
       cacheKeyManager = { getOrCreateRecordIdentifier: () => ({}) };
     }
 
-    class MockNetwork extends Service {
-      loadCurrentUser() {
-        return Promise.resolve();
-      }
-    }
-
     this.owner.register('service:store', MockStore);
-    this.owner.register('service:network', MockNetwork);
 
     const route = this.owner.lookup('route:group');
 
@@ -167,25 +146,6 @@ module('Unit | Route | group', function (hooks) {
       assert.ok(false, 'should have thrown');
     } catch (e) {
       assert.strictEqual(e.message, 'query failed');
-    }
-  });
-
-  test('model propagates loadCurrentUser errors', async function (assert) {
-    class MockNetwork extends Service {
-      loadCurrentUser() {
-        return Promise.reject(new Error('auth failed'));
-      }
-    }
-
-    this.owner.register('service:network', MockNetwork);
-
-    const route = this.owner.lookup('route:group');
-
-    try {
-      await route.model({ group_id: '1' });
-      assert.ok(false, 'should have thrown');
-    } catch (e) {
-      assert.strictEqual(e.message, 'auth failed');
     }
   });
 
@@ -205,14 +165,7 @@ module('Unit | Route | group', function (hooks) {
       cacheKeyManager = { getOrCreateRecordIdentifier: () => ({}) };
     }
 
-    class MockNetwork extends Service {
-      loadCurrentUser() {
-        return Promise.resolve();
-      }
-    }
-
     this.owner.register('service:store', MockStore);
-    this.owner.register('service:network', MockNetwork);
 
     const route = this.owner.lookup('route:group');
     await route.model({ group_id: '42' });
@@ -272,14 +225,7 @@ module('Unit | Route | group', function (hooks) {
       cacheKeyManager = { getOrCreateRecordIdentifier: () => ({}) };
     }
 
-    class MockNetwork extends Service {
-      loadCurrentUser() {
-        return Promise.resolve();
-      }
-    }
-
     this.owner.register('service:store', MockStore);
-    this.owner.register('service:network', MockNetwork);
 
     const route = this.owner.lookup('route:group');
     const result = await route.model({ group_id: '1' });
