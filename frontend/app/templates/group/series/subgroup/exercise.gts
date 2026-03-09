@@ -30,11 +30,11 @@ interface Signature {
 
 const tpl: TOC<Signature> = <template>
     <ModalDialog
-      @overlayClass="z-50 min-h-full w-full fixed bg-blue-400 flex"
-      @containerClass="w-full flex bg-white sm:p-2 p-2 rounded-lg text-2xl justify-center"
+      @overlayClass="z-50 fixed inset-0 bg-blue-400 flex overflow-hidden"
+      @containerClass="w-full flex bg-white sm:p-2 p-2 rounded-lg text-2xl justify-center overflow-hidden"
     >
       <div
-        class="series-page--canvas flex flex-col flex-grow max-w-screen-xl"
+        class="series-page--canvas flex flex-col flex-grow max-w-screen-xl min-h-0"
         {{didInsert @controller.disableBodyScroll}}
         {{willDestroy @controller.enableBodyScroll}}
         {{didInsert @controller.startStatsTracking @model}}

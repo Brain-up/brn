@@ -209,6 +209,7 @@ a[disabled] {
   flex-grow: 1;
   overflow: hidden;
   position: relative;
+  min-height: 0;
 }
 
 @media (max-width: 640px) {
