@@ -18,9 +18,10 @@ import didUpdate from '@ember/render-modifiers/modifiers/did-update';
 import { hash } from '@ember/helper';
 import { on } from '@ember/modifier';
 import { fn } from '@ember/helper';
-import { eq } from 'ember-truth-helpers';
+import { eq, and } from 'ember-truth-helpers';
 import UiTaskContent from 'brn/components/ui/task-content';
 import { t } from 'ember-intl';
+import { setHas } from 'brn/utils/set-has';
 
 export interface AuditorySequenceSignature {
   Args: {
@@ -29,6 +30,7 @@ export interface AuditorySequenceSignature {
     disableAnswers: boolean;
     activeWord: string;
     disableAudioPlayer: boolean;
+    heardWords?: Set<string>;
     onPlayText(word: string): void;
     onRightAnswer(): void;
     onWrongAnswer(params?: { skipRetry: true }): void;
@@ -252,7 +254,11 @@ export default class AuditorySequenceComponent extends Component<AuditorySequenc
                     {{if
                       (eq @activeWord answerOption.word)
                       "border-2 text-white bg-purple-primary"
-                      "border-2 border-purple-primary/25 text-purple-primary bg-transparent"
+                      (if
+                        (and (eq @mode "interact") (setHas @heardWords answerOption.word))
+                        "border-2 border-green-400 text-green-700 bg-green-50"
+                        "border-2 border-purple-primary/25 text-purple-primary bg-transparent"
+                      )
                     }}
                     {{if
                       @disableAnswers

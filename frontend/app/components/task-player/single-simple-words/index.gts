@@ -27,6 +27,7 @@ export interface WordsSequencesSignature<T> {
   disableAnswers: boolean;
   activeWord: string;
   disableAudioPlayer: boolean;
+  heardWords?: Set<string>;
   onPlayText(word: string): void;
   onRightAnswer(): void;
   onWrongAnswer(params?: { skipRetry: true }): void;
@@ -291,6 +292,7 @@ export default class SingleSimpleWordsComponent extends Component<WordsSequences
                 @mode={{@mode}}
                 @isCorrect={{this.isCorrect}}
                 @onPlayText={{@onPlayText}}
+                @heardWords={{@heardWords}}
               />
             {{/each}}
           </ul>

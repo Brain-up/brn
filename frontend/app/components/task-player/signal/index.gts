@@ -26,6 +26,7 @@ interface TaskPlayerSignalSignature {
   disableAnswers: boolean;
   activeWord: string;
   disableAudioPlayer: boolean;
+  heardWords?: Set<string>;
   onPlayText(): void;
   onRightAnswer(config?: any): void;
   onWrongAnswer(config?: any): void;

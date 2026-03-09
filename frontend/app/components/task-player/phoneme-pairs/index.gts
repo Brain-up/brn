@@ -19,6 +19,7 @@ import { on } from '@ember/modifier';
 import { fn } from '@ember/helper';
 import { eq, and } from 'ember-truth-helpers';
 import UiTaskContent from 'brn/components/ui/task-content';
+import { setHas } from 'brn/utils/set-has';
 
 export interface PhonemePairsSignature {
   Args: {
@@ -27,6 +28,7 @@ export interface PhonemePairsSignature {
     disableAnswers: boolean;
     activeWord: string;
     disableAudioPlayer: boolean;
+    heardWords?: Set<string>;
     onPlayText(word: string): void;
     onRightAnswer(): void;
     onWrongAnswer(params?: { skipRetry: true }): void;
@@ -229,7 +231,11 @@ export default class PhonemePairsComponent extends Component<PhonemePairsSignatu
                         (if
                           (eq @activeWord answerOption.word)
                           "border-2 text-white bg-purple-primary"
-                          "border-2 border-purple-primary/25 text-purple-primary bg-transparent"
+                          (if
+                            (and (eq @mode "interact") (setHas @heardWords answerOption.word))
+                            "border-2 border-green-400 text-green-700 bg-green-50"
+                            "border-2 border-purple-primary/25 text-purple-primary bg-transparent"
+                          )
                         )
                       )
                     }}

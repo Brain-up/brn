@@ -47,6 +47,7 @@ export interface WordsSequencesSignature<T> {
   disableAnswers: boolean;
   activeWord: string;
   disableAudioPlayer: boolean;
+  heardWords?: Set<string>;
   onPlayText(word: string): void;
   onRightAnswer(): void;
   onWrongAnswer(params?: { skipRetry: true }): void;
