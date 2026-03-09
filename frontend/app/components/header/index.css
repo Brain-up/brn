@@ -76,7 +76,14 @@
     display: none;
     position: absolute;
     top: 100%;
-    right: 0;
+    left: 0;
+  }
+
+  @media (min-width: 640px) {
+    .dropdown > div {
+      left: auto;
+      right: 0;
+    }
   }
 
   .dropdown input[type='checkbox']:checked + div {
