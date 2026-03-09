@@ -68,13 +68,13 @@ module('Unit | Route | group', function (hooks) {
     assert.strictEqual(transitionArgs[0], 'groups');
   });
 
-  test('redirect goes to first series on group.index', function (assert) {
-    let transitionArgs = [];
+  test('redirect does NOT auto-navigate to first series on group.index', function (assert) {
+    let transitioned = false;
 
     const route = this.owner.lookup('route:group');
     route.router = {
-      transitionTo(...args) {
-        transitionArgs = args;
+      transitionTo() {
+        transitioned = true;
       },
     };
 
@@ -85,9 +85,7 @@ module('Unit | Route | group', function (hooks) {
       },
       { to: { name: 'group.index' } },
     );
-    assert.strictEqual(transitionArgs[0], 'group.series.index');
-    assert.strictEqual(transitionArgs[1], '5');
-    assert.strictEqual(transitionArgs[2], '10');
+    assert.false(transitioned, 'should not auto-redirect to first series — user should choose exercise type');
   });
 
   test('redirect does nothing when not on group.index', function (assert) {

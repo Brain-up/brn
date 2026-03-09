@@ -9,6 +9,7 @@ import type Store from 'brn/services/store';
 import type Router from '@ember/routing/router-service';
 import type Session from 'ember-simple-auth/services/session';
 import { sortByKey } from 'brn/utils/sort-by-key';
+import type GroupController from 'brn/controllers/group';
 
 export interface GroupRouteModel {
   group: GroupModel;
@@ -47,21 +48,20 @@ export default class GroupRoute extends Route {
       series = (model as GroupRouteModel).series;
     } else {
       group = model as GroupModel;
-      series = await this.store.query<SeriesModel>('series', { groupId: group.id! });
+      const queriedSeries = await this.store.query<SeriesModel>('series', { groupId: group.id! });
+      series = sortByKey(Array.from(queriedSeries || []), 'id');
+
+      // Update the controller model to the composite format so that
+      // the controller's series getter works correctly.
+      const controller = this.controllerFor('group') as GroupController;
+      controller.model = { group, series };
     }
 
-    if (!series.length) {
+    if (!series.length && to?.name === 'group.index') {
       this.router.transitionTo('groups');
-      return;
     }
-    if (to?.name === 'group.index') {
-      this.router.transitionTo(
-        'group.series.index',
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        group.id!,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        series[0]!.id!,
-      );
-    }
+    // Do NOT auto-redirect from group.index to the first series.
+    // The group.index template shows all series as exercise type cards,
+    // letting the user choose which exercise type they want.
   }
 }

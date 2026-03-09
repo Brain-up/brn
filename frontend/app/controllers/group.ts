@@ -27,6 +27,11 @@ export default class GroupController extends Controller {
     return [];
   }
 
+  get isExerciseTypeSelection() {
+    const name = this.router.currentRouteName ?? '';
+    return name === 'group.index';
+  }
+
   get headerAndNavShown() {
     const name = this.router.currentRouteName ?? '';
     return name.includes('task') || name === 'group.loading';
