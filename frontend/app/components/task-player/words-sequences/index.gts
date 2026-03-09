@@ -76,7 +76,7 @@ export default class WordsSequencesComponent<
   @service stats!: StatsService;
   @tracked tasksCopy: TaskItem[] = [];
   @tracked currentAnswerObject: null | Record<string, string | null> = null;
-  @tracked isCorrect = false;
+  @tracked isCorrect: boolean | null = null;
   @tracked correctnessPerType: Record<string, boolean> = {};
   get task(): T {
     return this.args.task;
@@ -135,7 +135,7 @@ export default class WordsSequencesComponent<
     set(task, 'nextAttempt', true);
   }
   startTask() {
-    this.isCorrect = false;
+    this.isCorrect = null;
     this.correctnessPerType = {};
     const wsTask = this.task as unknown as WordsSequences;
     this.currentAnswerObject = getEmptyTemplate(wsTask.selectedItemsOrder);

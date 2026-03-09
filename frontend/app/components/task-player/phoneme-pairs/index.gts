@@ -17,7 +17,7 @@ import didUpdate from '@ember/render-modifiers/modifiers/did-update';
 import { hash } from '@ember/helper';
 import { on } from '@ember/modifier';
 import { fn } from '@ember/helper';
-import { eq } from 'ember-truth-helpers';
+import { eq, and } from 'ember-truth-helpers';
 import UiTaskContent from 'brn/components/ui/task-content';
 
 export interface PhonemePairsSignature {
@@ -43,7 +43,7 @@ export default class PhonemePairsComponent extends Component<PhonemePairsSignatu
   @service('stats') declare stats: StatsService;
 
   @tracked tasksCopy: TaskItem[] = [];
-  @tracked isCorrect = false;
+  @tracked isCorrect: boolean | null = null;
   @tracked currentAnswer = '';
 
   get task() {
@@ -139,7 +139,7 @@ export default class PhonemePairsComponent extends Component<PhonemePairsSignatu
   }
 
   startTask() {
-    this.isCorrect = false;
+    this.isCorrect = null;
     if (this.mode === MODES.TASK && this.uncompletedTasks.length > 0) {
       this.audio.startPlayTask(this.audioFiles);
     }
@@ -217,11 +217,19 @@ export default class PhonemePairsComponent extends Component<PhonemePairsSignatu
                   aria-label={{answerOption.word}}
                   disabled={{this.isDisabled}}
                   type="button"
-                  class="phoneme-pairs__option-button btn-press py-2 px-4 rounded
+                  class="phoneme-pairs__option-button btn-press py-2 px-4 rounded transition-colors duration-200
                     {{if
-                      (eq @activeWord answerOption.word)
-                      "border-2 text-white bg-purple-primary"
-                      "border-2 border-purple-primary/25 text-purple-primary bg-transparent"
+                      (and (eq this.currentAnswer answerOption.word) (eq this.isCorrect true))
+                      "border-2 text-white bg-green-500"
+                      (if
+                        (and (eq this.currentAnswer answerOption.word) (eq this.isCorrect false))
+                        "border-2 text-white bg-red-400"
+                        (if
+                          (eq @activeWord answerOption.word)
+                          "border-2 text-white bg-purple-primary"
+                          "border-2 border-purple-primary/25 text-purple-primary bg-transparent"
+                        )
+                      )
                     }}
                     {{if
                       @disableAnswers

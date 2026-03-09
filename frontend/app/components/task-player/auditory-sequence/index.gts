@@ -18,7 +18,7 @@ import didUpdate from '@ember/render-modifiers/modifiers/did-update';
 import { hash } from '@ember/helper';
 import { on } from '@ember/modifier';
 import { fn } from '@ember/helper';
-import { eq } from 'ember-truth-helpers';
+import { eq, and } from 'ember-truth-helpers';
 import UiTaskContent from 'brn/components/ui/task-content';
 import { t } from 'ember-intl';
 
@@ -45,7 +45,7 @@ export default class AuditorySequenceComponent extends Component<AuditorySequenc
   @service('stats') declare stats: StatsService;
 
   @tracked tasksCopy: TaskItem[] = [];
-  @tracked isCorrect = false;
+  @tracked isCorrect: boolean | null = null;
   @tracked selectedSequence: string[] = [];
 
   get task() {
@@ -158,7 +158,7 @@ export default class AuditorySequenceComponent extends Component<AuditorySequenc
   }
 
   startTask() {
-    this.isCorrect = false;
+    this.isCorrect = null;
     this.selectedSequence = [];
     if (this.mode === MODES.TASK && this.uncompletedTasks.length > 0) {
       this.audio.startPlayTask(this.audioFiles);
@@ -282,7 +282,9 @@ export default class AuditorySequenceComponent extends Component<AuditorySequenc
 
           {{#if this.selectedSequence.length}}
             <div
-              class="auditory-sequence__selection-info sm:mx-8 mx-2 mt-4"
+              class="auditory-sequence__selection-info sm:mx-8 mx-2 mt-4 transition-colors duration-200
+                {{if (eq this.isCorrect true) 'bg-green-100 rounded-md'}}
+                {{if (eq this.isCorrect false) 'bg-red-100 rounded-md'}}"
               data-test-auditory-sequence-selection
             >
               <div class="flex items-center justify-between">

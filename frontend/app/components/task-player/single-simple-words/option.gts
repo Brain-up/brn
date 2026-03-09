@@ -14,7 +14,7 @@ interface TaskPlayerSingleWordsOptionSignature {
   Args: {
   mode: Mode;
   disableAnswers: boolean;
-  isCorrect: boolean;
+  isCorrect: boolean | null;
   activeWord: string;
   answerOption: import('brn/utils/answer-option').default;
   onPlayText: (word: string) => void;
@@ -60,7 +60,7 @@ export default class TaskPlayerSingleWordsOptionComponent extends Component<Task
   get isDisabled() {
     return this.args.disableAnswers || this.args.mode === MODES.LISTEN || false;
   }
-  @action handleAnswer(node: HTMLButtonElement, [isCorrect]: [boolean]) {
+  @action handleAnswer(node: HTMLButtonElement, [isCorrect]: [boolean | null]) {
     if (this.args.mode !== MODES.TASK) {
       return;
     }

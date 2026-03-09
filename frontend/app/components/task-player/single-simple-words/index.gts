@@ -45,7 +45,7 @@ export default class SingleSimpleWordsComponent extends Component<WordsSequences
 
   // --- Tracked properties (from WordsSequencesComponent) ---
   @tracked tasksCopy: TaskItem[] = [];
-  @tracked isCorrect = false;
+  @tracked isCorrect: boolean | null = null;
 
   // --- Own tracked properties ---
   @tracked currentAnswer: string[] = [];
@@ -145,7 +145,7 @@ export default class SingleSimpleWordsComponent extends Component<WordsSequences
     return url ? [url] : [];
   }
   startTask() {
-    this.isCorrect = false;
+    this.isCorrect = null;
     if (this.mode === MODES.TASK && this.uncompletedTasks.length > 0) {
       this.audio.startPlayTask(this.audioFiles);
     }

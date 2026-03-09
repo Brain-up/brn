@@ -18,7 +18,7 @@ import didUpdate from '@ember/render-modifiers/modifiers/did-update';
 import { hash } from '@ember/helper';
 import { on } from '@ember/modifier';
 import { fn } from '@ember/helper';
-import { eq } from 'ember-truth-helpers';
+import { eq, and } from 'ember-truth-helpers';
 import UiTaskContent from 'brn/components/ui/task-content';
 
 export interface EnvironmentalSoundsSignature {
@@ -44,7 +44,7 @@ export default class EnvironmentalSoundsComponent extends Component<Environmenta
   @service('stats') declare stats: StatsService;
 
   @tracked tasksCopy: TaskItem[] = [];
-  @tracked isCorrect = false;
+  @tracked isCorrect: boolean | null = null;
   @tracked currentAnswer: string[] = [];
 
   get task() {
@@ -140,7 +140,7 @@ export default class EnvironmentalSoundsComponent extends Component<Environmenta
   }
 
   startTask() {
-    this.isCorrect = false;
+    this.isCorrect = null;
     if (this.mode === MODES.TASK && this.uncompletedTasks.length > 0) {
       this.audio.startPlayTask(this.audioFiles);
     }
@@ -214,7 +214,9 @@ export default class EnvironmentalSoundsComponent extends Component<Environmenta
 
         <UiTaskContent>
           <ul
-            class="environmental-sounds__options sm:mx-8 mx-2 mt-2"
+            class="environmental-sounds__options sm:mx-8 mx-2 mt-2 transition-colors duration-200
+              {{if (eq this.isCorrect false) 'bg-red-50 rounded-md'}}
+              {{if (eq this.isCorrect true) 'bg-green-50 rounded-md'}}"
             data-test-environmental-sounds-options
           >
             {{#each @task.answerOptions key="word" as |answerOption|}}
