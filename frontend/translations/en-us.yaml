@@ -464,6 +464,7 @@ audiometry:
   history_clear: "Clear History"
   history_duration: "Duration: {seconds}s"
   history_pta_trend: "PTA Trend Over Time"
+  keyboard_hint: "Hotkeys: ← Yes · → No · ↑ Replay"
 
 doctor:
   patients:

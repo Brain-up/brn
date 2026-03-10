@@ -1,6 +1,6 @@
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
-import { visit, click } from '@ember/test-helpers';
+import { visit, click, triggerKeyEvent, find } from '@ember/test-helpers';
 import { setupMSW } from '../../helpers/msw';
 import { authenticateSession } from 'ember-simple-auth/test-support';
 
@@ -273,5 +273,187 @@ module('Acceptance | audiometry | flow', function (hooks) {
     assert.dom('[data-test-matrix-unavailable]').exists('matrix unavailable message shown');
     assert.dom('[data-test-start-audiometry]').doesNotExist('no start button for matrix');
     assert.dom('[data-test-headphone-select]').doesNotExist('no headphone select for matrix');
+  });
+
+  test('SIGNALS keyboard shortcuts — ArrowLeft=yes, ArrowRight=no, ArrowUp=replay', async function (assert) {
+    server.get('audiometrics', () => ({
+      data: [
+        { id: '1', locale: 'en-us', name: 'Signal Test', audiometryType: 'SIGNALS', description: 'Frequency test' },
+      ],
+    }));
+    server.get('audiometrics/:id', () => ({
+      data: {
+        id: '1',
+        locale: 'en-us',
+        name: 'Signal Test',
+        audiometryType: 'SIGNALS',
+        description: 'Frequency test',
+        audiometryTasks: [
+          { id: '101', ear: 'LEFT', frequencies: [1000] },
+        ],
+      },
+    }));
+    server.get('users/current/headphones', () => ({
+      data: [{ id: '5', name: 'Test HP', active: true, type: 'NOT_DEFINED' }],
+    }));
+    server.post('audiometry-history', () => ({ data: { id: '1' } }));
+
+    await authenticateSession();
+    await visit('/audiometry/1');
+    await click('[data-test-start-audiometry]');
+
+    // Verify testing phase is active
+    assert.dom('[data-test-ear-label]').exists('testing phase active');
+    assert.dom('[data-test-answer-yes]').exists('yes button visible');
+
+    // Read initial dB level
+    const initialDB = find('[data-test-db-level]').textContent.trim();
+
+    // ArrowUp should replay (dB level stays the same)
+    const container = find('.outline-none[tabindex="0"]');
+    await triggerKeyEvent(container, 'keydown', 'ArrowUp');
+    assert.dom('[data-test-db-level]').hasText(initialDB, 'ArrowUp replays — dB unchanged');
+    assert.dom('[data-test-answer-yes]').exists('still in testing after replay');
+
+    // ArrowLeft should act as "Yes" (heard) — dB level decreases
+    await triggerKeyEvent(container, 'keydown', 'ArrowLeft');
+    const afterYesDB = find('[data-test-db-level]').textContent.trim();
+    assert.notEqual(afterYesDB, initialDB, 'ArrowLeft (yes) changed the dB level');
+
+    // ArrowRight should act as "No" (not heard) — dB level changes (increases)
+    const beforeNoDB = find('[data-test-db-level]').textContent.trim();
+    await triggerKeyEvent(container, 'keydown', 'ArrowRight');
+    const afterNoDB = find('[data-test-db-level]').textContent.trim();
+    assert.notEqual(afterNoDB, beforeNoDB, 'ArrowRight (no) changed the dB level');
+  });
+
+  test('SIGNALS keyboard shortcuts complete full adaptive test', async function (assert) {
+    const historyPosts = [];
+
+    server.get('audiometrics', () => ({
+      data: [
+        { id: '1', locale: 'en-us', name: 'Signal Test', audiometryType: 'SIGNALS', description: 'Frequency test' },
+      ],
+    }));
+    server.get('audiometrics/:id', () => ({
+      data: {
+        id: '1',
+        locale: 'en-us',
+        name: 'Signal Test',
+        audiometryType: 'SIGNALS',
+        description: 'Frequency test',
+        audiometryTasks: [
+          { id: '101', ear: 'LEFT', frequencies: [1000] },
+        ],
+      },
+    }));
+    server.get('users/current/headphones', () => ({
+      data: [{ id: '5', name: 'Test HP', active: true, type: 'NOT_DEFINED' }],
+    }));
+    server.post('audiometry-history', (request) => {
+      historyPosts.push(JSON.parse(request.requestBody));
+      return { data: { id: '1' } };
+    });
+
+    await authenticateSession();
+    await visit('/audiometry/1');
+    await click('[data-test-start-audiometry]');
+
+    const container = find('.outline-none[tabindex="0"]');
+
+    // Use keyboard to complete the adaptive procedure (same YES/NO pattern as click test)
+    // ArrowLeft = Yes, ArrowRight = No
+    await triggerKeyEvent(container, 'keydown', 'ArrowLeft');  // YES at 40
+    await triggerKeyEvent(container, 'keydown', 'ArrowLeft');  // YES at 30
+    await triggerKeyEvent(container, 'keydown', 'ArrowRight'); // NO at 20
+    await triggerKeyEvent(container, 'keydown', 'ArrowLeft');  // YES at 25
+    await triggerKeyEvent(container, 'keydown', 'ArrowRight'); // NO at 15
+    await triggerKeyEvent(container, 'keydown', 'ArrowLeft');  // YES at 20
+    await triggerKeyEvent(container, 'keydown', 'ArrowRight'); // NO at 10
+    await triggerKeyEvent(container, 'keydown', 'ArrowLeft');  // YES at 15
+    await triggerKeyEvent(container, 'keydown', 'ArrowRight'); // NO
+    await triggerKeyEvent(container, 'keydown', 'ArrowLeft');  // YES → threshold reached
+
+    // Handle any remaining iterations needed
+    for (let i = 0; i < 20; i++) {
+      if (document.querySelector('[data-test-back-to-list]')) break;
+      if (document.querySelector('[data-test-answer-yes]')) {
+        await triggerKeyEvent(container, 'keydown', 'ArrowLeft');
+      }
+    }
+
+    // Should reach results phase
+    assert.dom('[data-test-back-to-list]').exists('results phase reached via keyboard');
+    assert.dom('[data-test-audiogram]').exists('audiogram shown on results');
+    assert.dom('[data-test-signal-ear-result]').exists({ count: 1 }, 'ear result shown');
+    assert.strictEqual(historyPosts.length, 1, 'history posted for the ear task');
+    assert.ok(historyPosts[0].sinAudiometryResults, 'threshold results saved');
+  });
+
+  test('keyboard shortcuts do not interfere during setup phase', async function (assert) {
+    server.get('audiometrics', () => ({
+      data: [
+        { id: '1', locale: 'en-us', name: 'Signal Test', audiometryType: 'SIGNALS', description: 'Frequency test' },
+      ],
+    }));
+    server.get('audiometrics/:id', () => ({
+      data: {
+        id: '1',
+        locale: 'en-us',
+        name: 'Signal Test',
+        audiometryType: 'SIGNALS',
+        description: 'Frequency test',
+        audiometryTasks: [
+          { id: '101', ear: 'LEFT', frequencies: [1000] },
+        ],
+      },
+    }));
+    server.get('users/current/headphones', () => ({
+      data: [{ id: '5', name: 'Test HP', active: true, type: 'NOT_DEFINED' }],
+    }));
+
+    await authenticateSession();
+    await visit('/audiometry/1');
+
+    // Still in setup phase — keyboard should not trigger any test actions
+    const container = find('.outline-none[tabindex="0"]');
+    await triggerKeyEvent(container, 'keydown', 'ArrowLeft');
+    await triggerKeyEvent(container, 'keydown', 'ArrowRight');
+    await triggerKeyEvent(container, 'keydown', 'ArrowUp');
+
+    // Should still be in setup, not testing
+    assert.dom('[data-test-start-audiometry]').exists('still in setup phase after key presses');
+    assert.dom('[data-test-ear-label]').doesNotExist('not in testing phase');
+  });
+
+  test('keyboard hint is shown during SIGNALS testing', async function (assert) {
+    server.get('audiometrics', () => ({
+      data: [
+        { id: '1', locale: 'en-us', name: 'Signal Test', audiometryType: 'SIGNALS', description: 'Frequency test' },
+      ],
+    }));
+    server.get('audiometrics/:id', () => ({
+      data: {
+        id: '1',
+        locale: 'en-us',
+        name: 'Signal Test',
+        audiometryType: 'SIGNALS',
+        description: 'Frequency test',
+        audiometryTasks: [
+          { id: '101', ear: 'LEFT', frequencies: [1000] },
+        ],
+      },
+    }));
+    server.get('users/current/headphones', () => ({
+      data: [{ id: '5', name: 'Test HP', active: true, type: 'NOT_DEFINED' }],
+    }));
+    server.post('audiometry-history', () => ({ data: { id: '1' } }));
+
+    await authenticateSession();
+    await visit('/audiometry/1');
+    await click('[data-test-start-audiometry]');
+
+    assert.dom('[data-test-ear-label]').exists('testing phase active');
+    assert.dom('[data-test-keyboard-hint]').exists('keyboard hint is shown during testing');
   });
 });
