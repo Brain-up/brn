@@ -1,17 +1,8 @@
-import type { TOC } from '@ember/component/template-only';
 import RouteTemplate from 'ember-route-template';
+import ErrorPage from 'brn/components/error-page';
 
-interface Signature {
-  Args: {
-    model: string;
-  };
-}
-
-const tpl: TOC<Signature> = <template>
-    oooops...
-    <pre class="overflow-x-auto whitespace-pre-wrap break-words">
-      {{@model}}
-    </pre>
-  </template>;
-
-export default RouteTemplate(tpl);
+export default RouteTemplate<{ model: unknown }>(
+  <template>
+    <ErrorPage @model={{@model}} />
+  </template>
+);
