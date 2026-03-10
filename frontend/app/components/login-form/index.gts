@@ -7,6 +7,7 @@ import Router from '@ember/routing/router-service';
 import Session from 'ember-simple-auth/services/session';
 import IntlService from 'ember-intl/services/intl';
 import NetworkService from 'brn/services/network';
+import type TasksManagerService from 'brn/services/tasks-manager';
 import { LinkTo } from '@ember/routing';
 import { on } from '@ember/modifier';
 import { t } from 'ember-intl';
@@ -27,6 +28,7 @@ export default class LoginFormComponent extends Component {
   @service('router') router!: Router;
   @service('network') network!: NetworkService;
   @service('intl') intl!: IntlService;
+  @service('tasks-manager') tasksManager!: TasksManagerService;
 
   @tracked login: string | undefined = undefined;
   @tracked password: string | undefined = undefined;
@@ -75,7 +77,10 @@ export default class LoginFormComponent extends Component {
         password,
       );
       await timeout(500);
-      await this.network.loadCurrentUser();
+      await Promise.all([
+        this.network.loadCurrentUser(),
+        this.tasksManager.loadTodayCompletedExercises(),
+      ]);
     } catch (error) {
       let key = '';
       if (error.responseJSON) {

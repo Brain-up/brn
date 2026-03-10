@@ -18,6 +18,8 @@ import { secondsTo } from 'brn/utils/seconds-to';
 import { isNone } from '@ember/utils';
 import didInsert from '@ember/render-modifiers/modifiers/did-insert';
 import didUpdate from '@ember/render-modifiers/modifiers/did-update';
+import { service } from '@ember/service';
+import type IntlService from 'ember-intl/services/intl';
 import { t } from 'ember-intl';
 import LoadingSpinner from 'brn/components/loading-spinner';
 import StatisticsBarChart from 'brn/components/statistics/bar-chart';
@@ -48,6 +50,8 @@ interface WeekTimeTrackSignature {
 
 export default class WeekTimeTrackComponent extends Component<WeekTimeTrackSignature> {
   private static readonly EXERCISING_TIME_NORM_IN_S = 20 * 60;
+
+  @service('intl') intl!: IntlService;
 
   @tracked private chartData?: IWeekChartDataItem[];
 
@@ -129,6 +133,7 @@ export default class WeekTimeTrackComponent extends Component<WeekTimeTrackSigna
     let lastDay = null;
     let lastDayIndex = -1;
     let dayNumber: number;
+    const locale = this.intl.primaryLocale;
     for (
       dayNumber = 1;
       dayNumber <= this.selectedMonth.daysInMonth;
@@ -145,13 +150,14 @@ export default class WeekTimeTrackComponent extends Component<WeekTimeTrackSigna
       this.chartData.push(
         dataItem
           ? {
-              x: dataItem.date.weekdayShort.slice(0, 2),
+              x: dataItem.date.reconfigure({ locale }).weekdayShort.slice(0, 2),
               y: dataItem.exercisingTimeSeconds,
               progress: dataItem.progress,
             }
           : {
               x: this.selectedMonth
                 .set({ day: dayNumber })
+                .reconfigure({ locale })
                 .weekdayShort.slice(0, 2),
               y: 0,
               progress: PROGRESS.BAD,

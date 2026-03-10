@@ -1,12 +1,15 @@
 import './index.css';
 import type { TOC } from '@ember/component/template-only';
+import type { DateTime } from 'luxon';
 import { t } from 'ember-intl';
+import localeMonth from 'brn/helpers/locale-month';
 
 interface MonthTimeTrackData {
   progress: string;
   time: string;
   days: number;
   month: string;
+  date: DateTime;
   year: number;
 }
 
@@ -46,7 +49,7 @@ const StatisticsMonthTimeTrackItem: TOC<Signature> = <template>
     </div>
     <div class="date">
       <div class="month">
-        {{@data.month}}
+        {{localeMonth @data.date}}
       </div>
       <div class="year">
         {{@data.year}}
