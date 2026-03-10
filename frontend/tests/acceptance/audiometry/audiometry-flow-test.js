@@ -1,6 +1,6 @@
 import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
-import { visit, click, settled } from '@ember/test-helpers';
+import { visit, click } from '@ember/test-helpers';
 import { setupMSW } from '../../helpers/msw';
 import { authenticateSession } from 'ember-simple-auth/test-support';
 
@@ -93,13 +93,9 @@ module('Acceptance | audiometry | flow', function (hooks) {
     await authenticateSession();
     await visit('/audiometry/1');
 
-    // Setup phase — select headphones
+    // Setup phase — single headphone auto-selected
     assert.dom('[data-test-headphone-select]').exists('headphone selector shown');
-
-    const select = document.querySelector('[data-test-headphone-select]');
-    select.value = '5';
-    select.dispatchEvent(new Event('change', { bubbles: true }));
-    await settled();
+    assert.dom('[data-test-start-audiometry]').isNotDisabled('start button enabled with auto-selected headphone');
 
     // Start test
     await click('[data-test-start-audiometry]');
@@ -156,15 +152,18 @@ module('Acceptance | audiometry | flow', function (hooks) {
         description: 'Speech test',
         audiometryTasks: [
           {
-            id: '201',
+            id: 201,
             level: 1,
+            audiometryGroup: 'A',
             frequencyZone: 'LOW',
+            minFrequency: 150,
+            maxFrequency: 400,
             count: 1,
             showSize: 3,
             answerOptions: [
-              { id: '1', word: 'apple', audioFileUrl: '/audio/en/apple.ogg', wordType: 'OBJECT' },
-              { id: '2', word: 'chair', audioFileUrl: '/audio/en/chair.ogg', wordType: 'OBJECT' },
-              { id: '3', word: 'table', audioFileUrl: '/audio/en/table.ogg', wordType: 'OBJECT' },
+              { id: 1, word: 'apple', wordType: 'AUDIOMETRY_WORD', locale: 'en-us', pictureFileUrl: '', soundsCount: 0, description: '' },
+              { id: 2, word: 'chair', wordType: 'AUDIOMETRY_WORD', locale: 'en-us', pictureFileUrl: '', soundsCount: 0, description: '' },
+              { id: 3, word: 'table', wordType: 'AUDIOMETRY_WORD', locale: 'en-us', pictureFileUrl: '', soundsCount: 0, description: '' },
             ],
           },
         ],
@@ -181,13 +180,7 @@ module('Acceptance | audiometry | flow', function (hooks) {
     await authenticateSession();
     await visit('/audiometry/2');
 
-    // Setup phase — select headphones
-    const select = document.querySelector('[data-test-headphone-select]');
-    select.value = '5';
-    select.dispatchEvent(new Event('change', { bubbles: true }));
-    await settled();
-
-    // Start test
+    // Setup phase — single headphone auto-selected, start directly
     await click('[data-test-start-audiometry]');
 
     // Speech UI — word buttons shown

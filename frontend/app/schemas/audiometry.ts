@@ -29,17 +29,22 @@ export interface SignalsTask {
 }
 
 export interface SpeechAnswerOption {
-  id: string;
+  id: number;
   word: string;
-  audioFileUrl: string;
   wordType?: string;
+  locale?: string;
+  pictureFileUrl?: string;
+  soundsCount?: number;
+  description?: string;
 }
 
 export interface SpeechTask {
-  id: string;
+  id: number;
   level: number;
   audiometryGroup?: string;
   frequencyZone?: string;
+  minFrequency?: number;
+  maxFrequency?: number;
   count: number;
   showSize: number;
   answerOptions: SpeechAnswerOption[];

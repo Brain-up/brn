@@ -55,16 +55,17 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
   @tracked signalTaskIndex = 0;
   @tracked signalFreqIndex = 0;
   @tracked isPlayingTone = false;
-  signalResults: Map<string, { frequency: number; heard: boolean }[]> = new Map();
+  @tracked signalResults: Map<string, { frequency: number; heard: boolean }[]> = new Map();
 
   // SPEECH state
   @tracked speechTaskIndex = 0;
   @tracked speechRoundIndex = 0;
   @tracked isPlayingAudio = false;
   @tracked speechDisplayWords: SpeechAnswerOption[] = [];
-  @tracked speechPlayedWord: SpeechAnswerOption | null = null;
-  speechResults: { taskId: string; correct: number; total: number }[] = [];
+  @tracked speechCorrectWord: SpeechAnswerOption | null = null;
+  @tracked speechResults: { taskId: string; correct: number; total: number }[] = [];
 
+  _isProcessing = false;
   _synth: any = null;
   _audioContext: AudioContext | null = null;
   _audioSource: AudioBufferSourceNode | null = null;
@@ -97,9 +98,20 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
     return this.args.headphones.length > 0;
   }
 
+  get autoSelectedHeadphoneId(): string {
+    if (this.args.headphones.length === 1) {
+      return String(this.args.headphones[0]!.id ?? '');
+    }
+    return '';
+  }
+
+  get effectiveHeadphoneId(): string {
+    return this.selectedHeadphoneId || this.autoSelectedHeadphoneId;
+  }
+
   get canStart(): boolean {
     if (this.isMatrix) return false;
-    if (!this.hasHeadphones || this.selectedHeadphoneId === '') return false;
+    if (!this.hasHeadphones || this.effectiveHeadphoneId === '') return false;
     return this.tasks.length > 0;
   }
 
@@ -110,6 +122,10 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
 
   get currentEar(): string {
     return this.currentSignalTask?.ear ?? '';
+  }
+
+  get currentEarLabel(): string {
+    return this.earLabelFor(this.currentEar);
   }
 
   get currentFrequency(): number {
@@ -146,6 +162,10 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
     return this.speechTasks[this.speechTaskIndex];
   }
 
+  get currentSpeechFrequencyZone(): string | undefined {
+    return this.currentSpeechTask?.frequencyZone;
+  }
+
   get speechProgress(): string {
     const task = this.currentSpeechTask;
     if (!task) return '';
@@ -163,13 +183,19 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
     return Math.round((done / totalRounds) * 100);
   }
 
+  earLabelFor(ear: string): string {
+    if (ear === 'LEFT') return this.intl.t('audiometry.ear_left');
+    if (ear === 'RIGHT') return this.intl.t('audiometry.ear_right');
+    return ear;
+  }
+
   // SIGNALS results for display
-  get signalResultsSummary(): { ear: string; heard: number; total: number }[] {
-    const results: { ear: string; heard: number; total: number }[] = [];
+  get signalResultsSummary(): { ear: string; earLabel: string; heard: number; total: number }[] {
+    const results: { ear: string; earLabel: string; heard: number; total: number }[] = [];
     for (const task of this.signalTasks) {
       const entries = this.signalResults.get(String(task.id)) || [];
       const heard = entries.filter((e) => e.heard).length;
-      results.push({ ear: task.ear, heard, total: task.frequencies.length });
+      results.push({ ear: task.ear, earLabel: this.earLabelFor(task.ear), heard, total: task.frequencies.length });
     }
     return results;
   }
@@ -270,19 +296,22 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
 
   @action
   async answerSignal(heard: boolean) {
-    if (this.isPlayingTone) return;
+    if (this.isPlayingTone || this._isProcessing) return;
+    this._isProcessing = true;
 
     const task = this.currentSignalTask;
-    if (!task) return;
+    if (!task) { this._isProcessing = false; return; }
 
     const taskId = String(task.id);
-    if (!this.signalResults.has(taskId)) {
-      this.signalResults.set(taskId, []);
+    const results = new Map(this.signalResults);
+    if (!results.has(taskId)) {
+      results.set(taskId, []);
     }
-    this.signalResults.get(taskId)!.push({
+    results.get(taskId)!.push({
       frequency: this.currentFrequency,
       heard,
     });
+    this.signalResults = results;
 
     // Advance to next frequency
     if (this.signalFreqIndex + 1 < task.frequencies.length) {
@@ -298,10 +327,11 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
         await this.finishSignalsTest();
       }
     }
+    this._isProcessing = false;
   }
 
   async finishSignalsTest() {
-    this.disposeAudio();
+    this.disposeAllAudio();
     this.phase = 'results';
     const endTime = new Date().toISOString();
     const executionSeconds = Math.round(
@@ -326,7 +356,7 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
           executionSeconds,
           tasksCount: task.frequencies.length,
           rightAnswers: heardCount,
-          headphones: this.selectedHeadphoneId,
+          headphones: this.effectiveHeadphoneId,
           sinAudiometryResults,
         });
       } catch (error: any) {
@@ -338,59 +368,61 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
 
   // ── SPEECH ───────────────────────────────────────────────────────────────────
 
+  audioUrlForWord(word: string, locale: string): string {
+    return (
+      window.location.protocol + '//' + window.location.host +
+      `/api/audio?text=${encodeURIComponent(word)}&locale=${encodeURIComponent(locale)}&exerciseId=0`
+    );
+  }
+
   async startSpeechRound() {
     const task = this.currentSpeechTask;
     if (!task) return;
 
-    // Pick a random word to play
+    // Pick a random correct word for this round
     const options = task.answerOptions;
-    const playIndex = Math.floor(Math.random() * options.length);
-    const playedWord = options[playIndex]!;
-    this.speechPlayedWord = playedWord;
+    const correctIndex = Math.floor(Math.random() * options.length);
+    const correctWord = options[correctIndex]!;
+    this.speechCorrectWord = correctWord;
 
     // Select showSize words to display (including the correct one), shuffled
-    const display = this.pickDisplayWords(options, playedWord, task.showSize);
-    this.speechDisplayWords = display;
+    const others = options.filter((o) => o.word !== correctWord.word);
+    const picked = [correctWord, ...shuffleArray(others).slice(0, task.showSize - 1)];
+    this.speechDisplayWords = shuffleArray(picked);
 
-    // Play the word audio
-    await this.playSpeechAudio(playedWord.audioFileUrl);
+    // Play the word audio via TTS endpoint
+    const locale = correctWord.locale ?? this.intl.primaryLocale;
+    await this.playSpeechAudio(this.audioUrlForWord(correctWord.word, locale));
   }
 
-  pickDisplayWords(
-    options: SpeechAnswerOption[],
-    correct: SpeechAnswerOption,
-    showSize: number,
-  ): SpeechAnswerOption[] {
-    const others = options.filter((o) => o.word !== correct.word);
-    const picked = [correct, ...shuffleArray(others).slice(0, showSize - 1)];
-    return shuffleArray(picked);
-  }
-
-  async playSpeechAudio(audioFileUrl: string) {
+  async playSpeechAudio(url: string) {
     if (isTesting()) {
       return;
     }
 
     this.isPlayingAudio = true;
     try {
-      if (!this._audioContext) {
+      if (!this._audioContext || this._audioContext.state === 'closed') {
         this._audioContext = createAudioContext();
       }
       const context = this._audioContext;
       const getToken = () => this.network.token;
-      const buffers = await loadAudioFiles(context, [audioFileUrl], getToken);
+      const buffers = await loadAudioFiles(context, [url], getToken);
       const buffer = buffers[0];
-      if (!buffer) {
-        console.error('Failed to load audio file:', audioFileUrl);
-        return;
+      if (buffer) {
+        const { source } = createSource(context, buffer);
+        this._audioSource = source;
+        source.start(0);
+        await new Promise<void>((resolve) => {
+          source.onended = () => resolve();
+        });
+      } else {
+        // Fallback to browser speech synthesis (same as AudioService.playTask)
+        const text = new URL(url).searchParams.get('text');
+        if (text) {
+          await this.nativePlayText(text);
+        }
       }
-      const { source } = createSource(context, buffer);
-      this._audioSource = source;
-      source.start(0);
-
-      await new Promise<void>((resolve) => {
-        source.onended = () => resolve();
-      });
     } catch (e) {
       console.error('Failed to play speech audio:', e);
     } finally {
@@ -400,34 +432,55 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
     }
   }
 
+  nativePlayText(text: string): Promise<void> {
+    const lang = this.intl.primaryLocale;
+    const voices = speechSynthesis.getVoices().filter((e) => e.lang.toLowerCase() === lang);
+    const voicesToPlay: SpeechSynthesisVoice[] = ([
+      voices.find((el) => el.default === true),
+      voices.find((el) => el.localService === false),
+      ...voices,
+    ]).filter((el) => el !== undefined) as SpeechSynthesisVoice[];
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.voice = voicesToPlay[0] ?? null;
+    return new Promise((resolve) => {
+      utterance.onend = () => resolve();
+      speechSynthesis.speak(utterance);
+    });
+  }
+
   @action
   async replaySpeechWord() {
     if (this.isPlayingAudio) return;
-    const word = this.speechPlayedWord;
+    const word = this.speechCorrectWord;
     if (!word) return;
-    await this.playSpeechAudio(word.audioFileUrl);
+    const locale = word.locale ?? this.intl.primaryLocale;
+    await this.playSpeechAudio(this.audioUrlForWord(word.word, locale));
   }
 
   @action
   async answerSpeech(option: SpeechAnswerOption) {
-    if (this.isPlayingAudio) return;
+    if (this.isPlayingAudio || this._isProcessing) return;
+    this._isProcessing = true;
 
     const task = this.currentSpeechTask;
-    if (!task || !this.speechPlayedWord) return;
+    if (!task || !this.speechCorrectWord) { this._isProcessing = false; return; }
 
-    const correct = option.word === this.speechPlayedWord.word;
+    const correct = option.word === this.speechCorrectWord.word;
     const taskId = String(task.id);
 
     // Find or create result entry for this task
-    let resultEntry = this.speechResults.find((r) => r.taskId === taskId);
+    const updatedResults = [...this.speechResults];
+    let resultEntry = updatedResults.find((r) => r.taskId === taskId);
     if (!resultEntry) {
       resultEntry = { taskId, correct: 0, total: 0 };
-      this.speechResults.push(resultEntry);
+      updatedResults.push(resultEntry);
     }
     resultEntry.total++;
     if (correct) {
       resultEntry.correct++;
     }
+    this.speechResults = updatedResults;
 
     // Advance round
     if (this.speechRoundIndex + 1 < task.count) {
@@ -443,9 +496,11 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
         await this.finishSpeechTest();
       }
     }
+    this._isProcessing = false;
   }
 
   async finishSpeechTest() {
+    this.disposeAllAudio();
     this.phase = 'results';
     const endTime = new Date().toISOString();
     const executionSeconds = Math.round(
@@ -461,7 +516,7 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
           executionSeconds,
           tasksCount: result.total,
           rightAnswers: result.correct,
-          headphones: this.selectedHeadphoneId,
+          headphones: this.effectiveHeadphoneId,
         });
       } catch (error: any) {
         this.error = error.message || this.intl.t('audiometry.save_failed');
@@ -483,7 +538,7 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
 
   @action
   confirmAbandon() {
-    this.disposeAudio();
+    this.disposeAllAudio();
     this.showAbandonConfirm = false;
     this.router.transitionTo('audiometry');
   }
@@ -493,7 +548,7 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
     this.showAbandonConfirm = false;
   }
 
-  disposeAudio() {
+  disposeAllAudio() {
     this.disposeSynth();
     if (this._audioSource) {
       try { this._audioSource.stop(); } catch (_e) { /* already stopped */ }
@@ -507,7 +562,7 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
 
   willDestroy() {
     super.willDestroy();
-    this.disposeAudio();
+    this.disposeAllAudio();
   }
 
   <template>
@@ -534,9 +589,11 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
                 class="focus:ring-indigo-500 focus:border-indigo-500 block w-full px-3 py-2 text-sm border border-gray-300 rounded-md"
                 {{on "change" this.onHeadphoneSelect}}
               >
-                <option value="">--</option>
+                {{#if (isMultipleHeadphones @headphones)}}
+                  <option value="">--</option>
+                {{/if}}
                 {{#each @headphones as |hp|}}
-                  <option value={{hp.id}}>{{hp.name}}</option>
+                  <option value={{hp.id}} selected={{isSelected hp.id this.effectiveHeadphoneId}}>{{hp.name}}</option>
                 {{/each}}
               </select>
             </div>
@@ -601,7 +658,7 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
             {{! ── SIGNALS testing UI ── }}
             <div class="text-center p-8 bg-gray-50 rounded-lg">
               <p class="text-sm font-medium text-indigo-600 mb-2" data-test-ear-label>
-                {{t "audiometry.ear_testing" ear=(earLabel this.currentEar)}}
+                {{t "audiometry.ear_testing" ear=this.currentEarLabel}}
               </p>
               <p class="text-xs text-gray-400 mb-2" data-test-frequency-info>
                 {{t "audiometry.frequency" freq=this.currentFrequency}}
@@ -647,9 +704,9 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
           {{else if this.isSpeech}}
             {{! ── SPEECH testing UI ── }}
             <div class="text-center p-8 bg-gray-50 rounded-lg">
-              {{#if this.currentSpeechTask.frequencyZone}}
+              {{#if this.currentSpeechFrequencyZone}}
                 <p class="text-xs text-gray-400 mb-2">
-                  {{t "audiometry.speech_zone" zone=this.currentSpeechTask.frequencyZone}}
+                  {{t "audiometry.speech_zone" zone=this.currentSpeechFrequencyZone}}
                 </p>
               {{/if}}
 
@@ -697,7 +754,7 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
             <div class="space-y-2 mb-6">
               {{#each this.signalResultsSummary as |r|}}
                 <p class="text-sm text-gray-500" data-test-signal-ear-result>
-                  {{earLabel r.ear}}: {{t "audiometry.heard_count" heard=r.heard total=r.total}}
+                  {{r.earLabel}}: {{t "audiometry.heard_count" heard=r.heard total=r.total}}
                 </p>
               {{/each}}
             </div>
@@ -754,8 +811,12 @@ function taskCount(tasks: AudiometryTask[]): number {
   return tasks.length;
 }
 
-function earLabel(ear: string): string {
-  return ear;
+function isMultipleHeadphones(headphones: Headphone[]): boolean {
+  return headphones.length > 1;
+}
+
+function isSelected(id: string | null, selectedId: string): boolean {
+  return String(id ?? '') === selectedId;
 }
 
 function shuffleArray<T>(array: T[]): T[] {
