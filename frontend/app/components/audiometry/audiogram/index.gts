@@ -62,9 +62,15 @@ export default class AudiogramComponent extends Component<AudiogramSignature> {
     // Guard against component being destroyed during async import
     if (this.isDestroyed || this.isDestroying) return;
 
-    const columns = this.buildColumns();
+    // Eagerly capture all i18n strings before passing to billboard.js
+    // to avoid accessing this.intl in callbacks after component destruction
     const leftLabel = this.leftLabel;
     const rightLabel = this.rightLabel;
+    const freqAxisLabel = this.intl.t('audiometry.audiogram_freq_axis');
+    const dbAxisLabel = this.intl.t('audiometry.audiogram_db_axis');
+    const normalLabel = this.intl.t('audiometry.hearing_normal');
+
+    const columns = this.buildColumns();
 
     const options: ChartOptions = {
       bindto: el,
@@ -82,7 +88,7 @@ export default class AudiogramComponent extends Component<AudiogramSignature> {
           type: 'category' as const,
           categories: FREQ_LABELS,
           label: {
-            text: this.intl.t('audiometry.audiogram_freq_axis'),
+            text: freqAxisLabel,
             position: 'outer-center',
           },
         },
@@ -91,7 +97,7 @@ export default class AudiogramComponent extends Component<AudiogramSignature> {
           min: -10,
           max: 100,
           label: {
-            text: this.intl.t('audiometry.audiogram_db_axis'),
+            text: dbAxisLabel,
             position: 'outer-middle',
           },
           tick: { values: [-10, 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100] },
@@ -103,7 +109,7 @@ export default class AudiogramComponent extends Component<AudiogramSignature> {
           lines: [
             {
               value: 20,
-              text: this.intl.t('audiometry.hearing_normal'),
+              text: normalLabel,
               class: 'audiogram-threshold-line',
             },
           ],
@@ -114,7 +120,7 @@ export default class AudiogramComponent extends Component<AudiogramSignature> {
       legend: { show: true },
       tooltip: {
         format: {
-          value: (value: number) => `${value} ${this.intl.t('audiometry.audiogram_db_axis')}`,
+          value: (value: number) => `${value} ${dbAxisLabel}`,
         },
       },
       regions: [
