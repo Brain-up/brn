@@ -12,49 +12,22 @@ import NetworkService, { UserDTO } from 'brn/services/network';
 import { isBornYearValid, isNotEmptyString } from 'brn/utils/validators';
 import { LinkTo } from '@ember/routing';
 import { on } from '@ember/modifier';
-import { fn } from '@ember/helper';
-import { concat } from '@ember/helper';
+import { fn, concat } from '@ember/helper';
 import { t } from 'ember-intl';
 import { eq } from 'ember-truth-helpers';
 import htmlSafe from 'brn/helpers/html-safe';
 import ModalDialog from 'ember-modal-dialog/components/modal-dialog';
 import UiAvatars from 'brn/components/ui/avatars';
 import LoginFormInput from 'brn/components/login-form/input';
-import UiConfirmDialog from 'brn/components/ui/confirm-dialog';
-import type Store from 'brn/services/store';
-import type { Headphone } from 'brn/schemas/headphone';
-import didInsert from '@ember/render-modifiers/modifiers/did-insert';
-
-const HEADPHONE_TYPES = [
-  { value: 'NOT_DEFINED', label: 'Not defined' },
-  { value: 'ON_EAR_BLUETOOTH', label: 'On-ear Bluetooth' },
-  { value: 'OVER_EAR_BLUETOOTH', label: 'Over-ear Bluetooth' },
-  { value: 'IN_EAR_BLUETOOTH', label: 'In-ear Bluetooth' },
-  { value: 'ON_EAR_NO_BLUETOOTH', label: 'On-ear Wired' },
-  { value: 'OVER_EAR_NO_BLUETOOTH', label: 'Over-ear Wired' },
-  { value: 'IN_EAR_NO_BLUETOOTH', label: 'In-ear Wired' },
-] as const;
-
-function headphoneTypeLabel(type: string): string {
-  const found = HEADPHONE_TYPES.find((t) => t.value === type);
-  return found ? found.label : type;
-}
+import UiHeadphones from 'brn/components/ui/headphones';
 
 export default class ProfileComponent extends Component {
   @service('intl') intl!: IntlService;
   @service('session') session!: Session;
   @service('user-data') userData!: UserDataService;
   @service('network') network!: NetworkService;
-  @service('store') store!: Store;
 
   @tracked showAvatarsModal = false;
-  @tracked showAddHeadphonesForm = false;
-  @tracked headphones: Headphone[] = [];
-  @tracked headphoneName = '';
-  @tracked headphoneType = 'NOT_DEFINED';
-  @tracked headphoneError = '';
-  @tracked isLoadingHeadphones = false;
-  @tracked headphonePendingDelete: Headphone | null = null;
 
   get avatarUrl() {
     return this.userData.avatarUrl;
@@ -178,83 +151,6 @@ export default class ProfileComponent extends Component {
       }
   }
 
-  @action
-  async loadHeadphones() {
-    this.isLoadingHeadphones = true;
-    try {
-      this.headphones = await this.store.findAll<Headphone>('headphone');
-    } catch (error) {
-      console.error('Failed to load headphones:', error);
-    }
-    this.isLoadingHeadphones = false;
-  }
-
-  @action
-  toggleAddHeadphonesForm() {
-    this.showAddHeadphonesForm = !this.showAddHeadphonesForm;
-    this.headphoneName = '';
-    this.headphoneType = 'NOT_DEFINED';
-    this.headphoneError = '';
-  }
-
-  @action
-  onHeadphoneNameInput(e: Event & { target: HTMLInputElement }) {
-    this.headphoneName = e.target.value;
-    this.headphoneError = '';
-  }
-
-  @action
-  onHeadphoneTypeChange(e: Event & { target: HTMLSelectElement }) {
-    this.headphoneType = e.target.value;
-  }
-
-  @action
-  async addHeadphones(e: Event) {
-    e.preventDefault();
-    const name = this.headphoneName.trim();
-    if (!name) {
-      this.headphoneError = this.intl.t('profile.headphones.name_required');
-      return;
-    }
-    try {
-      await this.network.addHeadphones({
-        name,
-        type: this.headphoneType,
-        active: true,
-      });
-      this.showAddHeadphonesForm = false;
-      this.headphoneName = '';
-      this.headphoneType = 'NOT_DEFINED';
-      this.headphoneError = '';
-      await this.loadHeadphones();
-    } catch (error: any) {
-      this.headphoneError = error.message || 'Failed to add headphones';
-    }
-  }
-
-  @action
-  requestDeleteHeadphones(headphone: Headphone) {
-    this.headphonePendingDelete = headphone;
-  }
-
-  @action
-  cancelDeleteHeadphones() {
-    this.headphonePendingDelete = null;
-  }
-
-  @action
-  async confirmDeleteHeadphones() {
-    const headphone = this.headphonePendingDelete;
-    if (!headphone) return;
-    this.headphonePendingDelete = null;
-    try {
-      await this.network.deleteHeadphones(String(headphone.id));
-      await this.loadHeadphones();
-    } catch (error) {
-      console.error('Failed to delete headphones:', error);
-    }
-  }
-
   <template>
     {{#if this.showAvatarsModal}}
       <ModalDialog
@@ -281,7 +177,7 @@ export default class ProfileComponent extends Component {
         >
         </button>
       </div>
-      <div class="sm:p-8 lg:p-12 p-4" {{didInsert this.loadHeadphones}}>
+      <div class="sm:p-8 lg:p-12 p-4">
         <div class="mb-4">
           <LoginFormInput
             @model={{this.user}}
@@ -345,104 +241,8 @@ export default class ProfileComponent extends Component {
           </label>
         </div>
 
-        <div class="mb-4" role="region" aria-label={{t "profile.headphones.title"}}>
-          <p class="mb-2 text-sm font-bold text-gray-700">
-            {{t "profile.headphones.title"}}
-          </p>
-
-          {{#if this.isLoadingHeadphones}}
-            <div class="animate-pulse space-y-2">
-              <div class="h-16 bg-gray-200 rounded"></div>
-            </div>
-          {{else}}
-            {{#each this.headphones as |headphone|}}
-              <div data-test-headphone-item class="flex items-center justify-between p-3 mb-2 bg-gray-50 border border-gray-200 rounded-lg">
-                <div>
-                  <p class="text-sm font-medium text-gray-800" data-test-headphone-name>{{headphone.name}}</p>
-                  <p class="text-xs text-gray-500" data-test-headphone-type>{{headphoneTypeLabel headphone.type}}</p>
-                </div>
-                <button
-                  data-test-delete-headphone
-                  type="button"
-                  aria-label={{t "profile.headphones.delete"}}
-                  class="btn-press hover:text-red-700 hover:bg-red-100 min-w-[44px] min-h-[44px] p-2 text-red-500 rounded-full flex items-center justify-center"
-                  title={{t "profile.headphones.delete"}}
-                  {{on "click" (fn this.requestDeleteHeadphones headphone)}}
-                >
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-            {{/each}}
-
-            {{#if (eq this.headphones.length 0)}}
-              <p class="text-sm text-gray-400 mb-2">{{t "profile.headphones.empty"}}</p>
-            {{/if}}
-
-            {{#if this.showAddHeadphonesForm}}
-              <form data-test-add-headphones-form class="p-3 mt-2 bg-gray-50 border border-gray-200 rounded-lg" {{on "submit" this.addHeadphones}}>
-                <div class="mb-2">
-                  <label class="block mb-1 text-xs font-medium text-gray-600" for="headphone-name">
-                    {{t "profile.headphones.name_label"}}
-                  </label>
-                  <input
-                    data-test-headphone-name-input
-                    id="headphone-name"
-                    type="text"
-                    value={{this.headphoneName}}
-                    class="focus:ring-indigo-500 focus:border-indigo-500 block w-full px-3 py-2 text-sm border border-gray-300 rounded-md"
-                    placeholder={{t "profile.headphones.name_placeholder"}}
-                    {{on "input" this.onHeadphoneNameInput}}
-                  />
-                </div>
-                <div class="mb-2">
-                  <label class="block mb-1 text-xs font-medium text-gray-600" for="headphone-type">
-                    {{t "profile.headphones.type_label"}}
-                  </label>
-                  <select
-                    data-test-headphone-type-select
-                    id="headphone-type"
-                    class="focus:ring-indigo-500 focus:border-indigo-500 block w-full px-3 py-2 text-sm border border-gray-300 rounded-md"
-                    {{on "change" this.onHeadphoneTypeChange}}
-                  >
-                    {{#each HEADPHONE_TYPES as |hType|}}
-                      <option value={{hType.value}} selected={{eq this.headphoneType hType.value}}>{{hType.label}}</option>
-                    {{/each}}
-                  </select>
-                </div>
-                {{#if this.headphoneError}}
-                  <p data-test-headphone-error class="mb-2 text-xs text-red-500">{{this.headphoneError}}</p>
-                {{/if}}
-                <div class="flex gap-2">
-                  <button
-                    data-test-submit-headphone
-                    type="submit"
-                    class="btn-press hover:bg-indigo-700 px-4 py-2 text-xs font-medium text-white bg-indigo-600 rounded-md"
-                  >
-                    {{t "profile.headphones.add_button"}}
-                  </button>
-                  <button
-                    data-test-cancel-headphone
-                    type="button"
-                    class="btn-press hover:bg-gray-200 px-4 py-2 text-xs font-medium text-gray-700 bg-gray-100 rounded-md"
-                    {{on "click" this.toggleAddHeadphonesForm}}
-                  >
-                    {{t "profile.headphones.cancel"}}
-                  </button>
-                </div>
-              </form>
-            {{else}}
-              <button
-                data-test-show-add-headphones
-                type="button"
-                class="btn-press hover:text-indigo-700 mt-1 text-sm font-medium text-indigo-500"
-                {{on "click" this.toggleAddHeadphonesForm}}
-              >
-                + {{t "profile.headphones.add"}}
-              </button>
-            {{/if}}
-          {{/if}}
+        <div class="mb-4">
+          <UiHeadphones />
         </div>
 
         <div class="mb-4">
@@ -462,13 +262,5 @@ export default class ProfileComponent extends Component {
         </div>
       </div>
     </section>
-    {{#if this.headphonePendingDelete}}
-      <UiConfirmDialog
-        @message={{t "profile.headphones.confirm_delete"}}
-        @onConfirm={{this.confirmDeleteHeadphones}}
-        @onCancel={{this.cancelDeleteHeadphones}}
-        @destructive={{true}}
-      />
-    {{/if}}
   </template>
 }

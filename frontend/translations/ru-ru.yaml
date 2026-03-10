@@ -361,6 +361,14 @@ profile:
     name_placeholder: "например Sony WH-1000XM5"
     type_label: Тип
     name_required: Название наушников обязательно
+    types:
+      NOT_DEFINED: Не указан
+      ON_EAR_BLUETOOTH: Накладные Bluetooth
+      OVER_EAR_BLUETOOTH: Полноразмерные Bluetooth
+      IN_EAR_BLUETOOTH: Внутриканальные Bluetooth
+      ON_EAR_NO_BLUETOOTH: Накладные проводные
+      OVER_EAR_NO_BLUETOOTH: Полноразмерные проводные
+      IN_EAR_NO_BLUETOOTH: Внутриканальные проводные
   monthly_detail:
     title: "Детализация по дням — {month}"
     date: Дата
