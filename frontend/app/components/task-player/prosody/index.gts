@@ -20,10 +20,11 @@ import { fn } from '@ember/helper';
 import { eq, and } from 'ember-truth-helpers';
 import UiTaskContent from 'brn/components/ui/task-content';
 import { setHas } from 'brn/utils/set-has';
+import type { TaskProsody } from 'brn/schemas/task/prosody';
 
 export interface ProsodySignature {
   Args: {
-    task: any;
+    task: TaskProsody;
     mode: Mode;
     disableAnswers: boolean;
     activeWord: string;

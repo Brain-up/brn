@@ -82,8 +82,8 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
   @tracked speechResults: { taskId: string; correct: number; total: number }[] = [];
 
   _isProcessing = false;
-  _synth: any = null;
-  _panner: any = null;
+  _synth: import('tone').Synth | null = null;
+  _panner: import('tone').Panner | null = null;
   _audioContext: AudioContext | null = null;
   _audioSource: AudioBufferSourceNode | null = null;
   _maskingSource: AudioBufferSourceNode | null = null;
@@ -333,9 +333,10 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
       synth.connect(panner);
       this._panner = panner;
 
-      // Start contralateral masking noise
-      if (this.currentEar !== 'BOTH' && this.currentEar !== '') {
-        await this.startMaskingNoise(panValue * -1, getMaskingLevel(dBLevel));
+      // Start contralateral masking noise only when the signal is loud enough
+      const maskingLevel = getMaskingLevel(dBLevel);
+      if (this.currentEar !== 'BOTH' && this.currentEar !== '' && maskingLevel > 0) {
+        await this.startMaskingNoise(panValue * -1, maskingLevel);
       }
 
       const freq = this.currentFrequency;
@@ -360,14 +361,16 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
         this._audioContext = createAudioContext();
       }
       const ctx = this._audioContext;
-      // createNoizeBuffer already applies `level * 0.01` internally,
-      // so pass the 0-100 scale level and set gainNode to 1.0 (no double-scaling).
-      const noiseLevel = Math.round((levelDB / MAX_DB) * 100);
-      const noiseBuffer = createNoizeBuffer(ctx, TONE_DURATION_SEC + 0.5, noiseLevel);
+      // Generate white noise at unit amplitude, then control volume via gainNode
+      // using proper dB-to-linear conversion matching the Tone.js scale.
+      const noiseBuffer = createNoizeBuffer(ctx, TONE_DURATION_SEC + 0.5, 100);
       const source = ctx.createBufferSource();
       source.buffer = noiseBuffer;
       const gainNode = ctx.createGain();
-      gainNode.gain.value = 1.0;
+      // Convert dB HL to linear gain using the same reference as the tone:
+      // dBHLtoToneDB maps dB HL to Tone.js dB (0 = max digital), then convert to linear.
+      const toneDB = dBHLtoToneDB(levelDB);
+      gainNode.gain.value = Math.pow(10, toneDB / 20);
       const panner = ctx.createStereoPanner();
       panner.pan.value = panValue;
       source.connect(gainNode).connect(panner).connect(ctx.destination);

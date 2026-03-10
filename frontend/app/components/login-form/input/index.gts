@@ -7,7 +7,7 @@ import { Input } from '@ember/component';
 interface LoginFormInputSignature {
   Args: {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  model: any;
+  model?: Record<string, any>;
   name: string;
   warning?: string | boolean;
   type?: string;
@@ -50,7 +50,7 @@ export default class LoginFormInputComponent extends Component<LoginFormInputSig
     if (!model) {
       return undefined;
     }
-    return model[name] as string | undefined;
+    return model[name];
   }
 
   set value(value: string | undefined) {
@@ -62,7 +62,9 @@ export default class LoginFormInputComponent extends Component<LoginFormInputSig
     } else {
       normalizedValue = safeValue.trim();
     }
-    model[name] = normalizedValue.slice(0, this.maxlength - 1);
+    if (model) {
+      model[name] = normalizedValue.slice(0, this.maxlength - 1);
+    }
   }
 
   <template>

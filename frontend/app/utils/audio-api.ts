@@ -103,7 +103,7 @@ export function toMilliseconds(value: number) {
 
 export function createAudioContext() {
   const AudioContext =
-    window.AudioContext || (window as any).webkitAudioContext;
+    window.AudioContext || (window as unknown as { webkitAudioContext: typeof window.AudioContext }).webkitAudioContext;
   return new AudioContext();
 }
 
@@ -119,7 +119,7 @@ export function createSource(
   const source = context.createBufferSource();
   const gainNode: GainNode = context.createGain
     ? context.createGain()
-    : (context as any).createGainNode();
+    : (context as unknown as { createGainNode(): GainNode }).createGainNode();
   source.buffer = buffer;
   source.loop = false;
   source.connect(gainNode);
@@ -190,7 +190,7 @@ export class BufferLoader {
   }
 }
 
-const AudioCache = new Map();
+const AudioCache = new Map<string, ArrayBuffer>();
 
 export function preloadAudioFile(url: string, token: string) {
   return arrayBufferRequest(url, token);
@@ -204,7 +204,7 @@ function arrayBufferRequest(
     const urlObj = new URL(url);
     return new Promise((resolve) => {
       if (AudioCache.has(url)) {
-        return resolve(AudioCache.get(url).slice());
+        return resolve(AudioCache.get(url)!.slice());
       }
       const request = new XMLHttpRequest();
       request.open('GET', url, true);

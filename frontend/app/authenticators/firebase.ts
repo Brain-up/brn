@@ -5,6 +5,12 @@ import BaseAuthenticator from 'ember-simple-auth/authenticators/base';
 import type FirebaseService from 'brn/services/firebase';
 import { getOwner } from '@ember/application';
 
+interface FirebaseAuthError extends Error {
+  errors?: unknown[];
+  code?: string;
+  status?: string;
+}
+
 export interface SerializedUser {
   uid: string;
   displayName: null | string;
@@ -55,44 +61,22 @@ export default class FirebaseAuthenticator extends BaseAuthenticator {
       const firebaseError = e as { code?: string; message: string; errors?: unknown[]; status?: string };
       // https://firebase.google.com/docs/reference/js/v8/firebase.auth.Auth#signinandretrievedatawithcredential
       if (firebaseError.code === 'auth/internal-error') {
-        const { error }: any = JSON.parse(firebaseError.message);
-        const errorObj: any = new Error(error.message);
+        const { error } = JSON.parse(firebaseError.message) as { error: { message: string; errors?: unknown[]; code?: string; status?: string } };
+        const errorObj: FirebaseAuthError = new Error(error.message);
         errorObj.errors = error.errors;
         errorObj.code = error.code;
         errorObj.status = error.status;
-        errorObj.message = error.message;
         throw errorObj;
-      } else if (firebaseError.code === 'auth/user-not-found') {
-        const { error }: any = firebaseError.message;
-        const errorObj: any = new Error(error);
+      } else if (
+        firebaseError.code === 'auth/user-not-found' ||
+        firebaseError.code === 'auth/wrong-password' ||
+        firebaseError.code === 'auth/invalid-credential' ||
+        firebaseError.code === 'auth/user-disabled'
+      ) {
+        const errorObj: FirebaseAuthError = new Error(firebaseError.message);
         errorObj.errors = firebaseError.errors;
         errorObj.code = firebaseError.code;
         errorObj.status = firebaseError.status;
-        errorObj.message = firebaseError.message;
-        throw errorObj;
-      } else if (firebaseError.code === 'auth/wrong-password') {
-        const { error }: any = firebaseError.message;
-        const errorObj: any = new Error(error);
-        errorObj.errors = firebaseError.errors;
-        errorObj.code = firebaseError.code;
-        errorObj.status = firebaseError.status;
-        errorObj.message = firebaseError.message;
-        throw errorObj;
-      } else if (firebaseError.code === 'auth/invalid-credential') {
-        const { error }: any = firebaseError.message;
-        const errorObj: any = new Error(error);
-        errorObj.errors = firebaseError.errors;
-        errorObj.code = firebaseError.code;
-        errorObj.status = firebaseError.status;
-        errorObj.message = firebaseError.message;
-        throw errorObj;
-      } else if (firebaseError.code === 'auth/user-disabled') {
-        const { error }: any = firebaseError.message;
-        const errorObj: any = new Error(error);
-        errorObj.errors = firebaseError.errors;
-        errorObj.code = firebaseError.code;
-        errorObj.status = firebaseError.status;
-        errorObj.message = firebaseError.message;
         throw errorObj;
       }
       throw e;
@@ -103,7 +87,7 @@ export default class FirebaseAuthenticator extends BaseAuthenticator {
     return this.firebase.auth().signOut();
   }
 
-  tokenRefreshTimeout: any = null;
+  tokenRefreshTimeout: ReturnType<typeof setTimeout> | undefined = undefined;
 
   private async refreshToken() {
     const auth = await this.firebase.auth();

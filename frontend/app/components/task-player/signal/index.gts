@@ -28,8 +28,8 @@ interface TaskPlayerSignalSignature {
   disableAudioPlayer: boolean;
   heardWords?: Set<string>;
   onPlayText(): void;
-  onRightAnswer(config?: any): void;
-  onWrongAnswer(config?: any): void;
+  onRightAnswer(config?: { skipRetry?: boolean }): void;
+  onWrongAnswer(config?: { skipRetry?: boolean }): void;
   };
   Blocks: {
     header: [{ tasks: unknown[] }];

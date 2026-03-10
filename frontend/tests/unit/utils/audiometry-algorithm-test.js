@@ -192,9 +192,17 @@ module('Unit | Utils | audiometry-algorithm', function () {
       assert.strictEqual(getMaskingLevel(60), 30, '60 - 30 = 30');
     });
 
-    test('has minimum of 10 dB', function (assert) {
-      assert.strictEqual(getMaskingLevel(20), 10, 'min 10 when signal is 20');
-      assert.strictEqual(getMaskingLevel(10), 10, 'min 10 when signal is 10');
+    test('returns 0 when signal is 30 dB or below (no masking needed)', function (assert) {
+      assert.strictEqual(getMaskingLevel(30), 0, '30 dB → 0 (no masking)');
+      assert.strictEqual(getMaskingLevel(20), 0, '20 dB → 0 (no masking)');
+      assert.strictEqual(getMaskingLevel(10), 0, '10 dB → 0 (no masking)');
+      assert.strictEqual(getMaskingLevel(0), 0, '0 dB → 0 (no masking)');
+    });
+
+    test('returns positive values above 30 dB', function (assert) {
+      assert.strictEqual(getMaskingLevel(40), 10, '40 - 30 = 10');
+      assert.strictEqual(getMaskingLevel(50), 20, '50 - 30 = 20');
+      assert.strictEqual(getMaskingLevel(90), 60, '90 - 30 = 60');
     });
   });
 

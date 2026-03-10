@@ -68,9 +68,9 @@ export default class AudioService extends Service {
   buffers: (AudioBuffer | null | ToneObject)[] = [];
   startTime: null | number = 0;
   totalDuration = 0;
-  noiseNode!: any;
+  noiseNode!: ISource | null;
   sources!: ISourceCollection;
-  noiseTaskInstance!: TaskInstance<any>;
+  noiseTaskInstance!: TaskInstance<void>;
   @tracked isPlaying = false;
   @tracked isProcessing = false;
 
@@ -149,8 +149,8 @@ export default class AudioService extends Service {
       return null;
     }
     const owner = getOwner(this)!;
-    const model = (owner.lookup('route:application') as any)
-      .modelFor('group.series.subgroup.exercise');
+    const route = owner.lookup('route:application') as { modelFor(name: string): unknown } | undefined;
+    const model = route?.modelFor('group.series.subgroup.exercise');
     if (!model) {
       return null;
     }
@@ -409,7 +409,7 @@ export default class AudioService extends Service {
       this.isPlaying = true;
       this.trackProgress.perform();
       if (hasNoize) {
-        const noize: any = await this.getNoise(
+        const noize = await this.getNoise(
           noizeSeconds ? toSeconds(this.totalDuration) : 0,
           this.currentExerciseNoiseLevel,
         );

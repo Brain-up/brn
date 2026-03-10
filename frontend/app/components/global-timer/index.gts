@@ -1,6 +1,7 @@
 import Component from '@glimmer/component';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { service } from '@ember/service';
+import type Owner from '@ember/owner';
 import NetworkService from '../../services/network';
 import { keepLatestTask, timeout } from 'ember-concurrency';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -19,7 +20,7 @@ interface GlobalTimerSignature {
 }
 
 export default class GlobalTimerComponent extends Component<GlobalTimerSignature> {
-  constructor(owner: any, args: GlobalTimerSignature['Args']) {
+  constructor(owner: Owner, args: GlobalTimerSignature['Args']) {
     super(owner, args);
     this.syncTask.perform();
     window.addEventListener('blur', this.disableTimer);

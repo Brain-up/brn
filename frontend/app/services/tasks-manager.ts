@@ -7,19 +7,19 @@ export default class TasksManagerService extends Service {
   @service('network') network!: NetworkService;
 
   @tracked
-  completedTasks = A();
+  completedTasks = A<unknown>();
   @tracked
-  completedCycleTasks = A();
+  completedCycleTasks = A<unknown>();
   @tracked
   completedExerciseIds: Set<string> = new Set();
-  saveAsCompleted(task: any) {
+  saveAsCompleted(task: unknown) {
     this.completedTasks = A([...this.completedTasks, task]);
     this.completedCycleTasks = A([...this.completedCycleTasks, task]);
   }
-  isCompleted(task: any) {
+  isCompleted(task: unknown) {
     return this.completedTasks.includes(task);
   }
-  isCompletedInCurrentCycle(task: any) {
+  isCompletedInCurrentCycle(task: unknown) {
     return this.completedCycleTasks.includes(task);
   }
   async loadTodayCompletedExercises() {

@@ -47,7 +47,7 @@ export default class TimerComponent extends Component<TimerSignature> {
   @tracked
   timer = null;
 
-  timerId: any = null;
+  timerId: ReturnType<typeof later> | undefined = undefined;
 
   get displayValue() {
     const mins = Math.floor(this.countedSeconds / 60);
