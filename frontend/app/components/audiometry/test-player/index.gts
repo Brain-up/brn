@@ -10,6 +10,7 @@ import { on } from '@ember/modifier';
 import { fn } from '@ember/helper';
 import { t } from 'ember-intl';
 import { LinkTo } from '@ember/routing';
+import didInsert from '@ember/render-modifiers/modifiers/did-insert';
 import UiConfirmDialog from 'brn/components/ui/confirm-dialog';
 import Audiogram from 'brn/components/audiometry/audiogram';
 import { createAudioContext, createSource, createNoizeBuffer, loadAudioFiles } from 'brn/utils/audio-api';
@@ -279,6 +280,29 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
   get speechAccuracy(): number {
     if (this.speechTotalRounds === 0) return 0;
     return Math.round((this.speechTotalCorrect / this.speechTotalRounds) * 100);
+  }
+
+  @action
+  focusContainer(element: HTMLElement) {
+    element.focus();
+  }
+
+  @action
+  handleKeyboard(e: KeyboardEvent) {
+    if (this.phase !== 'testing') return;
+
+    if (this.isSignals) {
+      if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        this.replayCurrentTone();
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        this.answerSignal(true);
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        this.answerSignal(false);
+      }
+    }
   }
 
   @action
@@ -743,7 +767,13 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
   }
 
   <template>
-    <div class="max-w-2xl mx-auto p-4 sm:p-6" ...attributes>
+    <div
+      class="max-w-2xl mx-auto p-4 sm:p-6 outline-none"
+      tabindex="0"
+      {{on "keydown" this.handleKeyboard}}
+      {{didInsert this.focusContainer}}
+      ...attributes
+    >
       {{#if (isPhase this.phase "setup")}}
         <div class="text-center">
           <h1 class="text-2xl font-bold text-gray-800 mb-4">{{@test.name}}</h1>
@@ -905,6 +935,9 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
                   {{t "audiometry.no"}}
                 </button>
               </div>
+              <p class="mt-3 text-xs text-gray-400" data-test-keyboard-hint>
+                {{t "audiometry.keyboard_hint"}}
+              </p>
             </div>
 
           {{else if this.isSpeech}}

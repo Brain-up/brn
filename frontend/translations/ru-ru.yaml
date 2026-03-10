@@ -465,6 +465,7 @@ audiometry:
   history_clear: "Очистить историю"
   history_duration: "Длительность: {seconds}с"
   history_pta_trend: "Динамика PTA"
+  keyboard_hint: "Горячие клавиши: ← Да · → Нет · ↑ Повторить"
 
 doctor:
   patients:
