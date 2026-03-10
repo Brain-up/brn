@@ -59,8 +59,9 @@ export default class UiConfirmDialogComponent extends Component<UiConfirmDialogS
 
   @action
   cancel() {
+    // close('cancel') triggers the native 'close' event, which calls
+    // onDialogClose → onCancel. No need to call onCancel again here.
     this.dialogElement?.close('cancel');
-    this.args.onCancel();
   }
 
   willDestroy(): void {

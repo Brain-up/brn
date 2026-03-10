@@ -129,7 +129,7 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
       await Tone.start();
 
       this.disposeSynth();
-      const synth = new Tone.PolySynth(Tone.Synth).toDestination();
+      const synth = new Tone.Synth().toDestination();
       this._synth = synth;
 
       const freq = this.currentFrequency;
@@ -165,7 +165,7 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
       this.rightAnswers++;
     }
     if (this.currentTaskIndex + 1 >= this.totalTasks) {
-      this.finishTest();
+      await this.finishTest();
     } else {
       this.currentTaskIndex++;
       await this.playCurrentTone();
