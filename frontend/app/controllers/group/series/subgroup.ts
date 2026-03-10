@@ -26,8 +26,8 @@ export default class GroupSeriesSubgroupController extends Controller {
       return;
     }
     // @todo - fix;
-    const exercises = Array.from(this.model);
-    const targets = exercises.map((e: { id: string }) => e.id);
+    const exercises: Array<{ id: string; isManuallyCompleted?: boolean }> = Array.from(this.model);
+    const targets = exercises.map((e) => e.id);
     const results = await this.network.availableExercises(targets);
     this.availableExercises = results as string[];
 
