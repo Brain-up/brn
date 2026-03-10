@@ -11,16 +11,14 @@ import { fn } from '@ember/helper';
 import { t } from 'ember-intl';
 import { LinkTo } from '@ember/routing';
 import UiConfirmDialog from 'brn/components/ui/confirm-dialog';
+import { createAudioContext, createSource, loadAudioFiles } from 'brn/utils/audio-api';
 import type { Headphone } from 'brn/schemas/headphone';
+import type { SignalsTask, SpeechTask, SpeechAnswerOption } from 'brn/schemas/audiometry';
 import type IntlService from 'ember-intl/services/intl';
 import type NetworkService from 'brn/services/network';
 import type Router from '@ember/routing/router-service';
 
-interface AudiometryTask {
-  id: string;
-  frequencyZone?: number;
-  audiometryGroup?: string;
-}
+type AudiometryTask = SignalsTask | SpeechTask;
 
 interface AudiometryTestData {
   id: string;
@@ -32,18 +30,8 @@ interface AudiometryTestData {
 
 type TestPhase = 'setup' | 'testing' | 'results';
 
-// Standard audiometric test frequencies mapped by zone index
-const FREQUENCY_BY_ZONE: Record<number, number> = {
-  1: 125,
-  2: 250,
-  3: 500,
-  4: 1000,
-  5: 2000,
-  6: 4000,
-  7: 8000,
-};
-
 const TONE_DURATION_SEC = 1.5;
+const SIGNAL_VOLUME_DB = 50;
 
 interface AudiometryTestPlayerSignature {
   Args: {
@@ -58,37 +46,54 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
   @service('network') network!: NetworkService;
   @service('router') router!: Router;
 
+  // Shared state
   @tracked phase: TestPhase = 'setup';
   @tracked selectedHeadphoneId = '';
-  @tracked currentTaskIndex = 0;
-  @tracked rightAnswers = 0;
   @tracked startTime = '';
   @tracked error = '';
   @tracked showAbandonConfirm = false;
+
+  // SIGNALS state
+  @tracked signalTaskIndex = 0;
+  @tracked signalFreqIndex = 0;
   @tracked isPlayingTone = false;
+  signalResults: Map<string, { frequency: number; heard: boolean }[]> = new Map();
+
+  // SPEECH state
+  @tracked speechTaskIndex = 0;
+  @tracked speechRoundIndex = 0;
+  @tracked isPlayingAudio = false;
+  @tracked speechDisplayWords: SpeechAnswerOption[] = [];
+  @tracked speechPlayedWord: SpeechAnswerOption | null = null;
+  speechResults: { taskId: string; correct: number; total: number }[] = [];
 
   _synth: any = null;
+  _audioContext: BaseAudioContext | null = null;
+  _audioSource: AudioBufferSourceNode | null = null;
+  _audioBuffer: AudioBuffer | null = null;
+
+  get isSignals(): boolean {
+    return this.args.test.audiometryType === 'SIGNALS';
+  }
+
+  get isSpeech(): boolean {
+    return this.args.test.audiometryType === 'SPEECH';
+  }
+
+  get isMatrix(): boolean {
+    return this.args.test.audiometryType === 'MATRIX';
+  }
 
   get tasks(): AudiometryTask[] {
     return this.args.test.audiometryTasks || [];
   }
 
-  get totalTasks(): number {
-    return this.tasks.length;
+  get signalTasks(): SignalsTask[] {
+    return this.tasks as SignalsTask[];
   }
 
-  get currentTask(): AudiometryTask | undefined {
-    return this.tasks[this.currentTaskIndex];
-  }
-
-  get currentFrequency(): number {
-    const zone = this.currentTask?.frequencyZone ?? 4;
-    return FREQUENCY_BY_ZONE[zone] ?? 1000;
-  }
-
-  get progressPercent(): number {
-    if (this.totalTasks === 0) return 0;
-    return Math.round((this.currentTaskIndex / this.totalTasks) * 100);
+  get speechTasks(): SpeechTask[] {
+    return this.tasks as SpeechTask[];
   }
 
   get hasHeadphones(): boolean {
@@ -96,12 +101,107 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
   }
 
   get canStart(): boolean {
-    return this.hasHeadphones && this.selectedHeadphoneId !== '' && this.totalTasks > 0;
+    if (this.isMatrix) return false;
+    if (!this.hasHeadphones || this.selectedHeadphoneId === '') return false;
+    return this.tasks.length > 0;
   }
 
-  get accuracy(): number {
-    if (this.totalTasks === 0) return 0;
-    return Math.round((this.rightAnswers / this.totalTasks) * 100);
+  // SIGNALS getters
+  get currentSignalTask(): SignalsTask | undefined {
+    return this.signalTasks[this.signalTaskIndex];
+  }
+
+  get currentEar(): string {
+    return this.currentSignalTask?.ear ?? '';
+  }
+
+  get currentFrequency(): number {
+    const task = this.currentSignalTask;
+    if (!task) return 0;
+    return task.frequencies[this.signalFreqIndex] ?? 0;
+  }
+
+  get signalProgress(): string {
+    const task = this.currentSignalTask;
+    if (!task) return '';
+    const totalFreqs = this.signalTasks.reduce((sum, t) => sum + t.frequencies.length, 0);
+    let done = 0;
+    for (let i = 0; i < this.signalTaskIndex; i++) {
+      done += this.signalTasks[i]!.frequencies.length;
+    }
+    done += this.signalFreqIndex;
+    return `${done + 1} / ${totalFreqs}`;
+  }
+
+  get signalProgressPercent(): number {
+    const totalFreqs = this.signalTasks.reduce((sum, t) => sum + t.frequencies.length, 0);
+    if (totalFreqs === 0) return 0;
+    let done = 0;
+    for (let i = 0; i < this.signalTaskIndex; i++) {
+      done += this.signalTasks[i]!.frequencies.length;
+    }
+    done += this.signalFreqIndex;
+    return Math.round((done / totalFreqs) * 100);
+  }
+
+  // SPEECH getters
+  get currentSpeechTask(): SpeechTask | undefined {
+    return this.speechTasks[this.speechTaskIndex];
+  }
+
+  get speechProgress(): string {
+    const task = this.currentSpeechTask;
+    if (!task) return '';
+    return `${this.speechRoundIndex + 1} / ${task.count}`;
+  }
+
+  get speechProgressPercent(): number {
+    const totalRounds = this.speechTasks.reduce((sum, t) => sum + t.count, 0);
+    if (totalRounds === 0) return 0;
+    let done = 0;
+    for (let i = 0; i < this.speechTaskIndex; i++) {
+      done += this.speechTasks[i]!.count;
+    }
+    done += this.speechRoundIndex;
+    return Math.round((done / totalRounds) * 100);
+  }
+
+  // SIGNALS results for display
+  get signalResultsSummary(): { ear: string; heard: number; total: number }[] {
+    const results: { ear: string; heard: number; total: number }[] = [];
+    for (const task of this.signalTasks) {
+      const entries = this.signalResults.get(String(task.id)) || [];
+      const heard = entries.filter((e) => e.heard).length;
+      results.push({ ear: task.ear, heard, total: task.frequencies.length });
+    }
+    return results;
+  }
+
+  get signalTotalHeard(): number {
+    return this.signalResultsSummary.reduce((sum, r) => sum + r.heard, 0);
+  }
+
+  get signalTotalFreqs(): number {
+    return this.signalResultsSummary.reduce((sum, r) => sum + r.total, 0);
+  }
+
+  get signalAccuracy(): number {
+    if (this.signalTotalFreqs === 0) return 0;
+    return Math.round((this.signalTotalHeard / this.signalTotalFreqs) * 100);
+  }
+
+  // SPEECH results for display
+  get speechTotalCorrect(): number {
+    return this.speechResults.reduce((sum, r) => sum + r.correct, 0);
+  }
+
+  get speechTotalRounds(): number {
+    return this.speechResults.reduce((sum, r) => sum + r.total, 0);
+  }
+
+  get speechAccuracy(): number {
+    if (this.speechTotalRounds === 0) return 0;
+    return Math.round((this.speechTotalCorrect / this.speechTotalRounds) * 100);
   }
 
   @action
@@ -112,13 +212,25 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
   @action
   async startTest() {
     this.phase = 'testing';
-    this.currentTaskIndex = 0;
-    this.rightAnswers = 0;
     this.startTime = new Date().toISOString();
-    await this.playCurrentTone();
+    this.error = '';
+
+    if (this.isSignals) {
+      this.signalTaskIndex = 0;
+      this.signalFreqIndex = 0;
+      this.signalResults = new Map();
+      await this.playSignalTone();
+    } else if (this.isSpeech) {
+      this.speechTaskIndex = 0;
+      this.speechRoundIndex = 0;
+      this.speechResults = [];
+      await this.startSpeechRound();
+    }
   }
 
-  async playCurrentTone() {
+  // ── SIGNALS ──────────────────────────────────────────────────────────────────
+
+  async playSignalTone() {
     if (isTesting()) {
       return;
     }
@@ -129,7 +241,9 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
       await Tone.start();
 
       this.disposeSynth();
-      const synth = new Tone.Synth().toDestination();
+      const synth = new Tone.Synth({
+        oscillator: { type: 'sine' as const },
+      }).toDestination();
       this._synth = synth;
 
       const freq = this.currentFrequency;
@@ -158,22 +272,38 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
   }
 
   @action
-  async answer(heard: boolean) {
+  async answerSignal(heard: boolean) {
     if (this.isPlayingTone) return;
 
-    if (heard) {
-      this.rightAnswers++;
+    const task = this.currentSignalTask;
+    if (!task) return;
+
+    const taskId = String(task.id);
+    if (!this.signalResults.has(taskId)) {
+      this.signalResults.set(taskId, []);
     }
-    if (this.currentTaskIndex + 1 >= this.totalTasks) {
-      await this.finishTest();
+    this.signalResults.get(taskId)!.push({
+      frequency: this.currentFrequency,
+      heard,
+    });
+
+    // Advance to next frequency
+    if (this.signalFreqIndex + 1 < task.frequencies.length) {
+      this.signalFreqIndex++;
+      await this.playSignalTone();
     } else {
-      this.currentTaskIndex++;
-      await this.playCurrentTone();
+      // Next ear/task
+      if (this.signalTaskIndex + 1 < this.signalTasks.length) {
+        this.signalTaskIndex++;
+        this.signalFreqIndex = 0;
+        await this.playSignalTone();
+      } else {
+        await this.finishSignalsTest();
+      }
     }
   }
 
-  @action
-  async finishTest() {
+  async finishSignalsTest() {
     this.disposeSynth();
     this.phase = 'results';
     const endTime = new Date().toISOString();
@@ -181,24 +311,171 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
       (new Date(endTime).getTime() - new Date(this.startTime).getTime()) / 1000,
     );
 
-    const firstTask = this.tasks[0];
-    if (!firstTask) return;
+    for (const task of this.signalTasks) {
+      const entries = this.signalResults.get(String(task.id)) || [];
+      const sinAudiometryResults: Record<number, number> = {};
+      for (const entry of entries) {
+        if (entry.heard) {
+          sinAudiometryResults[entry.frequency] = SIGNAL_VOLUME_DB;
+        }
+      }
+      const heardCount = entries.filter((e) => e.heard).length;
 
-    try {
-      await this.network.postAudiometryHistory({
-        audiometryTaskId: String(firstTask.id),
-        startTime: this.startTime,
-        endTime,
-        executionSeconds,
-        tasksCount: this.totalTasks,
-        rightAnswers: this.rightAnswers,
-        headphones: this.selectedHeadphoneId,
-      });
-    } catch (error: any) {
-      this.error = error.message || this.intl.t('audiometry.save_failed');
-      console.error('Failed to save audiometry history:', error);
+      try {
+        await this.network.postAudiometryHistory({
+          audiometryTaskId: String(task.id),
+          startTime: this.startTime,
+          endTime,
+          executionSeconds,
+          tasksCount: task.frequencies.length,
+          rightAnswers: heardCount,
+          headphones: this.selectedHeadphoneId,
+          sinAudiometryResults,
+        });
+      } catch (error: any) {
+        this.error = error.message || this.intl.t('audiometry.save_failed');
+        console.error('Failed to save audiometry history:', error);
+      }
     }
   }
+
+  // ── SPEECH ───────────────────────────────────────────────────────────────────
+
+  async startSpeechRound() {
+    const task = this.currentSpeechTask;
+    if (!task) return;
+
+    // Pick a random word to play
+    const options = task.answerOptions;
+    const playIndex = Math.floor(Math.random() * options.length);
+    const playedWord = options[playIndex]!;
+    this.speechPlayedWord = playedWord;
+
+    // Select showSize words to display (including the correct one), shuffled
+    const display = this.pickDisplayWords(options, playedWord, task.showSize);
+    this.speechDisplayWords = display;
+
+    // Play the word audio
+    await this.playSpeechAudio(playedWord.audioFileUrl);
+  }
+
+  pickDisplayWords(
+    options: SpeechAnswerOption[],
+    correct: SpeechAnswerOption,
+    showSize: number,
+  ): SpeechAnswerOption[] {
+    const others = options.filter((o) => o.word !== correct.word);
+    const shuffledOthers = others.sort(() => Math.random() - 0.5);
+    const picked = [correct, ...shuffledOthers.slice(0, showSize - 1)];
+    return picked.sort(() => Math.random() - 0.5);
+  }
+
+  async playSpeechAudio(audioFileUrl: string) {
+    if (isTesting()) {
+      return;
+    }
+
+    this.isPlayingAudio = true;
+    try {
+      if (!this._audioContext) {
+        this._audioContext = createAudioContext();
+      }
+      const context = this._audioContext;
+      const getToken = () => this.network.token;
+      const buffers = await loadAudioFiles(context, [audioFileUrl], getToken);
+      const buffer = buffers[0];
+      if (!buffer) {
+        console.error('Failed to load audio file:', audioFileUrl);
+        return;
+      }
+      this._audioBuffer = buffer;
+      const { source } = createSource(context, buffer);
+      this._audioSource = source;
+      source.start(0);
+
+      await new Promise<void>((resolve) => {
+        source.onended = () => resolve();
+      });
+    } catch (e) {
+      console.error('Failed to play speech audio:', e);
+    } finally {
+      if (!this.isDestroyed && !this.isDestroying) {
+        this.isPlayingAudio = false;
+      }
+    }
+  }
+
+  @action
+  async replaySpeechWord() {
+    if (this.isPlayingAudio) return;
+    const word = this.speechPlayedWord;
+    if (!word) return;
+    await this.playSpeechAudio(word.audioFileUrl);
+  }
+
+  @action
+  async answerSpeech(option: SpeechAnswerOption) {
+    if (this.isPlayingAudio) return;
+
+    const task = this.currentSpeechTask;
+    if (!task || !this.speechPlayedWord) return;
+
+    const correct = option.word === this.speechPlayedWord.word;
+    const taskId = String(task.id);
+
+    // Find or create result entry for this task
+    let resultEntry = this.speechResults.find((r) => r.taskId === taskId);
+    if (!resultEntry) {
+      resultEntry = { taskId, correct: 0, total: 0 };
+      this.speechResults.push(resultEntry);
+    }
+    resultEntry.total++;
+    if (correct) {
+      resultEntry.correct++;
+    }
+
+    // Advance round
+    if (this.speechRoundIndex + 1 < task.count) {
+      this.speechRoundIndex++;
+      await this.startSpeechRound();
+    } else {
+      // Next task
+      if (this.speechTaskIndex + 1 < this.speechTasks.length) {
+        this.speechTaskIndex++;
+        this.speechRoundIndex = 0;
+        await this.startSpeechRound();
+      } else {
+        await this.finishSpeechTest();
+      }
+    }
+  }
+
+  async finishSpeechTest() {
+    this.phase = 'results';
+    const endTime = new Date().toISOString();
+    const executionSeconds = Math.round(
+      (new Date(endTime).getTime() - new Date(this.startTime).getTime()) / 1000,
+    );
+
+    for (const result of this.speechResults) {
+      try {
+        await this.network.postAudiometryHistory({
+          audiometryTaskId: result.taskId,
+          startTime: this.startTime,
+          endTime,
+          executionSeconds,
+          tasksCount: result.total,
+          rightAnswers: result.correct,
+          headphones: this.selectedHeadphoneId,
+        });
+      } catch (error: any) {
+        this.error = error.message || this.intl.t('audiometry.save_failed');
+        console.error('Failed to save audiometry history:', error);
+      }
+    }
+  }
+
+  // ── Shared ───────────────────────────────────────────────────────────────────
 
   @action
   backToList() {
@@ -224,6 +501,9 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
   willDestroy() {
     super.willDestroy();
     this.disposeSynth();
+    if (this._audioSource) {
+      try { this._audioSource.stop(); } catch (_e) { /* already stopped */ }
+    }
   }
 
   <template>
@@ -233,7 +513,13 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
           <h1 class="text-2xl font-bold text-gray-800 mb-4">{{@test.name}}</h1>
           <p class="text-sm text-gray-500 mb-6">{{@test.description}}</p>
 
-          {{#if this.hasHeadphones}}
+          {{#if this.isMatrix}}
+            <div class="p-4 bg-yellow-50 border border-yellow-200 rounded-lg" data-test-matrix-unavailable>
+              <p class="text-sm text-yellow-700">
+                {{t "audiometry.matrix_coming_soon"}}
+              </p>
+            </div>
+          {{else if this.hasHeadphones}}
             <div class="max-w-sm mx-auto mb-6">
               <label class="block mb-2 text-sm font-medium text-gray-700" for="headphone-select">
                 {{t "audiometry.select_headphones"}}
@@ -251,7 +537,7 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
               </select>
             </div>
 
-            {{#if (isEqual this.totalTasks 0)}}
+            {{#if (isEqual (taskCount this.tasks) 0)}}
               <p class="text-sm text-gray-400">{{t "audiometry.no_tasks"}}</p>
             {{else}}
               <button
@@ -286,26 +572,33 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
             </button>
             <h2 class="text-lg font-semibold text-gray-800">{{@test.name}}</h2>
             <span class="text-sm text-gray-500">
-              {{t "audiometry.progress" current=(addOne this.currentTaskIndex) total=this.totalTasks}}
+              {{#if this.isSignals}}
+                {{this.signalProgress}}
+              {{else}}
+                {{this.speechProgress}}
+              {{/if}}
             </span>
           </div>
 
           <div
             class="w-full bg-gray-200 rounded-full h-2 mb-6"
             role="progressbar"
-            aria-valuenow={{this.progressPercent}}
+            aria-valuenow={{if this.isSignals this.signalProgressPercent this.speechProgressPercent}}
             aria-valuemin={{0}}
             aria-valuemax={{100}}
-            aria-label={{t "audiometry.progress" current=(addOne this.currentTaskIndex) total=this.totalTasks}}
           >
             <div
               class="bg-indigo-600 h-2 rounded-full transition-all duration-300"
-              style="width: {{this.progressPercent}}%"
+              style="width: {{if this.isSignals this.signalProgressPercent this.speechProgressPercent}}%"
             ></div>
           </div>
 
-          <div class="text-center p-8 bg-gray-50 rounded-lg">
-            {{#if this.currentTask}}
+          {{#if this.isSignals}}
+            {{! ── SIGNALS testing UI ── }}
+            <div class="text-center p-8 bg-gray-50 rounded-lg">
+              <p class="text-sm font-medium text-indigo-600 mb-2" data-test-ear-label>
+                {{t "audiometry.ear_testing" ear=(earLabel this.currentEar)}}
+              </p>
               <p class="text-xs text-gray-400 mb-2" data-test-frequency-info>
                 {{t "audiometry.frequency" freq=this.currentFrequency}}
               </p>
@@ -331,7 +624,7 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
                   type="button"
                   disabled={{this.isPlayingTone}}
                   class="btn-press px-8 py-4 text-lg font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed min-w-[120px]"
-                  {{on "click" (fn this.answer true)}}
+                  {{on "click" (fn this.answerSignal true)}}
                 >
                   {{t "audiometry.yes"}}
                 </button>
@@ -340,26 +633,80 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
                   type="button"
                   disabled={{this.isPlayingTone}}
                   class="btn-press px-8 py-4 text-lg font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed min-w-[120px]"
-                  {{on "click" (fn this.answer false)}}
+                  {{on "click" (fn this.answerSignal false)}}
                 >
                   {{t "audiometry.no"}}
                 </button>
               </div>
-            {{/if}}
-          </div>
+            </div>
+
+          {{else if this.isSpeech}}
+            {{! ── SPEECH testing UI ── }}
+            <div class="text-center p-8 bg-gray-50 rounded-lg">
+              {{#if this.currentSpeechTask.frequencyZone}}
+                <p class="text-xs text-gray-400 mb-2">
+                  {{t "audiometry.speech_zone" zone=this.currentSpeechTask.frequencyZone}}
+                </p>
+              {{/if}}
+
+              <p class="text-lg font-medium text-gray-700 mb-4">
+                {{t "audiometry.speech_select_word"}}
+              </p>
+
+              <button
+                data-test-replay-word
+                type="button"
+                disabled={{this.isPlayingAudio}}
+                class="btn-press mb-6 px-4 py-2 text-sm text-indigo-600 border border-indigo-300 rounded-lg hover:bg-indigo-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                {{on "click" this.replaySpeechWord}}
+              >
+                {{t "audiometry.replay"}}
+              </button>
+
+              <div class="grid grid-cols-3 gap-3 max-w-md mx-auto">
+                {{#each this.speechDisplayWords as |option|}}
+                  <button
+                    data-test-speech-word
+                    type="button"
+                    disabled={{this.isPlayingAudio}}
+                    class="btn-press px-4 py-3 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-indigo-50 hover:border-indigo-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                    {{on "click" (fn this.answerSpeech option)}}
+                  >
+                    {{option.word}}
+                  </button>
+                {{/each}}
+              </div>
+            </div>
+          {{/if}}
         </div>
 
       {{else}}
+        {{! ── Results ── }}
         <div class="text-center">
           <h2 class="text-2xl font-bold text-gray-800 mb-4">{{t "audiometry.results_title"}}</h2>
 
-          <div class="inline-flex items-center justify-center w-32 h-32 rounded-full border-4 border-indigo-200 mb-6" role="img" aria-label="{{this.accuracy}}% accuracy">
-            <span class="text-3xl font-bold text-indigo-600">{{this.accuracy}}%</span>
-          </div>
+          {{#if this.isSignals}}
+            <div class="inline-flex items-center justify-center w-32 h-32 rounded-full border-4 border-indigo-200 mb-6" role="img" aria-label="{{this.signalAccuracy}}% accuracy">
+              <span class="text-3xl font-bold text-indigo-600">{{this.signalAccuracy}}%</span>
+            </div>
 
-          <div class="text-sm text-gray-500 mb-2">
-            {{this.rightAnswers}} / {{this.totalTasks}}
-          </div>
+            <div class="space-y-2 mb-6">
+              {{#each this.signalResultsSummary as |r|}}
+                <p class="text-sm text-gray-500" data-test-signal-ear-result>
+                  {{earLabel r.ear}}: {{t "audiometry.heard_count" heard=r.heard total=r.total}}
+                </p>
+              {{/each}}
+            </div>
+
+          {{else if this.isSpeech}}
+            <div class="inline-flex items-center justify-center w-32 h-32 rounded-full border-4 border-indigo-200 mb-6" role="img" aria-label="{{this.speechAccuracy}}% accuracy">
+              <span class="text-3xl font-bold text-indigo-600">{{this.speechAccuracy}}%</span>
+            </div>
+
+            <div class="text-sm text-gray-500 mb-2">
+              {{this.speechTotalCorrect}} / {{this.speechTotalRounds}}
+            </div>
+          {{/if}}
 
           {{#if this.error}}
             <p class="text-sm text-red-500 mb-4">{{this.error}}</p>
@@ -399,6 +746,10 @@ function isNot(value: boolean): boolean {
   return !value;
 }
 
-function addOne(value: number): number {
-  return value + 1;
+function taskCount(tasks: AudiometryTask[]): number {
+  return tasks.length;
+}
+
+function earLabel(ear: string): string {
+  return ear;
 }
