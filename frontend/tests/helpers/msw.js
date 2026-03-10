@@ -194,6 +194,11 @@ const defaultHandlers = [
     handler: () => ({ data: { id: '1' } }),
   },
   {
+    method: 'POST',
+    path: '/api/cloud/upload/picture',
+    handler: () => null,
+  },
+  {
     method: 'GET',
     path: '/api/doctors/:doctorId/patients',
     handler: () => ({ data: [] }),
