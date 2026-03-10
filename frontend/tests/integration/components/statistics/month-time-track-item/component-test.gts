@@ -84,5 +84,51 @@ module(
         .dom('[data-test-month-track-item]')
         .hasNoClass('selected', 'it is unselected');
     });
+
+    test('it displays localized month name for en-us', async function (assert) {
+      const itemData: any = {
+        progress: PROGRESS.GOOD,
+        time: '01:00:00',
+        days: 3,
+        month: 'June',
+        year: 2021,
+        date: DateTime.fromISO('2021-06-15'),
+      };
+
+      this.set('itemData', itemData);
+
+      const self = this;
+
+      await render(
+        <template><StatisticsMonthTimeTrackItem @data={{self.itemData}} /></template>
+      );
+
+      assert.dom('.month').hasText('June', 'month is displayed in English');
+    });
+
+    module('with ru-ru locale', function (hooks) {
+      setupIntl(hooks, 'ru-ru');
+
+      test('it displays localized month name for ru-ru', async function (assert) {
+        const itemData: any = {
+          progress: PROGRESS.GOOD,
+          time: '01:00:00',
+          days: 3,
+          month: 'June',
+          year: 2021,
+          date: DateTime.fromISO('2021-06-15'),
+        };
+
+        this.set('itemData', itemData);
+
+        const self = this;
+
+        await render(
+          <template><StatisticsMonthTimeTrackItem @data={{self.itemData}} /></template>
+        );
+
+        assert.dom('.month').hasText('июнь', 'month is displayed in Russian');
+      });
+    });
   },
 );

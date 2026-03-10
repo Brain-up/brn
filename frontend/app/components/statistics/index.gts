@@ -4,6 +4,7 @@ import type { UserYearlyStatistics as UserYearlyStatisticsModel } from 'brn/sche
 import NetworkService from 'brn/services/network';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { service } from '@ember/service';
+import type IntlService from 'ember-intl/services/intl';
 import { DateTime } from 'luxon';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { tracked } from '@glimmer/tracking';
@@ -30,6 +31,7 @@ interface StatisticsSignature {
 export default class StatisticsComponent extends Component<StatisticsSignature> {
   @service('network') network!: NetworkService;
   @service('store') store!: Store;
+  @service('intl') intl!: IntlService;
 
   @tracked selectedMonth: DateTime =
     this.args.initialSelectedMonth || DateTime.now();
@@ -42,7 +44,7 @@ export default class StatisticsComponent extends Component<StatisticsSignature> 
   @tracked isLoadingMonthlyDetail = false;
 
   get monthLabel(): string {
-    return this.selectedMonth.toFormat('LLLL yyyy');
+    return this.selectedMonth.reconfigure({ locale: this.intl.primaryLocale }).toFormat('LLLL yyyy');
   }
 
   getWeekTimeTrackData = dropTask(async () => {
