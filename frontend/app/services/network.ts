@@ -94,7 +94,13 @@ export default class NetworkService extends Service {
     try {
       const result = await this.request('users/current');
       const { data } = await result.json();
-      return fromLatestUserDto(Array.isArray(data) ? data[0] : data);
+      const raw = Array.isArray(data) ? data[0] : data;
+      const user = fromLatestUserDto(raw);
+      // Store roles from the API response
+      if (this.userData && raw.roles) {
+        this.userData.roles = raw.roles;
+      }
+      return user;
     } catch (e) {
       if (this.session.isAuthenticated) {
         await this.session.invalidate();
@@ -148,6 +154,121 @@ export default class NetworkService extends Service {
     const json = await result.json();
     const { data } = json;
     return data.map((el: number) => String(el));
+  }
+  deleteRequest(entry: string) {
+    return waitForPromise(
+      fetch(`${this.prefix}/${entry}`, {
+        headers: this._headers,
+        method: 'DELETE',
+      }),
+    );
+  }
+  putRequest(entry: string, data?: unknown) {
+    return waitForPromise(
+      fetch(`${this.prefix}/${entry}`, {
+        headers: this._headers,
+        method: 'PUT',
+        body: data !== undefined ? JSON.stringify(data) : undefined,
+      }),
+    );
+  }
+  async addHeadphones(data: { name: string; active?: boolean; type?: string; description?: string }) {
+    const result = await this.postRequest('users/current/headphones', data);
+    const json = await result.json();
+    if (!result.ok) {
+      const error: Error & { errors?: string[] } = new Error(
+        json.errors?.join(', ') ?? 'Failed to add headphones',
+      );
+      error.errors = json.errors;
+      throw error;
+    }
+    return json.data;
+  }
+  async deleteHeadphones(id: string) {
+    const result = await this.deleteRequest(`users/current/headphones/${id}`);
+    if (!result.ok) {
+      const json = await result.json();
+      const error: Error & { errors?: string[] } = new Error(
+        json.errors?.join(', ') ?? 'Failed to delete headphones',
+      );
+      error.errors = json.errors;
+      throw error;
+    }
+  }
+  async updateAvatar(avatar: string) {
+    const result = await this.putRequest(`users/current/avatar?avatar=${encodeURIComponent(avatar)}`);
+    if (!result.ok) {
+      const json = await result.json();
+      const error: Error & { errors?: string[] } = new Error(
+        json.errors?.join(', ') ?? 'Failed to update avatar',
+      );
+      error.errors = json.errors;
+      throw error;
+    }
+  }
+  async getMonthHistories(month: number, year: number) {
+    const result = await this.request(`study-history/monthHistories?month=${month}&year=${year}`);
+    const json = await result.json();
+    return json.data;
+  }
+  async getStudyHistoriesV2(from: string, to: string) {
+    const result = await this.request(`v2/study-history/histories?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`);
+    const json = await result.json();
+    return json.data;
+  }
+  async userHasStatistics(userId: string): Promise<boolean> {
+    const result = await this.request(`v2/study-history/user/${userId}/has/statistics`);
+    const json = await result.json();
+    return json.data;
+  }
+  async getDoctorPatients(doctorId: string) {
+    const result = await this.request(`doctors/${doctorId}/patients`);
+    const json = await result.json();
+    return json.data;
+  }
+  async addPatient(doctorId: string, patientId: string) {
+    const result = await this.postRequest(`doctors/${doctorId}/patients`, { id: patientId, type: 'PATIENT' });
+    const json = await result.json();
+    if (!result.ok) {
+      const error: Error & { errors?: string[] } = new Error(
+        json.errors?.join(', ') ?? 'Failed to add patient',
+      );
+      error.errors = json.errors;
+      throw error;
+    }
+    return json.data;
+  }
+  async removePatient(doctorId: string, patientId: string) {
+    const result = await this.deleteRequest(`doctors/${doctorId}/patients/${patientId}`);
+    if (!result.ok) {
+      const json = await result.json();
+      const error: Error & { errors?: string[] } = new Error(
+        json.errors?.join(', ') ?? 'Failed to remove patient',
+      );
+      error.errors = json.errors;
+      throw error;
+    }
+  }
+  async postAudiometryHistory(data: {
+    audiometryTaskId: string;
+    startTime: string;
+    endTime?: string;
+    executionSeconds: number;
+    tasksCount: number;
+    rightAnswers: number;
+    headphones: string;
+    sinAudiometryResults?: Record<number, number>;
+  }) {
+    const result = await this.postRequest('audiometry-history', data);
+    const json = await result.json();
+    if (!result.ok) {
+      const error: Error & { errors?: string[] } = new Error(
+        json.errors?.join(', ') ?? 'Failed to save audiometry history',
+      );
+      error.errors = json.errors;
+      throw error;
+    }
+    return json.data;
   }
 }
 

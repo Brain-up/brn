@@ -38,6 +38,10 @@ export default class HeaderComponent extends Component {
     return this.userData.userModel;
   }
 
+  get isSpecialist() {
+    return this.userData.isSpecialist;
+  }
+
   @action async logout() {
     this.isLoggingOut = true;
     try {
@@ -154,6 +158,10 @@ export default class HeaderComponent extends Component {
                   <LinkTo @route="specialists" {{on "click" this.closeMenu}}>{{t "header.specialists"}}</LinkTo>
                   <LinkTo @route="contributors" {{on "click" this.closeMenu}}>{{t "header.contributors"}}</LinkTo>
                   <LinkTo @route="used-resources" {{on "click" this.closeMenu}}>{{t "header.used_resources"}}</LinkTo>
+                  <LinkTo @route="audiometry" {{on "click" this.closeMenu}}>{{t "header.audiometry"}}</LinkTo>
+                  {{#if this.isSpecialist}}
+                    <LinkTo @route="doctor.patients" {{on "click" this.closeMenu}}>{{t "doctor.patients.header_link"}}</LinkTo>
+                  {{/if}}
                 </div>
               </div>
             </div>

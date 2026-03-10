@@ -18,6 +18,7 @@ import UiHelp from 'brn/components/ui/help';
 import StatisticsMonthTimeTrack from 'brn/components/statistics/month-time-track';
 import StatisticsWeekTimeTrack from 'brn/components/statistics/week-time-track';
 import StatisticsInfoDialog from 'brn/components/statistics/info-dialog';
+import MonthlyDetail from 'brn/components/statistics/monthly-detail';
 
 interface StatisticsSignature {
   Args: {
@@ -37,6 +38,12 @@ export default class StatisticsComponent extends Component<StatisticsSignature> 
   @tracked weekTimeTrackData: UserWeeklyStatisticsModel[] | null = null;
   @tracked monthTimeTrackData: UserYearlyStatisticsModel[] | null = null;
   @tracked isShownStatisticsInfoDialog = false;
+  @tracked monthlyDetailData: Record<string, unknown>[] | null = null;
+  @tracked isLoadingMonthlyDetail = false;
+
+  get monthLabel(): string {
+    return this.selectedMonth.toFormat('LLLL yyyy');
+  }
 
   getWeekTimeTrackData = dropTask(async () => {
     const fromMonth: DateTime = this.selectedMonth.startOf('month');
@@ -83,14 +90,29 @@ export default class StatisticsComponent extends Component<StatisticsSignature> 
     if (!lastMonth) {
       return;
     }
-    this.selectedMonth = lastMonth;
-    this.getWeekTimeTrackData.perform();
+    this.selectMonth(lastMonth);
   });
+
+  @action
+  async loadMonthlyDetail() {
+    this.isLoadingMonthlyDetail = true;
+    try {
+      this.monthlyDetailData = await this.network.getMonthHistories(
+        this.selectedMonth.month,
+        this.selectedMonth.year,
+      );
+    } catch (error) {
+      console.error('Failed to load monthly detail:', error);
+      this.monthlyDetailData = [];
+    }
+    this.isLoadingMonthlyDetail = false;
+  }
 
   @action
   onInit(): void {
     this.getWeekTimeTrackData.perform();
     this.getMonthTimeTrackData.perform();
+    this.loadMonthlyDetail();
   }
 
   @action
@@ -107,6 +129,7 @@ export default class StatisticsComponent extends Component<StatisticsSignature> 
   selectMonth(date: DateTime): void {
     this.selectedMonth = date;
     this.getWeekTimeTrackData.perform();
+    this.loadMonthlyDetail();
   }
 
   @action
@@ -126,6 +149,7 @@ export default class StatisticsComponent extends Component<StatisticsSignature> 
   resetCurrentData(): void {
     this.weekTimeTrackData = [];
     this.monthTimeTrackData = [];
+    this.monthlyDetailData = [];
   }
 
   <template>
@@ -153,6 +177,11 @@ export default class StatisticsComponent extends Component<StatisticsSignature> 
         @isLoading={{this.isLoadingWeekTimeTrackData}}
         @selectedMonth={{this.selectedMonth}}
         @data={{this.weekTimeTrackData}}
+      />
+      <MonthlyDetail
+        @data={{this.monthlyDetailData}}
+        @isLoading={{this.isLoadingMonthlyDetail}}
+        @monthLabel={{this.monthLabel}}
       />
       {{#if this.isShownStatisticsInfoDialog}}
         <StatisticsInfoDialog

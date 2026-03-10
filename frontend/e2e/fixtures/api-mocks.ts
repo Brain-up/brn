@@ -228,5 +228,128 @@ export const mockContributors = {
   ],
 };
 
+export const mockHeadphones = {
+  data: [
+    {
+      id: '1',
+      name: 'Sony WH-1000XM5',
+      active: true,
+      type: 'OVER_EAR_BLUETOOTH',
+      description: 'Over-ear noise cancelling',
+      userAccount: '1',
+    },
+    {
+      id: '2',
+      name: 'AirPods Pro',
+      active: true,
+      type: 'IN_EAR_BLUETOOTH',
+      description: 'In-ear wireless',
+      userAccount: '1',
+    },
+  ],
+};
+
+export const mockMonthHistories = {
+  data: [
+    {
+      id: '1',
+      exerciseId: '1',
+      startTime: '2024-03-01T10:00:00',
+      endTime: '2024-03-01T10:05:32',
+      executionSeconds: 332,
+      tasksCount: 20,
+      replaysCount: 2,
+      wrongAnswers: 3,
+    },
+    {
+      id: '2',
+      exerciseId: '2',
+      startTime: '2024-03-01T14:00:00',
+      endTime: '2024-03-01T14:03:15',
+      executionSeconds: 195,
+      tasksCount: 15,
+      replaysCount: 1,
+      wrongAnswers: 1,
+    },
+    {
+      id: '3',
+      exerciseId: '1',
+      startTime: '2024-03-02T09:00:00',
+      endTime: '2024-03-02T09:04:48',
+      executionSeconds: 288,
+      tasksCount: 10,
+      replaysCount: 0,
+      wrongAnswers: 0,
+    },
+  ],
+};
+
+export const mockAudiometryTests = {
+  data: [
+    {
+      id: '1',
+      locale: 'en-us',
+      name: 'Signal Audiometry',
+      audiometryType: 'SIGNALS',
+      description: 'Frequency-based hearing test',
+    },
+    {
+      id: '2',
+      locale: 'en-us',
+      name: 'Speech Audiometry',
+      audiometryType: 'SPEECH',
+      description: 'Speech recognition assessment',
+    },
+  ],
+};
+
+export function mockAudiometryTestWithTasks(testId: string) {
+  const test = mockAudiometryTests.data.find((t) => t.id === testId);
+  if (!test) return { data: {} };
+
+  return {
+    data: {
+      ...test,
+      audiometryTasks: [
+        {
+          id: '101',
+          frequencyZone: 1,
+          audiometryGroup: 'A',
+        },
+        {
+          id: '102',
+          frequencyZone: 2,
+          audiometryGroup: 'B',
+        },
+      ],
+    },
+  };
+}
+
+export const mockDoctorPatients = {
+  data: [
+    {
+      id: '10',
+      name: 'Ivan Petrov',
+      email: 'ivan@example.com',
+      bornYear: 1990,
+      gender: 'MALE',
+      active: true,
+      avatar: '1',
+      created: '2024-01-15T10:00:00',
+    },
+    {
+      id: '11',
+      name: 'Anna Sidorova',
+      email: 'anna@example.com',
+      bornYear: 1985,
+      gender: 'FEMALE',
+      active: true,
+      avatar: '2',
+      created: '2024-02-03T10:00:00',
+    },
+  ],
+};
+
 export const emptyResponse = { data: [] };
 export const emptyObject = { data: {} };

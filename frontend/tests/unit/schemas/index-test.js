@@ -3,7 +3,7 @@ import { ALL_SCHEMAS, ALL_EXTENSIONS } from 'brn/schemas/index';
 
 module('Unit | Schema | index', function () {
   test('ALL_SCHEMAS contains the expected number of schemas', function (assert) {
-    assert.strictEqual(ALL_SCHEMAS.length, 18);
+    assert.strictEqual(ALL_SCHEMAS.length, 19);
   });
 
   test('ALL_EXTENSIONS contains the expected number of extensions', function (assert) {
@@ -30,6 +30,7 @@ module('Unit | Schema | index', function () {
     assert.true(types.includes('task/phoneme-pairs'), 'includes task/phoneme-pairs');
     assert.true(types.includes('task/auditory-sequence'), 'includes task/auditory-sequence');
     assert.true(types.includes('task/prosody'), 'includes task/prosody');
+    assert.true(types.includes('audiometry'), 'includes audiometry');
   });
 
   test('ALL_EXTENSIONS contains all expected extension names', function (assert) {

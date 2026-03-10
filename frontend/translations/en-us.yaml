@@ -12,6 +12,12 @@ header:
   used_resources: Used Resources
   specialists: Specialists
   contributors: Contributors
+  audiometry: Audiometry
+
+ui:
+  confirm_dialog:
+    confirm: Confirm
+    cancel: Cancel
 
 login:
   title: Login
@@ -316,6 +322,26 @@ description:
     header: With the support
 
 profile:
+  headphones:
+    title: Headphones
+    empty: No headphones configured
+    add: Add Headphones
+    add_button: Add
+    cancel: Cancel
+    delete: Delete
+    confirm_delete: Are you sure you want to delete these headphones?
+    name_label: Name
+    name_placeholder: e.g. Sony WH-1000XM5
+    type_label: Type
+    name_required: Headphone name is required
+  monthly_detail:
+    title: "Daily Detail — {month}"
+    date: Date
+    exercise: Exercise
+    time: Time
+    accuracy: Accuracy
+    empty: No exercises completed this month
+    loading: Loading monthly data...
   statistics:
     title: Statistics
     about: What is it about?
@@ -363,6 +389,45 @@ gamification:
   perfect_exercises: Perfect runs
   xp_to_next_level: to next level
   longest_streak: Best streak
+
+audiometry:
+  title: Audiometry Tests
+  subtitle: Select a hearing assessment to begin
+  start_test: Start Test
+  no_headphones_warning: Please configure headphones in your profile before starting a test.
+  no_tasks: No tasks available for this test
+  progress: "{current} / {total}"
+  select_headphones: Select headphones
+  frequency: "Current frequency: {freq} Hz"
+  current_ear: "Current ear: {ear}"
+  can_you_hear: Can you hear the sound?
+  yes: "Yes"
+  no: "No"
+  results_title: Test Results
+  back: Back
+  save_failed: Failed to save results
+  confirm_abandon: Are you sure you want to leave? Your test progress will be lost.
+  playing: Playing sound...
+  ear_left: LEFT
+  ear_right: RIGHT
+
+doctor:
+  patients:
+    title: My Patients
+    add_patient: Add Patient
+    add_button: Add
+    cancel: Cancel
+    remove: Remove
+    confirm_remove: Are you sure you want to remove this patient?
+    patient_id_label: Patient ID
+    patient_id_placeholder: Enter patient ID
+    empty: No patients yet
+    has_statistics: Has statistics
+    no_statistics: No statistics
+    joined: "Joined: {date}"
+    id_required: Patient ID is required
+    add_failed: Failed to add patient
+    header_link: Patients
 
 contributors:
   title: "Our Team"
