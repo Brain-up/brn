@@ -33,7 +33,7 @@ const tpl: TOC<Signature> = <template>
           <div
             class="lg:mb-0 lg:flex-1 md:flex lg:mr-12 sm:p-8 lg:p-12 sm:mt-6 sm:mb-12 p-4 mt-4 mb-4 border-4 border-gray-200 rounded-lg"
           >
-            <div class="flex-initial w-24 mr-4">
+            <div class="flex-initial w-16 sm:w-24 mr-4">
               <img
                 src={{or i.avatar "/pictures/avatars/avatar 1.png"}}
                 alt="user avatar"

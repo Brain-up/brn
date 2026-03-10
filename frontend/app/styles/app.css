@@ -239,6 +239,12 @@ a[disabled] {
   padding: 25px 40px 40px;
 }
 
+@media (max-width: 1024px) {
+  .modal-body {
+    width: 95vw;
+  }
+}
+
 @media (max-width: 640px) {
   .custom-modal-overlay {
     min-height: 0;

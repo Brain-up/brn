@@ -24,7 +24,7 @@ import { t } from 'ember-intl';
           </span>
         </div>
         <div>
-          <ul class="c-footer__sponsors min-width-10 flex items-center">
+          <ul class="c-footer__sponsors min-w-10 flex flex-wrap items-center">
             <li data-test-support-logo>
               <a href="https://www.jetbrains.com/" target="blank" rel="noopener">
                 <img src="/logos/jetbrains-variant-4_.png" alt="JetBrains" />

@@ -277,7 +277,7 @@ export default class ProfileComponent extends Component {
           title="{{this.user.email}}"
           style={{htmlSafe
             (concat "background-image: url('" this.avatarUrl "');")
-          }} class="btn-press gradient-background focus:outline-hidden inline-flex items-center justify-center w-32 h-32 m-auto bg-center bg-contain border border-gray-400 rounded-full" {{on "click" this.onShowAvatars}}
+          }} class="btn-press gradient-background focus:outline-hidden inline-flex items-center justify-center w-24 h-24 sm:w-32 sm:h-32 m-auto bg-center bg-contain border border-gray-400 rounded-full" {{on "click" this.onShowAvatars}}
         >
         </button>
       </div>

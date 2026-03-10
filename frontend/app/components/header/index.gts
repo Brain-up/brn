@@ -118,13 +118,13 @@ export default class HeaderComponent extends Component {
               <span class="md:inline-flex md:px-2 items-center shrink-0 hidden font-semibold tracking-wider text-white uppercase">
                 <button
                   type="button"
-                  class="btn-press hover:text-white/50 py-2 text-white bg-transparent rounded uppercase {{if (eq this.activeLocale 'ru-ru') 'font-bold'}}"
+                  class="btn-press hover:text-white/50 min-h-[44px] min-w-[44px] py-2 text-white bg-transparent rounded uppercase {{if (eq this.activeLocale 'ru-ru') 'font-bold'}}"
                   {{on "click" (fn this.setLocale "ru")}}
                 >RU</button>
                 <span class="mx-1">/</span>
                 <button
                   type="button"
-                  class="btn-press hover:text-white/50 py-2 text-white bg-transparent rounded uppercase {{if (eq this.activeLocale 'en-us') 'font-bold'}}"
+                  class="btn-press hover:text-white/50 min-h-[44px] min-w-[44px] py-2 text-white bg-transparent rounded uppercase {{if (eq this.activeLocale 'en-us') 'font-bold'}}"
                   {{on "click" (fn this.setLocale "en")}}
                 >EN</button>
               </span>

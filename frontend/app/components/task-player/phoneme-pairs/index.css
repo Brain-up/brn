@@ -5,10 +5,16 @@
   padding: 0;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
+  gap: 8px;
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
+}
+
+@media (min-width: 640px) {
+  .phoneme-pairs__options {
+    gap: 16px;
+  }
 }
 
 .phoneme-pairs__option {

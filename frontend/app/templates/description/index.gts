@@ -147,7 +147,7 @@ export default RouteTemplate(
         {{t "description.support.header"}}
       </h2>
 
-      <ul class="flex flex-wrap justify-around p-6 -mx-4 bg-gray-100">
+      <ul class="flex flex-wrap justify-around p-6 -mx-4 bg-gray-100 overflow-hidden">
         <li class="flex items-center p-3">
           <a
             class="block"
@@ -156,7 +156,7 @@ export default RouteTemplate(
             rel="noopener noreferrer"
           >
             <img
-              class="w-32"
+              class="w-20 sm:w-32"
               src="/content/pages/description/epam-logo.png"
               alt="EPAM"
             />
@@ -171,7 +171,7 @@ export default RouteTemplate(
             rel="noopener noreferrer"
           >
             <img
-              class="w-40"
+              class="w-24 sm:w-40"
               src="/content/pages/description/selectel-logo.svg"
               alt="Selectel"
             />
@@ -201,7 +201,7 @@ export default RouteTemplate(
             rel="noopener noreferrer"
           >
             <img
-              class="w-40"
+              class="w-24 sm:w-40"
               src="/content/pages/description/yandex-cloud-logo.svg"
               alt="YandexCloud"
             />

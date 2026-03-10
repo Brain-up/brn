@@ -11,7 +11,8 @@
     flex-direction: column;
     overflow: hidden;
     position: relative;
-    width: 410px;
+    max-width: 410px;
+    width: 100%;
   }
 
   .card-img {
@@ -29,7 +30,8 @@
 
 @media (max-width: 640px) {
   .c-exercise-type .card {
-    width: 220px;
+    max-width: 220px;
+    width: 100%;
   }
 }
 

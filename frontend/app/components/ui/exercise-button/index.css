@@ -8,7 +8,7 @@
   background-clip: content-box, border-box;
   padding: 0;
   width: 100%;
-  max-width: 168px;
+  max-width: min(168px, 100%);
   aspect-ratio: 1;
   position: relative;
 

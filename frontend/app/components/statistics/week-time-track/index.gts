@@ -94,7 +94,6 @@ export default class WeekTimeTrackComponent extends Component<WeekTimeTrackSigna
       },
       size: {
         height: 200,
-        width: 1000,
       },
       legend: {
         show: false,
