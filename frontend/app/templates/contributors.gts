@@ -33,7 +33,7 @@ const tpl: TOC<Signature> = <template>
             (concat "contributors.kinds." kindType)
           }}</h3>
         <div
-          class="md:flex max-w-screen-xl m-auto flex-wrap
+          class="md:flex max-w-screen-xl m-auto flex-wrap gap-4
            "
         >
           {{#each group as |i|}}

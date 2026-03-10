@@ -4,6 +4,7 @@
     position: relative;
     margin: 6em auto 0 auto;
     padding: 10px;
+    width: 320px;
     -webkit-transform-origin: bottom;
     transform-origin: bottom;
     -webkit-transform: rotate(0deg) translate3d(0px, 0px, 0px);

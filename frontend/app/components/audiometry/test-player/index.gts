@@ -724,7 +724,7 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
                 {{t "audiometry.replay"}}
               </button>
 
-              <div class="grid grid-cols-3 gap-3 max-w-md mx-auto">
+              <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 max-w-md mx-auto">
                 {{#each this.speechDisplayWords as |option|}}
                   <button
                     data-test-speech-word

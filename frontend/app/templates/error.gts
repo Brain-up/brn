@@ -9,7 +9,7 @@ interface Signature {
 
 const tpl: TOC<Signature> = <template>
     oooops...
-    <pre>
+    <pre class="overflow-x-auto whitespace-pre-wrap break-words">
       {{@model}}
     </pre>
   </template>;

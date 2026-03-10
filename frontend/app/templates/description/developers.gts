@@ -137,9 +137,9 @@ const tpl: TOC<Signature> = <template>
           {{t "description.team.thanks_words"}}
         </p>
 
-        <ul class="sm:p-10 flex flex-wrap justify-between p-4 -mx-4 bg-gray-100">
+        <ul class="sm:p-10 flex flex-wrap justify-between p-4 -mx-4 bg-gray-100 overflow-hidden">
           {{#each @controller.persons.teamMembers as |teamMember i|}}
-            <li class="w-24 h-24 m-2 my-4 overflow-hidden rounded-full">
+            <li class="w-16 sm:w-24 h-16 sm:h-24 m-2 my-4 overflow-hidden rounded-full">
               <img
                 src={{teamMember.img}}
                 alt={{t "description.team.image_alt" i=i}}

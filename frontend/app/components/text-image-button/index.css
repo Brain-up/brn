@@ -93,7 +93,7 @@
 @media (max-width: 640px) and (orientation: landscape) {
   .c-text-image-button {
     button {
-      min-height: 40px;
+      min-height: 44px;
     }
   }
 }

@@ -72,7 +72,7 @@ export default class UiConfirmDialogComponent extends Component<UiConfirmDialogS
   <template>
     <dialog
       data-test-confirm-dialog
-      class="p-0 rounded-lg shadow-xl backdrop:bg-black/50 max-w-sm w-full"
+      class="p-0 rounded-lg shadow-xl backdrop:bg-black/50 max-w-[calc(100vw-2rem)] sm:max-w-sm w-full"
       ...attributes
       {{didInsert this.onInsert}}
     >
