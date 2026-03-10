@@ -98,9 +98,20 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
     return this.args.headphones.length > 0;
   }
 
+  get autoSelectedHeadphoneId(): string {
+    if (this.args.headphones.length === 1) {
+      return String(this.args.headphones[0]!.id ?? '');
+    }
+    return '';
+  }
+
+  get effectiveHeadphoneId(): string {
+    return this.selectedHeadphoneId || this.autoSelectedHeadphoneId;
+  }
+
   get canStart(): boolean {
     if (this.isMatrix) return false;
-    if (!this.hasHeadphones || this.selectedHeadphoneId === '') return false;
+    if (!this.hasHeadphones || this.effectiveHeadphoneId === '') return false;
     return this.tasks.length > 0;
   }
 
@@ -345,7 +356,7 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
           executionSeconds,
           tasksCount: task.frequencies.length,
           rightAnswers: heardCount,
-          headphones: this.selectedHeadphoneId,
+          headphones: this.effectiveHeadphoneId,
           sinAudiometryResults,
         });
       } catch (error: any) {
@@ -505,7 +516,7 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
           executionSeconds,
           tasksCount: result.total,
           rightAnswers: result.correct,
-          headphones: this.selectedHeadphoneId,
+          headphones: this.effectiveHeadphoneId,
         });
       } catch (error: any) {
         this.error = error.message || this.intl.t('audiometry.save_failed');
@@ -578,9 +589,11 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
                 class="focus:ring-indigo-500 focus:border-indigo-500 block w-full px-3 py-2 text-sm border border-gray-300 rounded-md"
                 {{on "change" this.onHeadphoneSelect}}
               >
-                <option value="">--</option>
+                {{#if (isMultipleHeadphones @headphones)}}
+                  <option value="">--</option>
+                {{/if}}
                 {{#each @headphones as |hp|}}
-                  <option value={{hp.id}}>{{hp.name}}</option>
+                  <option value={{hp.id}} selected={{isSelected hp.id this.effectiveHeadphoneId}}>{{hp.name}}</option>
                 {{/each}}
               </select>
             </div>
@@ -796,6 +809,14 @@ function isNot(value: boolean): boolean {
 
 function taskCount(tasks: AudiometryTask[]): number {
   return tasks.length;
+}
+
+function isMultipleHeadphones(headphones: Headphone[]): boolean {
+  return headphones.length > 1;
+}
+
+function isSelected(id: string | null, selectedId: string): boolean {
+  return String(id ?? '') === selectedId;
 }
 
 function shuffleArray<T>(array: T[]): T[] {
