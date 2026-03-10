@@ -5,9 +5,11 @@ import { keepLatestTask } from 'ember-concurrency';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { service } from '@ember/service';
 import type NetworkService from 'brn/services/network';
+import type TasksManagerService from 'brn/services/tasks-manager';
 
 export default class GroupSeriesSubgroupController extends Controller {
   @service('network') network!: NetworkService;
+  @service('tasks-manager') tasksManager!: TasksManagerService;
 
   @tracked
   availableExercises: string[] = [];
@@ -28,5 +30,14 @@ export default class GroupSeriesSubgroupController extends Controller {
     const targets = exercises.map((e: { id: string }) => e.id);
     const results = await this.network.availableExercises(targets);
     this.availableExercises = results as string[];
+
+    const completedIds = this.tasksManager.completedExerciseIds;
+    if (completedIds.size > 0) {
+      for (const exercise of exercises) {
+        if (completedIds.has(exercise.id)) {
+          exercise.isManuallyCompleted = true;
+        }
+      }
+    }
   });
 }
