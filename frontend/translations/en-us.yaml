@@ -466,7 +466,6 @@ server_down:
   title: Server is not responding
   message: "Our server is currently not responding: it may be reloading or experiencing an issue."
   telegram_prompt: "Please let us know in our Telegram chat:"
-  telegram_link: "https://t.me/BrainUpUsers"
   fix_promise: We will try to fix the problem as soon as possible.
 
 contributors:

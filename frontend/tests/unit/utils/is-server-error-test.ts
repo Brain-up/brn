@@ -3,8 +3,14 @@ import isServerError from 'brn/utils/is-server-error';
 
 module('Unit | Utils | is-server-error', function () {
   test('returns false for null/undefined', function (assert) {
-    assert.false(isServerError(null as any));
-    assert.false(isServerError(undefined as any));
+    assert.false(isServerError(null));
+    assert.false(isServerError(undefined));
+  });
+
+  test('returns false for non-object values', function (assert) {
+    assert.false(isServerError('some string error'));
+    assert.false(isServerError(42));
+    assert.false(isServerError(true));
   });
 
   test('returns true for WarpDrive FetchError with status 500', function (assert) {
@@ -57,9 +63,9 @@ module('Unit | Utils | is-server-error', function () {
     assert.false(isServerError(error));
   });
 
-  test('returns true for AbortError', function (assert) {
+  test('returns false for AbortError (user-initiated navigation)', function (assert) {
     const error = { name: 'AbortError', message: 'The operation was aborted' };
-    assert.true(isServerError(error));
+    assert.false(isServerError(error));
   });
 
   test('returns false for generic Error', function (assert) {

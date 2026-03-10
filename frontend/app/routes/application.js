@@ -15,6 +15,14 @@ export default class ApplicationRoute extends Route {
   async beforeModel() {
     await this.session.setup();
 
+    this.intl.addTranslations('ru-ru', translationsForRuRu);
+    this.intl.addTranslations('en-us', translationsForEnUs);
+
+    const navigatorLanguage = navigator.languages.filter(el => el.includes('-')).map(el => el.toLowerCase())[0];
+    const rawLocale = localStorage.getItem('locale') || navigatorLanguage;
+    const locale = rawLocale === 'ru-ru' ? 'ru-ru' : 'en-us';
+    this.intl.setLocale([locale]);
+
     if (this.session.isAuthenticated) {
       try {
         await Promise.all([
@@ -29,14 +37,6 @@ export default class ApplicationRoute extends Route {
         // Other errors (e.g. 401) are handled by loadCurrentUser (redirects to login)
       }
     }
-
-    this.intl.addTranslations('ru-ru', translationsForRuRu);
-    this.intl.addTranslations('en-us', translationsForEnUs);
-
-    const navigatorLanguage = navigator.languages.filter(el => el.includes('-')).map(el => el.toLowerCase())[0];
-    const rawLocale = localStorage.getItem('locale') || navigatorLanguage;
-    const locale = rawLocale === 'ru-ru' ? 'ru-ru' : 'en-us';
-    this.intl.setLocale([locale]);
   }
 
   redirect(_/* : unknown */, { to }/*: Transition*/) {

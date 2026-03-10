@@ -7,6 +7,10 @@ interface ErrorLike {
   errors?: Array<{ status?: number | string }>;
 }
 
+function isErrorLike(error: unknown): error is ErrorLike {
+  return typeof error === 'object' && error !== null;
+}
+
 /**
  * Detects whether an error represents a server/network failure
  * (as opposed to a client error like 401/404).
@@ -15,10 +19,9 @@ interface ErrorLike {
  * - WarpDrive FetchError with status >= 500 or status 0 (network error)
  * - HTTP 5xx errors from error payloads
  * - TypeError from fetch (network failures)
- * - AbortError (request timeout)
  */
-export default function isServerError(error: ErrorLike): boolean {
-  if (!error) return false;
+export default function isServerError(error: unknown): boolean {
+  if (!isErrorLike(error)) return false;
 
   // WarpDrive FetchError with status >= 500 or network error (status 0)
   if (error.isRequestError) {
@@ -32,9 +35,6 @@ export default function isServerError(error: ErrorLike): boolean {
 
   // Network failures (fetch throws TypeError for network errors)
   if (error instanceof TypeError && error.message?.includes('fetch')) return true;
-
-  // AbortError (request timed out)
-  if (error.name === 'AbortError') return true;
 
   return false;
 }
