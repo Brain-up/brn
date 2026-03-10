@@ -169,7 +169,8 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
   get signalProgress(): string {
     const totalFreqs = this.signalTasks.reduce((sum, t) => sum + t.frequencies.length, 0);
     const completedFreqs = [...this.thresholdStates.values()].filter((s) => s.isComplete).length;
-    return `${completedFreqs + 1} / ${totalFreqs}`;
+    const current = Math.min(completedFreqs + 1, totalFreqs);
+    return `${current} / ${totalFreqs}`;
   }
 
   get signalProgressPercent(): number {
@@ -410,28 +411,31 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
     if (this.isPlayingTone || this._isProcessing) return;
     this._isProcessing = true;
 
-    const task = this.currentSignalTask;
-    if (!task) { this._isProcessing = false; return; }
+    try {
+      const task = this.currentSignalTask;
+      if (!task) return;
 
-    const key = this.currentThresholdKey;
+      const key = this.currentThresholdKey;
 
-    // Get or create threshold state for this frequency
-    let state = this.thresholdStates.get(key) || createThresholdState();
-    state = processResponse(state, heard);
+      // Get or create threshold state for this frequency
+      let state = this.thresholdStates.get(key) || createThresholdState();
+      state = processResponse(state, heard);
 
-    const updatedStates = new Map(this.thresholdStates);
-    updatedStates.set(key, state);
-    this.thresholdStates = updatedStates;
+      const updatedStates = new Map(this.thresholdStates);
+      updatedStates.set(key, state);
+      this.thresholdStates = updatedStates;
 
-    if (state.isComplete) {
-      // Threshold found for this frequency, advance to next
-      await this.advanceToNextFrequency();
-    } else {
-      // Continue adaptive loop at new dB level
-      this.currentTrialDB = getNextDB(state);
-      await this.playSignalTone(this.currentTrialDB);
+      if (state.isComplete) {
+        // Threshold found for this frequency, advance to next
+        await this.advanceToNextFrequency();
+      } else {
+        // Continue adaptive loop at new dB level
+        this.currentTrialDB = getNextDB(state);
+        await this.playSignalTone(this.currentTrialDB);
+      }
+    } finally {
+      this._isProcessing = false;
     }
-    this._isProcessing = false;
   }
 
   private async advanceToNextFrequency() {
@@ -587,8 +591,9 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
 
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.voice = voicesToPlay[0] ?? null;
-    return new Promise((resolve) => {
+    return new Promise<void>((resolve) => {
       utterance.onend = () => resolve();
+      utterance.onerror = () => resolve();
       speechSynthesis.speak(utterance);
     });
   }
@@ -607,40 +612,43 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
     if (this.isPlayingAudio || this._isProcessing) return;
     this._isProcessing = true;
 
-    const task = this.currentSpeechTask;
-    if (!task || !this.speechCorrectWord) { this._isProcessing = false; return; }
+    try {
+      const task = this.currentSpeechTask;
+      if (!task || !this.speechCorrectWord) return;
 
-    const correct = option.word === this.speechCorrectWord.word;
-    const taskId = String(task.id);
+      const correct = option.word === this.speechCorrectWord.word;
+      const taskId = String(task.id);
 
-    // Find or create result entry for this task
-    const updatedResults = [...this.speechResults];
-    let resultEntry = updatedResults.find((r) => r.taskId === taskId);
-    if (!resultEntry) {
-      resultEntry = { taskId, correct: 0, total: 0 };
-      updatedResults.push(resultEntry);
-    }
-    resultEntry.total++;
-    if (correct) {
-      resultEntry.correct++;
-    }
-    this.speechResults = updatedResults;
+      // Find or create result entry for this task
+      const updatedResults = [...this.speechResults];
+      let resultEntry = updatedResults.find((r) => r.taskId === taskId);
+      if (!resultEntry) {
+        resultEntry = { taskId, correct: 0, total: 0 };
+        updatedResults.push(resultEntry);
+      }
+      resultEntry.total++;
+      if (correct) {
+        resultEntry.correct++;
+      }
+      this.speechResults = updatedResults;
 
-    // Advance round
-    if (this.speechRoundIndex + 1 < task.count) {
-      this.speechRoundIndex++;
-      await this.startSpeechRound();
-    } else {
-      // Next task
-      if (this.speechTaskIndex + 1 < this.speechTasks.length) {
-        this.speechTaskIndex++;
-        this.speechRoundIndex = 0;
+      // Advance round
+      if (this.speechRoundIndex + 1 < task.count) {
+        this.speechRoundIndex++;
         await this.startSpeechRound();
       } else {
-        await this.finishSpeechTest();
+        // Next task
+        if (this.speechTaskIndex + 1 < this.speechTasks.length) {
+          this.speechTaskIndex++;
+          this.speechRoundIndex = 0;
+          await this.startSpeechRound();
+        } else {
+          await this.finishSpeechTest();
+        }
       }
+    } finally {
+      this._isProcessing = false;
     }
-    this._isProcessing = false;
   }
 
   async finishSpeechTest() {
@@ -973,7 +981,7 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
                 <span class="text-sm text-gray-500">{{t "audiometry.ear_left"}}:</span>
                 <span class="text-sm font-medium text-gray-700 ml-1">
                   {{t (classificationKey this.hearingClassificationLeft)}}
-                  {{#if this.ptaLeft}}
+                  {{#if (isNotNull this.ptaLeft)}}
                     <span class="text-xs text-gray-400">(PTA: {{this.ptaLeft}} dB)</span>
                   {{/if}}
                 </span>
@@ -984,7 +992,7 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
                 <span class="text-sm text-gray-500">{{t "audiometry.ear_right"}}:</span>
                 <span class="text-sm font-medium text-gray-700 ml-1">
                   {{t (classificationKey this.hearingClassificationRight)}}
-                  {{#if this.ptaRight}}
+                  {{#if (isNotNull this.ptaRight)}}
                     <span class="text-xs text-gray-400">(PTA: {{this.ptaRight}} dB)</span>
                   {{/if}}
                 </span>
