@@ -444,6 +444,27 @@ audiometry:
   replay: Повторить
   heard_count: "Услышано {heard} / {total} частот"
   ear_testing: "Тестирование {ear} уха"
+  current_level: "Громкость: {level} дБ"
+  adaptive_info: "Этот тест использует адаптивную процедуру для определения порога слышимости на каждой частоте. Громкость будет автоматически регулироваться в зависимости от ваших ответов."
+  threshold_at: "{threshold} дБ HL"
+  no_response: "Нет ответа"
+  hearing_normal: "Нормальный слух"
+  hearing_mild_loss: "Лёгкая потеря слуха"
+  hearing_moderate_loss: "Умеренная потеря слуха"
+  hearing_moderately_severe_loss: "Умеренно-тяжёлая потеря слуха"
+  hearing_severe_loss: "Тяжёлая потеря слуха"
+  hearing_profound_loss: "Глубокая потеря слуха"
+  audiogram_freq_axis: "Частота (Гц)"
+  audiogram_db_axis: "дБ HL"
+  audiogram_normal: "Норма (0-20 дБ)"
+  audiogram_mild: "Лёгкая (21-40 дБ)"
+  audiogram_moderate: "Умеренная (41-55 дБ)"
+  audiogram_severe: "Тяжёлая (56+ дБ)"
+  history_title: "История тестов"
+  history_empty: "Нет предыдущих результатов. Пройдите тест, чтобы увидеть историю."
+  history_clear: "Очистить историю"
+  history_duration: "Длительность: {seconds}с"
+  history_pta_trend: "Динамика PTA"
 
 doctor:
   patients:

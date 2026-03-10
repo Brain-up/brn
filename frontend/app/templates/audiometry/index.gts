@@ -6,6 +6,7 @@ import pageTitle from 'ember-page-title/helpers/page-title';
 import { t } from 'ember-intl';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { LinkTo } from '@ember/routing';
+import AudiometryHistory from 'brn/components/audiometry/history';
 import type { Headphone } from 'brn/schemas/headphone';
 
 interface AudiometryTest {
@@ -69,6 +70,8 @@ class AudiometryIndexTemplate extends Component<Signature> {
           </p>
         </div>
       {{/unless}}
+
+      <AudiometryHistory />
     </div>
   </template>
 }

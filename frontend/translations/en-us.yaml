@@ -443,6 +443,27 @@ audiometry:
   replay: Replay
   heard_count: "Heard {heard} / {total} frequencies"
   ear_testing: "Testing {ear} ear"
+  current_level: "Volume: {level} dB"
+  adaptive_info: "This test uses an adaptive procedure to find your hearing threshold at each frequency. The volume will adjust automatically based on your responses."
+  threshold_at: "{threshold} dB HL"
+  no_response: "No response"
+  hearing_normal: "Normal hearing"
+  hearing_mild_loss: "Mild hearing loss"
+  hearing_moderate_loss: "Moderate hearing loss"
+  hearing_moderately_severe_loss: "Moderately severe hearing loss"
+  hearing_severe_loss: "Severe hearing loss"
+  hearing_profound_loss: "Profound hearing loss"
+  audiogram_freq_axis: "Frequency (Hz)"
+  audiogram_db_axis: "dB HL"
+  audiogram_normal: "Normal (0-20 dB)"
+  audiogram_mild: "Mild (21-40 dB)"
+  audiogram_moderate: "Moderate (41-55 dB)"
+  audiogram_severe: "Severe (56+ dB)"
+  history_title: "Test History"
+  history_empty: "No previous test results. Complete a test to see your history here."
+  history_clear: "Clear History"
+  history_duration: "Duration: {seconds}s"
+  history_pta_trend: "PTA Trend Over Time"
 
 doctor:
   patients:
