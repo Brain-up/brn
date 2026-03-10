@@ -9,6 +9,7 @@ import { on } from '@ember/modifier';
 import { fn } from '@ember/helper';
 import { t } from 'ember-intl';
 import type IntlService from 'ember-intl/services/intl';
+import type UserDataService from 'brn/services/user-data';
 import Audiogram from 'brn/components/audiometry/audiogram';
 import { loadHistory, clearHistory } from 'brn/utils/audiometry-history-storage';
 import type { AudiometryHistoryEntry } from 'brn/utils/audiometry-history-storage';
@@ -20,9 +21,19 @@ interface HistorySignature {
 
 export default class AudiometryHistoryComponent extends Component<HistorySignature> {
   @service('intl') intl!: IntlService;
+  @service('user-data') userData!: UserDataService;
 
-  @tracked entries: AudiometryHistoryEntry[] = loadHistory();
+  @tracked entries: AudiometryHistoryEntry[] = [];
   @tracked expandedId: string | null = null;
+
+  get userId(): string | undefined {
+    return this.userData.userModel?.id;
+  }
+
+  constructor(owner: any, args: Record<string, never>) {
+    super(owner, args);
+    this.entries = loadHistory(this.userId);
+  }
 
   get hasEntries(): boolean {
     return this.entries.length > 0;
@@ -36,14 +47,24 @@ export default class AudiometryHistoryComponent extends Component<HistorySignatu
     return this.entries.filter((e) => e.audiometryType === 'SPEECH');
   }
 
+  get latestSignalEntry(): AudiometryHistoryEntry | undefined {
+    return this.signalEntries[0];
+  }
+
   get latestPtaLeft(): number | null {
-    const entry = this.signalEntries[0];
-    return entry?.ptaLeft ?? null;
+    return this.latestSignalEntry?.ptaLeft ?? null;
   }
 
   get latestPtaRight(): number | null {
-    const entry = this.signalEntries[0];
-    return entry?.ptaRight ?? null;
+    return this.latestSignalEntry?.ptaRight ?? null;
+  }
+
+  get latestClassificationLeft(): string | null {
+    return this.latestSignalEntry?.classificationLeft ?? null;
+  }
+
+  get latestClassificationRight(): string | null {
+    return this.latestSignalEntry?.classificationRight ?? null;
   }
 
   get ptaTrendLeft(): { date: string; pta: number }[] {
@@ -67,14 +88,14 @@ export default class AudiometryHistoryComponent extends Component<HistorySignatu
 
   @action
   handleClearHistory() {
-    clearHistory();
+    clearHistory(this.userId);
     this.entries = [];
     this.expandedId = null;
   }
 
   @action
   refreshHistory() {
-    this.entries = loadHistory();
+    this.entries = loadHistory(this.userId);
   }
 
   <template>
@@ -101,9 +122,9 @@ export default class AudiometryHistoryComponent extends Component<HistorySignatu
               <div class="p-3 bg-blue-50 border border-blue-200 rounded-lg text-center" data-test-pta-left>
                 <p class="text-xs text-blue-500 mb-1">{{t "audiometry.ear_left"}} PTA</p>
                 <p class="text-xl font-bold text-blue-700">{{this.latestPtaLeft}} <span class="text-xs font-normal">dB</span></p>
-                {{#if this.signalEntries.[0].classificationLeft}}
+                {{#if this.latestClassificationLeft}}
                   <p class="text-xs text-blue-600 mt-1">
-                    {{t (classificationKey this.signalEntries.[0].classificationLeft)}}
+                    {{t (classificationKey this.latestClassificationLeft)}}
                   </p>
                 {{/if}}
               </div>
@@ -112,9 +133,9 @@ export default class AudiometryHistoryComponent extends Component<HistorySignatu
               <div class="p-3 bg-red-50 border border-red-200 rounded-lg text-center" data-test-pta-right>
                 <p class="text-xs text-red-500 mb-1">{{t "audiometry.ear_right"}} PTA</p>
                 <p class="text-xl font-bold text-red-700">{{this.latestPtaRight}} <span class="text-xs font-normal">dB</span></p>
-                {{#if this.signalEntries.[0].classificationRight}}
+                {{#if this.latestClassificationRight}}
                   <p class="text-xs text-red-600 mt-1">
-                    {{t (classificationKey this.signalEntries.[0].classificationRight)}}
+                    {{t (classificationKey this.latestClassificationRight)}}
                   </p>
                 {{/if}}
               </div>

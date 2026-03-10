@@ -30,6 +30,7 @@ import type { Headphone } from 'brn/schemas/headphone';
 import type { AudiometryTask, SignalsTask, SpeechTask, SpeechAnswerOption } from 'brn/schemas/audiometry';
 import type IntlService from 'ember-intl/services/intl';
 import type NetworkService from 'brn/services/network';
+import type UserDataService from 'brn/services/user-data';
 import type Router from '@ember/routing/router-service';
 
 interface AudiometryTestData {
@@ -55,6 +56,7 @@ interface AudiometryTestPlayerSignature {
 export default class AudiometryTestPlayerComponent extends Component<AudiometryTestPlayerSignature> {
   @service('intl') intl!: IntlService;
   @service('network') network!: NetworkService;
+  @service('user-data') userData!: UserDataService;
   @service('router') router!: Router;
 
   // Shared state
@@ -85,6 +87,10 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
   _audioContext: AudioContext | null = null;
   _audioSource: AudioBufferSourceNode | null = null;
   _maskingSource: AudioBufferSourceNode | null = null;
+
+  get currentUserId(): string | undefined {
+    return this.userData.userModel?.id;
+  }
 
   get isSignals(): boolean {
     return this.args.test.audiometryType === 'SIGNALS';
@@ -501,7 +507,7 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
       ptaRight: this.ptaRight,
       classificationLeft: this.hearingClassificationLeft,
       classificationRight: this.hearingClassificationRight,
-    });
+    }, this.currentUserId);
   }
 
   // ── SPEECH ───────────────────────────────────────────────────────────────────
@@ -681,7 +687,7 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
         correct: this.speechTotalCorrect,
         total: this.speechTotalRounds,
       },
-    });
+    }, this.currentUserId);
   }
 
   // ── Shared ───────────────────────────────────────────────────────────────────

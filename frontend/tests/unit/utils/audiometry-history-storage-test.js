@@ -9,10 +9,14 @@ import {
 module('Unit | Utils | audiometry-history-storage', function (hooks) {
   hooks.beforeEach(function () {
     clearHistory();
+    clearHistory('user-1');
+    clearHistory('user-2');
   });
 
   hooks.afterEach(function () {
     clearHistory();
+    clearHistory('user-1');
+    clearHistory('user-2');
   });
 
   test('loadHistory returns empty array when no data', function (assert) {
@@ -144,6 +148,54 @@ module('Unit | Utils | audiometry-history-storage', function (hooks) {
     const history = loadHistory();
     assert.strictEqual(history.length, 50, 'max 50 entries kept');
     assert.strictEqual(history[0].id, 'entry-54', 'newest entry is first');
+  });
+
+  test('user-scoped history is isolated between users', function (assert) {
+    const entry1 = {
+      id: 'u1-entry',
+      date: '2026-01-01T00:00:00Z',
+      testId: '1',
+      testName: 'User 1 Test',
+      audiometryType: 'SIGNALS',
+      headphoneId: '5',
+      executionSeconds: 60,
+      leftEarThresholds: {},
+      rightEarThresholds: {},
+      ptaLeft: null,
+      ptaRight: null,
+      classificationLeft: null,
+      classificationRight: null,
+    };
+    const entry2 = {
+      id: 'u2-entry',
+      date: '2026-01-01T00:00:00Z',
+      testId: '1',
+      testName: 'User 2 Test',
+      audiometryType: 'SIGNALS',
+      headphoneId: '5',
+      executionSeconds: 60,
+      leftEarThresholds: {},
+      rightEarThresholds: {},
+      ptaLeft: null,
+      ptaRight: null,
+      classificationLeft: null,
+      classificationRight: null,
+    };
+
+    saveHistoryEntry(entry1, 'user-1');
+    saveHistoryEntry(entry2, 'user-2');
+
+    const history1 = loadHistory('user-1');
+    const history2 = loadHistory('user-2');
+
+    assert.strictEqual(history1.length, 1, 'user-1 has one entry');
+    assert.strictEqual(history1[0].id, 'u1-entry', 'user-1 sees own entry');
+    assert.strictEqual(history2.length, 1, 'user-2 has one entry');
+    assert.strictEqual(history2[0].id, 'u2-entry', 'user-2 sees own entry');
+
+    clearHistory('user-1');
+    assert.deepEqual(loadHistory('user-1'), [], 'user-1 history cleared');
+    assert.strictEqual(loadHistory('user-2').length, 1, 'user-2 history unaffected');
   });
 
   test('speech results are preserved', function (assert) {

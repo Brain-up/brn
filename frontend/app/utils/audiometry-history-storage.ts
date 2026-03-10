@@ -1,5 +1,9 @@
-const STORAGE_KEY = 'brn:audiometry-history';
+const STORAGE_KEY_PREFIX = 'brn:audiometry-history';
 const MAX_ENTRIES = 50;
+
+function storageKey(userId?: string): string {
+  return userId ? `${STORAGE_KEY_PREFIX}:${userId}` : STORAGE_KEY_PREFIX;
+}
 
 export interface AudiometryHistoryEntry {
   id: string;
@@ -18,9 +22,9 @@ export interface AudiometryHistoryEntry {
   speechResults?: { correct: number; total: number };
 }
 
-export function loadHistory(): AudiometryHistoryEntry[] {
+export function loadHistory(userId?: string): AudiometryHistoryEntry[] {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = localStorage.getItem(storageKey(userId));
     if (!raw) return [];
     const parsed = JSON.parse(raw);
     if (!Array.isArray(parsed)) return [];
@@ -30,21 +34,21 @@ export function loadHistory(): AudiometryHistoryEntry[] {
   }
 }
 
-export function saveHistoryEntry(entry: AudiometryHistoryEntry): void {
-  const history = loadHistory();
+export function saveHistoryEntry(entry: AudiometryHistoryEntry, userId?: string): void {
+  const history = loadHistory(userId);
   history.unshift(entry);
   if (history.length > MAX_ENTRIES) {
     history.length = MAX_ENTRIES;
   }
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
+    localStorage.setItem(storageKey(userId), JSON.stringify(history));
   } catch {
     // localStorage quota exceeded — silently ignore
   }
 }
 
-export function clearHistory(): void {
-  localStorage.removeItem(STORAGE_KEY);
+export function clearHistory(userId?: string): void {
+  localStorage.removeItem(storageKey(userId));
 }
 
 export function generateEntryId(): string {
