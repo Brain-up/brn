@@ -250,6 +250,9 @@ export default class NetworkService extends Service {
     }
   }
   uploadPictureFile(file: Blob, fileName: string): Promise<Response> {
+    if (!file.size) {
+      return Promise.reject(new Error('Empty file'));
+    }
     const formData = new FormData();
     formData.append('file', file, fileName);
     return waitForPromise(
