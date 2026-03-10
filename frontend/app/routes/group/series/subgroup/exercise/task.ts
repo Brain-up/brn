@@ -1,4 +1,5 @@
 import Route from '@ember/routing/route';
+import type Transition from '@ember/routing/transition';
 import type { TaskBase as Task } from 'brn/schemas/task';
 import type { Exercise } from 'brn/schemas/exercise';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -36,18 +37,20 @@ export default class GroupSeriesSubgroupExerciseTaskRoute extends Route {
     return task;
   }
 
-  async afterModel(task: Task | undefined, { to }: any) {
+  async afterModel(task: Task | undefined, transition: Transition) {
+    const to = transition.to!;
     if (!task) return;
 
+    const parentParams = to.parent?.params as Record<string, string> | undefined;
     if (
       !task.canInteract ||
-      (to.parent.params.exercise_id &&
+      (parentParams?.exercise_id &&
         task.exercise &&
-        to.parent.params.exercise_id !== task.exercise.id)
+        parentParams.exercise_id !== task.exercise.id)
     ) {
       const exercise = await this.store.findRecord<Exercise>(
         'exercise',
-        to.parent.params.exercise_id,
+        parentParams!.exercise_id,
       );
       // Tasks are loaded as included resources in the exercise findRecord response,
       // so no explicit hasMany('tasks').load() is needed.

@@ -13,7 +13,7 @@ export default class GroupSeriesSubgroupController extends Controller {
 
   @tracked
   availableExercises: string[] = [];
-  @tracked _model: any;
+  @tracked _model: Iterable<{ id: string; isManuallyCompleted?: boolean }> | null = null;
   get model() {
     return this._model;
   }

@@ -54,7 +54,7 @@ export default class TaskPlayerSingleWordsOptionComponent extends Component<Task
       }
     }
   }
-  @action handleClick(cb: any) {
+  @action handleClick(cb: () => void) {
     this.isClicked = true;
     cb();
   }

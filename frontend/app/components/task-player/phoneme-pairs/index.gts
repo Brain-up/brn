@@ -20,10 +20,11 @@ import { fn } from '@ember/helper';
 import { eq, and } from 'ember-truth-helpers';
 import UiTaskContent from 'brn/components/ui/task-content';
 import { setHas } from 'brn/utils/set-has';
+import type { TaskPhonemePairs } from 'brn/schemas/task/phoneme-pairs';
 
 export interface PhonemePairsSignature {
   Args: {
-    task: any;
+    task: TaskPhonemePairs;
     mode: Mode;
     disableAnswers: boolean;
     activeWord: string;

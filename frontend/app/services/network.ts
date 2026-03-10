@@ -1,5 +1,6 @@
 import Service, { service } from '@ember/service';
 import Session from 'ember-simple-auth/services/session';
+import type RouterService from '@ember/routing/router-service';
 import AuthTokenService from './auth-token';
 import UserDataService from './user-data';
 import { waitForPromise } from '@ember/test-waiters';
@@ -46,7 +47,7 @@ export default class NetworkService extends Service {
   @service('session') session!: Session;
   @service('user-data') userData?: UserDataService;
   @service('auth-token') authToken!: AuthTokenService;
-  @service('router') router!: any;
+  @service('router') router!: RouterService;
   prefix = '/api';
   get token() {
     return this.authToken.token;
@@ -124,8 +125,8 @@ export default class NetworkService extends Service {
   }
   async loadCurrentUser() {
     try {
-      const user: any = await this.getCurrentUser();
-      user.initials = `${user.firstName.charAt(0)}${user.lastName.charAt(
+      const user = await this.getCurrentUser();
+      (user as UserDTO & { initials?: string }).initials = `${user.firstName.charAt(0)}${user.lastName.charAt(
         0,
       )}`.toUpperCase();
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

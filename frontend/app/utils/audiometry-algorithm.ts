@@ -169,10 +169,12 @@ export function dBHLtoToneDB(dBHL: number): number {
 }
 
 /**
- * Calculate masking noise level: signal - 30 dB, minimum 10 dB.
+ * Calculate masking noise level: signal - 30 dB.
+ * Returns 0 when the signal is too low to need masking (≤ 30 dB HL).
  */
 export function getMaskingLevel(signalDB: number): number {
-  return Math.max(signalDB - 30, 10);
+  if (signalDB <= 30) return 0;
+  return signalDB - 30;
 }
 
 /**

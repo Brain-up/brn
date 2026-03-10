@@ -22,10 +22,11 @@ import { eq, and } from 'ember-truth-helpers';
 import UiTaskContent from 'brn/components/ui/task-content';
 import { t } from 'ember-intl';
 import { setHas } from 'brn/utils/set-has';
+import type { TaskAuditorySequence } from 'brn/schemas/task/auditory-sequence';
 
 export interface AuditorySequenceSignature {
   Args: {
-    task: any;
+    task: TaskAuditorySequence;
     mode: Mode;
     disableAnswers: boolean;
     activeWord: string;

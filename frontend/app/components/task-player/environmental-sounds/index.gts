@@ -21,10 +21,11 @@ import { fn } from '@ember/helper';
 import { eq, and } from 'ember-truth-helpers';
 import UiTaskContent from 'brn/components/ui/task-content';
 import { setHas } from 'brn/utils/set-has';
+import type { TaskEnvironmentalSounds } from 'brn/schemas/task/environmental-sounds';
 
 export interface EnvironmentalSoundsSignature {
   Args: {
-    task: any;
+    task: TaskEnvironmentalSounds;
     mode: Mode;
     disableAnswers: boolean;
     activeWord: string;

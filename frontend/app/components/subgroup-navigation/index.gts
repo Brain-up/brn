@@ -36,7 +36,7 @@ interface SubgroupNavigationSignature {
 export default class SubgroupNavigation extends Component<SubgroupNavigationSignature> {
   @trackedRef('container') container!: HTMLUListElement;
   @tracked scrollIteration = 0;
-  debounceTimer: any = 0;
+  debounceTimer: ReturnType<typeof debounce> | undefined = undefined;
 
   get sortedExercises(): SubgroupItem[] {
     const group = this.args.group as SubgroupItem[] | undefined;

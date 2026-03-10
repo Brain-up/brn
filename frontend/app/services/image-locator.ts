@@ -107,7 +107,7 @@ export default class ImageLocatorService extends Service {
         return [];
       }
       const data = await request.json();
-      return data.def[0].tr.map((e: any) => e.text);
+      return data.def[0].tr.map((e: { text: string }) => e.text);
     } catch (_e) {
       return [];
     }

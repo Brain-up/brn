@@ -1,4 +1,5 @@
 import Service, { service } from '@ember/service';
+import type Session from 'ember-simple-auth/services/session';
 import { tracked } from '@glimmer/tracking';
 
 interface GamificationState {
@@ -27,7 +28,7 @@ const XP_PERFECT_BONUS = 15;
 const MAX_STREAK_BONUS = 50;
 
 export default class GamificationService extends Service {
-  @service session!: any;
+  @service session!: Session;
 
   @tracked private _state: GamificationState = DEFAULT_STATE;
   @tracked sessionXp = 0;

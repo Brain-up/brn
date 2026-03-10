@@ -33,7 +33,7 @@ export default class GroupSeriesSubgroupExerciseController extends Controller {
   get exerciseIsCompletedInCurrentCycle() {
     const tasksArray = Array.from(this.model.tasks);
     if (tasksArray.length === 0) return false;
-    return tasksArray.every((task: any) => task.completedInCurrentCycle);
+    return tasksArray.every((task) => (task as { completedInCurrentCycle: boolean }).completedInCurrentCycle);
   }
 
   goToSeries() {
