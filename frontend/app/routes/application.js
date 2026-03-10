@@ -3,6 +3,7 @@ import { service } from '@ember/service';
 import { isTesting } from '@embroider/macros';
 import translationsForRuRu from 'virtual:ember-intl/translations/ru-ru';
 import translationsForEnUs from 'virtual:ember-intl/translations/en-us';
+import isServerError from 'brn/utils/is-server-error';
 
 export default class ApplicationRoute extends Route {
   @service('session') session;
@@ -20,8 +21,12 @@ export default class ApplicationRoute extends Route {
           this.network.loadCurrentUser(),
           this.tasksManager.loadTodayCompletedExercises(),
         ]);
-      } catch {
-        // handled by loadCurrentUser (redirects to login)
+      } catch (e) {
+        // Re-throw server/network errors so the error template is shown
+        if (isServerError(e)) {
+          throw e;
+        }
+        // Other errors (e.g. 401) are handled by loadCurrentUser (redirects to login)
       }
     }
 
