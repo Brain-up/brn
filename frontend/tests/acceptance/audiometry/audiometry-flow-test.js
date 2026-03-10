@@ -156,15 +156,18 @@ module('Acceptance | audiometry | flow', function (hooks) {
         description: 'Speech test',
         audiometryTasks: [
           {
-            id: '201',
+            id: 201,
             level: 1,
+            audiometryGroup: 'A',
             frequencyZone: 'LOW',
+            minFrequency: 150,
+            maxFrequency: 400,
             count: 1,
             showSize: 3,
             answerOptions: [
-              { id: '1', word: 'apple', audioFileUrl: '/audio/en/apple.ogg', wordType: 'OBJECT' },
-              { id: '2', word: 'chair', audioFileUrl: '/audio/en/chair.ogg', wordType: 'OBJECT' },
-              { id: '3', word: 'table', audioFileUrl: '/audio/en/table.ogg', wordType: 'OBJECT' },
+              { id: 1, word: 'apple', wordType: 'AUDIOMETRY_WORD', locale: 'en-us', pictureFileUrl: '', soundsCount: 0, description: '' },
+              { id: 2, word: 'chair', wordType: 'AUDIOMETRY_WORD', locale: 'en-us', pictureFileUrl: '', soundsCount: 0, description: '' },
+              { id: 3, word: 'table', wordType: 'AUDIOMETRY_WORD', locale: 'en-us', pictureFileUrl: '', soundsCount: 0, description: '' },
             ],
           },
         ],
@@ -192,7 +195,6 @@ module('Acceptance | audiometry | flow', function (hooks) {
 
     // Speech UI — word buttons shown
     assert.dom('[data-test-speech-word]').exists({ count: 3 }, '3 word buttons shown');
-    assert.dom('[data-test-replay-word]').exists('replay button shown');
 
     // Click first word button (any word)
     await click('[data-test-speech-word]');

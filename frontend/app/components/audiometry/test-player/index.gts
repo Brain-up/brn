@@ -11,7 +11,6 @@ import { fn } from '@ember/helper';
 import { t } from 'ember-intl';
 import { LinkTo } from '@ember/routing';
 import UiConfirmDialog from 'brn/components/ui/confirm-dialog';
-import { createAudioContext, createSource, loadAudioFiles } from 'brn/utils/audio-api';
 import type { Headphone } from 'brn/schemas/headphone';
 import type { AudiometryTask, SignalsTask, SpeechTask, SpeechAnswerOption } from 'brn/schemas/audiometry';
 import type IntlService from 'ember-intl/services/intl';
@@ -60,14 +59,11 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
   // SPEECH state
   @tracked speechTaskIndex = 0;
   @tracked speechRoundIndex = 0;
-  @tracked isPlayingAudio = false;
   @tracked speechDisplayWords: SpeechAnswerOption[] = [];
-  @tracked speechPlayedWord: SpeechAnswerOption | null = null;
+  @tracked speechCorrectWord: SpeechAnswerOption | null = null;
   speechResults: { taskId: string; correct: number; total: number }[] = [];
 
   _synth: any = null;
-  _audioContext: AudioContext | null = null;
-  _audioSource: AudioBufferSourceNode | null = null;
 
   get isSignals(): boolean {
     return this.args.test.audiometryType === 'SIGNALS';
@@ -221,7 +217,7 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
       this.speechTaskIndex = 0;
       this.speechRoundIndex = 0;
       this.speechResults = [];
-      await this.startSpeechRound();
+      this.startSpeechRound();
     }
   }
 
@@ -301,7 +297,7 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
   }
 
   async finishSignalsTest() {
-    this.disposeAudio();
+    this.disposeSynth();
     this.phase = 'results';
     const endTime = new Date().toISOString();
     const executionSeconds = Math.round(
@@ -338,84 +334,28 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
 
   // ── SPEECH ───────────────────────────────────────────────────────────────────
 
-  async startSpeechRound() {
+  startSpeechRound() {
     const task = this.currentSpeechTask;
     if (!task) return;
 
-    // Pick a random word to play
+    // Pick a random correct word for this round
     const options = task.answerOptions;
-    const playIndex = Math.floor(Math.random() * options.length);
-    const playedWord = options[playIndex]!;
-    this.speechPlayedWord = playedWord;
+    const correctIndex = Math.floor(Math.random() * options.length);
+    const correctWord = options[correctIndex]!;
+    this.speechCorrectWord = correctWord;
 
     // Select showSize words to display (including the correct one), shuffled
-    const display = this.pickDisplayWords(options, playedWord, task.showSize);
-    this.speechDisplayWords = display;
-
-    // Play the word audio
-    await this.playSpeechAudio(playedWord.audioFileUrl);
-  }
-
-  pickDisplayWords(
-    options: SpeechAnswerOption[],
-    correct: SpeechAnswerOption,
-    showSize: number,
-  ): SpeechAnswerOption[] {
-    const others = options.filter((o) => o.word !== correct.word);
-    const picked = [correct, ...shuffleArray(others).slice(0, showSize - 1)];
-    return shuffleArray(picked);
-  }
-
-  async playSpeechAudio(audioFileUrl: string) {
-    if (isTesting()) {
-      return;
-    }
-
-    this.isPlayingAudio = true;
-    try {
-      if (!this._audioContext) {
-        this._audioContext = createAudioContext();
-      }
-      const context = this._audioContext;
-      const getToken = () => this.network.token;
-      const buffers = await loadAudioFiles(context, [audioFileUrl], getToken);
-      const buffer = buffers[0];
-      if (!buffer) {
-        console.error('Failed to load audio file:', audioFileUrl);
-        return;
-      }
-      const { source } = createSource(context, buffer);
-      this._audioSource = source;
-      source.start(0);
-
-      await new Promise<void>((resolve) => {
-        source.onended = () => resolve();
-      });
-    } catch (e) {
-      console.error('Failed to play speech audio:', e);
-    } finally {
-      if (!this.isDestroyed && !this.isDestroying) {
-        this.isPlayingAudio = false;
-      }
-    }
-  }
-
-  @action
-  async replaySpeechWord() {
-    if (this.isPlayingAudio) return;
-    const word = this.speechPlayedWord;
-    if (!word) return;
-    await this.playSpeechAudio(word.audioFileUrl);
+    const others = options.filter((o) => o.word !== correctWord.word);
+    const picked = [correctWord, ...shuffleArray(others).slice(0, task.showSize - 1)];
+    this.speechDisplayWords = shuffleArray(picked);
   }
 
   @action
   async answerSpeech(option: SpeechAnswerOption) {
-    if (this.isPlayingAudio) return;
-
     const task = this.currentSpeechTask;
-    if (!task || !this.speechPlayedWord) return;
+    if (!task || !this.speechCorrectWord) return;
 
-    const correct = option.word === this.speechPlayedWord.word;
+    const correct = option.word === this.speechCorrectWord.word;
     const taskId = String(task.id);
 
     // Find or create result entry for this task
@@ -432,13 +372,13 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
     // Advance round
     if (this.speechRoundIndex + 1 < task.count) {
       this.speechRoundIndex++;
-      await this.startSpeechRound();
+      this.startSpeechRound();
     } else {
       // Next task
       if (this.speechTaskIndex + 1 < this.speechTasks.length) {
         this.speechTaskIndex++;
         this.speechRoundIndex = 0;
-        await this.startSpeechRound();
+        this.startSpeechRound();
       } else {
         await this.finishSpeechTest();
       }
@@ -483,7 +423,7 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
 
   @action
   confirmAbandon() {
-    this.disposeAudio();
+    this.disposeSynth();
     this.showAbandonConfirm = false;
     this.router.transitionTo('audiometry');
   }
@@ -493,21 +433,9 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
     this.showAbandonConfirm = false;
   }
 
-  disposeAudio() {
-    this.disposeSynth();
-    if (this._audioSource) {
-      try { this._audioSource.stop(); } catch (_e) { /* already stopped */ }
-      this._audioSource = null;
-    }
-    if (this._audioContext) {
-      try { this._audioContext.close(); } catch (_e) { /* already closed */ }
-      this._audioContext = null;
-    }
-  }
-
   willDestroy() {
     super.willDestroy();
-    this.disposeAudio();
+    this.disposeSynth();
   }
 
   <template>
@@ -657,23 +585,12 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
                 {{t "audiometry.speech_select_word"}}
               </p>
 
-              <button
-                data-test-replay-word
-                type="button"
-                disabled={{this.isPlayingAudio}}
-                class="btn-press mb-6 px-4 py-2 text-sm text-indigo-600 border border-indigo-300 rounded-lg hover:bg-indigo-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                {{on "click" this.replaySpeechWord}}
-              >
-                {{t "audiometry.replay"}}
-              </button>
-
               <div class="grid grid-cols-3 gap-3 max-w-md mx-auto">
                 {{#each this.speechDisplayWords as |option|}}
                   <button
                     data-test-speech-word
                     type="button"
-                    disabled={{this.isPlayingAudio}}
-                    class="btn-press px-4 py-3 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-indigo-50 hover:border-indigo-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                    class="btn-press px-4 py-3 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-indigo-50 hover:border-indigo-300"
                     {{on "click" (fn this.answerSpeech option)}}
                   >
                     {{option.word}}
