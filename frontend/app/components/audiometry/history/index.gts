@@ -1,4 +1,5 @@
 import Component from '@glimmer/component';
+import type Owner from '@ember/owner';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { action } from '@ember/object';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -30,7 +31,7 @@ export default class AudiometryHistoryComponent extends Component<HistorySignatu
     return this.userData.userModel?.id;
   }
 
-  constructor(owner: any, args: Record<string, never>) {
+  constructor(owner: Owner, args: Record<string, never>) {
     super(owner, args);
     this.entries = loadHistory(this.userId);
   }
