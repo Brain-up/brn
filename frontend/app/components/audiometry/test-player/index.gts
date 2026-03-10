@@ -379,17 +379,20 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
       const getToken = () => this.network.token;
       const buffers = await loadAudioFiles(context, [url], getToken);
       const buffer = buffers[0];
-      if (!buffer) {
-        console.error('Failed to load audio:', url);
-        return;
+      if (buffer) {
+        const { source } = createSource(context, buffer);
+        this._audioSource = source;
+        source.start(0);
+        await new Promise<void>((resolve) => {
+          source.onended = () => resolve();
+        });
+      } else {
+        // Fallback to browser speech synthesis (same as AudioService.playTask)
+        const text = new URL(url).searchParams.get('text');
+        if (text) {
+          await this.nativePlayText(text);
+        }
       }
-      const { source } = createSource(context, buffer);
-      this._audioSource = source;
-      source.start(0);
-
-      await new Promise<void>((resolve) => {
-        source.onended = () => resolve();
-      });
     } catch (e) {
       console.error('Failed to play speech audio:', e);
     } finally {
@@ -397,6 +400,23 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
         this.isPlayingAudio = false;
       }
     }
+  }
+
+  nativePlayText(text: string): Promise<void> {
+    const lang = this.intl.primaryLocale;
+    const voices = speechSynthesis.getVoices().filter((e) => e.lang.toLowerCase() === lang);
+    const voicesToPlay: SpeechSynthesisVoice[] = ([
+      voices.find((el) => el.default === true),
+      voices.find((el) => el.localService === false),
+      ...voices,
+    ]).filter((el) => el !== undefined) as SpeechSynthesisVoice[];
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.voice = voicesToPlay[0] ?? null;
+    return new Promise((resolve) => {
+      utterance.onend = () => resolve();
+      speechSynthesis.speak(utterance);
+    });
   }
 
   @action
