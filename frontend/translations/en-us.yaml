@@ -407,6 +407,7 @@ audiometry:
   back: Back
   save_failed: Failed to save results
   confirm_abandon: Are you sure you want to leave? Your test progress will be lost.
+  playing: Playing sound...
   ear_left: LEFT
   ear_right: RIGHT
 

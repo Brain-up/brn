@@ -5,6 +5,7 @@ import { service } from '@ember/service';
 import { action } from '@ember/object';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { tracked } from '@glimmer/tracking';
+import { isTesting } from '@embroider/macros';
 import { on } from '@ember/modifier';
 import { fn } from '@ember/helper';
 import { t } from 'ember-intl';
@@ -31,6 +32,19 @@ interface AudiometryTestData {
 
 type TestPhase = 'setup' | 'testing' | 'results';
 
+// Standard audiometric test frequencies mapped by zone index
+const FREQUENCY_BY_ZONE: Record<number, number> = {
+  1: 125,
+  2: 250,
+  3: 500,
+  4: 1000,
+  5: 2000,
+  6: 4000,
+  7: 8000,
+};
+
+const TONE_DURATION_SEC = 1.5;
+
 interface AudiometryTestPlayerSignature {
   Args: {
     test: AudiometryTestData;
@@ -51,6 +65,9 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
   @tracked startTime = '';
   @tracked error = '';
   @tracked showAbandonConfirm = false;
+  @tracked isPlayingTone = false;
+
+  _synth: any = null;
 
   get tasks(): AudiometryTask[] {
     return this.args.test.audiometryTasks || [];
@@ -62,6 +79,11 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
 
   get currentTask(): AudiometryTask | undefined {
     return this.tasks[this.currentTaskIndex];
+  }
+
+  get currentFrequency(): number {
+    const zone = this.currentTask?.frequencyZone ?? 4;
+    return FREQUENCY_BY_ZONE[zone] ?? 1000;
   }
 
   get progressPercent(): number {
@@ -88,15 +110,57 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
   }
 
   @action
-  startTest() {
+  async startTest() {
     this.phase = 'testing';
     this.currentTaskIndex = 0;
     this.rightAnswers = 0;
     this.startTime = new Date().toISOString();
+    await this.playCurrentTone();
+  }
+
+  async playCurrentTone() {
+    if (isTesting()) {
+      return;
+    }
+
+    this.isPlayingTone = true;
+    try {
+      const Tone = await import('tone');
+      await Tone.start();
+
+      this.disposeSynth();
+      const synth = new Tone.PolySynth(Tone.Synth).toDestination();
+      this._synth = synth;
+
+      const freq = this.currentFrequency;
+      synth.triggerAttackRelease(freq, TONE_DURATION_SEC, Tone.now(), 0.5);
+
+      await new Promise((resolve) => setTimeout(resolve, TONE_DURATION_SEC * 1000));
+    } catch (e) {
+      console.error('Failed to play audiometry tone:', e);
+    } finally {
+      this.disposeSynth();
+      if (!this.isDestroyed && !this.isDestroying) {
+        this.isPlayingTone = false;
+      }
+    }
+  }
+
+  disposeSynth() {
+    if (this._synth) {
+      try {
+        this._synth.dispose();
+      } catch (_e) {
+        // synth may already be disposed
+      }
+      this._synth = null;
+    }
   }
 
   @action
-  answer(heard: boolean) {
+  async answer(heard: boolean) {
+    if (this.isPlayingTone) return;
+
     if (heard) {
       this.rightAnswers++;
     }
@@ -104,11 +168,13 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
       this.finishTest();
     } else {
       this.currentTaskIndex++;
+      await this.playCurrentTone();
     }
   }
 
   @action
   async finishTest() {
+    this.disposeSynth();
     this.phase = 'results';
     const endTime = new Date().toISOString();
     const executionSeconds = Math.round(
@@ -145,6 +211,7 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
 
   @action
   confirmAbandon() {
+    this.disposeSynth();
     this.showAbandonConfirm = false;
     this.router.transitionTo('audiometry');
   }
@@ -152,6 +219,11 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
   @action
   cancelAbandon() {
     this.showAbandonConfirm = false;
+  }
+
+  willDestroy() {
+    super.willDestroy();
+    this.disposeSynth();
   }
 
   <template>
@@ -234,14 +306,31 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
 
           <div class="text-center p-8 bg-gray-50 rounded-lg">
             {{#if this.currentTask}}
-              <p class="text-lg font-medium text-gray-700 mb-8">
-                {{t "audiometry.can_you_hear"}}
+              <p class="text-xs text-gray-400 mb-2" data-test-frequency-info>
+                {{t "audiometry.frequency" freq=this.currentFrequency}}
               </p>
+
+              {{#if this.isPlayingTone}}
+                <div class="mb-8" data-test-playing-indicator>
+                  <div class="inline-flex items-center gap-2 text-indigo-600">
+                    <svg class="animate-pulse w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+                    </svg>
+                    <span class="text-lg font-medium">{{t "audiometry.playing"}}</span>
+                  </div>
+                </div>
+              {{else}}
+                <p class="text-lg font-medium text-gray-700 mb-8">
+                  {{t "audiometry.can_you_hear"}}
+                </p>
+              {{/if}}
+
               <div class="flex justify-center gap-4">
                 <button
                   data-test-answer-yes
                   type="button"
-                  class="btn-press px-8 py-4 text-lg font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 min-w-[120px]"
+                  disabled={{this.isPlayingTone}}
+                  class="btn-press px-8 py-4 text-lg font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed min-w-[120px]"
                   {{on "click" (fn this.answer true)}}
                 >
                   {{t "audiometry.yes"}}
@@ -249,7 +338,8 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
                 <button
                   data-test-answer-no
                   type="button"
-                  class="btn-press px-8 py-4 text-lg font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 min-w-[120px]"
+                  disabled={{this.isPlayingTone}}
+                  class="btn-press px-8 py-4 text-lg font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed min-w-[120px]"
                   {{on "click" (fn this.answer false)}}
                 >
                   {{t "audiometry.no"}}
