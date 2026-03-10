@@ -7,6 +7,8 @@ import UiButton from 'brn/components/ui/button';
 import UiIconPersons from 'brn/components/ui/icon/persons';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import AboutUs from 'brn/components/about-us';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import DoctorFeedback from 'brn/components/doctor-feedback';
 
 export default RouteTemplate(
   <template>
@@ -35,5 +37,6 @@ export default RouteTemplate(
     </section>
 
     <AboutUs />
+    <DoctorFeedback />
   </template>
 );

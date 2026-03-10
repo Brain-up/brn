@@ -142,6 +142,33 @@ about_us:
       in an engaging, game-like format and later use new words in conversations
       with friends and acquaintances.
 
+doctor_feedback:
+  title: Expert Feedback
+  text: >-
+    "The BrainUP application is designed for auditory training in children with
+    central and peripheral hearing impairments. The relevance of its use is due
+    to the fact that even with peripheral hearing loss, problems of auditory
+    analysis are observed, especially in children with concomitant disorders.
+    The prevalence of auditory neuropathy spectrum disorders and central
+    auditory processing disorders is also growing, in which hearing correction
+    cannot be limited to the use of hearing aids or cochlear implants alone.
+    Research has shown that systematic auditory training helps improve sound
+    discrimination, speech recognition in quiet and in the presence of noise,
+    sound localization, and other aspects of auditory processing. The lack of
+    Russian-language programs for auditory training limited the rehabilitation
+    options for such patients. With the advent of the BrainUP application, the
+    situation has improved significantly. BrainUP features a simple and
+    intuitive interface, gradual task complexity as previous levels are
+    completed, and a logical development of both speech and non-speech hearing.
+    We hope that the further development of the application will contribute to
+    even greater success for our patients!"
+  name: Gaziz Sharifovich Tufatulin
+  credentials: >-
+    Doctor of Medical Sciences, Chief Physician of St. Petersburg Children's
+    City Audiological Center, Associate Professor of Otorhinolaryngology at
+    North-Western State Medical University, Leading Researcher at St.
+    Petersburg Research Institute of Ear, Nose, Throat and Speech
+
 index:
   app_info: BrainUP - online classes for children and adults
   app_description: Our site is a platform of interactive exercises for adults and children from the age of seven with cognitive speech perception problems, which helps to train the ability to listen and understand.
