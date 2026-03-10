@@ -145,7 +145,7 @@ about_us:
 doctor_feedback:
   title: Expert Feedback
   text: >-
-    The BrainUP application is designed for auditory training in children with
+    "The BrainUP application is designed for auditory training in children with
     central and peripheral hearing impairments. The relevance of its use is due
     to the fact that even with peripheral hearing loss, problems of auditory
     analysis are observed, especially in children with concomitant disorders.
@@ -161,7 +161,7 @@ doctor_feedback:
     intuitive interface, gradual task complexity as previous levels are
     completed, and a logical development of both speech and non-speech hearing.
     We hope that the further development of the application will contribute to
-    even greater success for our patients!
+    even greater success for our patients!"
   name: Gaziz Sharifovich Tufatulin
   credentials: >-
     Doctor of Medical Sciences, Chief Physician of St. Petersburg Children's
