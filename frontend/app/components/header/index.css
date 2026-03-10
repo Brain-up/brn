@@ -97,6 +97,20 @@
     padding: 6px 20px;
   }
 
+  .dropdown a[target="_blank"] {
+    position: relative;
+    padding-right: 30px;
+  }
+
+  .dropdown a[target="_blank"] .external-icon {
+    position: absolute;
+    top: 4px;
+    right: 8px;
+    width: 12px;
+    height: 12px;
+    opacity: 0.6;
+  }
+
   .dropdown a:hover {
     cursor: pointer;
     opacity: 0.5;

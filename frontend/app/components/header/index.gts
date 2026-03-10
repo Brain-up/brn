@@ -19,6 +19,14 @@ import XpBadge from 'brn/components/xp-badge';
 import StreakCounter from 'brn/components/streak-counter';
 import GamificationService from 'brn/services/gamification';
 
+const ExternalLinkIcon = <template>
+  <svg class="external-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+    <polyline points="15 3 21 3 21 9" />
+    <line x1="10" y1="14" x2="21" y2="3" />
+  </svg>
+</template>;
+
 export default class HeaderComponent extends Component {
   @service('session') session!: Session;
   @service('user-data') userData!: UserDataService;
@@ -151,9 +159,9 @@ export default class HeaderComponent extends Component {
                     >EN</button>
                   </div>
                   <LinkTo class="lg:hidden" @route="description" {{on "click" this.closeMenu}}>{{t "header.about"}}</LinkTo>
-                  <a class="xl:hidden" target="_blank" href="https://t.me/BrainUpUsers" rel="noopener noreferrer" {{on "click" this.closeMenu}}>Telegram</a>
-                  <a target="_blank" href="https://opencollective.com/brainup" rel="noopener noreferrer">{{t "header.donate"}}</a>
-                  <a target="_blank" href="https://github.com/Brain-up/brn" rel="noopener noreferrer">{{t "header.github"}}</a>
+                  <a class="xl:hidden" target="_blank" href="https://t.me/BrainUpUsers" rel="noopener noreferrer" {{on "click" this.closeMenu}}>Telegram<ExternalLinkIcon /></a>
+                  <a target="_blank" href="https://opencollective.com/brainup" rel="noopener noreferrer">{{t "header.donate"}}<ExternalLinkIcon /></a>
+                  <a target="_blank" href="https://github.com/Brain-up/brn" rel="noopener noreferrer">{{t "header.github"}}<ExternalLinkIcon /></a>
                   <LinkTo @route="contact" {{on "click" this.closeMenu}}>{{t "header.contact"}}</LinkTo>
                   <LinkTo @route="specialists" {{on "click" this.closeMenu}}>{{t "header.specialists"}}</LinkTo>
                   <LinkTo @route="contributors" {{on "click" this.closeMenu}}>{{t "header.contributors"}}</LinkTo>
@@ -251,8 +259,8 @@ export default class HeaderComponent extends Component {
                 >{{t "header.more"}}</button>
                 <input type="checkbox" />
                 <div class="sm:text-base bottom absolute z-20 py-2 text-xs rounded">
-                  <a target="_blank" href="https://opencollective.com/brainup" rel="noopener noreferrer">{{t "header.donate"}}</a>
-                  <a target="_blank" href="https://github.com/Brain-up/brn" rel="noopener noreferrer">{{t "header.github"}}</a>
+                  <a target="_blank" href="https://opencollective.com/brainup" rel="noopener noreferrer">{{t "header.donate"}}<ExternalLinkIcon /></a>
+                  <a target="_blank" href="https://github.com/Brain-up/brn" rel="noopener noreferrer">{{t "header.github"}}<ExternalLinkIcon /></a>
                   <LinkTo @route="contact" {{on "click" this.closeMenu}}>{{t "header.contact"}}</LinkTo>
                   <LinkTo @route="specialists" {{on "click" this.closeMenu}}>{{t "header.specialists"}}</LinkTo>
                   <LinkTo @route="contributors" {{on "click" this.closeMenu}}>{{t "header.contributors"}}</LinkTo>
