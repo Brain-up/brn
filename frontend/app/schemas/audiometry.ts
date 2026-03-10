@@ -22,8 +22,27 @@ export type Audiometry = WithLegacy<{
   [Type]: 'audiometry';
 }>;
 
-export interface AudiometryTask {
+export interface SignalsTask {
   id: string;
-  frequencyZone?: number;
-  audiometryGroup?: string;
+  ear: 'LEFT' | 'RIGHT';
+  frequencies: number[];
 }
+
+export interface SpeechAnswerOption {
+  id: string;
+  word: string;
+  audioFileUrl: string;
+  wordType?: string;
+}
+
+export interface SpeechTask {
+  id: string;
+  level: number;
+  audiometryGroup?: string;
+  frequencyZone?: string;
+  count: number;
+  showSize: number;
+  answerOptions: SpeechAnswerOption[];
+}
+
+export type AudiometryTask = SignalsTask | SpeechTask;

@@ -412,6 +412,12 @@ audiometry:
   playing: Воспроизведение звука...
   ear_left: ЛЕВОЕ
   ear_right: ПРАВОЕ
+  matrix_coming_soon: Этот тест пока недоступен.
+  speech_select_word: Выберите слово, которое вы услышали
+  speech_zone: "Частотная зона: {zone}"
+  replay: Повторить
+  heard_count: "Услышано {heard} / {total} частот"
+  ear_testing: "Тестирование {ear} уха"
 
 doctor:
   patients:

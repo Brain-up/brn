@@ -410,6 +410,12 @@ audiometry:
   playing: Playing sound...
   ear_left: LEFT
   ear_right: RIGHT
+  matrix_coming_soon: This test is not yet available.
+  speech_select_word: Select the word you heard
+  speech_zone: "Frequency zone: {zone}"
+  replay: Replay
+  heard_count: "Heard {heard} / {total} frequencies"
+  ear_testing: "Testing {ear} ear"
 
 doctor:
   patients:
