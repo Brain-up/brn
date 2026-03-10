@@ -195,6 +195,7 @@ module('Acceptance | audiometry | flow', function (hooks) {
 
     // Speech UI — word buttons shown
     assert.dom('[data-test-speech-word]').exists({ count: 3 }, '3 word buttons shown');
+    assert.dom('[data-test-replay-word]').exists('replay button shown');
 
     // Click first word button (any word)
     await click('[data-test-speech-word]');

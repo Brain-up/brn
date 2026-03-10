@@ -11,6 +11,7 @@ import { fn } from '@ember/helper';
 import { t } from 'ember-intl';
 import { LinkTo } from '@ember/routing';
 import UiConfirmDialog from 'brn/components/ui/confirm-dialog';
+import { createAudioContext, createSource, loadAudioFiles } from 'brn/utils/audio-api';
 import type { Headphone } from 'brn/schemas/headphone';
 import type { AudiometryTask, SignalsTask, SpeechTask, SpeechAnswerOption } from 'brn/schemas/audiometry';
 import type IntlService from 'ember-intl/services/intl';
@@ -59,11 +60,14 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
   // SPEECH state
   @tracked speechTaskIndex = 0;
   @tracked speechRoundIndex = 0;
+  @tracked isPlayingAudio = false;
   @tracked speechDisplayWords: SpeechAnswerOption[] = [];
   @tracked speechCorrectWord: SpeechAnswerOption | null = null;
   speechResults: { taskId: string; correct: number; total: number }[] = [];
 
   _synth: any = null;
+  _audioContext: AudioContext | null = null;
+  _audioSource: AudioBufferSourceNode | null = null;
 
   get isSignals(): boolean {
     return this.args.test.audiometryType === 'SIGNALS';
@@ -217,7 +221,7 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
       this.speechTaskIndex = 0;
       this.speechRoundIndex = 0;
       this.speechResults = [];
-      this.startSpeechRound();
+      await this.startSpeechRound();
     }
   }
 
@@ -297,7 +301,7 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
   }
 
   async finishSignalsTest() {
-    this.disposeSynth();
+    this.disposeAllAudio();
     this.phase = 'results';
     const endTime = new Date().toISOString();
     const executionSeconds = Math.round(
@@ -334,7 +338,14 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
 
   // ── SPEECH ───────────────────────────────────────────────────────────────────
 
-  startSpeechRound() {
+  audioUrlForWord(word: string, locale: string): string {
+    return (
+      window.location.protocol + '//' + window.location.host +
+      `/api/audio?text=${encodeURIComponent(word)}&locale=${encodeURIComponent(locale)}&exerciseId=0`
+    );
+  }
+
+  async startSpeechRound() {
     const task = this.currentSpeechTask;
     if (!task) return;
 
@@ -348,10 +359,59 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
     const others = options.filter((o) => o.word !== correctWord.word);
     const picked = [correctWord, ...shuffleArray(others).slice(0, task.showSize - 1)];
     this.speechDisplayWords = shuffleArray(picked);
+
+    // Play the word audio via TTS endpoint
+    const locale = correctWord.locale ?? this.intl.primaryLocale;
+    await this.playSpeechAudio(this.audioUrlForWord(correctWord.word, locale));
+  }
+
+  async playSpeechAudio(url: string) {
+    if (isTesting()) {
+      return;
+    }
+
+    this.isPlayingAudio = true;
+    try {
+      if (!this._audioContext || this._audioContext.state === 'closed') {
+        this._audioContext = createAudioContext();
+      }
+      const context = this._audioContext;
+      const getToken = () => this.network.token;
+      const buffers = await loadAudioFiles(context, [url], getToken);
+      const buffer = buffers[0];
+      if (!buffer) {
+        console.error('Failed to load audio:', url);
+        return;
+      }
+      const { source } = createSource(context, buffer);
+      this._audioSource = source;
+      source.start(0);
+
+      await new Promise<void>((resolve) => {
+        source.onended = () => resolve();
+      });
+    } catch (e) {
+      console.error('Failed to play speech audio:', e);
+    } finally {
+      if (!this.isDestroyed && !this.isDestroying) {
+        this.isPlayingAudio = false;
+      }
+    }
+  }
+
+  @action
+  async replaySpeechWord() {
+    if (this.isPlayingAudio) return;
+    const word = this.speechCorrectWord;
+    if (!word) return;
+    const locale = word.locale ?? this.intl.primaryLocale;
+    await this.playSpeechAudio(this.audioUrlForWord(word.word, locale));
   }
 
   @action
   async answerSpeech(option: SpeechAnswerOption) {
+    if (this.isPlayingAudio) return;
+
     const task = this.currentSpeechTask;
     if (!task || !this.speechCorrectWord) return;
 
@@ -372,13 +432,13 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
     // Advance round
     if (this.speechRoundIndex + 1 < task.count) {
       this.speechRoundIndex++;
-      this.startSpeechRound();
+      await this.startSpeechRound();
     } else {
       // Next task
       if (this.speechTaskIndex + 1 < this.speechTasks.length) {
         this.speechTaskIndex++;
         this.speechRoundIndex = 0;
-        this.startSpeechRound();
+        await this.startSpeechRound();
       } else {
         await this.finishSpeechTest();
       }
@@ -423,7 +483,7 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
 
   @action
   confirmAbandon() {
-    this.disposeSynth();
+    this.disposeAllAudio();
     this.showAbandonConfirm = false;
     this.router.transitionTo('audiometry');
   }
@@ -433,9 +493,21 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
     this.showAbandonConfirm = false;
   }
 
+  disposeAllAudio() {
+    this.disposeSynth();
+    if (this._audioSource) {
+      try { this._audioSource.stop(); } catch (_e) { /* already stopped */ }
+      this._audioSource = null;
+    }
+    if (this._audioContext) {
+      try { this._audioContext.close(); } catch (_e) { /* already closed */ }
+      this._audioContext = null;
+    }
+  }
+
   willDestroy() {
     super.willDestroy();
-    this.disposeSynth();
+    this.disposeAllAudio();
   }
 
   <template>
@@ -585,12 +657,23 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
                 {{t "audiometry.speech_select_word"}}
               </p>
 
+              <button
+                data-test-replay-word
+                type="button"
+                disabled={{this.isPlayingAudio}}
+                class="btn-press mb-6 px-4 py-2 text-sm text-indigo-600 border border-indigo-300 rounded-lg hover:bg-indigo-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                {{on "click" this.replaySpeechWord}}
+              >
+                {{t "audiometry.replay"}}
+              </button>
+
               <div class="grid grid-cols-3 gap-3 max-w-md mx-auto">
                 {{#each this.speechDisplayWords as |option|}}
                   <button
                     data-test-speech-word
                     type="button"
-                    class="btn-press px-4 py-3 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-indigo-50 hover:border-indigo-300"
+                    disabled={{this.isPlayingAudio}}
+                    class="btn-press px-4 py-3 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-indigo-50 hover:border-indigo-300 disabled:opacity-50 disabled:cursor-not-allowed"
                     {{on "click" (fn this.answerSpeech option)}}
                   >
                     {{option.word}}
