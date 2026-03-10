@@ -6,6 +6,7 @@ import { tracked } from '@glimmer/tracking';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { service } from '@ember/service';
 import { on } from '@ember/modifier';
+import { fn } from '@ember/helper';
 import { t } from 'ember-intl';
 import type IntlService from 'ember-intl/services/intl';
 import Audiogram from 'brn/components/audiometry/audiogram';
