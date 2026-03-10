@@ -460,6 +460,11 @@ audiometry:
   audiogram_mild: "Лёгкая (21-40 дБ)"
   audiogram_moderate: "Умеренная (41-55 дБ)"
   audiogram_severe: "Тяжёлая (56+ дБ)"
+  history_title: "История тестов"
+  history_empty: "Нет предыдущих результатов. Пройдите тест, чтобы увидеть историю."
+  history_clear: "Очистить историю"
+  history_duration: "Длительность: {seconds}с"
+  history_pta_trend: "Динамика PTA"
 
 doctor:
   patients:

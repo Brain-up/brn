@@ -24,6 +24,7 @@ import {
   INITIAL_DB,
   MAX_DB,
 } from 'brn/utils/audiometry-algorithm';
+import { saveHistoryEntry, generateEntryId } from 'brn/utils/audiometry-history-storage';
 import type { ThresholdState } from 'brn/utils/audiometry-algorithm';
 import type { Headphone } from 'brn/schemas/headphone';
 import type { AudiometryTask, SignalsTask, SpeechTask, SpeechAnswerOption } from 'brn/schemas/audiometry';
@@ -484,6 +485,23 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
         console.error('Failed to save audiometry history:', error);
       }
     }
+
+    // Save to local history for progress tracking
+    saveHistoryEntry({
+      id: generateEntryId(),
+      date: new Date().toISOString(),
+      testId: this.args.test.id,
+      testName: this.args.test.name,
+      audiometryType: 'SIGNALS',
+      headphoneId: this.effectiveHeadphoneId,
+      executionSeconds,
+      leftEarThresholds: this.leftEarThresholds,
+      rightEarThresholds: this.rightEarThresholds,
+      ptaLeft: this.ptaLeft,
+      ptaRight: this.ptaRight,
+      classificationLeft: this.hearingClassificationLeft,
+      classificationRight: this.hearingClassificationRight,
+    });
   }
 
   // ── SPEECH ───────────────────────────────────────────────────────────────────
@@ -643,6 +661,27 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
         console.error('Failed to save audiometry history:', error);
       }
     }
+
+    // Save to local history for progress tracking
+    saveHistoryEntry({
+      id: generateEntryId(),
+      date: new Date().toISOString(),
+      testId: this.args.test.id,
+      testName: this.args.test.name,
+      audiometryType: 'SPEECH',
+      headphoneId: this.effectiveHeadphoneId,
+      executionSeconds,
+      leftEarThresholds: {},
+      rightEarThresholds: {},
+      ptaLeft: null,
+      ptaRight: null,
+      classificationLeft: null,
+      classificationRight: null,
+      speechResults: {
+        correct: this.speechTotalCorrect,
+        total: this.speechTotalRounds,
+      },
+    });
   }
 
   // ── Shared ───────────────────────────────────────────────────────────────────

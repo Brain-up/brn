@@ -81,8 +81,9 @@ export default class AudiogramComponent extends Component<AudiogramSignature> {
           [leftLabel]: '#2563EB',
           [rightLabel]: '#DC2626',
         },
+        // connectNull is supported by billboard.js but missing from the type definitions
         connectNull: true,
-      },
+      } as ChartOptions['data'],
       axis: {
         x: {
           type: 'category' as const,
