@@ -31,6 +31,12 @@ Router.map(function () {
   this.route('profile', function () {
     this.route('statistics');
   });
+  this.route('audiometry', function () {
+    this.route('test', { path: ':audiometry_id' });
+  });
+  this.route('doctor', function () {
+    this.route('patients');
+  });
   this.route('used-resources');
   this.route('specialists');
   this.route('contributors');

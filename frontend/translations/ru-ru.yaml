@@ -12,6 +12,12 @@ header:
   used_resources: Используемые ресурсы
   specialists: Специалисты
   contributors: Наша команда
+  audiometry: Аудиометрия
+
+ui:
+  confirm_dialog:
+    confirm: Подтвердить
+    cancel: Отмена
 
 login:
   title: Начать
@@ -317,6 +323,26 @@ description:
     header: При поддержке
 
 profile:
+  headphones:
+    title: Наушники
+    empty: Наушники не настроены
+    add: Добавить наушники
+    add_button: Добавить
+    cancel: Отмена
+    delete: Удалить
+    confirm_delete: Вы уверены, что хотите удалить эти наушники?
+    name_label: Название
+    name_placeholder: "например Sony WH-1000XM5"
+    type_label: Тип
+    name_required: Название наушников обязательно
+  monthly_detail:
+    title: "Детализация по дням — {month}"
+    date: Дата
+    exercise: Упражнение
+    time: Время
+    accuracy: Точность
+    empty: В этом месяце не было выполнено упражнений
+    loading: Загрузка данных за месяц...
   statistics:
     title: Статистика
     about: О чем говорит статистика
@@ -365,6 +391,44 @@ gamification:
   perfect_exercises: Без ошибок
   xp_to_next_level: до след. уровня
   longest_streak: Лучшая серия
+
+audiometry:
+  title: Аудиометрические тесты
+  subtitle: Выберите тест для оценки слуха
+  start_test: Начать тест
+  no_headphones_warning: Пожалуйста, настройте наушники в вашем профиле перед началом теста.
+  no_tasks: Для этого теста нет доступных заданий
+  progress: "{current} / {total}"
+  select_headphones: Выберите наушники
+  frequency: "Текущая частота: {freq} Гц"
+  current_ear: "Текущее ухо: {ear}"
+  can_you_hear: Вы слышите звук?
+  yes: Да
+  no: Нет
+  results_title: Результаты теста
+  back: Назад
+  save_failed: Не удалось сохранить результаты
+  confirm_abandon: Вы уверены, что хотите выйти? Прогресс теста будет потерян.
+  ear_left: ЛЕВОЕ
+  ear_right: ПРАВОЕ
+
+doctor:
+  patients:
+    title: Мои пациенты
+    add_patient: Добавить пациента
+    add_button: Добавить
+    cancel: Отмена
+    remove: Удалить
+    confirm_remove: Вы уверены, что хотите удалить этого пациента?
+    patient_id_label: ID пациента
+    patient_id_placeholder: Введите ID пациента
+    empty: Пациентов пока нет
+    has_statistics: Есть статистика
+    no_statistics: Нет статистики
+    joined: "Дата регистрации: {date}"
+    id_required: ID пациента обязателен
+    add_failed: Не удалось добавить пациента
+    header_link: Пациенты
 
 contributors:
   title: "Наша команда"

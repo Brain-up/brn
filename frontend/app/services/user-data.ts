@@ -15,6 +15,16 @@ export default class UserDataService extends Service {
   @tracked
   userModel!: UserDTO | undefined;
 
+  @tracked roles: string[] = [];
+
+  get isSpecialist(): boolean {
+    return this.roles.some((r) => r === 'SPECIALIST' || r === 'ROLE_SPECIALIST');
+  }
+
+  get isAdmin(): boolean {
+    return this.roles.some((r) => r === 'ADMIN' || r === 'ROLE_ADMIN');
+  }
+
   get userAvatar(): string {
     return this.userModel?.avatar || '1';
   }

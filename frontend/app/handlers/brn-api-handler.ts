@@ -12,6 +12,7 @@ const PATH_OVERRIDES: Record<string, string> = {
   'user-weekly-statistics': 'v2/statistics/study/week',
   'user-yearly-statistics': 'v2/statistics/study/year',
   'user-daily-time-table-statistics': 'v2/statistics/study/day',
+  audiometry: 'audiometrics',
 };
 
 function buildPath(type: string, id?: string): string {

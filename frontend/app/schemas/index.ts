@@ -29,6 +29,7 @@ import { TaskEnvironmentalSoundsSchema, TaskEnvironmentalSoundsExtension } from 
 import { TaskPhonemePairsSchema, TaskPhonemePairsExtension } from './task/phoneme-pairs';
 import { TaskAuditorySequenceSchema, TaskAuditorySequenceExtension } from './task/auditory-sequence';
 import { TaskProsodySchema, TaskProsodyExtension } from './task/prosody';
+import { AudiometrySchema } from './audiometry';
 
 /**
  * Fields that the Ember Inspector accesses on records via its object inspector.
@@ -85,6 +86,7 @@ export const ALL_SCHEMAS: LegacyResourceSchema[] = [
   TaskPhonemePairsSchema,
   TaskAuditorySequenceSchema,
   TaskProsodySchema,
+  AudiometrySchema,
 ].map(withInspectorFields);
 
 export const ALL_EXTENSIONS: CAUTION_MEGA_DANGER_ZONE_Extension[] = [

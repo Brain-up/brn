@@ -143,6 +143,71 @@ const defaultHandlers = [
     path: '/api/contributors',
     handler: () => ({ data: [] }),
   },
+  {
+    method: 'GET',
+    path: '/api/users/current/headphones',
+    handler: () => ({ data: [] }),
+  },
+  {
+    method: 'POST',
+    path: '/api/users/current/headphones',
+    handler: () => ({ data: { id: '1', name: 'Test', active: true, type: 'NOT_DEFINED' } }),
+  },
+  {
+    method: 'DELETE',
+    path: '/api/users/current/headphones/:id',
+    handler: () => ({}),
+  },
+  {
+    method: 'PUT',
+    path: '/api/users/current/avatar',
+    handler: () => ({ data: {} }),
+  },
+  {
+    method: 'GET',
+    path: '/api/study-history/monthHistories',
+    handler: () => ({ data: [] }),
+  },
+  {
+    method: 'GET',
+    path: '/api/v2/study-history/histories',
+    handler: () => ({ data: [] }),
+  },
+  {
+    method: 'GET',
+    path: '/api/v2/study-history/user/:userId/has/statistics',
+    handler: () => ({ data: false }),
+  },
+  {
+    method: 'GET',
+    path: '/api/audiometrics',
+    handler: () => ({ data: [] }),
+  },
+  {
+    method: 'GET',
+    path: '/api/audiometrics/:id',
+    handler: () => ({ data: {} }),
+  },
+  {
+    method: 'POST',
+    path: '/api/audiometry-history',
+    handler: () => ({ data: { id: '1' } }),
+  },
+  {
+    method: 'GET',
+    path: '/api/doctors/:doctorId/patients',
+    handler: () => ({ data: [] }),
+  },
+  {
+    method: 'POST',
+    path: '/api/doctors/:doctorId/patients',
+    handler: () => ({ data: {} }),
+  },
+  {
+    method: 'DELETE',
+    path: '/api/doctors/:doctorId/patients/:patientId',
+    handler: () => ({}),
+  },
 ];
 
 // ─── Interceptor singleton ───────────────────────────────────────────────────
