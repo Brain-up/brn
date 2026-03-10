@@ -17,18 +17,14 @@ module('Integration | Component | server-down', function (hooks) {
     assert.dom('[data-test-server-down-message]').hasText('t:server_down.message');
   });
 
-  test('it shows the Telegram link', async function (assert) {
+  test('it shows the Telegram link with correct attributes', async function (assert) {
     await render(<template><ServerDown /></template>);
 
-    assert
-      .dom('[data-test-server-down-telegram-link]')
-      .hasAttribute('href', 'https://t.me/BrainUpUsers');
-    assert
-      .dom('[data-test-server-down-telegram-link]')
-      .hasAttribute('target', '_blank');
-    assert
-      .dom('[data-test-server-down-telegram-link]')
-      .hasText('https://t.me/BrainUpUsers');
+    const link = assert.dom('[data-test-server-down-telegram-link]');
+    link.hasAttribute('href', 'https://t.me/BrainUpUsers');
+    link.hasAttribute('target', '_blank');
+    link.hasAttribute('rel', 'noopener noreferrer');
+    link.hasText('https://t.me/BrainUpUsers');
   });
 
   test('it shows the fix promise message', async function (assert) {
