@@ -249,6 +249,17 @@ export default class NetworkService extends Service {
       throw error;
     }
   }
+  uploadPictureFile(file: Blob, fileName: string): Promise<Response> {
+    const formData = new FormData();
+    formData.append('file', file, fileName);
+    return waitForPromise(
+      fetch(`${this.prefix}/cloud/upload/picture`, {
+        body: formData,
+        headers: this.authToken.headers,
+        method: 'POST',
+      }),
+    );
+  }
   async postAudiometryHistory(data: {
     audiometryTaskId: string;
     startTime: string;

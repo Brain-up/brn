@@ -48,9 +48,8 @@ export default class TaskPlayerSingleWordsOptionComponent extends Component<Task
       'data:image/gif;base64,R0lGODlhAQABAPAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==';
 
     if (this.shouldLoadSymbol(word)) {
-      const url = await this.imageLocator.getPictureForWord(word);
+      const url = await this.imageLocator.getPictureForWordAsDataURL(word);
       if (url) {
-        e.target.crossOrigin = 'anonymous';
         e.target.src = url;
       }
     }
