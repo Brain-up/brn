@@ -8,13 +8,18 @@ interface Signature {
   };
 }
 
+function errorMessage(error: unknown): string {
+  if (error instanceof Error) return error.message;
+  return String(error ?? '');
+}
+
 const ErrorPage: TOC<Signature> = <template>
   {{#if (isServerError @model)}}
     <ServerDown />
   {{else}}
     oooops...
     <pre class="overflow-x-auto whitespace-pre-wrap break-words">
-      {{@model}}
+      {{errorMessage @model}}
     </pre>
   {{/if}}
 </template>;
