@@ -9,13 +9,17 @@ export default class ApplicationRoute extends Route {
   @service('intl') intl;
   @service('router') router;
   @service('network') network;
+  @service('tasks-manager') tasksManager;
 
   async beforeModel() {
     await this.session.setup();
 
     if (this.session.isAuthenticated) {
       try {
-        await this.network.loadCurrentUser();
+        await Promise.all([
+          this.network.loadCurrentUser(),
+          this.tasksManager.loadTodayCompletedExercises(),
+        ]);
       } catch {
         // handled by loadCurrentUser (redirects to login)
       }

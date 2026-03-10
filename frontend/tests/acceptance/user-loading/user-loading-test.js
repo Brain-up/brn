@@ -44,6 +44,47 @@ module('Acceptance | user loading', function (hooks) {
     );
   });
 
+  test('loadTodayCompletedExercises is called after user loads', async function (assert) {
+    server.get('users/current', () => ({
+      data: [
+        {
+          id: '1',
+          name: 'Test User',
+          email: 'test@test.com',
+          bornYear: 1990,
+          gender: 'MALE',
+          active: true,
+          avatar: '1',
+          roles: ['ROLE_USER'],
+        },
+      ],
+      errors: [],
+      meta: [],
+    }));
+
+    server.get('groups', () => ({ data: [] }));
+
+    server.get('v2/study-history/histories', () => ({
+      data: [
+        { exerciseId: 42, startTime: '2024-01-01T10:00:00', endTime: '2024-01-01T10:05:00' },
+        { exerciseId: 99, startTime: '2024-01-01T11:00:00', endTime: '2024-01-01T11:05:00' },
+      ],
+    }));
+
+    await authenticateSession();
+    await visit('/groups');
+
+    const tasksManager = this.owner.lookup('service:tasks-manager');
+    assert.true(
+      tasksManager.completedExerciseIds.has('42'),
+      'completedExerciseIds contains exercise 42',
+    );
+    assert.true(
+      tasksManager.completedExerciseIds.has('99'),
+      'completedExerciseIds contains exercise 99',
+    );
+  });
+
   test('loadCurrentUser is called exactly once when visiting a nested route', async function (assert) {
     let userCurrentCallCount = 0;
 
