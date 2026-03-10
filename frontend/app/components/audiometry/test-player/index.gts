@@ -13,12 +13,10 @@ import { LinkTo } from '@ember/routing';
 import UiConfirmDialog from 'brn/components/ui/confirm-dialog';
 import { createAudioContext, createSource, loadAudioFiles } from 'brn/utils/audio-api';
 import type { Headphone } from 'brn/schemas/headphone';
-import type { SignalsTask, SpeechTask, SpeechAnswerOption } from 'brn/schemas/audiometry';
+import type { AudiometryTask, SignalsTask, SpeechTask, SpeechAnswerOption } from 'brn/schemas/audiometry';
 import type IntlService from 'ember-intl/services/intl';
 import type NetworkService from 'brn/services/network';
 import type Router from '@ember/routing/router-service';
-
-type AudiometryTask = SignalsTask | SpeechTask;
 
 interface AudiometryTestData {
   id: string;
@@ -68,9 +66,8 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
   speechResults: { taskId: string; correct: number; total: number }[] = [];
 
   _synth: any = null;
-  _audioContext: BaseAudioContext | null = null;
+  _audioContext: AudioContext | null = null;
   _audioSource: AudioBufferSourceNode | null = null;
-  _audioBuffer: AudioBuffer | null = null;
 
   get isSignals(): boolean {
     return this.args.test.audiometryType === 'SIGNALS';
@@ -304,7 +301,7 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
   }
 
   async finishSignalsTest() {
-    this.disposeSynth();
+    this.disposeAudio();
     this.phase = 'results';
     const endTime = new Date().toISOString();
     const executionSeconds = Math.round(
@@ -365,9 +362,8 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
     showSize: number,
   ): SpeechAnswerOption[] {
     const others = options.filter((o) => o.word !== correct.word);
-    const shuffledOthers = others.sort(() => Math.random() - 0.5);
-    const picked = [correct, ...shuffledOthers.slice(0, showSize - 1)];
-    return picked.sort(() => Math.random() - 0.5);
+    const picked = [correct, ...shuffleArray(others).slice(0, showSize - 1)];
+    return shuffleArray(picked);
   }
 
   async playSpeechAudio(audioFileUrl: string) {
@@ -388,7 +384,6 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
         console.error('Failed to load audio file:', audioFileUrl);
         return;
       }
-      this._audioBuffer = buffer;
       const { source } = createSource(context, buffer);
       this._audioSource = source;
       source.start(0);
@@ -488,7 +483,7 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
 
   @action
   confirmAbandon() {
-    this.disposeSynth();
+    this.disposeAudio();
     this.showAbandonConfirm = false;
     this.router.transitionTo('audiometry');
   }
@@ -498,12 +493,21 @@ export default class AudiometryTestPlayerComponent extends Component<AudiometryT
     this.showAbandonConfirm = false;
   }
 
-  willDestroy() {
-    super.willDestroy();
+  disposeAudio() {
     this.disposeSynth();
     if (this._audioSource) {
       try { this._audioSource.stop(); } catch (_e) { /* already stopped */ }
+      this._audioSource = null;
     }
+    if (this._audioContext) {
+      try { this._audioContext.close(); } catch (_e) { /* already closed */ }
+      this._audioContext = null;
+    }
+  }
+
+  willDestroy() {
+    super.willDestroy();
+    this.disposeAudio();
   }
 
   <template>
@@ -752,4 +756,13 @@ function taskCount(tasks: AudiometryTask[]): number {
 
 function earLabel(ear: string): string {
   return ear;
+}
+
+function shuffleArray<T>(array: T[]): T[] {
+  const result = [...array];
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j]!, result[i]!];
+  }
+  return result;
 }
