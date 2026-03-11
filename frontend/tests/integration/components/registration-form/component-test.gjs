@@ -69,8 +69,8 @@ module('Integration | Component | registration-form', function (hooks) {
     await render(<template><RegistrationForm /></template>);
     await fillIn('[name="firstName"]', 'b');
     await fillIn('[name="email"]', 'c@name.com');
-    await fillIn('[name="password"]', 'd');
-    await fillIn('[name="repeatPassword"]', 'd');
+    await fillIn('[name="password"]', 'Test1234');
+    await fillIn('[name="repeatPassword"]', 'Test1234');
     await fillIn('[name="birthday"]', '1991');
     await click('[name="agreement"]');
     await click('[id="male"]');
@@ -113,8 +113,8 @@ module('Integration | Component | registration-form', function (hooks) {
     await render(<template><RegistrationForm /></template>);
     await fillIn('[name="firstName"]', 'b');
     await fillIn('[name="email"]', 'c@name.com');
-    await fillIn('[name="password"]', 'd');
-    await fillIn('[name="repeatPassword"]', 'd');
+    await fillIn('[name="password"]', 'Test1234');
+    await fillIn('[name="repeatPassword"]', 'Test1234');
     await fillIn('[name="birthday"]', '1991');
     await click('[name="agreement"]');
     await click('[id="male"]');
@@ -144,5 +144,27 @@ module('Integration | Component | registration-form', function (hooks) {
     await fillIn('input[name="birthday"]', getDate(0));
 
     assert.dom('[data-test-warning-message="birthday"]').doesNotExist();
+  });
+
+  test('shows warning when password is shorter than 6 characters', async function (assert) {
+    await render(<template><RegistrationForm /></template>);
+
+    await fillIn('[name="password"]', 'Sho');
+
+    assert.dom('[data-test-warning-message="password"]').exists('warning is shown for short password');
+  });
+
+  test('does not show password length warning when password is 6+ characters', async function (assert) {
+    await render(<template><RegistrationForm /></template>);
+
+    await fillIn('[name="password"]', 'Valid1');
+
+    assert.dom('[data-test-warning-message="password"]').doesNotExist('no warning for valid password');
+  });
+
+  test('does not show password length warning when password is empty', async function (assert) {
+    await render(<template><RegistrationForm /></template>);
+
+    assert.dom('[data-test-warning-message="password"]').doesNotExist('no warning before input');
   });
 });

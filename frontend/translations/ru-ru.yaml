@@ -70,7 +70,7 @@ registration_form:
   agreement_part2: пользовательского соглашения
   sign_in: ВОЙТИ
   surname: Фамилия
-  password_length: Длина пароля должна составлять от 4 до 20 символов
+  password_length: Длина пароля должна составлять от 6 до 20 символов
   email_exists: Пользователь с такой почтой уже зарегистрирован
 
 breadcrumbs:

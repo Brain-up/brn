@@ -70,7 +70,7 @@ registration_form:
   surname: Surname
   warning_enter_credentials: Please enter your login and password
   warning_input_restriction: Maximum number of characters
-  password_length: Password must be between 4 and 20 characters long
+  password_length: Password must be between 6 and 20 characters long
   email_exists: User with this Email already registered
 
 breadcrumbs:

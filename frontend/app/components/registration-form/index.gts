@@ -19,9 +19,13 @@ import LoadingSpinner from 'brn/components/loading-spinner';
 import LoginFormInput from 'brn/components/login-form/input';
 import UiButton from 'brn/components/ui/button';
 
+const MIN_PASSWORD_LENGTH = 6;
+
 const ERRORS_MAP = {
   'The user already exists!': 'registration_form.email_exists',
   PASSWORD_MUST_BE_BETWEEN_6_AND_20_CHARACTERS_LONG:
+    'registration_form.password_length',
+  PASSWORD_MUST_BE_BETWEEN_8_AND_20_CHARACTERS_LONG:
     'registration_form.password_length',
 };
 
@@ -123,6 +127,19 @@ export default class RegistrationFormComponent extends Component {
   }
   set login(value) {
     this.email = value;
+  }
+
+  get warningPasswordLength() {
+    if (this.password === undefined) {
+      return false;
+    }
+
+    const trimmed = this.trimmedValue(this.password);
+    if (trimmed.length > 0 && trimmed.length < MIN_PASSWORD_LENGTH) {
+      return this.intl.t('registration_form.password_length');
+    }
+
+    return false;
   }
 
   get warningPasswordsEquality() {
@@ -376,6 +393,7 @@ export default class RegistrationFormComponent extends Component {
               @model={{this}}
               @name="password"
               @type="password"
+              @warning={{this.warningPasswordLength}}
             />
           </div>
           <div class="mb-6">
