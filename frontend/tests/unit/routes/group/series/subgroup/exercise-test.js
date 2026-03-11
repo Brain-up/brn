@@ -169,12 +169,15 @@ module('Unit | Route | group/series/subgroup/exercise', function (hooks) {
 
   test('resetController cleans up state', function (assert) {
     const route = this.owner.lookup('route:group/series/subgroup/exercise');
+    let cancelAllCalled = false;
     const mockController = {
       showExerciseStats: true,
       exerciseStats: { some: 'data' },
       correctnessWidgetIsShown: true,
+      runCorrectnessWidgetTimer: { cancelAll() { cancelAllCalled = true; } },
     };
     route.resetController(mockController, true);
+    assert.true(cancelAllCalled, 'runCorrectnessWidgetTimer.cancelAll was called');
     assert.false(mockController.showExerciseStats);
     assert.deepEqual(mockController.exerciseStats, {});
     assert.false(mockController.correctnessWidgetIsShown);
@@ -182,12 +185,15 @@ module('Unit | Route | group/series/subgroup/exercise', function (hooks) {
 
   test('resetController does not clean up when not exiting', function (assert) {
     const route = this.owner.lookup('route:group/series/subgroup/exercise');
+    let cancelAllCalled = false;
     const mockController = {
       showExerciseStats: true,
       exerciseStats: { some: 'data' },
       correctnessWidgetIsShown: true,
+      runCorrectnessWidgetTimer: { cancelAll() { cancelAllCalled = true; } },
     };
     route.resetController(mockController, false);
+    assert.false(cancelAllCalled, 'cancelAll not called when not exiting');
     assert.true(mockController.showExerciseStats, 'not cleaned up');
   });
 
