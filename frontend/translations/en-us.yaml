@@ -361,6 +361,14 @@ profile:
     name_placeholder: e.g. Sony WH-1000XM5
     type_label: Type
     name_required: Headphone name is required
+    types:
+      NOT_DEFINED: Not defined
+      ON_EAR_BLUETOOTH: On-ear Bluetooth
+      OVER_EAR_BLUETOOTH: Over-ear Bluetooth
+      IN_EAR_BLUETOOTH: In-ear Bluetooth
+      ON_EAR_NO_BLUETOOTH: On-ear Wired
+      OVER_EAR_NO_BLUETOOTH: Over-ear Wired
+      IN_EAR_NO_BLUETOOTH: In-ear Wired
   monthly_detail:
     title: "Daily Detail — {month}"
     date: Date
