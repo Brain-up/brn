@@ -1,6 +1,6 @@
-import { module, test, skip } from 'qunit';
+import { module, test } from 'qunit';
 import { setupApplicationTest } from 'ember-qunit';
-import { settled } from '@ember/test-helpers';
+import { settled, waitFor } from '@ember/test-helpers';
 import {
   getServerResponses,
   chooseAnswer,
@@ -59,7 +59,7 @@ module('Acceptance | exercises availability', function (hooks) {
     //   .hasAttribute('disabled');
   });
 
-  skip('marks available exercises withing a name group if previous is completed', async function (assert) {
+  test('marks available exercises withing a name group if previous is completed', async function (assert) {
     await pageObject.goToFirstSeriesPage();
     await settled();
 
@@ -80,6 +80,7 @@ module('Acceptance | exercises availability', function (hooks) {
     await chooseAnswer('test option');
     await chooseAnswer('test option');
 
+    await waitFor('[data-test-exercise-stats]', { timeout: 5000 });
     await continueAfterStats();
 
     assert.dom('[data-test-exercise-level="1"]').exists({ count: 2 });

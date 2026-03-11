@@ -1,7 +1,7 @@
 import Controller from '@ember/controller';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { service } from '@ember/service';
-import { dropTask } from 'ember-concurrency';
+import { dropTask, didCancel } from 'ember-concurrency';
 import customTimeout from 'brn/utils/custom-timeout';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { tracked } from '@glimmer/tracking';
@@ -64,8 +64,16 @@ export default class GroupSeriesSubgroupExerciseController extends Controller {
 
   @action
   async greedOnCompletedExercise() {
+    const currentModel = this.model;
     const stats = this.saveExercise();
-    await this.runCorrectnessWidgetTimer.perform(true);
+    try {
+      await this.runCorrectnessWidgetTimer.perform(true);
+    } catch (e) {
+      if (didCancel(e)) return;
+      throw e;
+    }
+    // Guard: user may have navigated away during the timer
+    if (this.model !== currentModel) return;
     this.showExerciseStats = true;
     this.exerciseStats = stats;
   }

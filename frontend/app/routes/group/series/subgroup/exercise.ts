@@ -70,6 +70,7 @@ export default class GroupSeriesSubgroupExerciseRoute extends Route {
   }
   resetController(controller: GroupSeriesSubgroupExerciseController, isExiting: boolean) {
     if (isExiting) {
+      controller.runCorrectnessWidgetTimer.cancelAll();
       controller.showExerciseStats = false;
       controller.exerciseStats = {};
       controller.correctnessWidgetIsShown = false;
