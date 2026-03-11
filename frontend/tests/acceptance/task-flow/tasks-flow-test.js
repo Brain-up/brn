@@ -129,6 +129,8 @@ module('Acceptance | tasks flow', function (hooks) {
     await waitFor('[data-test-exercise-stats]', { timeout: 5000 });
 
     await click('[data-test-continue]');
+    // eslint-disable-next-line ember/no-settled-after-test-helper -- afterCompleted has nested async (ember-concurrency task + route transition)
+    await settled();
 
     assert.equal(currentURL(), '/groups/1/series/1/subgroup/1');
   });
