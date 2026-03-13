@@ -67,6 +67,11 @@ module('Unit | Utility | file-url', function (hooks) {
     assert.equal(urlForAudio('/audio/test.mp3'), '/audio/test.mp3');
   });
 
+  test('urlForImage skips cloud resolution for /public/ paths', function (assert) {
+    setCloudBaseUrl('https://brnup.s3.eu-north-1.amazonaws.com');
+    assert.equal(urlForImage('/public/pictures/foo.png'), '/public/pictures/foo.png');
+  });
+
   test('setCloudBaseUrl strips trailing slash', function (assert) {
     setCloudBaseUrl('https://brnup.s3.eu-north-1.amazonaws.com/');
     assert.equal(getCloudBaseUrl(), 'https://brnup.s3.eu-north-1.amazonaws.com');

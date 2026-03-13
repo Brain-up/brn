@@ -4,6 +4,7 @@ import type { LegacyResourceSchema } from '@warp-drive/core/types/schema/fields'
 import type { CAUTION_MEGA_DANGER_ZONE_Extension } from '@warp-drive/core/reactive';
 import { storeFor } from '@warp-drive/core';
 import type { OpaqueRecordInstance } from '@warp-drive/core/types/record';
+import { urlForImage } from 'brn/utils/file-url';
 
 /**
  * Minimal interface for Exercise properties accessed through Subgroup.
@@ -43,7 +44,7 @@ export const SubgroupExtension: CAUTION_MEGA_DANGER_ZONE_Extension = {
   features: {
     get picture(): string {
       const self = this as unknown as { pictureUrl: string };
-      return self.pictureUrl;
+      return urlForImage(self.pictureUrl) ?? self.pictureUrl;
     },
     get parent(): unknown {
       const self = this as unknown as { seriesId: string };

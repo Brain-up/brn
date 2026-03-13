@@ -5,6 +5,7 @@ import type { CAUTION_MEGA_DANGER_ZONE_Extension } from '@warp-drive/core/reacti
 import arrayPreviousItems from 'brn/utils/array-previous-items';
 import { getService } from 'brn/utils/schema-helpers';
 import { sortByKey } from 'brn/utils/sort-by-key';
+import { urlForImage } from 'brn/utils/file-url';
 import type TasksManagerService from 'brn/services/tasks-manager';
 import type NetworkService from 'brn/services/network';
 import type { IStatsExerciseStats } from 'brn/services/stats';
@@ -130,6 +131,11 @@ export const ExerciseExtension: CAUTION_MEGA_DANGER_ZONE_Extension = {
      */
     get isQueryParams() {
       return undefined;
+    },
+
+    get picture(): string {
+      const self = this as unknown as { pictureUrl: string };
+      return urlForImage(self.pictureUrl) ?? self.pictureUrl;
     },
 
     get sortChildrenBy() {
@@ -306,6 +312,7 @@ export type Exercise = WithLegacy<{
   description: string;
   level: number;
   pictureUrl: string;
+  picture: string;
   order: number;
   exerciseType: string;
   startTime: Date;

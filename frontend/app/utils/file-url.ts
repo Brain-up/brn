@@ -15,6 +15,9 @@ export function urlForImage(fileUrl: string | null | undefined): string | null {
   if (fileUrl.startsWith('http')) {
     return fileUrl;
   }
+  if (fileUrl.startsWith('/public/')) {
+    return fileUrl;
+  }
   if (fileUrl.startsWith('/') && _cloudBaseUrl) {
     return `${_cloudBaseUrl}${fileUrl}`;
   }
