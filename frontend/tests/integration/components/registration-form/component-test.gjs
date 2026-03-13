@@ -45,6 +45,9 @@ module('Integration | Component | registration-form', function (hooks) {
         }
         return Promise.resolve();
       }
+      loadCloudUrl() {
+        return Promise.resolve();
+      }
       patchUserInfo(fields) {
         patchUserInfoCalled = true;
         assert.ok(fields, 'patchUserInfo called with user fields');
@@ -92,6 +95,9 @@ module('Integration | Component | registration-form', function (hooks) {
 
     class MockNetwork extends Service {
       loadCurrentUser() {
+        return Promise.resolve();
+      }
+      loadCloudUrl() {
         return Promise.resolve();
       }
       patchUserInfo() {
