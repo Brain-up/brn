@@ -1,7 +1,11 @@
-import '../../styles/horizontal-scroll.css';
 import Component from '@glimmer/component';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { array } from '@ember/helper';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import UiTabButton from 'brn/components/ui/tab-button';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import UiHorizontalScroll from 'brn/components/ui/horizontal-scroll';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import autofitText from 'brn/modifiers/autofit-text';
 
 interface SeriesItem {
@@ -30,21 +34,19 @@ export default class GroupNavigationComponent extends Component<GroupNavigationS
   }
 
   <template>
-    <div class="hs-container" ...attributes>
-      <ul class="hs full no-scrollbar">
-        {{#each this.sortedSeries as |series|}}
-          <li class="item">
-            <UiTabButton
-              data-test-active-link={{series.name}}
-              @route="group.series"
-              @models={{array series.id}}
-              @title={{series.name}}
-              @tooltip={{series.description}}
-              {{autofitText series.name}}
-            />
-          </li>
-        {{/each}}
-      </ul>
-    </div>
+    <UiHorizontalScroll ...attributes>
+      {{#each this.sortedSeries as |series|}}
+        <li class="item">
+          <UiTabButton
+            data-test-active-link={{series.name}}
+            @route="group.series"
+            @models={{array series.id}}
+            @title={{series.name}}
+            @tooltip={{series.description}}
+            {{autofitText series.name}}
+          />
+        </li>
+      {{/each}}
+    </UiHorizontalScroll>
   </template>
 }
