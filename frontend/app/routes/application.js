@@ -27,6 +27,7 @@ export default class ApplicationRoute extends Route {
       try {
         await Promise.all([
           this.network.loadCurrentUser(),
+          this.network.loadCloudUrl(),
           this.tasksManager.loadTodayCompletedExercises(),
         ]);
       } catch (e) {

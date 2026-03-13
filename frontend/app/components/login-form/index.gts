@@ -79,6 +79,7 @@ export default class LoginFormComponent extends Component {
       await timeout(500);
       await Promise.all([
         this.network.loadCurrentUser(),
+        this.network.loadCloudUrl(),
         this.tasksManager.loadTodayCompletedExercises(),
       ]);
     } catch (error) {

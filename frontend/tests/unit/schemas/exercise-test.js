@@ -1,8 +1,13 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
+import { setCloudBaseUrl } from 'brn/utils/file-url';
 
 module('Unit | Schema | exercise', function (hooks) {
   setupTest(hooks);
+
+  hooks.afterEach(function () {
+    setCloudBaseUrl('');
+  });
 
   test('creates an exercise record', function (assert) {
     const store = this.owner.lookup('service:store');
@@ -167,5 +172,62 @@ module('Unit | Schema | exercise', function (hooks) {
     const model = store.createRecord('exercise', {});
     const children = model.children;
     assert.ok(Array.isArray(children) || children.length === 0);
+  });
+
+  // --- picture getter (urlForImage integration) ---
+
+  test('picture resolves relative pictureUrl through urlForImage', function (assert) {
+    const store = this.owner.lookup('service:store');
+    const model = store.createRecord('exercise', {
+      pictureUrl: 'pictures/exercise1.png',
+    });
+    // Without cloud URL, urlForImage prepends /
+    assert.strictEqual(model.picture, '/pictures/exercise1.png');
+  });
+
+  test('picture resolves absolute pictureUrl with cloud base url', function (assert) {
+    setCloudBaseUrl('https://cdn.example.com');
+    const store = this.owner.lookup('service:store');
+    const model = store.createRecord('exercise', {
+      pictureUrl: '/pictures/exercise1.png',
+    });
+    assert.strictEqual(model.picture, 'https://cdn.example.com/pictures/exercise1.png');
+  });
+
+  test('picture preserves http pictureUrl as-is', function (assert) {
+    setCloudBaseUrl('https://cdn.example.com');
+    const store = this.owner.lookup('service:store');
+    const model = store.createRecord('exercise', {
+      pictureUrl: 'https://other.com/exercise1.png',
+    });
+    assert.strictEqual(model.picture, 'https://other.com/exercise1.png');
+  });
+
+  test('picture skips cloud resolution for /public/ pictureUrl', function (assert) {
+    setCloudBaseUrl('https://cdn.example.com');
+    const store = this.owner.lookup('service:store');
+    const model = store.createRecord('exercise', {
+      pictureUrl: '/public/pictures/exercise1.png',
+    });
+    assert.strictEqual(model.picture, '/public/pictures/exercise1.png');
+  });
+
+  test('picture falls back to pictureUrl when urlForImage returns null', function (assert) {
+    const store = this.owner.lookup('service:store');
+    const model = store.createRecord('exercise', {
+      pictureUrl: null,
+    });
+    // urlForImage(null) returns null, so the fallback ?? self.pictureUrl applies
+    // pictureUrl is null, so picture is null
+    assert.strictEqual(model.picture, null);
+  });
+
+  test('picture resolves relative pictureUrl with cloud base url', function (assert) {
+    setCloudBaseUrl('https://cdn.example.com');
+    const store = this.owner.lookup('service:store');
+    const model = store.createRecord('exercise', {
+      pictureUrl: 'pictures/exercise1.png',
+    });
+    assert.strictEqual(model.picture, 'https://cdn.example.com/pictures/exercise1.png');
   });
 });
