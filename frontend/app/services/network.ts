@@ -4,6 +4,7 @@ import type RouterService from '@ember/routing/router-service';
 import AuthTokenService from './auth-token';
 import UserDataService from './user-data';
 import { waitForPromise } from '@ember/test-waiters';
+import { setCloudBaseUrl } from 'brn/utils/file-url';
 
 export interface UserDTO {
   firstName: string;
@@ -90,6 +91,12 @@ export default class NetworkService extends Service {
     const result = await this.request('cloud/baseFileUrl');
     const { data } = await result.json();
     return data;
+  }
+  async loadCloudUrl() {
+    const url = await this.cloudUrl();
+    if (url) {
+      setCloudBaseUrl(url);
+    }
   }
   async getCurrentUser() {
     try {

@@ -59,3 +59,9 @@ words_ru.txt
 
 ### Local Docker-compose Without conflicts ###
 .docker-local
+
+
+frontend/public/assets/loader.js
+frontend/public/assets/ffmpeg-core.js
+frontend/public/assets/ffmpeg-core.wasm
+frontend/public/assets/ffmpeg-core.worker.js

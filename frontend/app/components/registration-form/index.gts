@@ -97,7 +97,10 @@ export default class RegistrationFormComponent extends Component {
         password,
       );
       await timeout(500);
-      await this.network.loadCurrentUser();
+      await Promise.all([
+        this.network.loadCurrentUser(),
+        this.network.loadCloudUrl(),
+      ]);
     } catch (error) {
       let key = '';
       if (error.responseJSON) {
@@ -224,7 +227,10 @@ export default class RegistrationFormComponent extends Component {
 
     try {
       await this.network.patchUserInfo(user);
-      await this.network.loadCurrentUser();
+      await Promise.all([
+        this.network.loadCurrentUser(),
+        this.network.loadCloudUrl(),
+      ]);
     } catch (e) {
       const error = e as Error & { errors?: string[] };
       const key = error.errors?.pop() ?? error.message;
