@@ -18,8 +18,8 @@ export function urlForImage(fileUrl: string | null | undefined): string | null {
   if (fileUrl.startsWith('/public/')) {
     return fileUrl;
   }
-  if (fileUrl.startsWith('/') && _cloudBaseUrl) {
-    return `${_cloudBaseUrl}${fileUrl}`;
+  if (fileUrl.startsWith('/')) {
+    return _cloudBaseUrl ? `${_cloudBaseUrl}${fileUrl}` : fileUrl;
   }
   if (_cloudBaseUrl) {
     return `${_cloudBaseUrl}/${fileUrl}`;
@@ -32,6 +32,9 @@ export function urlForAudio(fileUrl: string | null): string | null {
     return null;
   }
   if (fileUrl.startsWith('http')) {
+    return fileUrl;
+  }
+  if (fileUrl.startsWith('/public/')) {
     return fileUrl;
   }
   if (fileUrl.startsWith('/') && _cloudBaseUrl) {

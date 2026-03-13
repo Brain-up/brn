@@ -5,7 +5,7 @@ import type { CAUTION_MEGA_DANGER_ZONE_Extension } from '@warp-drive/core/reacti
 import arrayPreviousItems from 'brn/utils/array-previous-items';
 import { getService } from 'brn/utils/schema-helpers';
 import { sortByKey } from 'brn/utils/sort-by-key';
-import { urlForImage } from 'brn/utils/file-url';
+import { urlForImage, urlForAudio } from 'brn/utils/file-url';
 import type TasksManagerService from 'brn/services/tasks-manager';
 import type NetworkService from 'brn/services/network';
 import type { IStatsExerciseStats } from 'brn/services/stats';
@@ -166,7 +166,8 @@ export const ExerciseExtension: CAUTION_MEGA_DANGER_ZONE_Extension = {
 
     get noiseUrl(): string | null {
       const self = this as unknown as ExerciseSelf;
-      return self.noise?.url || null;
+      const url = self.noise?.url || null;
+      return urlForAudio(url);
     },
 
     get isCompleted(): boolean {

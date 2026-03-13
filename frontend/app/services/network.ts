@@ -93,9 +93,13 @@ export default class NetworkService extends Service {
     return data;
   }
   async loadCloudUrl() {
-    const url = await this.cloudUrl();
-    if (url) {
-      setCloudBaseUrl(url);
+    try {
+      const url = await this.cloudUrl();
+      if (url) {
+        setCloudBaseUrl(url);
+      }
+    } catch (_e) {
+      // Cloud URL is non-critical; fall back to relative paths
     }
   }
   async getCurrentUser() {
