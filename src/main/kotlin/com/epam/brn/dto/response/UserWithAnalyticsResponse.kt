@@ -18,7 +18,7 @@ data class UserWithAnalyticsResponse(
     var active: Boolean = true,
     var firstDone: LocalDateTime? = null, // generally first done exercise
     var lastDone: LocalDateTime? = null, // generally last done exercise
-    var lastWeek: List<DayStudyStatistics> = emptyList(),
+    var lastWeek: MutableList<DayStudyStatistics> = arrayListOf(),
     var studyDaysInCurrentMonth: Int = 0, // amount of days in current month when user made any exercises
     var diagnosticProgress: Map<AudiometryType, Boolean> = mapOf(AudiometryType.SIGNALS to true), // todo fill by user
     var doneExercises: Int = 0, // for all time
