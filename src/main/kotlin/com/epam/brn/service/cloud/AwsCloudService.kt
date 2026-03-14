@@ -38,6 +38,12 @@ class AwsCloudService(
     @Value("\${brn.resources.default-pictures.path}")
     lateinit var defaultPicturesPath: String
 
+    @Value("\${brn.resources.unverified-pictures.path}")
+    lateinit var unverifiedPicturesPath: String
+
+    @Value("\${brn.resources.pictures.ext:}")
+    lateinit var contributorPictureExtension: String
+
     companion object {
         private const val FOLDER_DELIMITER = "/"
     }
@@ -151,11 +157,27 @@ class AwsCloudService(
                     .key(fullFileName)
                     .build()
             s3Client.headObject(request)
+            log.info("Picture fileName=$fileName fullFileName=`$fullFileName` exist in $filePath")
             true
         } catch (e: NoSuchKeyException) {
+            log.error("Picture `$fullFileName` doesn't exist in $filePath", e)
             false
         }
     }
+
+    override fun isPictureExistInFolder(
+        filePath: String,
+        fileName: String,
+    ): Pair<Boolean, String> {
+        val isFileExist = isFileExist(filePath, fileName)
+        val pictureUrl = baseFileUrl() + FOLDER_DELIMITER + filePath + FOLDER_DELIMITER + fileName
+        return Pair(isFileExist, pictureUrl)
+    }
+
+    override fun isPictureExistInMainFolder(fileName: String): Pair<Boolean, String> = isPictureExistInFolder(defaultPicturesPath, fileName)
+
+    override fun isPictureExistInUnverifiedFolder(fileName: String): Pair<Boolean, String> =
+        isPictureExistInFolder(unverifiedPicturesPath, fileName)
 
     override fun createFullFileName(
         path: String,

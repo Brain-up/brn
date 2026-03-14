@@ -34,8 +34,6 @@ class TaskService(
 ) {
     private val log = logger()
 
-    private val tempPictureStorageUrl = "https://brnup.s3.eu-north-1.amazonaws.com/pictures/"
-
     @Cacheable("tasksByExerciseId")
     fun getTasksByExerciseId(exerciseId: Long): List<Any> {
         val exerciseType =
@@ -85,8 +83,24 @@ class TaskService(
     private fun processAnswerOptions(task: Task) {
         task.answerOptions
             .forEach { resource ->
-                if (!resource.pictureFileUrl.isNullOrEmpty())
+                val word = resource.word
+                if (!resource.pictureFileUrl.isNullOrEmpty()) {
                     resource.pictureFileUrl = cloudService.baseFileUrl() + "/" + resource.pictureFileUrl
+                    log.info("Picture url for word $word is ${resource.pictureFileUrl}")
+                } else {
+                    val pictureFile = "$word.png"
+                    var isExistOnS3AndUrl = cloudService.isPictureExistInMainFolder(pictureFile)
+                    log.info("Picture $pictureFile on main s3 /pictures folder exist = $isExistOnS3AndUrl")
+                    if (!isExistOnS3AndUrl.first) {
+                        isExistOnS3AndUrl = cloudService.isPictureExistInUnverifiedFolder(pictureFile)
+                        log.info("Picture $pictureFile on main s3 /unverifiedPictures folder exist = $isExistOnS3AndUrl")
+                    }
+                    if (isExistOnS3AndUrl.first) {
+                        resource.pictureFileUrl = isExistOnS3AndUrl.second
+                    } else {
+                        log.info("Picture for word $word not found on s3.")
+                    }
+                }
             }
     }
 
