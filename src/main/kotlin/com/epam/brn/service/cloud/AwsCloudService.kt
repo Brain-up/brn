@@ -153,6 +153,7 @@ class AwsCloudService(
             s3Client.headObject(request)
             true
         } catch (e: NoSuchKeyException) {
+            log.error("Picture with name `$fullFileName` doesn't exist in $filePath", e)
             false
         }
     }
