@@ -20,7 +20,6 @@ import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.TaskRepository
 import com.epam.brn.service.cloud.CloudService
 import org.apache.logging.log4j.kotlin.logger
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.cache.annotation.CacheEvict
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
@@ -34,12 +33,6 @@ class TaskService(
     private val cloudService: CloudService,
 ) {
     private val log = logger()
-
-    @Value("\${brn.resources.default-pictures.path}")
-    lateinit var defaultPicturesPath: String
-
-    @Value("\${brn.resources.unverified-pictures.path}")
-    lateinit var unverifiedPicturesPath: String
 
     @Cacheable("tasksByExerciseId")
     fun getTasksByExerciseId(exerciseId: Long): List<Any> {
@@ -91,18 +84,22 @@ class TaskService(
         task.answerOptions
             .forEach { resource ->
                 val word = resource.word
-                val pictureFile = "$word.png"
-                var isExistOnS3 = cloudService.isFileExist(defaultPicturesPath, pictureFile)
-                log.info("Picture for word $word exist on main s3 $defaultPicturesPath = $isExistOnS3")
-                if (!isExistOnS3) {
-                    isExistOnS3 = cloudService.isFileExist(unverifiedPicturesPath, pictureFile)
-                    log.info("Picture for word $word exist on main s3 $unverifiedPicturesPath = $isExistOnS3")
-                }
-                if (!resource.pictureFileUrl.isNullOrEmpty() || isExistOnS3) {
+                if (!resource.pictureFileUrl.isNullOrEmpty()) {
                     resource.pictureFileUrl = cloudService.baseFileUrl() + "/" + resource.pictureFileUrl
                     log.info("Picture url for word $word is ${resource.pictureFileUrl}")
                 } else {
-                    log.info("Picture url for word $word is empty")
+                    val pictureFile = "$word.png"
+                    var isExistOnS3AndUrl = cloudService.isPictureExistInMainFolder(pictureFile)
+                    log.info("Picture $pictureFile on main s3 /pictures folder exist = $isExistOnS3AndUrl")
+                    if (!isExistOnS3AndUrl.first) {
+                        isExistOnS3AndUrl = cloudService.isPictureExistInUnverifiedFolder(pictureFile)
+                        log.info("Picture $pictureFile on main s3 /unverifiedPictures folder exist = $isExistOnS3AndUrl")
+                    }
+                    if (isExistOnS3AndUrl.first) {
+                        resource.pictureFileUrl = isExistOnS3AndUrl.second
+                    } else {
+                        log.info("Picture for word $word not found on s3.")
+                    }
                 }
             }
     }

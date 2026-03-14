@@ -138,6 +138,8 @@ internal class TaskServiceTest {
 
             val baseFileUrl = "baseFileUrl"
             every { cloudService.baseFileUrl() } returns (baseFileUrl)
+            every { cloudService.isPictureExistInMainFolder(any()) } returns Pair(true, "baseFileUrl/word.png")
+            every { cloudService.isPictureExistInUnverifiedFolder(any()) } returns Pair(false, "")
 
             // WHEN
             val foundTasks = taskService.getTasksByExerciseId(LONG_ONE)
@@ -161,6 +163,8 @@ internal class TaskServiceTest {
 
             val baseFileUrl = "baseFileUrl"
             every { cloudService.baseFileUrl() } returns (baseFileUrl)
+            every { cloudService.isPictureExistInMainFolder(any()) } returns Pair(true, "baseFileUrl/word.png")
+            every { cloudService.isPictureExistInUnverifiedFolder(any()) } returns Pair(false, "")
 
             // WHEN
             val foundTasks = taskService.getTasksByExerciseId(LONG_ONE) as List<TaskResponse>
@@ -209,6 +213,8 @@ internal class TaskServiceTest {
 
             val baseFileUrl = "baseFileUrl"
             every { cloudService.baseFileUrl() } returns (baseFileUrl)
+            every { cloudService.isPictureExistInMainFolder(any()) } returns Pair(true, "baseFileUrl/word.png")
+            every { cloudService.isPictureExistInUnverifiedFolder(any()) } returns Pair(false, "")
 
             // WHEN
             val foundTasks = taskService.getTasksByExerciseId(LONG_ONE)
@@ -250,6 +256,8 @@ internal class TaskServiceTest {
 
             val baseFileUrl = "baseFileUrl"
             every { cloudService.baseFileUrl() } returns (baseFileUrl)
+            every { cloudService.isPictureExistInMainFolder(any()) } returns Pair(true, "baseFileUrl/word.png")
+            every { cloudService.isPictureExistInUnverifiedFolder(any()) } returns Pair(false, "")
 
             // WHEN
             val foundTasks = taskService.getTasksByExerciseId(LONG_ONE)
@@ -277,6 +285,8 @@ internal class TaskServiceTest {
 
             val baseFileUrl = "baseFileUrl"
             every { cloudService.baseFileUrl() } returns (baseFileUrl)
+            every { cloudService.isPictureExistInMainFolder(any()) } returns Pair(true, "baseFileUrl/word.png")
+            every { cloudService.isPictureExistInUnverifiedFolder(any()) } returns Pair(false, "")
 
             // WHEN
             var foundTasks = taskService.getTasksByExerciseId(LONG_ONE)
@@ -307,6 +317,8 @@ internal class TaskServiceTest {
 
             val baseFileUrl = "baseFileUrl"
             every { cloudService.baseFileUrl() } returns (baseFileUrl)
+            every { cloudService.isPictureExistInMainFolder(any()) } returns Pair(true, "baseFileUrl/word.png")
+            every { cloudService.isPictureExistInUnverifiedFolder(any()) } returns Pair(false, "")
 
             // THEN
             shouldThrowExactly<EntityNotFoundException> {
