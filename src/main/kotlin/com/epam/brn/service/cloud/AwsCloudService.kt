@@ -164,6 +164,10 @@ class AwsCloudService(
             log.error("Picture fileName=$fileName fullFileName=`$fullFileName` not exist in $filePath, mes=${e.message}")
             false
         }
+        catch (e: Exception) {
+            log.error("Error checking aws s3 file existence: ${e.message}", e)
+            false
+        }
     }
 
     override fun isPictureExistInFolder(
