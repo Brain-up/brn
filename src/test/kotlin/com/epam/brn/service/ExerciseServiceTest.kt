@@ -17,6 +17,7 @@ import com.epam.brn.model.Role
 import com.epam.brn.model.Series
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.SubGroup
+import com.epam.brn.model.Task
 import com.epam.brn.model.UserAccount
 import com.epam.brn.model.projection.ExerciseAvailabilityView
 import com.epam.brn.model.projection.ExerciseLastAttemptView
@@ -38,13 +39,13 @@ import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import io.mockk.mockkClass
 import io.mockk.verify
+import java.time.LocalDateTime
+import java.util.Optional
+import java.util.stream.Stream
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.test.util.ReflectionTestUtils
 import org.springframework.transaction.annotation.Transactional
-import java.time.LocalDateTime
-import java.util.Optional
-import java.util.stream.Stream
 
 @ExtendWith(MockKExtension::class)
 internal class ExerciseServiceTest {
@@ -62,6 +63,9 @@ internal class ExerciseServiceTest {
 
     @MockK
     lateinit var urlConversionService: UrlConversionService
+
+    @MockK
+    lateinit var taskService: TaskService
 
     @MockK
     lateinit var recordProcessors: List<RecordProcessor<out Any, out Any>>
@@ -85,6 +89,7 @@ internal class ExerciseServiceTest {
     fun `should get exercises by user`() {
         // GIVEN
         val exerciseMock: Exercise = mockkClass(Exercise::class)
+        val taskMock: Task = mockkClass(Task::class)
         val noiseUrl = "noiseUrl"
         val exerciseDtoMock = ExerciseDto(2, 1, "name", 1, NoiseDto(0, noiseUrl))
         val exerciseId = 1L
@@ -93,6 +98,8 @@ internal class ExerciseServiceTest {
         every { studyHistoryRepository.getDoneExercisesIdList(ofType(Long::class)) } returns listOf(exerciseId)
         every { exerciseRepository.findAll() } returns listOf(exerciseMock)
         every { urlConversionService.makeUrlForNoise(noiseUrl) } returns noiseUrl
+        every { exerciseMock.tasks } returns setOf(taskMock) as MutableSet<Task>
+        every { taskService.processAnswerOptions(taskMock) } returns Unit
 
         // WHEN
         val actualResult: List<ExerciseDto> = exerciseService.findExercisesByUserId(22L)
@@ -114,7 +121,11 @@ internal class ExerciseServiceTest {
         val exercise2 = Exercise(id = 2, name = "pets", level = 100)
         val noiseUrl = "noiseUrl"
         every { userAccountService.getCurrentUserRoles() } returns setOf(BrnRole.ADMIN)
-        every { exerciseRepository.findExercisesWithSubGroupBySubGroupId(subGroupId) } returns listOf(exercise1, exercise2)
+        every { exerciseRepository.findExercisesWithSubGroupBySubGroupId(subGroupId) } returns
+            listOf(
+                exercise1,
+                exercise2,
+            )
         every { urlConversionService.makeUrlForNoise(ofType(String::class)) } returns noiseUrl
 
         // WHEN
@@ -139,7 +150,11 @@ internal class ExerciseServiceTest {
         val exercise2 = Exercise(id = 2, name = "pets", level = 100)
         val noiseUrl = "noiseUrl"
         every { userAccountService.getCurrentUserRoles() } returns setOf(BrnRole.SPECIALIST, BrnRole.USER)
-        every { exerciseRepository.findExercisesWithSubGroupBySubGroupId(subGroupId) } returns listOf(exercise1, exercise2)
+        every { exerciseRepository.findExercisesWithSubGroupBySubGroupId(subGroupId) } returns
+            listOf(
+                exercise1,
+                exercise2,
+            )
         every { urlConversionService.makeUrlForNoise(ofType(String::class)) } returns noiseUrl
 
         // WHEN
@@ -286,9 +301,17 @@ internal class ExerciseServiceTest {
 
         every { exerciseRepository.findSubGroupIdByExerciseId(requestedExerciseId) } returns subGroupId
         every { userAccountService.getCurrentUser() } returns currentUser
-        every { exerciseRepository.findExerciseAvailabilityBySubGroupId(subGroupId) } returns listOf(exercise1, exercise2, exercise3)
+        every { exerciseRepository.findExerciseAvailabilityBySubGroupId(subGroupId) } returns
+            listOf(
+                exercise1,
+                exercise2,
+                exercise3,
+            )
         every { studyHistoryRepository.getDoneExerciseIds(subGroupId, userId) } returns listOf(1L)
-        every { studyHistoryRepository.findLastAttemptBySubGroupAndUserAccount(subGroupId, userId) } returns listOf(lastAttempt)
+        every { studyHistoryRepository.findLastAttemptBySubGroupAndUserAccount(subGroupId, userId) } returns
+            listOf(
+                lastAttempt,
+            )
 
         // WHEN
         val actualResult = exerciseService.getAvailableExerciseIds(listOf(requestedExerciseId))
@@ -390,7 +413,12 @@ internal class ExerciseServiceTest {
 
         every { exerciseRepository.findSubGroupIdByExerciseId(requestedExerciseId) } returns subGroupId
         every { userAccountService.getCurrentUser() } returns currentUser
-        every { exerciseRepository.findExerciseAvailabilityBySubGroupId(subGroupId) } returns listOf(exercise1, exercise2, exercise3)
+        every { exerciseRepository.findExerciseAvailabilityBySubGroupId(subGroupId) } returns
+            listOf(
+                exercise1,
+                exercise2,
+                exercise3,
+            )
         every { studyHistoryRepository.getDoneExerciseIds(subGroupId, userId) } returns listOf(1L)
         every { studyHistoryRepository.findLastAttemptBySubGroupAndUserAccount(subGroupId, userId) } returns emptyList()
 
@@ -419,9 +447,17 @@ internal class ExerciseServiceTest {
 
         every { exerciseRepository.findSubGroupIdByExerciseId(requestedExerciseId) } returns subGroupId
         every { userAccountService.getCurrentUser() } returns currentUser
-        every { exerciseRepository.findExerciseAvailabilityBySubGroupId(subGroupId) } returns listOf(exercise1, exercise2, exercise3)
+        every { exerciseRepository.findExerciseAvailabilityBySubGroupId(subGroupId) } returns
+            listOf(
+                exercise1,
+                exercise2,
+                exercise3,
+            )
         every { studyHistoryRepository.getDoneExerciseIds(subGroupId, userId) } returns listOf(1L)
-        every { studyHistoryRepository.findLastAttemptBySubGroupAndUserAccount(subGroupId, userId) } returns listOf(lastAttempt)
+        every { studyHistoryRepository.findLastAttemptBySubGroupAndUserAccount(subGroupId, userId) } returns
+            listOf(
+                lastAttempt,
+            )
 
         // WHEN
         val actualResult = exerciseService.getAvailableExerciseIds(listOf(requestedExerciseId))
@@ -434,11 +470,14 @@ internal class ExerciseServiceTest {
     fun `should get exercise by id`() {
         // GIVEN
         val exerciseMock: Exercise = mockkClass(Exercise::class)
+        val taskMock: Task = mockkClass(Task::class)
         val noiseUrl = "noiseUrl"
         val exerciseDtoMock = ExerciseDto(2, 1, "name", 1, NoiseDto(0, noiseUrl))
         every { exerciseMock.toDto() } returns exerciseDtoMock
         every { exerciseRepository.findByIdWithSubGroup(ofType(Long::class)) } returns exerciseMock
         every { urlConversionService.makeUrlForNoise(noiseUrl) }.returns(noiseUrl)
+        every { exerciseMock.tasks } returns setOf(taskMock) as MutableSet<Task>
+        every { taskService.processAnswerOptions(taskMock) } returns Unit
 
         // WHEN
         val actualResult: ExerciseDto = exerciseService.findExerciseById(1L)

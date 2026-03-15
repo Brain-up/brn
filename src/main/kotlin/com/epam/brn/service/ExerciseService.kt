@@ -27,6 +27,7 @@ class ExerciseService(
     private val studyHistoryRepository: StudyHistoryRepository,
     private val userAccountService: UserAccountService,
     private val urlConversionService: UrlConversionService,
+    private val taskService: TaskService,
     private val recordProcessors: List<RecordProcessor<out Any, out Any>>,
 ) {
     @Value(value = "\${minRepetitionIndex}")
@@ -42,7 +43,8 @@ class ExerciseService(
         val exercise =
             exerciseRepository.findByIdWithSubGroup(exerciseID)
                 ?: throw EntityNotFoundException("Could not find requested exerciseID=$exerciseID")
-        return updateExerciseDto(exercise.toDto())
+        updateTasksUrl(exercise)
+        return updateNoiseExerciseDto(exercise.toDto())
     }
 
     fun findExerciseByNameAndLevel(
@@ -58,7 +60,8 @@ class ExerciseService(
         val exercisesIdList = studyHistoryRepository.getDoneExercisesIdList(userId)
         val exercises = exerciseRepository.findAll()
         return exercises.map { exercise ->
-            updateExerciseDto(exercise.toDto(exercisesIdList.contains(exercise.id)))
+            updateTasksUrl(exercise)
+            updateNoiseExerciseDto(exercise.toDto(exercisesIdList.contains(exercise.id)))
         }
     }
 
@@ -74,17 +77,22 @@ class ExerciseService(
         subGroupId: Long,
     ): List<ExerciseDto> {
         log.debug("Searching exercises for user=$userId with subGroupId=$subGroupId with Availability")
-        val subGroupExercises = exerciseRepository.findExercisesWithSubGroupBySubGroupId(subGroupId).sortedBy { s -> s.level }
+        val subGroupExercises =
+            exerciseRepository.findExercisesWithSubGroupBySubGroupId(subGroupId).sortedBy { s -> s.level }
         val currentUserRoles = userAccountService.getCurrentUserRoles()
         if (currentUserRoles.contains(BrnRole.ADMIN) || currentUserRoles.contains(BrnRole.SPECIALIST))
-            return subGroupExercises.map { exercise -> updateExerciseDto(exercise.toDto(true)) }
+            return subGroupExercises.map { exercise ->
+                updateTasksUrl(exercise)
+                updateNoiseExerciseDto(exercise.toDto(true))
+            }
         val doneSubGroupExercises = studyHistoryRepository.getDoneExercises(subGroupId, userId)
         val openSubGroupExercises =
             getAvailableExercisesForSubGroup(doneSubGroupExercises, subGroupExercises, userId, subGroupId)
         return subGroupExercises
             .mapIndexed { index, exercise ->
+                updateTasksUrl(exercise)
                 val updatedExerciseDto =
-                    updateExerciseDto(exercise.toDto(openSubGroupExercises.contains(exercise)))
+                    updateNoiseExerciseDto(exercise.toDto(openSubGroupExercises.contains(exercise)))
                 updatedExerciseDto.level = index + 1
                 updatedExerciseDto
             }
@@ -167,9 +175,13 @@ class ExerciseService(
         return (repetitionIndex >= minRepetitionIndex.toFloat() && rightAnswersIndex >= minRightAnswersIndex.toFloat())
     }
 
-    fun updateExerciseDto(exerciseDto: ExerciseDto): ExerciseDto {
+    fun updateNoiseExerciseDto(exerciseDto: ExerciseDto): ExerciseDto {
         exerciseDto.noise.url = urlConversionService.makeUrlForNoise(exerciseDto.noise.url)
         return exerciseDto
+    }
+
+    fun updateTasksUrl(exercise: Exercise) {
+        exercise.tasks.forEach { task -> taskService.processAnswerOptions(task) }
     }
 
     fun updateActiveStatus(
@@ -184,7 +196,7 @@ class ExerciseService(
     @Transactional(readOnly = true)
     fun findExercisesWithTasksBySubGroup(subGroupId: Long): List<ExerciseDto> = exerciseRepository
         .findExercisesWithSubGroupBySubGroupId(subGroupId)
-        .map { updateExerciseDto(it.toDto()) }
+        .map { updateNoiseExerciseDto(it.toDto()) }
 
     @Transactional(readOnly = true)
     fun findExercisesByWord(word: String): List<ExerciseWithWordsResponse> = exerciseRepository
@@ -202,6 +214,7 @@ class ExerciseService(
                             ?: throw IllegalArgumentException("Exercise with this name (${exerciseCreateDto.exerciseName}) already exist")
                     exercise
                 }
+
                 is ExercisePhrasesCreateDto -> {
                     val seriesPhrasesRecord = exerciseCreateDto.toSeriesPhrasesRecord()
                     val exercise =
@@ -209,6 +222,7 @@ class ExerciseService(
                             ?: throw IllegalArgumentException("Exercise with this name (${exerciseCreateDto.exerciseName}) already exist")
                     exercise
                 }
+
                 is ExerciseSentencesCreateDto -> {
                     val seriesMatrixRecord = exerciseCreateDto.toSeriesMatrixRecord()
                     val exercise =
@@ -254,7 +268,8 @@ class ExerciseService(
                 val lastAttempt = lastAttemptsByExerciseId[lastDoneExercise.id] ?: return@forEach
                 if (!isDoneWell(lastAttempt)) return@forEach
 
-                val nextClosedExercise = currentNameExercises.firstOrNull { !doneExerciseIds.contains(it.id) } ?: return@forEach
+                val nextClosedExercise =
+                    currentNameExercises.firstOrNull { !doneExerciseIds.contains(it.id) } ?: return@forEach
                 availableExerciseIds.add(nextClosedExercise.id)
             }
         return subGroupExercises

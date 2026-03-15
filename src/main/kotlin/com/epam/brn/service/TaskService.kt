@@ -80,7 +80,7 @@ class TaskService(
         }
     }
 
-    private fun processAnswerOptions(task: Task) {
+    public fun processAnswerOptions(task: Task) {
         task.answerOptions
             .forEach { resource ->
                 val word = resource.word
