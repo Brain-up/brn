@@ -358,7 +358,7 @@ class AwsCloudServiceTest {
         assertEquals(BUCKET, putObjectRequestSlot.captured.bucket())
         assertEquals("$filePath$fileName.png", putObjectRequestSlot.captured.key())
         assertEquals(BUCKET, waitObjectRequestSlot.captured.bucket())
-        assertEquals("$filePath$fileName", waitObjectRequestSlot.captured.key())
+        assertEquals("$filePath$fileName.png", waitObjectRequestSlot.captured.key())
         val newStream = requestBodySlot.captured.contentStreamProvider().newStream()
         val expectedBody = IOUtils.toByteArray(file.inputStream())
         val actualBody = IOUtils.toByteArray(newStream)
