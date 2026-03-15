@@ -88,12 +88,11 @@ class TaskService(
                     resource.pictureFileUrl = cloudService.baseFileUrl() + "/" + resource.pictureFileUrl
                     log.info("Picture url for word $word is ${resource.pictureFileUrl}")
                 } else {
-                    val pictureFile = "$word.png"
-                    var isExistOnS3AndUrl = cloudService.isPictureExistInMainFolder(pictureFile)
-                    log.info("Picture $pictureFile on main s3 /pictures folder exist = $isExistOnS3AndUrl")
+                    var isExistOnS3AndUrl = cloudService.isPictureExistInMainFolder(word)
+                    log.info("Picture for $word on main s3 /pictures folder exist = $isExistOnS3AndUrl")
                     if (!isExistOnS3AndUrl.first) {
-                        isExistOnS3AndUrl = cloudService.isPictureExistInUnverifiedFolder(pictureFile)
-                        log.info("Picture $pictureFile on main s3 /unverifiedPictures folder exist = $isExistOnS3AndUrl")
+                        isExistOnS3AndUrl = cloudService.isPictureExistInUnverifiedFolder(word)
+                        log.info("Picture for $word on main s3 /unverifiedPictures folder exist = $isExistOnS3AndUrl")
                     }
                     if (isExistOnS3AndUrl.first) {
                         resource.pictureFileUrl = isExistOnS3AndUrl.second
