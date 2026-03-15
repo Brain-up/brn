@@ -318,7 +318,8 @@ class AwsCloudServiceTest {
     @Test
     fun `should upload file to folder`() {
         // GIVEN
-        val fileName = "file.name"
+        ReflectionTestUtils.setField(awsCloudService, "pictureExtension", ".png")
+        val fileName = "file"
         val filePath = "some/path/"
         val file =
             File(
@@ -355,7 +356,7 @@ class AwsCloudServiceTest {
 
         // THEN
         assertEquals(BUCKET, putObjectRequestSlot.captured.bucket())
-        assertEquals("$filePath$fileName", putObjectRequestSlot.captured.key())
+        assertEquals("$filePath$fileName.png", putObjectRequestSlot.captured.key())
         assertEquals(BUCKET, waitObjectRequestSlot.captured.bucket())
         assertEquals("$filePath$fileName", waitObjectRequestSlot.captured.key())
         val newStream = requestBodySlot.captured.contentStreamProvider().newStream()
@@ -405,6 +406,7 @@ class AwsCloudServiceTest {
         // GIVEN
         every { awsConfig.bucketName } returns BUCKET
         every { s3Client.headObject(any<HeadObjectRequest>()) } returns null
+        ReflectionTestUtils.setField(awsCloudService, "pictureExtension", ".png")
 
         // WHEN
         val actual = awsCloudService.isFileExist("testPath", "testName")
@@ -416,6 +418,7 @@ class AwsCloudServiceTest {
     @Test
     fun `should check file is not exist`() {
         // GIVEN
+        ReflectionTestUtils.setField(awsCloudService, "pictureExtension", ".png")
         every { awsConfig.bucketName } returns BUCKET
         every { s3Client.headObject(any<HeadObjectRequest>()) } throws (NoSuchKeyException.builder().build())
 
