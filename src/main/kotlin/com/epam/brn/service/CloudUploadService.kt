@@ -51,11 +51,10 @@ class CloudUploadService(
         resourceService.findFirstResourceByWord(fileName)
             ?: throw IllegalArgumentException("The world \"$fileName\" is not found in database")
         if (cloudService.isFileExist(defaultPicturesPath, fileName)) {
-            throw IllegalArgumentException("File \"$fullFileName\" is exist in cloud default path")
+            log.error("File \"$fullFileName\" is already exist in cloud default path")
         } else if (cloudService.isFileExist(unverifiedPicturesPath, fileName)) {
-            throw IllegalArgumentException("File \"$fullFileName\" is exist in cloud path \"$unverifiedPicturesPath\"")
+            log.error("File \"$fullFileName\" is already exist in cloud path \"$unverifiedPicturesPath\"")
         }
-
         cloudService.uploadFile(unverifiedPicturesPath, fullFileName, multipartFile.inputStream)
     }
 
