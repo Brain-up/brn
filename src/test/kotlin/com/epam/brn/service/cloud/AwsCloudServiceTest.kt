@@ -318,7 +318,7 @@ class AwsCloudServiceTest {
     @Test
     fun `should upload file to folder`() {
         // GIVEN
-        ReflectionTestUtils.setField(awsCloudService, "pictureExtension", ".png")
+        ReflectionTestUtils.setField(awsCloudService, "pictureExtension", "png")
         val fileName = "file"
         val filePath = "some/path/"
         val file =

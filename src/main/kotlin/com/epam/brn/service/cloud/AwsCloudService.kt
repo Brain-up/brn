@@ -190,7 +190,7 @@ class AwsCloudService(
         }
         fullFileName += fileName
         if (!fileName.endsWith(pictureExtension))
-            fullFileName += pictureExtension
+            fullFileName += ".$pictureExtension"
         return fullFileName
     }
 
