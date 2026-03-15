@@ -174,7 +174,9 @@ class AwsCloudService(
         fileName: String,
     ): Pair<Boolean, String> {
         val isFileExist = isFileExist(filePath, fileName)
-        val pictureUrl = baseFileUrl() + FOLDER_DELIMITER + filePath + FOLDER_DELIMITER + fileName
+        var pictureUrl = baseFileUrl() + FOLDER_DELIMITER + filePath + fileName
+        if (!fileName.endsWith(pictureExtension))
+            pictureUrl += ".$pictureExtension"
         return Pair(isFileExist, pictureUrl)
     }
 
