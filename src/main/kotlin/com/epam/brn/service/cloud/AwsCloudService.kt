@@ -42,7 +42,7 @@ class AwsCloudService(
     lateinit var unverifiedPicturesPath: String
 
     @Value("\${brn.resources.pictures.ext:}")
-    lateinit var contributorPictureExtension: String
+    lateinit var pictureExtension: String
 
     companion object {
         private const val FOLDER_DELIMITER = "/"
@@ -156,11 +156,12 @@ class AwsCloudService(
                     .bucket(awsConfig.bucketName)
                     .key(fullFileName)
                     .build()
+            log.info("Request to aws s3 for file: $request")
             s3Client.headObject(request)
             log.info("Picture fileName=$fileName fullFileName=`$fullFileName` exist in $filePath")
             true
         } catch (e: NoSuchKeyException) {
-            log.error("Picture `$fullFileName` doesn't exist in $filePath", e)
+            log.error("Picture fileName=$fileName fullFileName=`$fullFileName` not exist in $filePath, mes=${e.message}")
             false
         }
     }
@@ -181,13 +182,15 @@ class AwsCloudService(
 
     override fun createFullFileName(
         path: String,
-        filename: String,
+        fileName: String,
     ): String {
         var fullFileName = path
         if (!StringUtils.endsWith(fullFileName, FOLDER_DELIMITER)) {
             fullFileName += FOLDER_DELIMITER
         }
-        fullFileName += filename
+        fullFileName += fileName
+        if (!fileName.endsWith(pictureExtension))
+            fullFileName += pictureExtension
         return fullFileName
     }
 
