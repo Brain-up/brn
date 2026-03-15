@@ -6,6 +6,11 @@ import com.fasterxml.jackson.core.util.DefaultPrettyPrinter
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.ObjectWriter
 import com.fasterxml.jackson.databind.SerializationFeature
+import java.io.File
+import java.io.InputStream
+import java.io.Serializable
+import javax.crypto.Mac
+import javax.crypto.spec.SecretKeySpec
 import org.apache.commons.io.IOUtils
 import org.apache.commons.lang3.StringUtils
 import org.apache.logging.log4j.kotlin.logger
@@ -23,11 +28,6 @@ import software.amazon.awssdk.services.s3.model.NoSuchKeyException
 import software.amazon.awssdk.services.s3.model.ObjectIdentifier
 import software.amazon.awssdk.services.s3.model.PutObjectRequest
 import software.amazon.awssdk.utils.BinaryUtils
-import java.io.File
-import java.io.InputStream
-import java.io.Serializable
-import javax.crypto.Mac
-import javax.crypto.spec.SecretKeySpec
 
 @ConditionalOnProperty(name = ["cloud.provider"], havingValue = "aws")
 @Service
@@ -163,6 +163,9 @@ class AwsCloudService(
         } catch (e: NoSuchKeyException) {
             log.error("Picture fileName=$fileName fullFileName=`$fullFileName` not exist in $filePath, mes=${e.message}")
             false
+        } catch (e: Exception) {
+            log.error("Error checking aws s3 file existence: ${e.message}", e)
+            false
         }
     }
 
@@ -190,7 +193,7 @@ class AwsCloudService(
         }
         fullFileName += fileName
         if (!fileName.endsWith(pictureExtension))
-            fullFileName += pictureExtension
+            fullFileName += ".$pictureExtension"
         return fullFileName
     }
 
