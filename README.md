@@ -181,7 +181,7 @@ Use format '#GitHub_TaskNumber-# issue description' or 'Merge description'. Issu
  2.2 command line: `gradle jacocoTestReport`
 3. Pay attention that main local metric would be a little bit different from the one in Sonar cloud.
 
-### Thanks companies for support
+### Thanks companies for support:
 - EPAM for Jira/Confluence, test instance and Jenkins, for contribution support program.
 - JetBrains for IDEA licenses
 - Selectel for public instance
