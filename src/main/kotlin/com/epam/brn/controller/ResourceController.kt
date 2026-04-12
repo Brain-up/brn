@@ -48,4 +48,10 @@ class ResourceController(
     @Operation(summary = "Update picture URL for all resources")
     fun updateResourceUrls(): ResponseEntity<ResourcePictureUrlUpdateJobResponse> =
         ResponseEntity.ok(resourcePictureUpdateJob.updatePictureUrl())
+
+    @GetMapping("/update")
+    @RolesAllowed(BrnRole.ADMIN)
+    @Operation(summary = "Update picture URL for all resources")
+    fun updateResourcePictureUrls(): ResponseEntity<ResourcePictureUrlUpdateJobResponse> =
+        ResponseEntity.ok(resourcePictureUpdateJob.updatePictureUrl())
 }
