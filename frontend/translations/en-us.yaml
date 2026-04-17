@@ -130,24 +130,13 @@ about_us:
 
 index:
   hero_badge: Free for adults and children from age 7
+  hero_image_alt: A child, an adult and an older person each practicing with
+    BrainUp on their own device
   app_info: "Hearing can be trained.<br />Practice 20 minutes a day."
   app_description: Free exercises from hearing specialists for adults and
     children from age 7. They help users hear speech better, distinguish
     sounds, and regain confidence in communication.
   cta: Start Training
-  visual:
-    child:
-      title: Children 7+
-      description: A gentle start with exercises for speech attention and
-        distinguishing sounds.
-    adult:
-      title: Adults
-      description: Short daily sessions fit into a work schedule and support
-        hearing rehabilitation.
-    senior:
-      title: Older adults
-      description: Regular practice helps people stay confident in family
-        conversations and keep up with speech.
   community:
     prompt: Have feedback or questions? Join the chat for Russian-speaking
       users.
