@@ -112,6 +112,7 @@ service_message:
 
 control_exercises:
   solve: Решать
+  solve_hint: Нажмите, когда будете готовы перейти к решению
   interact: Повторить
   listen: Слушать
 

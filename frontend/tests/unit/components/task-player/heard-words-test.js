@@ -182,9 +182,10 @@ module('Unit | Component | task-player | interactModeTask heardWords accumulatio
   });
 });
 
-module('Unit | Component | task-player | exerciseSequenceTask with auto-transition', function () {
-  // Test that the exercise sequence flows through listen -> interact -> task,
-  // and that interactModeTask returns (completing interact) when allOptionsHeard is true.
+module('Unit | Component | task-player | exerciseSequenceTask auto-transition', function () {
+  // The auto-sequence stops after INTERACT — users opt into TASK (Solve)
+  // manually, so the body of exerciseSequenceTask only calls setMode for
+  // LISTEN and INTERACT.
 
   async function runExerciseSequence(setMode) {
     try {
@@ -197,23 +198,18 @@ module('Unit | Component | task-player | exerciseSequenceTask with auto-transiti
     } catch (_e) {
       // Interact was interrupted
     }
-    try {
-      await setMode(MODES.TASK);
-    } catch (_e) {
-      // Task mode interrupted
-    }
   }
 
-  test('transitions through listen -> interact -> task in full sequence', async function (assert) {
+  test('transitions through listen -> interact and stops before task', async function (assert) {
     const calls = [];
     await runExerciseSequence(async (mode) => {
       calls.push(mode);
     });
 
-    assert.strictEqual(calls.length, 3, 'setMode called three times');
+    assert.strictEqual(calls.length, 2, 'setMode called twice');
     assert.strictEqual(calls[0], MODES.LISTEN, 'first call is LISTEN');
     assert.strictEqual(calls[1], MODES.INTERACT, 'second call is INTERACT');
-    assert.strictEqual(calls[2], MODES.TASK, 'third call is TASK');
+    assert.false(calls.includes(MODES.TASK), 'TASK is not auto-entered');
   });
 
   test('allOptionsHeard check causes loop exit after all options played (simulated logic)', async function (assert) {

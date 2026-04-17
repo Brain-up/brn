@@ -112,6 +112,7 @@ service_message:
 
 control_exercises:
   solve: Solve
+  solve_hint: Click when you are ready to start solving
   interact: Interact
   listen: Listen
 
