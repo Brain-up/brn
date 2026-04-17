@@ -148,6 +148,10 @@ index:
       title: Older adults
       description: Regular practice helps people stay confident in family
         conversations and keep up with speech.
+  community:
+    prompt: Have feedback or questions? Join the chat for Russian-speaking
+      users.
+    link_text: Open MAX chat
 
 start_task_button:
   label: Start exercise
