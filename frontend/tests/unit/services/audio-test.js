@@ -181,4 +181,110 @@ module('Unit | Service | audio', function (hooks) {
 
     assert.strictEqual(ctx.state, 'closed', 'context is closed after destroy');
   });
+
+  module('playTask onended handling', function () {
+    // Build a plain object that satisfies `rawSource instanceof
+    // AudioBufferSourceNode` via prototype injection. Avoids real
+    // AudioContext, which in headless CI is created in the suspended
+    // state and makes stop()/onended timing unreliable.
+    function fakeNativeSource(durationSec, options = {}) {
+      const { autoEndAfterMs = null, suppressOnended = false } = options;
+      const source = {
+        buffer: { duration: durationSec },
+        _onended: null,
+        get onended() {
+          return this._onended;
+        },
+        set onended(fn) {
+          if (suppressOnended) return;
+          this._onended = fn;
+        },
+        start() {
+          if (autoEndAfterMs !== null) {
+            setTimeout(() => this._onended && this._onended(), autoEndAfterMs);
+          }
+        },
+        stop() {
+          if (this._onended) this._onended();
+        },
+      };
+      Object.setPrototypeOf(source, AudioBufferSourceNode.prototype);
+      return source;
+    }
+
+    function stubContext(service) {
+      service.context = {
+        state: 'running',
+        resume: () => Promise.resolve(),
+        close: () => Promise.resolve(),
+      };
+    }
+
+    test('awaits onended and advances on the event, not a wall-clock timer', async function (assert) {
+      const service = this.owner.lookup('service:audio');
+      stubContext(service);
+      // 5-second nominal duration, onended fires after 50ms. A timer-only
+      // loop would have waited ~5s; onended should release it in ~50ms.
+      const source = fakeNativeSource(5, { autoEndAfterMs: 50 });
+      service.createSources = async () => [{ source, gainNode: {} }];
+      service.buffers = [{}];
+
+      const t0 = Date.now();
+      await service.playTask.perform();
+      const elapsed = Date.now() - t0;
+
+      assert.ok(source instanceof AudioBufferSourceNode, 'prototype satisfies instanceof');
+      assert.true(
+        elapsed < 2000,
+        `advanced on onended at ~50ms, not wall-clock 5s (${elapsed}ms)`,
+      );
+      assert.false(service.isPlaying, 'isPlaying is reset after completion');
+    });
+
+    test('falls back to duration + 1s when onended never fires', async function (assert) {
+      const service = this.owner.lookup('service:audio');
+      stubContext(service);
+      // 50ms duration, onended assignment is swallowed → safety net must
+      // release after duration + 1000ms. Assert against the full 1050 so
+      // shrinking the margin in the future is caught.
+      const source = fakeNativeSource(0.05, { suppressOnended: true });
+      service.createSources = async () => [{ source, gainNode: {} }];
+      service.buffers = [{}];
+
+      const t0 = Date.now();
+      await service.playTask.perform();
+      const elapsed = Date.now() - t0;
+
+      assert.true(
+        elapsed >= 1050,
+        `safety net waited at least duration + 1s (${elapsed}ms)`,
+      );
+      assert.true(
+        elapsed < 3000,
+        `safety net did not hang (${elapsed}ms)`,
+      );
+    });
+
+    test('swallowed synchronous source.start error does not strand the loop', async function (assert) {
+      const service = this.owner.lookup('service:audio');
+      stubContext(service);
+      const source = fakeNativeSource(5);
+      source.start = () => {
+        throw new Error('closed context');
+      };
+      service.createSources = async () => [{ source, gainNode: {} }];
+      service.buffers = [{}];
+
+      const t0 = Date.now();
+      await service.playTask.perform();
+      const elapsed = Date.now() - t0;
+
+      // If the start-failure branch were absent, the loop would hang on
+      // the safety-net timeout (≥1050ms). It should exit nearly instantly.
+      assert.true(
+        elapsed < 500,
+        `loop bails out on sync start throw (${elapsed}ms)`,
+      );
+    });
+  });
 });

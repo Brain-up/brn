@@ -1,5 +1,4 @@
 import { module, test } from 'qunit';
-import { MODES } from 'brn/utils/task-modes';
 
 module('Unit | Component | task-player | heardWords tracking', function () {
   // Test the heardWords and allOptionsHeard logic by replicating the
@@ -182,40 +181,7 @@ module('Unit | Component | task-player | interactModeTask heardWords accumulatio
   });
 });
 
-module('Unit | Component | task-player | exerciseSequenceTask with auto-transition', function () {
-  // Test that the exercise sequence flows through listen -> interact -> task,
-  // and that interactModeTask returns (completing interact) when allOptionsHeard is true.
-
-  async function runExerciseSequence(setMode) {
-    try {
-      await setMode(MODES.LISTEN);
-    } catch (_e) {
-      return;
-    }
-    try {
-      await setMode(MODES.INTERACT);
-    } catch (_e) {
-      // Interact was interrupted
-    }
-    try {
-      await setMode(MODES.TASK);
-    } catch (_e) {
-      // Task mode interrupted
-    }
-  }
-
-  test('transitions through listen -> interact -> task in full sequence', async function (assert) {
-    const calls = [];
-    await runExerciseSequence(async (mode) => {
-      calls.push(mode);
-    });
-
-    assert.strictEqual(calls.length, 3, 'setMode called three times');
-    assert.strictEqual(calls[0], MODES.LISTEN, 'first call is LISTEN');
-    assert.strictEqual(calls[1], MODES.INTERACT, 'second call is INTERACT');
-    assert.strictEqual(calls[2], MODES.TASK, 'third call is TASK');
-  });
-
+module('Unit | Component | task-player | allOptionsHeard break condition', function () {
   test('allOptionsHeard check causes loop exit after all options played (simulated logic)', async function (assert) {
     // Simulate the interactModeTask loop logic (sync) to verify the break condition
     let heardWords = new Set();

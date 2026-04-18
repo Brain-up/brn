@@ -422,10 +422,41 @@ export default class AudioService extends Service {
         index++;
         if (item) {
           if (item.source.buffer) {
+            // Browsers (Safari, and Chrome under throttling) suspend idle
+            // AudioContexts. source.start(0) on a suspended context queues
+            // playback instead of playing it — without this resume, later
+            // words fall silent until a user gesture wakes the context.
+            if (this.context.state === 'suspended' && !isTesting()) {
+              await this.context.resume();
+            }
             const duration = toMilliseconds(item.source.buffer.duration);
-            item.source.start(0);
-            startedSources.push(item);
-            await timeout(duration);
+            // Prefer onended over wall-clock timeout: setTimeout keeps
+            // ticking when the context suspends mid-clip, so a timer-only
+            // loop would advance over silent words instead of waiting
+            // for real playback to finish.
+            const rawSource = item.source as unknown;
+            const ended = rawSource instanceof AudioBufferSourceNode
+              ? new Promise<void>((resolve) => {
+                  rawSource.onended = () => resolve();
+                })
+              : null;
+            let startFailed = false;
+            try {
+              item.source.start(0);
+              startedSources.push(item);
+            } catch (e) {
+              // A sync throw (closed context, source already started, etc.)
+              // would otherwise strand the loop in the safety-net timeout.
+              startFailed = true;
+              console.error('source.start failed', e);
+            }
+            if (startFailed) {
+              // nothing playing — move on immediately
+            } else if (ended) {
+              await Promise.race([ended, timeout(duration + 1000)]);
+            } else {
+              await timeout(duration);
+            }
           } else {
             console.error('there is no buffer for source');
           }
