@@ -183,89 +183,107 @@ module('Unit | Service | audio', function (hooks) {
   });
 
   module('playTask onended handling', function () {
-    test('awaits the source onended event for AudioBufferSourceNode', async function (assert) {
+    // Build a plain object that satisfies `rawSource instanceof
+    // AudioBufferSourceNode` via prototype injection. Avoids real
+    // AudioContext, which in headless CI is created in the suspended
+    // state and makes stop()/onended timing unreliable.
+    function fakeNativeSource(durationSec, options = {}) {
+      const { autoEndAfterMs = null, suppressOnended = false } = options;
+      const source = {
+        buffer: { duration: durationSec },
+        _onended: null,
+        get onended() {
+          return this._onended;
+        },
+        set onended(fn) {
+          if (suppressOnended) return;
+          this._onended = fn;
+        },
+        start() {
+          if (autoEndAfterMs !== null) {
+            setTimeout(() => this._onended && this._onended(), autoEndAfterMs);
+          }
+        },
+        stop() {
+          if (this._onended) this._onended();
+        },
+      };
+      Object.setPrototypeOf(source, AudioBufferSourceNode.prototype);
+      return source;
+    }
+
+    function stubContext(service) {
+      service.context = {
+        state: 'running',
+        resume: () => Promise.resolve(),
+        close: () => Promise.resolve(),
+      };
+    }
+
+    test('awaits onended and advances on the event, not a wall-clock timer', async function (assert) {
       const service = this.owner.lookup('service:audio');
-      const AudioContextCtor =
-        window.AudioContext || window.webkitAudioContext;
-      if (!AudioContextCtor) {
-        assert.ok(true, 'no AudioContext in this env — skipping');
-        return;
-      }
-
-      const ctx = new AudioContextCtor();
-      service.context = ctx;
-
-      // A long silent buffer — wall-clock timeout would wait ~5s here.
-      const buffer = ctx.createBuffer(1, ctx.sampleRate * 5, ctx.sampleRate);
-      service.buffers = [buffer];
+      stubContext(service);
+      // 5-second nominal duration, onended fires after 50ms. A timer-only
+      // loop would have waited ~5s; onended should release it in ~50ms.
+      const source = fakeNativeSource(5, { autoEndAfterMs: 50 });
+      service.createSources = async () => [{ source, gainNode: {} }];
+      service.buffers = [{}];
 
       const t0 = Date.now();
-      const taskInstance = service.playTask.perform();
-
-      // Stop the source early; this fires onended and should let the
-      // loop advance immediately instead of waiting out the 5s duration.
-      await new Promise((r) => setTimeout(r, 20));
-      const source = service.sources[0]?.source;
-      if (source) {
-        source.stop(0);
-      }
-
-      await taskInstance;
+      await service.playTask.perform();
       const elapsed = Date.now() - t0;
 
-      assert.ok(source instanceof AudioBufferSourceNode, 'native source is used');
+      assert.ok(source instanceof AudioBufferSourceNode, 'prototype satisfies instanceof');
       assert.true(
         elapsed < 2000,
-        `playTask returns on onended, not wall-clock (${elapsed}ms)`,
+        `advanced on onended at ~50ms, not wall-clock 5s (${elapsed}ms)`,
       );
       assert.false(service.isPlaying, 'isPlaying is reset after completion');
     });
 
-    test('falls back to timeout when onended never fires (safety net)', async function (assert) {
+    test('falls back to duration + 1s when onended never fires', async function (assert) {
       const service = this.owner.lookup('service:audio');
-      const AudioContextCtor =
-        window.AudioContext || window.webkitAudioContext;
-      if (!AudioContextCtor) {
-        assert.ok(true, 'no AudioContext in this env — skipping');
-        return;
-      }
-
-      const ctx = new AudioContextCtor();
-      service.context = ctx;
-
-      // Very short buffer (50ms). If we never manually trigger onended and
-      // the native playback doesn't end (stub), the duration+1s timeout
-      // fallback should release us inside ~1.1s.
-      const buffer = ctx.createBuffer(1, ctx.sampleRate * 0.05, ctx.sampleRate);
-      service.buffers = [buffer];
-
-      // Patch createBufferSource to return a source that never ends so we
-      // exercise the fallback path specifically.
-      const originalCreate = ctx.createBufferSource.bind(ctx);
-      ctx.createBufferSource = () => {
-        const s = originalCreate();
-        // swallow the onended assignment so the promise never resolves
-        Object.defineProperty(s, 'onended', {
-          configurable: true,
-          set() {},
-          get() {
-            return null;
-          },
-        });
-        return s;
-      };
+      stubContext(service);
+      // 50ms duration, onended assignment is swallowed → safety net must
+      // release after duration + 1000ms. Assert against the full 1050 so
+      // shrinking the margin in the future is caught.
+      const source = fakeNativeSource(0.05, { suppressOnended: true });
+      service.createSources = async () => [{ source, gainNode: {} }];
+      service.buffers = [{}];
 
       const t0 = Date.now();
       await service.playTask.perform();
       const elapsed = Date.now() - t0;
 
       assert.true(
-        elapsed >= 1000,
-        `fallback timeout waited at least duration+1s (${elapsed}ms)`,
+        elapsed >= 1050,
+        `safety net waited at least duration + 1s (${elapsed}ms)`,
       );
       assert.true(
         elapsed < 3000,
-        `fallback timeout did not hang (${elapsed}ms)`,
+        `safety net did not hang (${elapsed}ms)`,
+      );
+    });
+
+    test('swallowed synchronous source.start error does not strand the loop', async function (assert) {
+      const service = this.owner.lookup('service:audio');
+      stubContext(service);
+      const source = fakeNativeSource(5);
+      source.start = () => {
+        throw new Error('closed context');
+      };
+      service.createSources = async () => [{ source, gainNode: {} }];
+      service.buffers = [{}];
+
+      const t0 = Date.now();
+      await service.playTask.perform();
+      const elapsed = Date.now() - t0;
+
+      // If the start-failure branch were absent, the loop would hang on
+      // the safety-net timeout (≥1050ms). It should exit nearly instantly.
+      assert.true(
+        elapsed < 500,
+        `loop bails out on sync start throw (${elapsed}ms)`,
       );
     });
   });

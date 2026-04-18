@@ -132,21 +132,29 @@ module('Unit | Controller | group/series/subgroup/exercise', function (hooks) {
       );
     });
 
-    test('skips tasksManager update when model.id is null', function (assert) {
+    test('skips tasksManager update when model.id is null or undefined', function (assert) {
       const controller = this.owner.lookup(
         'controller:group/series/subgroup/exercise',
       );
       const tasksManager = this.owner.lookup('service:tasks-manager');
-      const before = tasksManager.completedExerciseIds;
-      const model = makeModel(null);
-      controller.model = model;
+      const initial = tasksManager.completedExerciseIds;
 
-      controller.enableNextExercise(model);
-
+      const nullModel = makeModel(null);
+      controller.model = nullModel;
+      controller.enableNextExercise(nullModel);
       assert.strictEqual(
         tasksManager.completedExerciseIds,
-        before,
+        initial,
         'completedExerciseIds untouched for null id',
+      );
+
+      const undefinedModel = makeModel(undefined);
+      controller.model = undefinedModel;
+      controller.enableNextExercise(undefinedModel);
+      assert.strictEqual(
+        tasksManager.completedExerciseIds,
+        initial,
+        'completedExerciseIds untouched for undefined id',
       );
     });
   });

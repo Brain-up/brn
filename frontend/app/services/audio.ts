@@ -440,9 +440,19 @@ export default class AudioService extends Service {
                   rawSource.onended = () => resolve();
                 })
               : null;
-            item.source.start(0);
-            startedSources.push(item);
-            if (ended) {
+            let startFailed = false;
+            try {
+              item.source.start(0);
+              startedSources.push(item);
+            } catch (e) {
+              // A sync throw (closed context, source already started, etc.)
+              // would otherwise strand the loop in the safety-net timeout.
+              startFailed = true;
+              console.error('source.start failed', e);
+            }
+            if (startFailed) {
+              // nothing playing — move on immediately
+            } else if (ended) {
               await Promise.race([ended, timeout(duration + 1000)]);
             } else {
               await timeout(duration);
