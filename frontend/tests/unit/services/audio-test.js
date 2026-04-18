@@ -181,4 +181,92 @@ module('Unit | Service | audio', function (hooks) {
 
     assert.strictEqual(ctx.state, 'closed', 'context is closed after destroy');
   });
+
+  module('playTask onended handling', function () {
+    test('awaits the source onended event for AudioBufferSourceNode', async function (assert) {
+      const service = this.owner.lookup('service:audio');
+      const AudioContextCtor =
+        window.AudioContext || window.webkitAudioContext;
+      if (!AudioContextCtor) {
+        assert.ok(true, 'no AudioContext in this env — skipping');
+        return;
+      }
+
+      const ctx = new AudioContextCtor();
+      service.context = ctx;
+
+      // A long silent buffer — wall-clock timeout would wait ~5s here.
+      const buffer = ctx.createBuffer(1, ctx.sampleRate * 5, ctx.sampleRate);
+      service.buffers = [buffer];
+
+      const t0 = Date.now();
+      const taskInstance = service.playTask.perform();
+
+      // Stop the source early; this fires onended and should let the
+      // loop advance immediately instead of waiting out the 5s duration.
+      await new Promise((r) => setTimeout(r, 20));
+      const source = service.sources[0]?.source;
+      if (source) {
+        source.stop(0);
+      }
+
+      await taskInstance;
+      const elapsed = Date.now() - t0;
+
+      assert.ok(source instanceof AudioBufferSourceNode, 'native source is used');
+      assert.true(
+        elapsed < 2000,
+        `playTask returns on onended, not wall-clock (${elapsed}ms)`,
+      );
+      assert.false(service.isPlaying, 'isPlaying is reset after completion');
+    });
+
+    test('falls back to timeout when onended never fires (safety net)', async function (assert) {
+      const service = this.owner.lookup('service:audio');
+      const AudioContextCtor =
+        window.AudioContext || window.webkitAudioContext;
+      if (!AudioContextCtor) {
+        assert.ok(true, 'no AudioContext in this env — skipping');
+        return;
+      }
+
+      const ctx = new AudioContextCtor();
+      service.context = ctx;
+
+      // Very short buffer (50ms). If we never manually trigger onended and
+      // the native playback doesn't end (stub), the duration+1s timeout
+      // fallback should release us inside ~1.1s.
+      const buffer = ctx.createBuffer(1, ctx.sampleRate * 0.05, ctx.sampleRate);
+      service.buffers = [buffer];
+
+      // Patch createBufferSource to return a source that never ends so we
+      // exercise the fallback path specifically.
+      const originalCreate = ctx.createBufferSource.bind(ctx);
+      ctx.createBufferSource = () => {
+        const s = originalCreate();
+        // swallow the onended assignment so the promise never resolves
+        Object.defineProperty(s, 'onended', {
+          configurable: true,
+          set() {},
+          get() {
+            return null;
+          },
+        });
+        return s;
+      };
+
+      const t0 = Date.now();
+      await service.playTask.perform();
+      const elapsed = Date.now() - t0;
+
+      assert.true(
+        elapsed >= 1000,
+        `fallback timeout waited at least duration+1s (${elapsed}ms)`,
+      );
+      assert.true(
+        elapsed < 3000,
+        `fallback timeout did not hang (${elapsed}ms)`,
+      );
+    });
+  });
 });
