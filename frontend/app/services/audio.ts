@@ -422,10 +422,31 @@ export default class AudioService extends Service {
         index++;
         if (item) {
           if (item.source.buffer) {
+            // Browsers (Safari, and Chrome under throttling) suspend idle
+            // AudioContexts. source.start(0) on a suspended context queues
+            // playback instead of playing it — without this resume, later
+            // words fall silent until a user gesture wakes the context.
+            if (this.context.state === 'suspended' && !isTesting()) {
+              await this.context.resume();
+            }
             const duration = toMilliseconds(item.source.buffer.duration);
+            // Prefer onended over wall-clock timeout: setTimeout keeps
+            // ticking when the context suspends mid-clip, so a timer-only
+            // loop would advance over silent words instead of waiting
+            // for real playback to finish.
+            const rawSource = item.source as unknown;
+            const ended = rawSource instanceof AudioBufferSourceNode
+              ? new Promise<void>((resolve) => {
+                  rawSource.onended = () => resolve();
+                })
+              : null;
             item.source.start(0);
             startedSources.push(item);
-            await timeout(duration);
+            if (ended) {
+              await Promise.race([ended, timeout(duration + 1000)]);
+            } else {
+              await timeout(duration);
+            }
           } else {
             console.error('there is no buffer for source');
           }
