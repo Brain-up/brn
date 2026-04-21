@@ -23,7 +23,7 @@ module('Integration | Component | exercise-playback-help', function (hooks) {
     assert.dom('[data-test-instructions-dialog]').exists();
     assert
       .dom('[data-test-instructions-dialog-title]')
-      .hasText('How the three steps work');
+      .hasText('t:instructions.playback_title');
     assert.dom('[data-test-playback-help-body]').exists();
   });
 

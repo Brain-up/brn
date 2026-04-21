@@ -39,10 +39,9 @@ module('Integration | Component | ui/exercise-button', function (hooks) {
       </template>,
     );
 
-    assert.dom('.c-exercise-button').hasAttribute(
-      'title',
-      'Click to start this task',
-    );
+    assert
+      .dom('.c-exercise-button')
+      .hasAttribute('title', 't:exercise_button.tooltip_available');
   });
 
   test('tooltip points at the locked key when the exercise is not available', async function (assert) {
@@ -58,9 +57,8 @@ module('Integration | Component | ui/exercise-button', function (hooks) {
       </template>,
     );
 
-    assert.dom('.c-exercise-button').hasAttribute(
-      'title',
-      'This task is not available yet. It will open once you finish the previous one.',
-    );
+    assert
+      .dom('.c-exercise-button')
+      .hasAttribute('title', 't:exercise_button.tooltip_locked');
   });
 });
