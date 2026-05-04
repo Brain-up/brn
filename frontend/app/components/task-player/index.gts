@@ -104,7 +104,7 @@ export default class TaskPlayerComponent extends Component<TaskPlayerSignature> 
 
   @action
   onPauseStateChanged() {
-    if (this.studyingTimer.isPaused) {
+    if (this.studyingTimer.isPaused && !this.audio.isPlaying) {
       this.audio.stop();
     }
   }

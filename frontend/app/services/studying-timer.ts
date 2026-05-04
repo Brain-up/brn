@@ -63,6 +63,26 @@ export default class StudyingTimerService extends Service {
     this.isPaused = false;
   }
   @action
+  resetIdle() {
+    // Force resume when audio is about to play, preventing idle detection
+    // from interrupting the exercise. Also restart the idle watcher to
+    // reset its internal timer.
+    if (this.isPaused) {
+      this.isPaused = false;
+      if (this.timerInstance) {
+        this.timerInstance.relaunchStartedTimer();
+      }
+    }
+    if (this.idleWatcher) {
+      try {
+        this.idleWatcher.stop();
+        this.idleWatcher.start();
+      } catch (_e) {
+        // idle-js may not support stop/start cycle in all versions
+      }
+    }
+  }
+  @action
   async startIdleWatcher() {
     if (isTesting()) {
       return;
