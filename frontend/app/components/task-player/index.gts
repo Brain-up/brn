@@ -226,6 +226,9 @@ export default class TaskPlayerComponent extends Component<TaskPlayerSignature> 
       for (const option of this.orderedPlaylist) {
         await this.waitWhilePaused();
         this.activeWord = option.word;
+        // Reset idle timer before each audio playback to prevent idle
+        // detection from interrupting the listen sequence.
+        this.studyingTimer.resetIdle();
         // tone object case
         if (typeof option.audioFileUrl === 'object' && option.audioFileUrl !== null) {
           await this.audio.setAudioElements([option.audioFileUrl]);
@@ -289,7 +292,9 @@ export default class TaskPlayerComponent extends Component<TaskPlayerSignature> 
             ({ word }: any) => word === playText,
           );
           if (option) {
-
+            // Reset idle timer before audio playback to prevent idle detection
+            // from interrupting the interact mode.
+            this.studyingTimer.resetIdle();
             if (typeof option.audioFileUrl === 'object' && option.audioFileUrl !== null) {
               await this.audio.setAudioElements([option.audioFileUrl]);
             } else {

@@ -130,16 +130,17 @@ module('Unit | Component | task-player | disableAnswers', function () {
 });
 
 module('Unit | Component | task-player | onPauseStateChanged', function () {
-  function createComponent({ isPaused }) {
+  function createComponent({ isPaused, isPlaying }) {
     let stopCallCount = 0;
     const component = {
       studyingTimer: { isPaused: !!isPaused },
       audio: {
+        isPlaying: !!isPlaying,
         stop() { stopCallCount++; },
       },
       // Reproduce the logic from TaskPlayerComponent
       onPauseStateChanged() {
-        if (this.studyingTimer.isPaused) {
+        if (this.studyingTimer.isPaused && !this.audio.isPlaying) {
           this.audio.stop();
         }
       },
@@ -147,23 +148,29 @@ module('Unit | Component | task-player | onPauseStateChanged', function () {
     return { component, getStopCallCount: () => stopCallCount };
   }
 
-  test('stops audio when isPaused becomes true', function (assert) {
-    const { component, getStopCallCount } = createComponent({ isPaused: true });
+  test('stops audio when isPaused becomes true and audio is not playing', function (assert) {
+    const { component, getStopCallCount } = createComponent({ isPaused: true, isPlaying: false });
     component.onPauseStateChanged();
     assert.strictEqual(getStopCallCount(), 1, 'audio.stop() was called once');
   });
 
   test('does not stop audio when isPaused is false', function (assert) {
-    const { component, getStopCallCount } = createComponent({ isPaused: false });
+    const { component, getStopCallCount } = createComponent({ isPaused: false, isPlaying: false });
     component.onPauseStateChanged();
     assert.strictEqual(getStopCallCount(), 0, 'audio.stop() was not called');
   });
 
   test('stops audio each time pause is triggered', function (assert) {
-    const { component, getStopCallCount } = createComponent({ isPaused: true });
+    const { component, getStopCallCount } = createComponent({ isPaused: true, isPlaying: false });
     component.onPauseStateChanged();
     component.onPauseStateChanged();
     assert.strictEqual(getStopCallCount(), 2, 'audio.stop() was called twice');
+  });
+
+  test('does not stop audio when isPaused is true but audio is playing', function (assert) {
+    const { component, getStopCallCount } = createComponent({ isPaused: true, isPlaying: true });
+    component.onPauseStateChanged();
+    assert.strictEqual(getStopCallCount(), 0, 'audio.stop() was not called because audio is playing');
   });
 });
 
