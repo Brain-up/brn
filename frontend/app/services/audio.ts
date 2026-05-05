@@ -34,7 +34,6 @@ import type { Signal as SignalModel } from 'brn/schemas/signal';
 import Intl from 'ember-intl/services/intl';
 import { PolySynth, Synth, SynthOptions } from 'tone';
 import UserDataService from './user-data';
-import StudyingTimerService from './studying-timer';
 import type { Exercise } from 'brn/schemas/exercise';
 
 type ISourceCollection = (ISource | IToneSource | null)[];
@@ -53,7 +52,6 @@ export default class AudioService extends Service {
   @service('stats') declare stats: StatsService;
   @service('intl') declare intl: Intl;
   @service('user-data') declare userData: UserDataService;
-  @service('studying-timer') declare studyingTimer: StudyingTimerService;
   context!: AudioContext;
 
   willDestroy(): void {
@@ -127,8 +125,6 @@ export default class AudioService extends Service {
     this.isProcessing = true;
     try {
       this.stats.addEvent(StatEvents.PlayAudio);
-      // Reset idle timer so audio playback is not interrupted by idle detection
-      this.studyingTimer.resetIdle();
       await this.setAudioElements(filesToPlay as string[]);
       await this.playAudio();
     } catch (e) {

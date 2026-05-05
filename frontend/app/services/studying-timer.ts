@@ -1,9 +1,10 @@
-import Service from '@ember/service';
+import Service, { service } from '@ember/service';
 import { action } from '@ember/object';
 import config from 'brn/config/environment';
 import { tracked } from '@glimmer/tracking';
 import { isTesting } from '@embroider/macros';
 import type IdleJs from 'idle-js';
+import type AudioService from './audio';
 
 export interface TimerInstance {
   isStarted: boolean;
@@ -13,6 +14,7 @@ export interface TimerInstance {
 }
 
 export default class StudyingTimerService extends Service {
+  @service('audio') declare audio: AudioService;
   willDestroy() {
     super.willDestroy();
     this.idleWatcher && this.idleWatcher.stop();
@@ -63,24 +65,13 @@ export default class StudyingTimerService extends Service {
     this.isPaused = false;
   }
   @action
-  resetIdle() {
-    // Force resume when audio is about to play, preventing idle detection
-    // from interrupting the exercise. Also restart the idle watcher to
-    // reset its internal timer.
-    if (this.isPaused) {
-      this.isPaused = false;
-      if (this.timerInstance) {
-        this.timerInstance.relaunchStartedTimer();
-      }
+  maybeIdlePause() {
+    // Don't pause while audio is playing: exercises play audio without
+    // requiring mouse movement, and pausing here cascades into audio.stop().
+    if (this.audio.isPlaying) {
+      return;
     }
-    if (this.idleWatcher) {
-      try {
-        this.idleWatcher.stop();
-        this.idleWatcher.start();
-      } catch (_e) {
-        // idle-js may not support stop/start cycle in all versions
-      }
-    }
+    this.pause();
   }
   @action
   async startIdleWatcher() {
@@ -95,7 +86,7 @@ export default class StudyingTimerService extends Service {
     this.idleWatcher = new IdleJs({
       idle: timerInstance.idleTimeout || config.idleTimeout,
       onIdle() {
-        player.pause();
+        player.maybeIdlePause();
       },
       onActive() {
         timerInstance.relaunchStartedTimer();
