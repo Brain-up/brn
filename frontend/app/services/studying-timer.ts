@@ -66,8 +66,8 @@ export default class StudyingTimerService extends Service {
   }
   @action
   maybeIdlePause() {
-    // Don't pause while audio is playing: exercises play audio without
-    // requiring mouse movement, and pausing here cascades into audio.stop().
+    // Pause cascades into audio.stop() via task-player.onPauseStateChanged,
+    // which would interrupt exercises whenever the user stops moving the mouse.
     if (this.audio.isPlaying) {
       return;
     }
