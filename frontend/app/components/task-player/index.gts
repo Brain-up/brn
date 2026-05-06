@@ -126,11 +126,7 @@ export default class TaskPlayerComponent extends Component<TaskPlayerSignature> 
     } catch (_e) {
       // Interact was interrupted
     }
-    try {
-      await this.setMode(MODES.TASK);
-    } catch (_e) {
-      // Task mode interrupted
-    }
+    // Solve (TASK) is entered manually — users found the auto-jump abrupt.
   });
 
   @action
@@ -439,6 +435,7 @@ export default class TaskPlayerComponent extends Component<TaskPlayerSignature> 
               <ExerciseSteps
                 @visible={{not this.justEnteredTask}}
                 @activeStep={{this.mode}}
+                @interactReady={{this.allOptionsHeard}}
                 @onClick={{this.onModeChange}}
                 class="sm:ml-2 flex mb-3 mr-2"
               />

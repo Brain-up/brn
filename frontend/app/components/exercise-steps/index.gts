@@ -22,6 +22,7 @@ interface ExerciseStepsSignature {
   Args: {
   activeStep: Mode;
   visible: boolean;
+  interactReady?: boolean;
   onClick: (key: string) => unknown;
   };
   Element: HTMLElement;
@@ -86,7 +87,7 @@ export default class ExerciseStepsComponent extends Component<ExerciseStepsSigna
     const base = ExerciseStepsComponent.BASE_BTN;
     if (this.modeForTask === BUTTONS.ACTIVE) return `${base} ${ExerciseStepsComponent.STATE_ACTIVE}`;
     if (this.modeForTask === BUTTONS.DISABLED) return `${base} ${ExerciseStepsComponent.STATE_LOCKED}`;
-    if (this.isInteractCompleted) return `${base} ${ExerciseStepsComponent.STATE_NEXT}`;
+    if (this.isInteractCompleted || this.args.interactReady) return `${base} ${ExerciseStepsComponent.STATE_NEXT}`;
     return `${base} ${ExerciseStepsComponent.STATE_DEFAULT}`;
   }
 
@@ -171,6 +172,7 @@ export default class ExerciseStepsComponent extends Component<ExerciseStepsSigna
         type="button"
         class={{this.taskBtnClass}}
         aria-label={{t "control_exercises.solve"}}
+        title={{t "control_exercises.solve_hint"}}
         disabled={{eq this.modeForTask "disabled"}}
         {{on "click" (fn this.onClick this.MODES.TASK this.modeForTask)}}
       >

@@ -32,7 +32,8 @@ class ResourcePictureUrlUpdateJob(
                     val updatedResources = arrayListOf<Resource>()
 
                     val defaultFolderPictures: Map<String, String> = cloudService.getFilePathMap(defaultPicturesPath)
-                    val unverifiedFolderPictures: Map<String, String> = cloudService.getFilePathMap(unverifiedPicturesPath)
+                    val unverifiedFolderPictures: Map<String, String> =
+                        cloudService.getFilePathMap(unverifiedPicturesPath)
 
                     response.inDefaultFolderPicturesCount = defaultFolderPictures.size
                     response.inUnverifiedFolderPicturesCount = unverifiedFolderPictures.size
@@ -81,6 +82,56 @@ class ResourcePictureUrlUpdateJob(
                 Without pictures resources: ${response.resourcesWithoutPictures}
                 Updated resources: ${response.updatedPicturedResources}
                 Cleaned pictures from resources: ${response.cleanedResourcePicturesFromResource}
+                Execution Time: ${executionTime / 1000}s
+            """
+        log.info(logStatement)
+        response.executionTime = executionTime
+        return response
+    }
+
+    fun updatePictureUrlForEachFile(): ResourcePictureUrlUpdateJobResponse {
+        log.info("Start Job: update picture URLs")
+        val response = ResourcePictureUrlUpdateJobResponse()
+        val executionTime =
+            measureTimeMillis {
+                try {
+                    val updatedResources = arrayListOf<Resource>()
+
+                    val resources = resourceService.findAll()
+                    resources
+                        .filter { it.pictureFileUrl != null && !(it.pictureFileUrl!!.contains(defaultPicturesPath)) }
+                        .forEach {
+                            val (isExist, fileFullPath) = cloudService.isPictureExistInMainFolder(it.word)
+                            if (isExist) {
+                                it.pictureFileUrl =
+                                    defaultPicturesPath + fileFullPath.substringAfter(defaultPicturesPath)
+                                updatedResources.add(it)
+                                response.updatedPicturedResources++
+                            } else {
+                                log.debug("No picture for ${it.word} found")
+                            }
+                        }
+                    if (updatedResources.isNotEmpty())
+                        resourceService.saveAll(updatedResources)
+
+                    if (updatedResources.isNotEmpty())
+                        resourceService.saveAll(updatedResources)
+                } catch (e: Exception) {
+                    response.success = false
+                    response.errorMessage = e.message.orEmpty()
+                    log.error("Error updating picture URLs for resources", e)
+                }
+            }
+        val logStatement =
+            """
+                End Job: update picture URLs
+                Success: ${response.success}, message: ${response.errorMessage}
+                Pictures in Default folder: ${response.inDefaultFolderPicturesCount}
+                Pictures in Unverified folder: ${response.inUnverifiedFolderPicturesCount}
+                Used default URLs count: ${response.withCorrectDefaultUrlResources}
+                Used unverified URLs count: ${response.withUnverifiedUrlResources}
+                Without pictures resources: ${response.resourcesWithoutPictures}
+                Updated resources: ${response.updatedPicturedResources}
                 Execution Time: ${executionTime / 1000}s
             """
         log.info(logStatement)

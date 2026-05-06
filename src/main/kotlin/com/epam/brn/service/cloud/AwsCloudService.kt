@@ -27,6 +27,7 @@ import software.amazon.awssdk.services.s3.model.ListObjectsV2Request
 import software.amazon.awssdk.services.s3.model.NoSuchKeyException
 import software.amazon.awssdk.services.s3.model.ObjectIdentifier
 import software.amazon.awssdk.services.s3.model.PutObjectRequest
+import software.amazon.awssdk.services.s3.model.S3Object
 import software.amazon.awssdk.utils.BinaryUtils
 
 @ConditionalOnProperty(name = ["cloud.provider"], havingValue = "aws")
@@ -92,15 +93,29 @@ class AwsCloudService(
     override fun getPicturesNamesFromMainFolder(): List<String> = getFileNames(defaultPicturesPath)
 
     override fun getFilePathMap(folderPath: String): Map<String, String> {
-        val request =
-            ListObjectsV2Request
-                .builder()
-                .bucket(awsConfig.bucketName)
-                .prefix(folderPath)
-                .build()
-        return s3Client
-            .listObjectsV2(request)
-            .contents()
+        val allObjects = mutableListOf<S3Object>()
+        var continuationToken: String? = null
+
+        do {
+            val requestBuilder =
+                ListObjectsV2Request
+                    .builder()
+                    .bucket(awsConfig.bucketName)
+                    .prefix(folderPath)
+
+            // Добавляем токен для следующих страниц (если есть)
+            if (continuationToken != null) {
+                requestBuilder.continuationToken(continuationToken)
+            }
+
+            val result = s3Client.listObjectsV2(requestBuilder.build())
+            allObjects.addAll(result.contents())
+
+            // Получаем токен для следующей страницы
+            continuationToken = result.nextContinuationToken()
+        } while (result.isTruncated) // Пока есть ещё объекты
+
+        return allObjects
             .filter { !it.key().endsWith(FOLDER_DELIMITER) }
             .associate { (File(it.key()).nameWithoutExtension to it.key()) }
     }

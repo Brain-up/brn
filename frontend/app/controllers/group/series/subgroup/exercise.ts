@@ -94,6 +94,17 @@ export default class GroupSeriesSubgroupExerciseController extends Controller {
     const nextIndex = index + 1;
     model.isManuallyCompleted = true;
 
+    // Persist the completion in tasksManager so the subgroup view still
+    // shows this exercise as completed after navigating away and back —
+    // the server history is only re-read on login/app start, so without
+    // this the green check disappears on the next visit.
+    if (model.id != null) {
+      this.tasksManager.completedExerciseIds = new Set([
+        ...this.tasksManager.completedExerciseIds,
+        String(model.id),
+      ]);
+    }
+
     if (children[nextIndex]) {
       children[nextIndex].available = true;
     }
