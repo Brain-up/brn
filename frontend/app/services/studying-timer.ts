@@ -66,12 +66,26 @@ export default class StudyingTimerService extends Service {
   }
   @action
   maybeIdlePause() {
-    // Pause cascades into audio.stop() via task-player.onPauseStateChanged,
-    // which would interrupt exercises whenever the user stops moving the mouse.
+    // resetIdle() (invoked on every playAudio) is the primary mechanism that
+    // keeps the watcher from firing mid-sequence. This guard is a defensive
+    // backstop in case a single clip ever outruns the idle window: pause
+    // cascades into audio.stop() via task-player.onPauseStateChanged, which
+    // would interrupt exercises whenever the user stops moving the mouse.
     if (this.audio.isPlaying) {
       return;
     }
     this.pause();
+  }
+  @action
+  resetIdle() {
+    if (this.idleWatcher) {
+      try {
+        this.idleWatcher.stop();
+        this.idleWatcher.start();
+      } catch (_e) {
+        // idle-js may not support stop/start cycle in some edge cases
+      }
+    }
   }
   @action
   async startIdleWatcher() {
