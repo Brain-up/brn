@@ -11,6 +11,17 @@ function getDate(num) {
   return date.getFullYear() + num;
 }
 
+async function fillAndSubmit() {
+  await fillIn('[name="firstName"]', 'b');
+  await fillIn('[name="email"]', 'c@name.com');
+  await fillIn('[name="password"]', 'Test1234');
+  await fillIn('[name="repeatPassword"]', 'Test1234');
+  await fillIn('[name="birthday"]', '1991');
+  await click('[name="agreement"]');
+  await click('[id="male"]');
+  await click('[data-test-submit-form]');
+}
+
 module('Integration | Component | registration-form', function (hooks) {
   setupRenderingTest(hooks);
   setupIntl(hooks, 'en-us');
@@ -25,8 +36,6 @@ module('Integration | Component | registration-form', function (hooks) {
   });
 
   test('it send register request if all fields filled', async function (assert) {
-    assert.expect(6);
-
     // eslint-disable-next-line ember/no-classic-classes
     const MockFirebaseAuthenticator = EmberObject.extend({
       registerUser() {
@@ -34,22 +43,16 @@ module('Integration | Component | registration-form', function (hooks) {
       },
     });
 
-    let loadCurrentUserCallCount = 0;
-    let patchUserInfoCalled = false;
-
     class MockNetwork extends Service {
       loadCurrentUser() {
-        loadCurrentUserCallCount++;
-        if (patchUserInfoCalled) {
-          assert.ok(true, 'loadCurrentUser called after patchUserInfo to refresh profile data');
-        }
+        assert.step('loadCurrentUser');
         return Promise.resolve();
       }
       loadCloudUrl() {
         return Promise.resolve();
       }
       patchUserInfo(fields) {
-        patchUserInfoCalled = true;
+        assert.step('patchUserInfo');
         assert.ok(fields, 'patchUserInfo called with user fields');
         return Promise.resolve(fields);
       }
@@ -57,10 +60,8 @@ module('Integration | Component | registration-form', function (hooks) {
 
     class MockSession extends Service {
       isAuthenticated = false;
-      authenticate(type, login, password) {
-        assert.ok(type, 'authenticate called with type');
-        assert.ok(login, 'authenticate called with login');
-        assert.ok(password, 'authenticate called with password');
+      authenticate() {
+        assert.step('authenticate');
         return Promise.resolve();
       }
     }
@@ -70,25 +71,126 @@ module('Integration | Component | registration-form', function (hooks) {
     this.owner.register('service:network', MockNetwork);
 
     await render(<template><RegistrationForm /></template>);
-    await fillIn('[name="firstName"]', 'b');
-    await fillIn('[name="email"]', 'c@name.com');
-    await fillIn('[name="password"]', 'Test1234');
-    await fillIn('[name="repeatPassword"]', 'Test1234');
-    await fillIn('[name="birthday"]', '1991');
-    await click('[name="agreement"]');
-    await click('[id="male"]');
-    await click('[data-test-submit-form]');
+    await fillAndSubmit();
 
-    assert.strictEqual(loadCurrentUserCallCount, 2, 'loadCurrentUser called twice: once during login, once after patchUserInfo');
+    // Login loads the user, then the profile is patched and the user reloaded.
+    assert.verifySteps([
+      'authenticate',
+      'loadCurrentUser',
+      'patchUserInfo',
+      'loadCurrentUser',
+    ]);
   });
 
-  test('it able to handle registration error', async function (assert) {
-    assert.expect(2);
-
+  test('redirects to index only after the profile is patched and reloaded', async function (assert) {
     // eslint-disable-next-line ember/no-classic-classes
     const MockFirebaseAuthenticator = EmberObject.extend({
       registerUser() {
-        assert.ok(true, 'registerUser was called');
+        return Promise.resolve();
+      },
+    });
+
+    class MockNetwork extends Service {
+      loadCurrentUser() {
+        assert.step('loadCurrentUser');
+        return Promise.resolve();
+      }
+      loadCloudUrl() {
+        return Promise.resolve();
+      }
+      patchUserInfo(fields) {
+        assert.step('patchUserInfo');
+        return Promise.resolve(fields);
+      }
+    }
+
+    class MockSession extends Service {
+      isAuthenticated = false;
+      authenticate() {
+        // Mirror production: the session becomes authenticated after login.
+        this.isAuthenticated = true;
+        return Promise.resolve();
+      }
+    }
+
+    this.owner.register('authenticator:firebase', MockFirebaseAuthenticator);
+    this.owner.register('service:session', MockSession);
+    this.owner.register('service:network', MockNetwork);
+
+    // Spy on the real router's transitionTo so the template's <LinkTo>s keep
+    // rendering while we record when the redirect happens.
+    this.owner.lookup('service:router').transitionTo = (route) => {
+      assert.step(`transitionTo:${route}`);
+    };
+
+    await render(<template><RegistrationForm /></template>);
+    await fillAndSubmit();
+
+    // The redirect must come last — after the profile is patched and reloaded.
+    // Redirecting earlier cancels the in-flight task and leaves the profile
+    // blank (the bug this fixes).
+    assert.verifySteps([
+      'loadCurrentUser',
+      'patchUserInfo',
+      'loadCurrentUser',
+      'transitionTo:index',
+    ]);
+  });
+
+  test('still redirects into the app when the profile patch fails after auth', async function (assert) {
+    // eslint-disable-next-line ember/no-classic-classes
+    const MockFirebaseAuthenticator = EmberObject.extend({
+      registerUser() {
+        return Promise.resolve();
+      },
+    });
+
+    class MockNetwork extends Service {
+      loadCurrentUser() {
+        return Promise.resolve();
+      }
+      loadCloudUrl() {
+        return Promise.resolve();
+      }
+      patchUserInfo() {
+        assert.step('patchUserInfo');
+        // The account is already created/authenticated; only the profile save
+        // fails (e.g. a transient backend error).
+        return Promise.reject(
+          Object.assign(new Error('save failed'), { errors: ['save failed'] }),
+        );
+      }
+    }
+
+    class MockSession extends Service {
+      isAuthenticated = false;
+      authenticate() {
+        this.isAuthenticated = true;
+        return Promise.resolve();
+      }
+    }
+
+    this.owner.register('authenticator:firebase', MockFirebaseAuthenticator);
+    this.owner.register('service:session', MockSession);
+    this.owner.register('service:network', MockNetwork);
+
+    this.owner.lookup('service:router').transitionTo = (route) => {
+      assert.step(`transitionTo:${route}`);
+    };
+
+    await render(<template><RegistrationForm /></template>);
+    await fillAndSubmit();
+
+    // The registered+authenticated user is sent into the app instead of being
+    // trapped on the form, even though the profile save failed.
+    assert.verifySteps(['patchUserInfo', 'transitionTo:index']);
+  });
+
+  test('it able to handle registration error', async function (assert) {
+    // eslint-disable-next-line ember/no-classic-classes
+    const MockFirebaseAuthenticator = EmberObject.extend({
+      registerUser() {
+        assert.step('registerUser');
         return Promise.reject(new Error('foo'));
       },
     });
@@ -117,14 +219,10 @@ module('Integration | Component | registration-form', function (hooks) {
     this.owner.register('service:network', MockNetwork);
 
     await render(<template><RegistrationForm /></template>);
-    await fillIn('[name="firstName"]', 'b');
-    await fillIn('[name="email"]', 'c@name.com');
-    await fillIn('[name="password"]', 'Test1234');
-    await fillIn('[name="repeatPassword"]', 'Test1234');
-    await fillIn('[name="birthday"]', '1991');
-    await click('[name="agreement"]');
-    await click('[id="male"]');
-    await click('[data-test-submit-form]');
+    await fillAndSubmit();
+
+    // registerUser fails, so login/patch never run.
+    assert.verifySteps(['registerUser']);
     assert.dom('[data-test-form-error]').hasText('foo');
   });
 
