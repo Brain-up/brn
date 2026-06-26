@@ -118,9 +118,10 @@ export default class RegistrationFormComponent extends Component {
       await this.loginTask.cancelAll();
     }
 
-    if (this.session.isAuthenticated) {
-      this.router.transitionTo('index');
-    }
+    // Registration deliberately omits the post-login redirect: registrationTask
+    // still has to PATCH the profile and reload the user, and navigating away
+    // here would tear down this component and cancel that work, leaving the
+    // profile blank. registrationTask redirects once it is done.
   });
 
   // --- Own getters ---
@@ -232,8 +233,13 @@ export default class RegistrationFormComponent extends Component {
         this.network.loadCloudUrl(),
       ]);
     } catch (e) {
+      // The account exists and the session is authenticated; only the profile
+      // save failed. Fall through to the redirect rather than trapping the user
+      // here — a re-submit would re-run registerUser and fail with "user already
+      // exists". They can finish the profile on the profile page.
       const error = e as Error & { errors?: string[] };
       const key = error.errors?.pop() ?? error.message;
+      console.error('Failed to save profile after registration:', error);
       if (this.intl.exists(`msg.validation.${key}`)) {
         this.errorMessage = this.intl.t(`msg.validation.${key}`);
       } else {
@@ -242,7 +248,12 @@ export default class RegistrationFormComponent extends Component {
             ? this.intl.t(ERRORS_MAP[key as keyof typeof ERRORS_MAP])
             : key;
       }
-      await this.registrationTask.cancelAll();
+    }
+
+    // Redirect whether or not the PATCH succeeded; this tears down the component
+    // and cancels the task, so it must be the last step.
+    if (this.session.isAuthenticated) {
+      this.router.transitionTo('index');
     }
   });
 

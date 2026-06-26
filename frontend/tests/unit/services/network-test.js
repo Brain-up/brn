@@ -116,7 +116,37 @@ module('Unit | Service | network', function (hooks) {
     assert.strictEqual(userData.userModel.email, 'test@example.com', 'email is set');
     assert.strictEqual(userData.userModel.avatar, '3', 'avatar is set');
     assert.strictEqual(userData.userModel.gender, 'MALE', 'gender is set');
+    assert.strictEqual(userData.userModel.birthday, '1990', 'birthday parsed from bornYear');
     assert.strictEqual(userData.userModel.id, '42', 'id is set');
     assert.strictEqual(userData.userModel.initials, 'TU', 'initials computed correctly');
+  });
+
+  test('loadCurrentUser leaves birthday empty when bornYear is missing', async function (assert) {
+    window.server.get('users/current', () => ({
+      data: [
+        {
+          id: '43',
+          name: 'No Year',
+          email: 'noyear@example.com',
+          gender: 'FEMALE',
+          active: true,
+          avatar: '1',
+          roles: ['ROLE_USER'],
+        },
+      ],
+      errors: [],
+      meta: [],
+    }));
+
+    const network = this.owner.lookup('service:network');
+    const userData = this.owner.lookup('service:user-data');
+
+    await network.loadCurrentUser();
+
+    assert.strictEqual(
+      userData.userModel.birthday,
+      '',
+      'birthday is empty (not "NaN") when bornYear is absent',
+    );
   });
 });
