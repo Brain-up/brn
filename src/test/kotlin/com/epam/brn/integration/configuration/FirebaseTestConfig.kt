@@ -1,4 +1,4 @@
-package com.epam.brn.config
+package com.epam.brn.integration.configuration
 
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.firebase.FirebaseApp
@@ -8,19 +8,18 @@ import com.google.firebase.messaging.FirebaseMessaging
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.Profile
+import org.testcontainers.junit.jupiter.Testcontainers
 import java.io.FileInputStream
 
 @Configuration
-@Profile("!integration-tests")
-class FirebaseConfig {
-    @Value("\${firebase.credentials.path}")
-    val firebaseCredentialsPath: String = ""
-
+@Testcontainers
+class FirebaseTestConfig(
+    @Value("\${firebase.test.config.path}") private val firebaseTestConfigPath: String,
+) {
     @Bean
     fun firebaseApp(): FirebaseApp {
         if (FirebaseApp.getApps().isEmpty()) {
-            val refreshToken = FileInputStream(firebaseCredentialsPath)
+            val refreshToken = FileInputStream(firebaseTestConfigPath)
             val options =
                 FirebaseOptions
                     .builder()
