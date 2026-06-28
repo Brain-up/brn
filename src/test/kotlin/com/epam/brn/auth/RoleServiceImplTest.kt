@@ -98,7 +98,10 @@ internal class RoleServiceImplTest {
                 id = 1L,
                 name = "FirstName",
             )
-        every { roleRepository.save(role) } returns (role)
+        every {
+            hint(Role::class)
+            roleRepository.save(role)
+        } returns (role)
         // WHEN
         val resultSaving = roleServiceImpl.save(role)
         // THEN
