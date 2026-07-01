@@ -336,8 +336,13 @@ module('Unit | Service | audio', function (hooks) {
       this.owner.register('service:audio', TestAudioService);
       const service = this.owner.lookup('service:audio');
       // A running context is the post-restart case; the suspended-context
-      // resume is production-only (guarded by !isTesting()).
-      service.context = { state: 'running', resume: () => Promise.resolve() };
+      // resume is production-only (guarded by !isTesting()). close() is needed
+      // because the service's willDestroy() closes the context on teardown.
+      service.context = {
+        state: 'running',
+        resume: () => Promise.resolve(),
+        close: () => Promise.resolve(),
+      };
 
       const instance = service.startNoiseTask.perform();
       // The task loops on timeout(6000) after starting; cancel once started.
