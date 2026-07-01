@@ -287,4 +287,76 @@ module('Unit | Service | audio', function (hooks) {
       );
     });
   });
+
+  module('startNoiseTask', function () {
+    test('does not create or start noise when the exercise has no noise level', async function (assert) {
+      const events = [];
+      class TestAudioService extends AudioService {
+        get currentExerciseNoiseLevel() {
+          return 0;
+        }
+        get currentExerciseNoiseUrl() {
+          return null;
+        }
+        async getNoise() {
+          events.push('getNoise');
+          return { source: { start() {}, stop() {} }, gainNode: {} };
+        }
+      }
+      this.owner.register('service:audio', TestAudioService);
+      const service = this.owner.lookup('service:audio');
+
+      await service.startNoiseTask.perform();
+
+      assert.deepEqual(events, [], 'no noise is created when the level is 0');
+    });
+
+    test('creates and starts the noise source when the exercise has a noise level', async function (assert) {
+      const events = [];
+      class TestAudioService extends AudioService {
+        get currentExerciseNoiseLevel() {
+          return 50;
+        }
+        get currentExerciseNoiseUrl() {
+          return 'http://example.com/noise.mp3';
+        }
+        async getNoise() {
+          events.push('getNoise');
+          return {
+            source: {
+              start() {
+                events.push('start');
+              },
+              stop() {
+                events.push('stop');
+              },
+            },
+            gainNode: {},
+          };
+        }
+      }
+      this.owner.register('service:audio', TestAudioService);
+      const service = this.owner.lookup('service:audio');
+      // A running context is the post-restart case; the suspended-context
+      // resume is production-only (guarded by !isTesting()).
+      service.context = { state: 'running', resume: () => Promise.resolve() };
+
+      const instance = service.startNoiseTask.perform();
+      // The task loops on timeout(6000) after starting; cancel once started.
+      await new Promise((resolve) => setTimeout(resolve, 20));
+      instance.cancel();
+      try {
+        await instance;
+      } catch (_e) {
+        // cancellation is expected
+      }
+
+      assert.true(events.includes('getNoise'), 'noise source is created');
+      assert.true(events.includes('start'), 'noise source is started');
+      assert.ok(
+        events.indexOf('getNoise') < events.indexOf('start'),
+        'noise is created before it is started',
+      );
+    });
+  });
 });

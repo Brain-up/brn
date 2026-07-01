@@ -365,6 +365,14 @@ export default class AudioService extends Service {
         return;
       }
       noise = await this.getNoise(timeInSeconds, level, url);
+      // Mirror the word-playback path: a fresh AudioContext (e.g. right after a
+      // page refresh) starts suspended under the browser autoplay policy, and
+      // source.start(0) on a suspended context queues silently. Resume before
+      // starting so background noise plays on first load — not only after a
+      // lesson restart, which happened to reuse an already-resumed context.
+      if (this.context && this.context.state === 'suspended' && !isTesting()) {
+        await this.context.resume();
+      }
       noise.source.start(0);
       this.noiseNode = noise;
       if (url) {
