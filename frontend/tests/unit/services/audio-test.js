@@ -288,6 +288,132 @@ module('Unit | Service | audio', function (hooks) {
     });
   });
 
+  module('playback rate (speech speed)', function (hooks) {
+    hooks.afterEach(function () {
+      localStorage.removeItem('audioPlaybackRate');
+    });
+
+    function fakeBufferSource(durationSec) {
+      const source = {
+        buffer: { duration: durationSec },
+        playbackRate: { value: 1 },
+        _onended: null,
+        get onended() {
+          return this._onended;
+        },
+        set onended(fn) {
+          this._onended = fn;
+        },
+        start() {
+          setTimeout(() => this._onended && this._onended(), 5);
+        },
+        stop() {
+          if (this._onended) this._onended();
+        },
+      };
+      Object.setPrototypeOf(source, AudioBufferSourceNode.prototype);
+      return source;
+    }
+
+    function stubContext(service) {
+      service.context = {
+        state: 'running',
+        resume: () => Promise.resolve(),
+        close: () => Promise.resolve(),
+      };
+    }
+
+    test('calcDurationForSources scales audio-buffer duration by the rate', function (assert) {
+      const service = this.owner.lookup('service:audio');
+      const sources = [{ source: fakeBufferSource(2), gainNode: {} }];
+
+      assert.strictEqual(
+        service.calcDurationForSources(sources, 1),
+        2000,
+        'rate 1 → nominal duration',
+      );
+      assert.strictEqual(
+        service.calcDurationForSources(sources, 0.5),
+        4000,
+        'rate 0.5 → playback takes twice as long',
+      );
+      assert.strictEqual(
+        service.calcDurationForSources(sources, 2),
+        1000,
+        'rate 2 → playback takes half as long',
+      );
+    });
+
+    test('calcDurationForSources leaves tone/signal sources at their natural rate', function (assert) {
+      const service = this.owner.lookup('service:audio');
+      // A tone source is a plain object, not an AudioBufferSourceNode.
+      const toneSources = [{ source: { buffer: { duration: 2 } } }];
+
+      assert.strictEqual(
+        service.calcDurationForSources(toneSources, 0.5),
+        2000,
+        'tone duration is unaffected by the speech rate',
+      );
+    });
+
+    test('playTask routes through the pitch-preserving path when rate != 1', async function (assert) {
+      const service = this.owner.lookup('service:audio');
+      stubContext(service);
+      service.userData.setAudioPlaybackRate(0.5);
+
+      const calls = [];
+      service.playBufferAtRate = async (buffer, rate) => {
+        calls.push({ buffer, rate });
+      };
+
+      const source = fakeBufferSource(0.01);
+      let started = false;
+      source.start = () => {
+        started = true;
+      };
+      service.createSources = async () => [{ source, gainNode: {} }];
+      service.buffers = [{}];
+
+      await service.playTask.perform();
+
+      assert.strictEqual(calls.length, 1, 'pitch-preserving playback was used');
+      assert.strictEqual(calls[0].rate, 0.5, 'forwarded the user rate');
+      assert.strictEqual(calls[0].buffer, source.buffer, 'forwarded the decoded buffer');
+      assert.false(started, 'web-audio source.start is skipped at a non-default rate');
+      assert.strictEqual(
+        source.playbackRate.value,
+        1,
+        'web-audio playbackRate is left untouched (pitch preserved via <audio>)',
+      );
+    });
+
+    test('playTask uses the web-audio path (no diversion) at the default rate', async function (assert) {
+      const service = this.owner.lookup('service:audio');
+      stubContext(service);
+      service.userData.setAudioPlaybackRate(1);
+
+      let diverted = false;
+      service.playBufferAtRate = async () => {
+        diverted = true;
+      };
+
+      const source = fakeBufferSource(0.01);
+      let started = false;
+      source.start = () => {
+        started = true;
+        setTimeout(() => source._onended && source._onended(), 5);
+      };
+      service.createSources = async () => [{ source, gainNode: {} }];
+      service.buffers = [{}];
+
+      await service.playTask.perform();
+
+      assert.false(diverted, 'no pitch-preserving diversion at rate 1');
+      assert.true(started, 'web-audio source.start is used at rate 1');
+      assert.strictEqual(source.playbackRate.value, 1, 'playbackRate untouched');
+    });
+  });
+
   module('startNoiseTask', function () {
     test('does not create or start noise when the exercise has no noise level', async function (assert) {
       class TestAudioService extends AudioService {

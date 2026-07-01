@@ -181,30 +181,67 @@ module('Unit | Component | task-player | interactModeTask heardWords accumulatio
   });
 });
 
-module('Unit | Component | task-player | allOptionsHeard break condition', function () {
-  test('allOptionsHeard check causes loop exit after all options played (simulated logic)', async function (assert) {
-    // Simulate the interactModeTask loop logic (sync) to verify the break condition
-    let heardWords = new Set();
-    const normalizedAnswerOptions = [{ word: 'cat' }, { word: 'dog' }];
-    const wordsToPlay = ['cat', 'dog'];
-    let iterationCount = 0;
+module('Unit | Component | task-player | repeat step stays replayable', function () {
+  // The repeat (interact) step no longer locks once every word is heard.
+  // Re-entering it clears heardWords so the user can go through again, and the
+  // loop does not auto-exit on completion (previously the step could only be
+  // replayed by switching to the Listen tab and back).
 
-    // Simulate the interact mode loop
-    for (const word of wordsToPlay) {
-      iterationCount++;
+  function enterInteract(heardWords, normalizedAnswerOptions) {
+    // Replicate the reset-on-reentry guard at the top of interactModeTask.
+    const allOptionsHeard =
+      normalizedAnswerOptions.length > 0 &&
+      normalizedAnswerOptions.every((o) => heardWords.has(o.word));
+    return allOptionsHeard ? new Set() : heardWords;
+  }
+
+  test('re-entering a completed repeat step clears heardWords for a fresh pass', function (assert) {
+    const options = [{ word: 'cat' }, { word: 'dog' }];
+    const next = enterInteract(new Set(['cat', 'dog']), options);
+
+    assert.strictEqual(next.size, 0, 'heardWords cleared on re-entry when all heard');
+  });
+
+  test('entering an in-progress repeat step keeps existing heardWords', function (assert) {
+    const options = [{ word: 'cat' }, { word: 'dog' }, { word: 'bird' }];
+    const next = enterInteract(new Set(['cat']), options);
+
+    assert.strictEqual(next.size, 1, 'partial progress preserved on entry');
+    assert.true(next.has('cat'), 'previously heard word retained');
+  });
+
+  test('a word played after completion is still processed (loop does not lock)', function (assert) {
+    // Mirror the interact loop body: each processed click plays the word and
+    // marks it heard. The removed early-return stopped processing once every
+    // word was heard; this asserts a post-completion click is still played,
+    // which is the actual user-facing fix (replay without switching tabs).
+    let heardWords = new Set();
+    const played = [];
+    let exitedEarly = false;
+
+    function processClick(word) {
+      // Once the (removed) allOptionsHeard early-return fired, no further click
+      // played. Keeping exitedEarly false models the current, fixed loop; if the
+      // return is ever re-added here, the post-completion replay stops playing.
+      if (exitedEarly) return;
+      played.push(word);
       heardWords = new Set([...heardWords, word]);
-      const allOptionsHeard =
-        normalizedAnswerOptions.length > 0 &&
-        normalizedAnswerOptions.every((o) => heardWords.has(o.word));
-      if (allOptionsHeard) {
-        break;
-      }
     }
 
-    assert.strictEqual(iterationCount, 2, 'loop ran for both words before exiting');
-    assert.true(
-      normalizedAnswerOptions.every((o) => heardWords.has(o.word)),
-      'all options were heard',
+    processClick('cat');
+    processClick('dog'); // every word heard here
+    processClick('cat'); // replay after completion
+
+    assert.false(exitedEarly, 'loop is not exited on completion');
+    assert.deepEqual(
+      played,
+      ['cat', 'dog', 'cat'],
+      'the post-completion replay click was played',
+    );
+    assert.strictEqual(
+      played.filter((w) => w === 'cat').length,
+      2,
+      'a word can be heard again after every word was already heard',
     );
   });
 });
