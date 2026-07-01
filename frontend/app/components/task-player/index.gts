@@ -122,6 +122,12 @@ export default class TaskPlayerComponent extends Component<TaskPlayerSignature> 
       return;
     }
     try {
+      // The interact loop runs until the mode changes and no longer exits on
+      // its own once every word is heard (so words stay replayable). This await
+      // therefore stays pending until the user leaves the step — at which point
+      // setMode cancels the task and the catch below runs. That is intentional;
+      // nothing depends on this task resolving, and ember-concurrency cancels it
+      // on component teardown and on the next perform (onTaskChanged).
       await this.setMode(MODES.INTERACT);
     } catch (_e) {
       // Interact was interrupted

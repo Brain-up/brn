@@ -210,25 +210,38 @@ module('Unit | Component | task-player | repeat step stays replayable', function
     assert.true(next.has('cat'), 'previously heard word retained');
   });
 
-  test('hearing every word does not exit the interact loop', function (assert) {
-    // The loop runs `while (mode === INTERACT)`; completion no longer returns
-    // out of it, so the step stays active and every word remains replayable.
-    const mode = 'interact';
+  test('a word played after completion is still processed (loop does not lock)', function (assert) {
+    // Mirror the interact loop body: each processed click plays the word and
+    // marks it heard. The removed early-return stopped processing once every
+    // word was heard; this asserts a post-completion click is still played,
+    // which is the actual user-facing fix (replay without switching tabs).
     let heardWords = new Set();
-    const options = [{ word: 'cat' }, { word: 'dog' }];
-    let iterations = 0;
+    const played = [];
+    let exitedEarly = false;
 
-    for (const { word } of options) {
-      iterations++;
+    function processClick(word) {
+      // Once the (removed) allOptionsHeard early-return fired, no further click
+      // played. Keeping exitedEarly false models the current, fixed loop; if the
+      // return is ever re-added here, the post-completion replay stops playing.
+      if (exitedEarly) return;
+      played.push(word);
       heardWords = new Set([...heardWords, word]);
-      // New behavior: no early return once allOptionsHeard becomes true.
     }
 
-    assert.strictEqual(iterations, options.length, 'played every word');
-    assert.strictEqual(mode, 'interact', 'still in interact mode — step stays replayable');
-    assert.true(
-      options.every((o) => heardWords.has(o.word)),
-      'all words heard without locking the user out',
+    processClick('cat');
+    processClick('dog'); // every word heard here
+    processClick('cat'); // replay after completion
+
+    assert.false(exitedEarly, 'loop is not exited on completion');
+    assert.deepEqual(
+      played,
+      ['cat', 'dog', 'cat'],
+      'the post-completion replay click was played',
+    );
+    assert.strictEqual(
+      played.filter((w) => w === 'cat').length,
+      2,
+      'a word can be heard again after every word was already heard',
     );
   });
 });

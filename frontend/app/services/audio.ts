@@ -412,6 +412,7 @@ export default class AudioService extends Service {
   async playBufferAtRate(buffer: AudioBuffer, rate: number) {
     const url = URL.createObjectURL(audioBufferToWavBlob(buffer));
     const el = new Audio();
+    el.src = url;
     // preservesPitch defaults to true where supported; set the legacy-prefixed
     // flags too for older WebKit/Gecko. Falls back to pitch-shifted playback
     // (today's behaviour) if the browser ignores it.
@@ -422,18 +423,26 @@ export default class AudioService extends Service {
     };
     legacyEl.mozPreservesPitch = true;
     legacyEl.webkitPreservesPitch = true;
+    // Set defaultPlaybackRate as well: the media load algorithm applies
+    // defaultPlaybackRate on resource selection, so a playbackRate set before
+    // metadata can otherwise be reset to 1x on some browsers (Safari) — which
+    // would silently drop the speed change.
+    el.defaultPlaybackRate = rate;
     el.playbackRate = rate;
-    el.src = url;
     this.activePitchAudio = el;
+    let resolveEnded: () => void = () => {};
+    const ended = new Promise<void>((resolve) => {
+      resolveEnded = resolve;
+      el.onended = () => resolve();
+      el.onerror = () => resolve();
+    });
     try {
-      const ended = new Promise<void>((resolve) => {
-        el.onended = () => resolve();
-        el.onerror = () => resolve();
-      });
       await el.play().catch((e) => {
-        // Autoplay rejection / interruption: log and let the safety-net
-        // timeout below advance playback rather than stranding the loop.
+        // An autoplay-policy rejection does NOT fire onerror, so resolve the
+        // ended promise here — otherwise the loop would wait out the full
+        // safety timeout in silence instead of advancing to the next word.
         console.error('pitch-preserving audio playback failed', e);
+        resolveEnded();
       });
       // Real clip length grows as rate shrinks; +1s mirrors the buffer path.
       const safety = toMilliseconds(buffer.duration) / rate + 1000;
