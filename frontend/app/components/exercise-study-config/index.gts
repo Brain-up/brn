@@ -4,6 +4,7 @@ import StudyConfigService from 'brn/services/study-config';
 import UserDataService, { AUDIO_PLAYBACK_RATES } from 'brn/services/user-data';
 import { action } from '@ember/object';
 import { on } from '@ember/modifier';
+import { eq } from 'ember-truth-helpers';
 import { t } from 'ember-intl';
 import FaIcon from '@fortawesome/ember-fontawesome/components/fa-icon';
 
@@ -65,17 +66,20 @@ export default class ExerciseStudyConfigComponent extends Component {
           </svg>
           <span class="hidden sm:inline">{{t "study_config.speech_rate"}}</span>
         </label>
+        {{! Selection is driven by per-option `selected`; a `value` binding on
+            <select> is not applied by this Glimmer version (CI: hasValue fails). }}
         <select
           data-test-speech-rate
           id="exercise-speech-rate"
           aria-label={{t "study_config.speech_rate"}}
           title={{t "study_config.speech_rate"}}
-          value={{this.playbackRate}}
           class="focus:ring-blue-300 focus:border-blue-500 py-1 pl-2 pr-6 text-sm text-blue-700 bg-white border border-blue-700 rounded-full cursor-pointer"
           {{on "change" this.onPlaybackRateChange}}
         >
           {{#each this.rates as |rate|}}
-            <option value={{rate}}>{{rate}}×</option>
+            <option value={{rate}} selected={{eq this.playbackRate rate}}>
+              {{rate}}×
+            </option>
           {{/each}}
         </select>
       </div>
