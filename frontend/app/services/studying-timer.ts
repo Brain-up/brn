@@ -1,9 +1,10 @@
-import Service from '@ember/service';
+import Service, { service } from '@ember/service';
 import { action } from '@ember/object';
 import config from 'brn/config/environment';
 import { tracked } from '@glimmer/tracking';
 import { isTesting } from '@embroider/macros';
 import type IdleJs from 'idle-js';
+import type AudioService from './audio';
 
 export interface TimerInstance {
   isStarted: boolean;
@@ -13,6 +14,7 @@ export interface TimerInstance {
 }
 
 export default class StudyingTimerService extends Service {
+  @service('audio') declare audio: AudioService;
   willDestroy() {
     super.willDestroy();
     this.idleWatcher && this.idleWatcher.stop();
@@ -63,6 +65,29 @@ export default class StudyingTimerService extends Service {
     this.isPaused = false;
   }
   @action
+  maybeIdlePause() {
+    // resetIdle() (invoked on every playAudio) is the primary mechanism that
+    // keeps the watcher from firing mid-sequence. This guard is a defensive
+    // backstop in case a single clip ever outruns the idle window: pause
+    // cascades into audio.stop() via task-player.onPauseStateChanged, which
+    // would interrupt exercises whenever the user stops moving the mouse.
+    if (this.audio.isPlaying) {
+      return;
+    }
+    this.pause();
+  }
+  @action
+  resetIdle() {
+    if (this.idleWatcher) {
+      try {
+        this.idleWatcher.stop();
+        this.idleWatcher.start();
+      } catch (_e) {
+        // idle-js may not support stop/start cycle in some edge cases
+      }
+    }
+  }
+  @action
   async startIdleWatcher() {
     if (isTesting()) {
       return;
@@ -75,7 +100,7 @@ export default class StudyingTimerService extends Service {
     this.idleWatcher = new IdleJs({
       idle: timerInstance.idleTimeout || config.idleTimeout,
       onIdle() {
-        player.pause();
+        player.maybeIdlePause();
       },
       onActive() {
         timerInstance.relaunchStartedTimer();

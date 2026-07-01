@@ -29,17 +29,19 @@ export interface LatestUserDTO {
 
 function fromLatestUserDto(user: LatestUserDTO): UserDTO {
   const [firstName = '', lastName = ''] = (user.name || '').split(' ');
-  const bDate = new Date();
-
-  bDate.setFullYear(user.bornYear);
+  // `birthday` is just the four-digit year; guard a missing/invalid bornYear so
+  // the field renders empty instead of "NaN".
+  const bornYear = Number(user.bornYear);
+  const birthday =
+    Number.isInteger(bornYear) && bornYear > 0 ? String(bornYear) : '';
 
   return {
-    firstName: firstName || '',
-    lastName: lastName || '',
+    firstName,
+    lastName,
     avatar: user.avatar,
     email: user.email,
     gender: user.gender,
-    birthday: bDate.getFullYear().toString(),
+    birthday,
     id: user.id as string,
   };
 }
