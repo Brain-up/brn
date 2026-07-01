@@ -290,7 +290,6 @@ module('Unit | Service | audio', function (hooks) {
 
   module('startNoiseTask', function () {
     test('does not create or start noise when the exercise has no noise level', async function (assert) {
-      const events = [];
       class TestAudioService extends AudioService {
         get currentExerciseNoiseLevel() {
           return 0;
@@ -299,7 +298,7 @@ module('Unit | Service | audio', function (hooks) {
           return null;
         }
         async getNoise() {
-          events.push('getNoise');
+          assert.step('getNoise');
           return { source: { start() {}, stop() {} }, gainNode: {} };
         }
       }
@@ -308,11 +307,10 @@ module('Unit | Service | audio', function (hooks) {
 
       await service.startNoiseTask.perform();
 
-      assert.deepEqual(events, [], 'no noise is created when the level is 0');
+      assert.verifySteps([], 'no noise is created when the level is 0');
     });
 
     test('creates and starts the noise source when the exercise has a noise level', async function (assert) {
-      const events = [];
       class TestAudioService extends AudioService {
         get currentExerciseNoiseLevel() {
           return 50;
@@ -321,14 +319,14 @@ module('Unit | Service | audio', function (hooks) {
           return 'http://example.com/noise.mp3';
         }
         async getNoise() {
-          events.push('getNoise');
+          assert.step('getNoise');
           return {
             source: {
               start() {
-                events.push('start');
+                assert.step('start');
               },
               stop() {
-                events.push('stop');
+                assert.step('stop');
               },
             },
             gainNode: {},
@@ -351,11 +349,10 @@ module('Unit | Service | audio', function (hooks) {
         // cancellation is expected
       }
 
-      assert.true(events.includes('getNoise'), 'noise source is created');
-      assert.true(events.includes('start'), 'noise source is started');
-      assert.ok(
-        events.indexOf('getNoise') < events.indexOf('start'),
-        'noise is created before it is started',
+      // Ordered: the source is created, then started, then stopped on cancel.
+      assert.verifySteps(
+        ['getNoise', 'start', 'stop'],
+        'noise is created before it is started, and stopped on cancellation',
       );
     });
   });
