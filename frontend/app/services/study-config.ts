@@ -5,6 +5,7 @@ import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { getOwner } from '@ember/application';
 import type { TaskBase as Task } from 'brn/schemas/task';
+import { ExerciseMechanism } from 'brn/utils/exercise-types';
 
 export default class StudyConfigService extends Service {
     @tracked
@@ -20,6 +21,13 @@ export default class StudyConfigService extends Service {
 
     get showImageToggler() {
       return this.allowImagesInTask;
+    }
+
+    get allowSpeechRate(): boolean {
+      // Speech-rate only affects decoded audio buffers (words, sounds, prosody).
+      // Pure-tone SIGNALS exercises play through Tone synths and are unaffected,
+      // so the control would be misleading there. Show it everywhere else.
+      return this.task?.exerciseMechanism !== ExerciseMechanism.SIGNALS;
     }
 
     get showImages() {

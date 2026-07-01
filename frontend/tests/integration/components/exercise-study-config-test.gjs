@@ -45,6 +45,8 @@ module('Integration | Component | exercise-study-config', function(hooks) {
   });
 
   test('it renders a speech-rate selector that updates the user preference', async function (assert) {
+    const controller = this.owner.lookup('controller:group.series.subgroup.exercise.task');
+    controller.set('model', { exerciseMechanism: 'WORDS' });
     const userData = this.owner.lookup('service:user-data');
     userData.setAudioPlaybackRate(1);
 
@@ -60,5 +62,16 @@ module('Integration | Component | exercise-study-config', function(hooks) {
       0.5,
       'selecting a rate updates the user preference',
     );
+  });
+
+  test('it hides the speech-rate selector for pure-tone SIGNALS exercises', async function (assert) {
+    const controller = this.owner.lookup('controller:group.series.subgroup.exercise.task');
+    controller.set('model', { exerciseMechanism: 'SIGNALS' });
+
+    await render(<template><ExerciseStudyConfig /></template>);
+
+    assert
+      .dom('[data-test-speech-rate]')
+      .doesNotExist('speech rate is hidden where it has no effect (tone exercises)');
   });
 });
