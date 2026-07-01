@@ -272,6 +272,13 @@ export default class TaskPlayerComponent extends Component<TaskPlayerSignature> 
   interactModeTask = keepLatestTask(async () => {
     try {
       this.mode = MODES.INTERACT;
+      // Re-entering the repeat step after every word was already heard starts
+      // a fresh pass: clear the green "all heard" state so the user can go
+      // through the words again. Previously the only way to replay was to
+      // switch to the Listen tab and back.
+      if (this.allOptionsHeard) {
+        this.heardWords = new Set();
+      }
       while (this.mode === MODES.INTERACT) {
         if (this.studyingTimer.isPaused) {
           await timeout(200);
@@ -302,10 +309,9 @@ export default class TaskPlayerComponent extends Component<TaskPlayerSignature> 
             await this.audio.playAudio();
           }
           this.heardWords = new Set([...this.heardWords, playText]);
-          if (this.allOptionsHeard) {
-            await timeout(500);
-            return;
-          }
+          // Intentionally keep looping once every word has been heard: the
+          // repeat step stays interactive so the user can replay any word as
+          // many times as they like. Moving on to "Solve" is done manually.
         }
         await timeout(250);
         this.activeWord = null;
