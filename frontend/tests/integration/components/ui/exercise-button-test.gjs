@@ -25,4 +25,40 @@ module('Integration | Component | ui/exercise-button', function (hooks) {
 
     assert.dom('.completed').exists();
   });
+
+  test('tooltip points at the available key when the exercise is available', async function (assert) {
+    this.setProperties({ exercise: { id: '1', level: 1, isCompleted: false } });
+    const self = this;
+
+    await render(
+      <template>
+        <UiExerciseButton
+          @exercise={{self.exercise}}
+          @isAvailable={{true}}
+        />
+      </template>,
+    );
+
+    assert
+      .dom('.c-exercise-button')
+      .hasAttribute('title', 't:exercise_button.tooltip_available');
+  });
+
+  test('tooltip points at the locked key when the exercise is not available', async function (assert) {
+    this.setProperties({ exercise: { id: '1', level: 1, isCompleted: false } });
+    const self = this;
+
+    await render(
+      <template>
+        <UiExerciseButton
+          @exercise={{self.exercise}}
+          @isAvailable={{false}}
+        />
+      </template>,
+    );
+
+    assert
+      .dom('.c-exercise-button')
+      .hasAttribute('title', 't:exercise_button.tooltip_locked');
+  });
 });

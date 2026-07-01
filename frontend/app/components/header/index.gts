@@ -17,6 +17,7 @@ import GlobalTimer from 'brn/components/global-timer';
 import LoadingSpinner from 'brn/components/loading-spinner';
 import XpBadge from 'brn/components/xp-badge';
 import StreakCounter from 'brn/components/streak-counter';
+import InstructionsModal from 'brn/components/instructions-modal';
 import GamificationService from 'brn/services/gamification';
 
 const ExternalLinkIcon = <template>
@@ -175,6 +176,7 @@ export default class HeaderComponent extends Component {
             </div>
           </div>
           <div class="sm:ml-4 flex items-center shrink-0 ml-1 gap-2 sm:gap-3">
+            <InstructionsModal />
             <LinkTo @route="profile.statistics" class="shrink-0">
               <GlobalTimer />
             </LinkTo>
