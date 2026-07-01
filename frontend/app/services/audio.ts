@@ -355,6 +355,7 @@ export default class AudioService extends Service {
 
   startNoiseTask = task(async () => {
     let noise = null;
+    let started = false;
     const timeInSeconds = 10;
     try {
       const [level, url] = [
@@ -365,7 +366,16 @@ export default class AudioService extends Service {
         return;
       }
       noise = await this.getNoise(timeInSeconds, level, url);
+      // Mirror the word-playback path: a fresh AudioContext (e.g. right after a
+      // page refresh) starts suspended under the browser autoplay policy, and
+      // source.start(0) on a suspended context queues silently. Resume before
+      // starting so background noise plays on first load — not only after a
+      // lesson restart, which happened to reuse an already-resumed context.
+      if (this.context && this.context.state === 'suspended' && !isTesting()) {
+        await this.context.resume();
+      }
       noise.source.start(0);
+      started = true;
       this.noiseNode = noise;
       if (url) {
         await timeout(toMilliseconds(6000));
@@ -374,7 +384,11 @@ export default class AudioService extends Service {
         this.startNoise();
       }
     } finally {
-      if (noise) {
+      // Only stop a source that actually started. The context.resume() above
+      // adds an await between creating and starting the source, so a cancel
+      // (e.g. stopNoise) or a resume rejection in that window would otherwise
+      // call stop() on a never-started node and throw InvalidStateError.
+      if (noise && started) {
         noise.source.stop();
       }
     }

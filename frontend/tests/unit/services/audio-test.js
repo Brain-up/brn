@@ -287,4 +287,78 @@ module('Unit | Service | audio', function (hooks) {
       );
     });
   });
+
+  module('startNoiseTask', function () {
+    test('does not create or start noise when the exercise has no noise level', async function (assert) {
+      class TestAudioService extends AudioService {
+        get currentExerciseNoiseLevel() {
+          return 0;
+        }
+        get currentExerciseNoiseUrl() {
+          return null;
+        }
+        async getNoise() {
+          assert.step('getNoise');
+          return { source: { start() {}, stop() {} }, gainNode: {} };
+        }
+      }
+      this.owner.register('service:audio', TestAudioService);
+      const service = this.owner.lookup('service:audio');
+
+      await service.startNoiseTask.perform();
+
+      assert.verifySteps([], 'no noise is created when the level is 0');
+    });
+
+    test('creates and starts the noise source when the exercise has a noise level', async function (assert) {
+      class TestAudioService extends AudioService {
+        get currentExerciseNoiseLevel() {
+          return 50;
+        }
+        get currentExerciseNoiseUrl() {
+          return 'http://example.com/noise.mp3';
+        }
+        async getNoise() {
+          assert.step('getNoise');
+          return {
+            source: {
+              start() {
+                assert.step('start');
+              },
+              stop() {
+                assert.step('stop');
+              },
+            },
+            gainNode: {},
+          };
+        }
+      }
+      this.owner.register('service:audio', TestAudioService);
+      const service = this.owner.lookup('service:audio');
+      // A running context is the post-restart case; the suspended-context
+      // resume is production-only (guarded by !isTesting()). close() is needed
+      // because the service's willDestroy() closes the context on teardown.
+      service.context = {
+        state: 'running',
+        resume: () => Promise.resolve(),
+        close: () => Promise.resolve(),
+      };
+
+      const instance = service.startNoiseTask.perform();
+      // The task loops on timeout(6000) after starting; cancel once started.
+      await new Promise((resolve) => setTimeout(resolve, 20));
+      instance.cancel();
+      try {
+        await instance;
+      } catch (_e) {
+        // cancellation is expected
+      }
+
+      // Ordered: the source is created, then started, then stopped on cancel.
+      assert.verifySteps(
+        ['getNoise', 'start', 'stop'],
+        'noise is created before it is started, and stopped on cancellation',
+      );
+    });
+  });
 });
