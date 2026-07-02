@@ -1,8 +1,11 @@
 import { module, test } from 'qunit';
-import { setupTest } from 'ember-qunit';
-import { waitUntil } from '@ember/test-helpers';
-import { destroy } from '@ember/destroyable';
-import TaskPlayerComponent from 'brn/components/task-player';
+
+// NOTE: behavioral coverage for the repeat-step replay fix (loop stays alive
+// after every word is heard; fresh-pass reset on re-entry) lives in
+// tests/integration/components/task-player/interact-replay-test.gjs, which
+// drives the REAL TaskPlayerComponent — Glimmer components cannot be
+// constructed manually in unit tests (the constructor asserts on the
+// manager-created args proxy).
 
 module('Unit | Component | task-player | heardWords tracking', function () {
   // Test the heardWords and allOptionsHeard logic by replicating the
@@ -182,105 +185,5 @@ module('Unit | Component | task-player | interactModeTask heardWords accumulatio
 
     assert.strictEqual(result.newHeardWords.size, 1, 'heardWords size unchanged after duplicate');
     assert.false(result.allOptionsHeard, 'allOptionsHeard still false after duplicate');
-  });
-});
-
-module('Unit | Component | task-player | repeat step stays replayable', function (hooks) {
-  // These tests drive the REAL TaskPlayerComponent and its interactModeTask —
-  // not a simulation — so re-introducing the removed all-heard early-return
-  // (the lock this PR fixes) makes them fail. The audio service records the
-  // last requested text in `_lastText` ("for tests"), which is how we observe
-  // that a click actually reached playback.
-  setupTest(hooks);
-
-  function makeComponent(owner, words) {
-    return new TaskPlayerComponent(owner, {
-      task: {
-        normalizedAnswerOptions: words.map((word) => ({
-          word,
-          wordPronounce: word,
-        })),
-        usePreGeneratedAudio: false,
-        exerciseMechanism: 'WORDS',
-      },
-    });
-  }
-
-  async function clickAndAwaitPlayback(component, word) {
-    component.audio._lastText = null;
-    component.playText(word);
-    await waitUntil(() => component.audio._lastText === word, { timeout: 5000 });
-    await waitUntil(() => component.heardWords.has(word), { timeout: 5000 });
-  }
-
-  async function stop(instance) {
-    instance.cancel();
-    await instance.catch(() => {
-      // cancellation is expected
-    });
-  }
-
-  test('a word can be replayed after every word was heard (loop stays alive)', async function (assert) {
-    const component = makeComponent(this.owner, ['cat', 'dog']);
-    const instance = component.interactModeTask.perform();
-
-    await clickAndAwaitPlayback(component, 'cat');
-    await clickAndAwaitPlayback(component, 'dog');
-    assert.true(component.allOptionsHeard, 'every word has been heard');
-    assert.true(
-      component.interactModeTask.isRunning,
-      'interact loop is still running after completion (no early exit)',
-    );
-
-    // The user clicks a word again — the loop must still process the click.
-    component.audio._lastText = null;
-    component.playText('cat');
-    await waitUntil(() => component.audio._lastText === 'cat', { timeout: 5000 });
-    assert.strictEqual(
-      component.audio._lastText,
-      'cat',
-      'a post-completion click still plays the word (no lock)',
-    );
-
-    await stop(instance);
-    destroy(component);
-  });
-
-  test('re-entering a completed repeat step clears heardWords for a fresh pass', async function (assert) {
-    const component = makeComponent(this.owner, ['cat']);
-    const first = component.interactModeTask.perform();
-    await clickAndAwaitPlayback(component, 'cat');
-    assert.true(component.allOptionsHeard, 'pass completed');
-    await stop(first);
-
-    const second = component.interactModeTask.perform();
-    await waitUntil(() => component.heardWords.size === 0, { timeout: 5000 });
-    assert.strictEqual(
-      component.heardWords.size,
-      0,
-      'heardWords cleared on re-entry when all words were heard',
-    );
-
-    await stop(second);
-    destroy(component);
-  });
-
-  test('entering an in-progress repeat step keeps existing heardWords', async function (assert) {
-    const component = makeComponent(this.owner, ['cat', 'dog']);
-    const first = component.interactModeTask.perform();
-    await clickAndAwaitPlayback(component, 'cat');
-    await stop(first);
-
-    const second = component.interactModeTask.perform();
-    // Let the task run its entry guard and a couple of poll cycles.
-    await new Promise((resolve) => setTimeout(resolve, 400));
-    assert.true(
-      component.heardWords.has('cat'),
-      'partial progress preserved on re-entry',
-    );
-    assert.strictEqual(component.heardWords.size, 1, 'nothing was cleared');
-
-    await stop(second);
-    destroy(component);
   });
 });
