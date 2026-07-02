@@ -2,6 +2,7 @@ import Component from '@glimmer/component';
 import { service } from '@ember/service';
 import StudyConfigService from 'brn/services/study-config';
 import UserDataService, { AUDIO_PLAYBACK_RATES } from 'brn/services/user-data';
+import type IntlService from 'ember-intl/services/intl';
 import { action } from '@ember/object';
 import { on } from '@ember/modifier';
 import { eq } from 'ember-truth-helpers';
@@ -11,11 +12,19 @@ import FaIcon from '@fortawesome/ember-fontawesome/components/fa-icon';
 export default class ExerciseStudyConfigComponent extends Component {
     @service('study-config') studyConfig!: StudyConfigService;
     @service('user-data') userData!: UserDataService;
-
-    rates = AUDIO_PLAYBACK_RATES;
+    @service('intl') intl!: IntlService;
 
     get playbackRate() {
       return this.userData.audioPlaybackRate;
+    }
+
+    get rateOptions() {
+      // Only the visible label is localized (ru-ru sees "0,75×"); the machine
+      // value stays dot-formatted so Number.parseFloat can read it back.
+      return AUDIO_PLAYBACK_RATES.map((rate) => ({
+        rate,
+        label: `${this.intl.formatNumber(rate, {})}×`,
+      }));
     }
 
     @action
@@ -51,19 +60,11 @@ export default class ExerciseStudyConfigComponent extends Component {
         >
           {{! Speedometer icon — gives the control meaning on mobile, where the
               text label is hidden to keep the exercise header compact. }}
-          <svg
+          <FaIcon
             aria-hidden="true"
             class="w-4 h-4 text-blue-700"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path d="M3 18a9 9 0 0 1 18 0"></path>
-            <path d="M12 18l4.5-4.5"></path>
-          </svg>
+            @icon="gauge-high"
+          />
           <span class="hidden sm:inline">{{t "study_config.speech_rate"}}</span>
         </label>
         {{! Selection is driven by per-option `selected`; a `value` binding on
@@ -76,9 +77,12 @@ export default class ExerciseStudyConfigComponent extends Component {
           class="focus:ring-blue-300 focus:border-blue-500 py-1 pl-2 pr-6 text-sm text-blue-700 bg-white border border-blue-700 rounded-full cursor-pointer"
           {{on "change" this.onPlaybackRateChange}}
         >
-          {{#each this.rates as |rate|}}
-            <option value={{rate}} selected={{eq this.playbackRate rate}}>
-              {{rate}}×
+          {{#each this.rateOptions as |rateOption|}}
+            <option
+              value={{rateOption.rate}}
+              selected={{eq this.playbackRate rateOption.rate}}
+            >
+              {{rateOption.label}}
             </option>
           {{/each}}
         </select>

@@ -41,6 +41,26 @@ module('Unit | Service | user-data', function (hooks) {
     assert.strictEqual(service.audioPlaybackRate, 0.75, 'restored from storage');
   });
 
+  test('setAudioPlaybackRate rejects values outside the preset list', function (assert) {
+    const service = this.owner.lookup('service:user-data');
+    service.setAudioPlaybackRate(0.5);
+
+    service.setAudioPlaybackRate(3); // not a preset
+    assert.strictEqual(service.audioPlaybackRate, 0.5, 'unknown rate is ignored');
+
+    service.setAudioPlaybackRate(NaN);
+    assert.strictEqual(service.audioPlaybackRate, 0.5, 'NaN is ignored');
+
+    service.setAudioPlaybackRate(0);
+    assert.strictEqual(service.audioPlaybackRate, 0.5, 'zero is ignored');
+
+    assert.strictEqual(
+      localStorage.getItem('audioPlaybackRate'),
+      '0.5',
+      'rejected values are not persisted either',
+    );
+  });
+
   test('an invalid/unknown persisted rate falls back to 1', function (assert) {
     localStorage.setItem('audioPlaybackRate', 'not-a-number');
     const service = this.owner.factoryFor('service:user-data').create();

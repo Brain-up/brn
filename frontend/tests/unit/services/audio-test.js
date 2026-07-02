@@ -364,6 +364,7 @@ module('Unit | Service | audio', function (hooks) {
       const calls = [];
       service.playBufferAtRate = async (buffer, rate) => {
         calls.push({ buffer, rate });
+        return true; // playback went through the <audio> element
       };
 
       const source = fakeBufferSource(0.01);
@@ -371,7 +372,13 @@ module('Unit | Service | audio', function (hooks) {
       source.start = () => {
         started = true;
       };
-      service.createSources = async () => [{ source, gainNode: {} }];
+      let disconnected = false;
+      const gainNode = {
+        disconnect() {
+          disconnected = true;
+        },
+      };
+      service.createSources = async () => [{ source, gainNode }];
       service.buffers = [{}];
 
       await service.playTask.perform();
@@ -380,10 +387,40 @@ module('Unit | Service | audio', function (hooks) {
       assert.strictEqual(calls[0].rate, 0.5, 'forwarded the user rate');
       assert.strictEqual(calls[0].buffer, source.buffer, 'forwarded the decoded buffer');
       assert.false(started, 'web-audio source.start is skipped at a non-default rate');
+      assert.true(disconnected, 'bypassed web-audio nodes are dropped from the graph');
       assert.strictEqual(
         source.playbackRate.value,
         1,
         'web-audio playbackRate is left untouched (pitch preserved via <audio>)',
+      );
+    });
+
+    test('playTask falls back to pitch-shifted Web Audio when <audio> playback fails', async function (assert) {
+      const service = this.owner.lookup('service:audio');
+      stubContext(service);
+      service.userData.setAudioPlaybackRate(0.5);
+
+      // Simulate a gesture-strict browser rejecting <audio>.play()
+      service.playBufferAtRate = async () => false;
+
+      const source = fakeBufferSource(0.01);
+      let started = false;
+      source.start = () => {
+        started = true;
+        setTimeout(() => source._onended && source._onended(), 5);
+      };
+      service.createSources = async () => [
+        { source, gainNode: { disconnect() {} } },
+      ];
+      service.buffers = [{}];
+
+      await service.playTask.perform();
+
+      assert.true(started, 'web-audio fallback is started so the word is audible');
+      assert.strictEqual(
+        source.playbackRate.value,
+        0.5,
+        'the fallback applies the user rate (pitch-shifted, but not silent)',
       );
     });
 
@@ -395,6 +432,7 @@ module('Unit | Service | audio', function (hooks) {
       let diverted = false;
       service.playBufferAtRate = async () => {
         diverted = true;
+        return true;
       };
 
       const source = fakeBufferSource(0.01);
@@ -411,6 +449,19 @@ module('Unit | Service | audio', function (hooks) {
       assert.false(diverted, 'no pitch-preserving diversion at rate 1');
       assert.true(started, 'web-audio source.start is used at rate 1');
       assert.strictEqual(source.playbackRate.value, 1, 'playbackRate untouched');
+    });
+
+    test('wavBlobFor caches encoded blobs by key and encodes uncached buffers once', function (assert) {
+      const service = this.owner.lookup('service:audio');
+      const buffer = new AudioBuffer({ length: 8, sampleRate: 8000 });
+
+      const first = service.wavBlobFor(buffer, 'http://example.com/a.mp3');
+      const second = service.wavBlobFor(buffer, 'http://example.com/a.mp3');
+      assert.strictEqual(first, second, 'same key returns the cached blob');
+
+      const uncachedA = service.wavBlobFor(buffer);
+      const uncachedB = service.wavBlobFor(buffer);
+      assert.notStrictEqual(uncachedA, uncachedB, 'no key → no caching');
     });
   });
 
