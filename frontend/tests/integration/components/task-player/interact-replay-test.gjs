@@ -58,13 +58,21 @@ module('Integration | Component | task-player | repeat step stays replayable', f
     lastInstance = null;
     playedWords = [];
     const audio = this.owner.lookup('service:audio');
-    audio.setAudioElements = async (elements) => {
-      const text = new URL(String(elements[0])).searchParams.get('text');
-      if (text) {
-        playedWords.push(text);
-      }
-    };
-    audio.playAudio = async () => {};
+    // playAudio is an @action — a getter-only accessor on the prototype — so
+    // plain assignment throws; defineProperty shadows it with an own value.
+    Object.defineProperty(audio, 'setAudioElements', {
+      configurable: true,
+      value: async (elements) => {
+        const text = new URL(String(elements[0])).searchParams.get('text');
+        if (text) {
+          playedWords.push(text);
+        }
+      },
+    });
+    Object.defineProperty(audio, 'playAudio', {
+      configurable: true,
+      value: async () => {},
+    });
   });
 
   // waitUntil is used instead of settled-aware helpers on purpose: the
