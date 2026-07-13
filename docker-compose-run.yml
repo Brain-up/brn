@@ -14,6 +14,7 @@ services:
   brn:
     container_name: brn
     image: brainup/brn-backend
+    restart: unless-stopped
     command: >
       java -Xms128m -Xmx256m -XX:MaxMetaspaceSize=192m
       -XX:+UseSerialGC -XX:MaxRAM=400m
@@ -50,6 +51,7 @@ services:
   brn_fe_with_tls:
     image: brainup/brn-frontend-with-tls:latest
     container_name: brn_fe_with_tls
+    restart: unless-stopped
     ports:
       - 80:80
       - 443:443
