@@ -16,6 +16,7 @@ import {
   createNoizeBuffer,
   loadAudioFiles,
   createAudioContext,
+  audioBufferToWavBlob,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   toSeconds,
   toMilliseconds,
@@ -72,6 +73,9 @@ export default class AudioService extends Service {
   totalDuration = 0;
   noiseNode!: ISource | null;
   sources!: ISourceCollection;
+  // The <audio> element currently playing a pitch-preserved (rate != 1) clip,
+  // tracked so it can be stopped when playback is cancelled.
+  activePitchAudio: HTMLAudioElement | null = null;
   noiseTaskInstance!: TaskInstance<void>;
   @tracked isPlaying = false;
   @tracked isProcessing = false;
@@ -340,13 +344,17 @@ export default class AudioService extends Service {
     return results;
   }
 
-  calcDurationForSources(sources: ISourceCollection) {
+  calcDurationForSources(sources: ISourceCollection, rate = 1) {
     return sources.reduce((result, item) => {
       if (item === null) {
         return result;
       }
       if (item.source.buffer) {
-        return result + toMilliseconds(item.source.buffer.duration);
+        // Only real audio buffers honour the playback-rate preference; tone /
+        // signal sources play at their natural rate.
+        const effectiveRate =
+          item.source instanceof AudioBufferSourceNode ? rate : 1;
+        return result + toMilliseconds(item.source.buffer.duration) / effectiveRate;
       } else {
         return result;
       }
@@ -394,7 +402,10 @@ export default class AudioService extends Service {
     }
   });
 
-  nativePlayText(txt: string) {
+  // `rate` defaults to the live preference, but playTask passes its own
+  // snapshot so every word in one playback pass uses the same rate even if
+  // the user changes the setting mid-pass.
+  nativePlayText(txt: string, rate = this.userData.audioPlaybackRate) {
     const lang = this.userData.activeLocale;
     const voices = speechSynthesis.getVoices().filter((e) => e.lang.toLowerCase() === lang);
     const voicesToPlay: SpeechSynthesisVoice[] = [
@@ -405,11 +416,130 @@ export default class AudioService extends Service {
 
     const v = new SpeechSynthesisUtterance(txt);
     v.voice = voicesToPlay[0];
+    // SpeechSynthesis accepts a rate of 0.1–10; our presets sit well inside it.
+    v.rate = rate;
     const p = new Promise((resolve) => {
       v.onend = resolve;
+      // A synthesis error ('not-allowed', 'interrupted', …) never fires
+      // onend; without this the awaiting playTask hangs forever, isBusy
+      // stays true and the whole exercise wedges with disabled buttons.
+      v.onerror = resolve;
     });
     speechSynthesis.speak(v);
     return p;
+  }
+
+  // Encoded-WAV cache for pitch-preserved playback, keyed by source URL.
+  // Decoded AudioBuffers are re-created on every play (only raw bytes are
+  // cached), so without this the O(samples) PCM encode would run on the main
+  // thread for every click of every word. Bounded; Map preserves insertion
+  // order, so eviction drops the oldest entry.
+  wavBlobCache = new Map<string, Blob>();
+  static WAV_CACHE_LIMIT = 32;
+
+  wavBlobFor(buffer: AudioBuffer, cacheKey?: string): Blob {
+    if (!cacheKey) {
+      return audioBufferToWavBlob(buffer);
+    }
+    const cached = this.wavBlobCache.get(cacheKey);
+    if (cached) {
+      return cached;
+    }
+    const blob = audioBufferToWavBlob(buffer);
+    if (this.wavBlobCache.size >= AudioService.WAV_CACHE_LIMIT) {
+      const oldest = this.wavBlobCache.keys().next().value;
+      if (oldest !== undefined) {
+        this.wavBlobCache.delete(oldest);
+      }
+    }
+    this.wavBlobCache.set(cacheKey, blob);
+    return blob;
+  }
+
+  // Stop the given pitch-preserved <audio> element. Shared by playBufferAtRate
+  // and playTask's cancellation cleanup so the teardown stays in one place.
+  stopPitchAudioElement(el: HTMLAudioElement) {
+    try {
+      el.pause();
+    } catch (e) {
+      console.error('failed to stop pitch-preserving audio', e);
+    }
+    if (this.activePitchAudio === el) {
+      this.activePitchAudio = null;
+    }
+  }
+
+  // Play a decoded clip at a non-default speed while keeping its natural pitch.
+  // AudioBufferSourceNode.playbackRate would pitch-shift; an <audio> element
+  // with preservesPitch time-stretches instead. We re-encode the buffer to a
+  // WAV blob so the element can decode it on any browser.
+  //
+  // Returns true when playback went through (or was deliberately stopped),
+  // false when it failed to start — the caller then falls back to Web Audio
+  // playback so the user hears the word instead of silence.
+  async playBufferAtRate(
+    buffer: AudioBuffer,
+    rate: number,
+    cacheKey?: string,
+  ): Promise<boolean> {
+    const url = URL.createObjectURL(this.wavBlobFor(buffer, cacheKey));
+    const el = new Audio();
+    el.src = url;
+    // preservesPitch defaults to true where supported; set the legacy-prefixed
+    // flags too for older WebKit/Gecko. Falls back to pitch-shifted playback
+    // (today's behaviour) if the browser ignores it.
+    el.preservesPitch = true;
+    const legacyEl = el as unknown as {
+      mozPreservesPitch?: boolean;
+      webkitPreservesPitch?: boolean;
+    };
+    legacyEl.mozPreservesPitch = true;
+    legacyEl.webkitPreservesPitch = true;
+    // Set defaultPlaybackRate as well: the media load algorithm applies
+    // defaultPlaybackRate on resource selection, so a playbackRate set before
+    // metadata can otherwise be reset to 1x on some browsers (Safari) — which
+    // would silently drop the speed change.
+    el.defaultPlaybackRate = rate;
+    el.playbackRate = rate;
+    this.activePitchAudio = el;
+    let startFailed = false;
+    let resolveEnded: () => void = () => {};
+    const ended = new Promise<void>((resolve) => {
+      resolveEnded = resolve;
+      el.onended = () => resolve();
+      el.onerror = () => resolve();
+      // pause() — from a cancelled playTask's cleanup — must release the race
+      // promptly; otherwise this detached await would hold the object URL for
+      // the full rate-scaled safety window after every Stop. (Natural end
+      // fires 'pause' just before 'ended', so this is also just an earlier
+      // resolution of the same completion.)
+      el.onpause = () => resolve();
+    });
+    try {
+      await el.play().catch((e) => {
+        resolveEnded();
+        if ((e as DOMException)?.name === 'AbortError') {
+          // pause() landed while play() was still pending — a routine stop /
+          // next-word interruption, not a playback failure.
+          return;
+        }
+        // Autoplay-policy rejection (gesture-strict browsers like Safari) or
+        // a real media failure. Neither fires onerror, so signal the caller
+        // to fall back to (pitch-shifted) Web Audio playback — a silently
+        // "successful" no-op here would mark words as heard without a sound.
+        console.error('pitch-preserving audio playback failed', e);
+        startFailed = true;
+      });
+      if (!startFailed) {
+        // Real clip length grows as rate shrinks; +1s mirrors the buffer path.
+        const safety = toMilliseconds(buffer.duration) / rate + 1000;
+        await Promise.race([ended, timeout(safety)]);
+      }
+    } finally {
+      this.stopPitchAudioElement(el);
+      URL.revokeObjectURL(url);
+    }
+    return !startFailed;
   }
 
   playTask = keepLatestTask({ maxConcurrency: 1 }, async (noizeSeconds = 0) => {
@@ -419,9 +549,10 @@ export default class AudioService extends Service {
       noizeSeconds = 0.3;
     }
     try {
+      const playbackRate = this.userData.audioPlaybackRate;
       this.sources = await this.createSources(this.context, this.buffers || []);
       this.totalDuration =
-        this.calcDurationForSources(this.sources) +
+        this.calcDurationForSources(this.sources, playbackRate) +
         toMilliseconds(noizeSeconds);
       this.isPlaying = true;
       this.trackProgress.perform();
@@ -446,12 +577,41 @@ export default class AudioService extends Service {
             if (this.context.state === 'suspended' && !isTesting()) {
               await this.context.resume();
             }
-            const duration = toMilliseconds(item.source.buffer.duration);
+            const rawSource = item.source as unknown;
+            // When the user changed the speech speed, play real audio buffers
+            // through an <audio> element so the pitch stays natural (see
+            // playBufferAtRate). Tone/signal sources are not buffer nodes and
+            // always play at their own rate.
+            let sourceRate = 1;
+            if (
+              rawSource instanceof AudioBufferSourceNode &&
+              playbackRate !== 1 &&
+              rawSource.buffer
+            ) {
+              const element = this.audioElements[index];
+              const played = await this.playBufferAtRate(
+                rawSource.buffer,
+                playbackRate,
+                typeof element === 'string' ? element : undefined,
+              );
+              if (played) {
+                // The pre-built Web Audio nodes for this clip were bypassed —
+                // drop them from the graph instead of leaving them connected.
+                (item as ISource).gainNode.disconnect();
+                continue;
+              }
+              // <audio> playback failed to start (autoplay policy, media
+              // error): fall back to Web Audio at the same rate. Pitch-shifted,
+              // but audible — silence while marking words heard is worse.
+              sourceRate = playbackRate;
+              rawSource.playbackRate.value = playbackRate;
+            }
+            const duration =
+              toMilliseconds(item.source.buffer.duration) / sourceRate;
             // Prefer onended over wall-clock timeout: setTimeout keeps
             // ticking when the context suspends mid-clip, so a timer-only
             // loop would advance over silent words instead of waiting
             // for real playback to finish.
-            const rawSource = item.source as unknown;
             const ended = rawSource instanceof AudioBufferSourceNode
               ? new Promise<void>((resolve) => {
                   rawSource.onended = () => resolve();
@@ -485,7 +645,7 @@ export default class AudioService extends Service {
               this.audioElements[index] as string,
             ).searchParams.get('text');
             if (text) {
-              await this.nativePlayText(text);
+              await this.nativePlayText(text, playbackRate);
             } else {
               // wrong url;
             }
@@ -506,6 +666,13 @@ export default class AudioService extends Service {
       startedSources.forEach(({ source }) => {
         source.stop(0);
       });
+      // Defensive: playBufferAtRate normally stops its own element, but on
+      // cancellation this task unwinds first — pausing here also fires the
+      // element's 'pause' listener, which promptly releases the detached
+      // playBufferAtRate await (and with it the object URL).
+      if (this.activePitchAudio) {
+        this.stopPitchAudioElement(this.activePitchAudio);
+      }
       if (!this.isDestroyed && !this.isDestroying) {
         this.isPlaying = false;
         this.totalDuration = 0;
