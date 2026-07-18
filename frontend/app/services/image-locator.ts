@@ -14,21 +14,26 @@ export default class ImageLocatorService extends Service {
     if (!url) {
       return null;
     }
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       const img = new Image();
       img.crossOrigin = 'anonymous';
       img.src = url;
       img.onload = () => {
-        const canvas = document.createElement('canvas');
-        canvas.width = img.width;
-        canvas.height = img.height;
-        const ctx = canvas.getContext('2d');
-        ctx?.drawImage(img, 0, 0);
-        const dataURL = canvas.toDataURL('image/png');
-        this.maybeUploadImage(word, canvas);
-        resolve(dataURL);
+        try {
+          const canvas = document.createElement('canvas');
+          canvas.width = img.width;
+          canvas.height = img.height;
+          const ctx = canvas.getContext('2d');
+          ctx?.drawImage(img, 0, 0);
+          const dataURL = canvas.toDataURL('image/png');
+          this.maybeUploadImage(word, canvas);
+          resolve(dataURL);
+        } catch {
+          // tainted canvas (CORS headers present but insufficient)
+          resolve(url);
+        }
       };
-      img.onerror = () => reject(null);
+      img.onerror = () => resolve(url);
     });
   }
   private maybeUploadImage(word: string, canvas: HTMLCanvasElement): void {
