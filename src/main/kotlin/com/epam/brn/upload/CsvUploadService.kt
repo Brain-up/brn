@@ -22,7 +22,7 @@ class CsvUploadService(
     private val recordProcessors: List<RecordProcessor<out Any, out Any>>,
     private val seriesRepository: SeriesRepository,
 ) {
-    val localeSuffixMap = mapOf("ru" to BrnLocale.RU, "en" to BrnLocale.EN, "tr" to BrnLocale.TR)
+    val localeSuffixMap = mapOf("ru" to BrnLocale.RU, "en" to BrnLocale.EN)
 
     companion object {
         private val csvContentTypes =

@@ -5,5 +5,4 @@ enum class BrnLocale(
 ) {
     RU("ru-ru"),
     EN("en-us"),
-    TR("tr-tr"),
 }

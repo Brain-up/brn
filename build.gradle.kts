@@ -211,6 +211,7 @@ tasks.withType<JacocoReport> {
                             "com/epam/brn/exception/**",
                             "com/epam/brn/Application*",
                             "com/epam/brn/service/azure/tts/config/**",
+                            "com/epam/brn/service/yandex/tts/config/**",
                             "com/epam/brn/webclient/customizer/**",
                             "com/epam/brn/webclient/model/**",
                         )
@@ -251,6 +252,7 @@ sonarqube {
                 "**/com/epam/brn/service/load/FirebaseUserDataLoader*," +
                 "**/com/epam/brn/service/azure/tts/AzureVoiceLoader*," +
                 "**/com/epam/brn/service/azure/tts/config/**," +
+                "**/com/epam/brn/service/yandex/tts/config/**," +
                 "**/com/epam/brn/webclient/customizer/**," +
                 "**/com/epam/brn/webclient/model/**",
         )
