@@ -34,7 +34,7 @@
    "group": 2,
    "id": 2,
    "type": "PHRASES",
-   "name": "Похожие фразы",
+   "name": "Фразы",
    "level": 2,
    "description": "Распознование похожих фраз",
    "subGroups": [
