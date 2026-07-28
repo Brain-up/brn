@@ -25,7 +25,7 @@ class AwsTestConfig {
 
         @Container
         public var localStack =
-            LocalStackContainer(DockerImageName.parse("localstack/localstack:0.14.3"))
+            LocalStackContainer(DockerImageName.parse("localstack/localstack:4.14.0"))
                 .withServices(LocalStackContainer.Service.S3)
 
         init {
