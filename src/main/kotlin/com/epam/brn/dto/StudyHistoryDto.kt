@@ -4,7 +4,7 @@ import com.epam.brn.model.Exercise
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.UserAccount
 import java.time.LocalDateTime
-import javax.validation.constraints.NotNull
+import jakarta.validation.constraints.NotNull
 
 data class StudyHistoryDto(
     var id: Long?,

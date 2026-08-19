@@ -3,8 +3,8 @@ package com.epam.brn.dto.request
 import com.epam.brn.model.Series
 import com.epam.brn.model.SubGroup
 import com.fasterxml.jackson.annotation.JsonCreator
-import javax.validation.constraints.NotBlank
-import javax.validation.constraints.NotNull
+import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotNull
 
 data class SubGroupRequest
     @JsonCreator

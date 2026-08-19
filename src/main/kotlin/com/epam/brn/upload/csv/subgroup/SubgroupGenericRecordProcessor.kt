@@ -7,7 +7,7 @@ import com.epam.brn.repo.SubGroupRepository
 import com.epam.brn.upload.csv.RecordProcessor
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
-import javax.persistence.EntityNotFoundException
+import jakarta.persistence.EntityNotFoundException
 
 @Component
 class SubgroupGenericRecordProcessor(

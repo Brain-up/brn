@@ -1,7 +1,7 @@
 package com.epam.brn.validator
 
-import javax.validation.ConstraintValidator
-import javax.validation.ConstraintValidatorContext
+import jakarta.validation.ConstraintValidator
+import jakarta.validation.ConstraintValidatorContext
 import kotlin.text.Regex
 
 class PunctuationValidator : ConstraintValidator<WithoutPunctuation, String> {

@@ -1,6 +1,6 @@
 package com.epam.brn.validator
 
-import javax.validation.Constraint
+import jakarta.validation.Constraint
 import kotlin.annotation.AnnotationTarget.FIELD
 import kotlin.reflect.KClass
 

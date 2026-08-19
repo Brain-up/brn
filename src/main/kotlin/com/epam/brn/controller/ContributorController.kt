@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import javax.annotation.security.RolesAllowed
-import javax.validation.Valid
+import jakarta.annotation.security.RolesAllowed
+import jakarta.validation.Valid
 
 @RestController
 @RequestMapping("/contributors")
