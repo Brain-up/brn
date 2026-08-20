@@ -35,8 +35,13 @@ class WebSecurityBasicConfiguration(
             .addFilterAfter(rememberLastVisitFilter, UsernamePasswordAuthenticationFilter::class.java)
             .authorizeHttpRequests {
                 it
-                    .requestMatchers("/swagger-ui.html", "/swagger-resources/**", "/webjars/**")
-                    .hasRole(BrnRole.ADMIN)
+                    .requestMatchers(
+                        "/swagger-ui.html",
+                        "/swagger-ui/**",
+                        "/v3/api-docs/**",
+                        "/swagger-resources/**",
+                        "/webjars/**",
+                    ).hasRole(BrnRole.ADMIN)
                     .anyRequest()
                     .permitAll()
             }.formLogin { it.disable() }
