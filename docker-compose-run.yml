@@ -1,6 +1,6 @@
 services:
   db_brn:
-    image: postgres:16
+    image: postgres:13
     restart: always
     ports:
       - 5432:5432
