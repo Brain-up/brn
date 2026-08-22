@@ -55,7 +55,7 @@ Autotest Python team chat: ask Elena
 ## TOOLS WE USE
 - Back-end: KOTLIN + Spring boot. Rest api as integration layer.
 - Front-end: Ember (user app), Angular (admin panel).
-- DB: Postgres 16.
+- DB: Postgres 13.
 - TestContainers for running integration tests.
 
 # GETTING STARTED!
@@ -89,7 +89,7 @@ Go to location where the project is download for example C:\brn\brn\frontend-ang
 
 ### Database running:
 1. Install docker to your machine.
-The project uses postgres 16. [Documentation](https://www.postgresql.org/docs/16/index.html)
+The project uses postgres 13. [Documentation](https://www.postgresql.org/docs/13/index.html)
 Currently for local development we use [postgres docker image](https://hub.docker.com/_/postgres)
 To install docker use:
 * [on windows](https://docs.docker.com/docker-for-windows/install/)
@@ -101,14 +101,14 @@ To install docker use:
 2.1 To run docker db image use the following command:
 * on linux\windows:
 ```
-docker run --name postgres_dev -d -p 5432:5432 -e POSTGRES_DB=brn -e POSTGRES_PASSWORD=$PG_PASSWORD -e POSTGRES_USER=$PG_USER postgres:16
+docker run --name postgres_dev -d -p 5432:5432 -e POSTGRES_DB=brn -e POSTGRES_PASSWORD=$PG_PASSWORD -e POSTGRES_USER=$PG_USER postgres:13
 ```
 `$PG_PASSWORD` and `$PG_USER` are environment variables and  could be replaced directly or added to your operating system. 
 [how to add in win10](https://www.architectryan.com/2018/03/17/add-to-the-path-on-windows-10). 
 
 2.2 Alternatively, you can just replace the variables by "admin", the default user and password for development:
 ```bash
-docker run --name postgres_dev -d -p 5432:5432 -e POSTGRES_DB=brn -e POSTGRES_PASSWORD=admin -e POSTGRES_USER=admin postgres:16
+docker run --name postgres_dev -d -p 5432:5432 -e POSTGRES_DB=brn -e POSTGRES_PASSWORD=admin -e POSTGRES_USER=admin postgres:13
 ```
 
 ### Back-end Kotlin Part:

@@ -17,7 +17,7 @@ Each subproject has its own README with details; read them before working in a f
 Use the Gradle wrapper (`./gradlew` / `gradlew.bat` on Windows).
 
 - Build with tests: `gradlew build`
-- Run the app: `gradlew bootRun --args=--spring.profiles.active=dev` (needs a Postgres 16 DB running — see README for the `docker run postgres:16` command)
+- Run the app: `gradlew bootRun --args=--spring.profiles.active=dev` (needs a Postgres 13 DB running — see README for the `docker run postgres:13` command)
 - Run unit tests: `gradlew test`
 - Run a single test class: `gradlew test --tests "com.epam.brn.service.SomeServiceTest"`
 - Run integration tests: `gradlew integrationTest` — these are **excluded from `test`/`build`** and run separately against a Postgres Testcontainer.
@@ -60,7 +60,7 @@ Angular admin app (`frontend-angular/`, npm):
 ## Versions / toolchain
 
 - JDK **17** toolchain, Kotlin **2.1.20**, Spring Boot **3.5.3** (uses `jakarta.*` namespace).
-- Postgres **16** (local dev and Testcontainers).
+- Postgres **13** (local dev and Testcontainers).
 - Frontend Node **22+**; Ember app uses pnpm, Angular app uses npm.
 
 ## Conventions
