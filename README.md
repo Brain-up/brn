@@ -54,8 +54,8 @@ Autotest Python team chat: ask Elena
 
 ## TOOLS WE USE
 - Back-end: KOTLIN + Spring boot. Rest api as integration layer.
-- Front-end : TBD - Ember, Angular.
-- DB: Postgres13.
+- Front-end: Ember (user app), Angular (admin panel).
+- DB: Postgres 13.
 - TestContainers for running integration tests.
 
 # GETTING STARTED!
@@ -89,7 +89,7 @@ Go to location where the project is download for example C:\brn\brn\frontend-ang
 
 ### Database running:
 1. Install docker to your machine.
-The project uses postgres 11.5. [Documentation](https://www.postgresql.org/docs/11/index.html)
+The project uses postgres 13. [Documentation](https://www.postgresql.org/docs/13/index.html)
 Currently for local development we use [postgres docker image](https://hub.docker.com/_/postgres)
 To install docker use:
 * [on windows](https://docs.docker.com/docker-for-windows/install/)
@@ -112,7 +112,7 @@ docker run --name postgres_dev -d -p 5432:5432 -e POSTGRES_DB=brn -e POSTGRES_PA
 ```
 
 ### Back-end Kotlin Part:
-1. Run command 'gradle build' from main project folder to build project with tests.
+1. Run command 'gradlew build' (Gradle wrapper) from main project folder to build project with tests.
 2. Application.kt is the main class to run application from Idea for example.
 3. Get Postman Collection from [https://www.postman.com/koylubaevNT/workspace/brainup/collection/2686902-d91ba307-e131-4d4f-a308-0a272e063c95 and environment from https://www.postman.com/koylubaevNT/workspace/brainup/environment/2686902-95b2c495-82a1-4244-83c7-dad7f8efebd7](https://brnteam.postman.co/workspace/My-Workspace~d7a4e69a-0ba8-4c56-8fc0-4e27e1998f7c/collection/2464717-96455e8c-ba11-49ed-a299-5c1b77b31db8?action=share&creator=2464717).
 You can directly login on www.brainup.site with some user, for example default2@default.ru / password, than use his token in postamn in Authorization tab use Bearer Token and put here yours.
@@ -121,7 +121,7 @@ You can directly login on www.brainup.site with some user, for example default2@
 end-point specification is here: https://github.com/Brain-up/brn/blob/master/api-contract/api.raml
 6. use https://brainup.site/admin/swagger
 
-Note that if you are using IntelliJ, you may want to use version 2019.2 and later to avoid issues with new kotlin plugin.
+Note that the project targets JDK 17 and Kotlin 2.1, so use a recent IntelliJ IDEA version with an up-to-date Kotlin plugin.
 
 #### Useful Postman scripts:
 - [Script](./postman_scripts/generate_month_history.js) to generate month tasks statistics (you can use it with `brnlogin` request in `Test` tab)
@@ -150,9 +150,9 @@ docker rm $(docker ps -a -q) # Remove all stopped containers
 2. Create branch from dev with the codename of your task, i.e. #GitHub_TaskNumber#.
 3. Implement your task, do not forget to write tests. Remember to follow project's coding standards: https://github.com/Brain-up/brn/wiki/Coding-Standards.
 4. Create pull request with task name and description about what was done. 
-5. Notify the team in our skype chat and wait for reviews. At least one reviewer is necessary, but more can be added in a case by case basis.
+5. Notify the team in our Telegram dev chat and wait for reviews. At least one reviewer is necessary, but more can be added in a case by case basis.
 6. The task gets merged by a project maintainer. 
-7. check that build job on jenkins passes successfully.
+7. check that the GitHub Actions CI checks pass successfully.
 8. Before load config files check them with https://orfogrammka.ru/ service.
 9. Integration tests does not run in build process, it can/should be run locally with run job verification/integrationTests.
 

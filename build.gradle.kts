@@ -1,4 +1,5 @@
 import org.gradle.jvm.toolchain.JavaLanguageVersion
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val kotestAssertionsVersion: String by properties
@@ -36,9 +37,9 @@ kotlin {
 }
 
 allOpen {
-    annotation("javax.persistence.Entity")
-    annotation("javax.persistence.MappedSuperclass")
-    annotation("javax.persistence.Embeddable")
+    annotation("jakarta.persistence.Entity")
+    annotation("jakarta.persistence.MappedSuperclass")
+    annotation("jakarta.persistence.Embeddable")
 }
 
 repositories {
@@ -47,7 +48,7 @@ repositories {
 
 dependencyManagement {
     imports {
-        mavenBom("software.amazon.awssdk:bom:2.17.198")
+        mavenBom("software.amazon.awssdk:bom:2.31.78")
     }
 }
 
@@ -58,20 +59,20 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    implementation("org.springframework.boot:spring-boot-starter-batch")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-cache")
-    implementation("com.github.ben-manes.caffeine:caffeine:3.1.8")
+    implementation("com.github.ben-manes.caffeine:caffeine:3.2.0")
     testImplementation("org.springframework.security:spring-security-test")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
     implementation("org.postgresql:postgresql")
     implementation("org.flywaydb:flyway-core:$flywayVersion")
+    implementation("org.flywaydb:flyway-database-postgresql:$flywayVersion")
 
-    implementation("com.google.firebase:firebase-admin:8.1.0")
+    implementation("com.google.firebase:firebase-admin:9.9.0")
 
-    implementation("com.auth0:java-jwt:3.10.3")
+    implementation("com.auth0:java-jwt:4.5.0")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-csv")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml")
@@ -80,11 +81,10 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactive:$kotlinxCoroutinesCoreVersion")
     implementation("org.apache.logging.log4j:log4j-api-kotlin:$log4jApiKotlinVersion")
 
-    implementation("org.springdoc:springdoc-openapi-ui:$springDocOpenApiVersion")
-    implementation("org.springdoc:springdoc-openapi-kotlin:$springDocOpenApiVersion")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springDocOpenApiVersion")
 
     implementation("software.amazon.awssdk:s3")
-    implementation("com.google.cloud:google-cloud-storage:1.110.0")
+    implementation("com.google.cloud:google-cloud-storage:2.69.0")
 
     implementation("org.json:json:$jsonVersion")
     implementation("commons-io:commons-io:2.17.0")
@@ -114,9 +114,9 @@ dependencies {
 }
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions {
-        freeCompilerArgs = listOf("-Xjsr305=strict")
-        jvmTarget = "17"
+    compilerOptions {
+        freeCompilerArgs.add("-Xjsr305=strict")
+        jvmTarget.set(JvmTarget.JVM_17)
     }
 }
 
@@ -168,9 +168,11 @@ tasks.register<JavaExec>("ktlintFormat") {
     )
 }
 
-project.exec {
-    commandLine = "git config core.hooksPath .githooks".split(" ")
-}
+providers
+    .exec {
+        commandLine("git", "config", "core.hooksPath", ".githooks")
+    }.result
+    .get()
 
 tasks.named("compileKotlin") { dependsOn("ktlintCheck") }
 
@@ -195,9 +197,9 @@ tasks.withType<JacocoReport> {
     reports {
         xml.required.set(true)
         html.required.set(true)
-        xml.outputLocation.set(file("$buildDir/jacoco/coverage.xml"))
+        xml.outputLocation.set(layout.buildDirectory.file("jacoco/coverage.xml"))
         csv.required.set(false)
-        html.outputLocation.set(file("$buildDir/jacoco/html"))
+        html.outputLocation.set(layout.buildDirectory.dir("jacoco/html"))
     }
     afterEvaluate {
         classDirectories.setFrom(
@@ -219,10 +221,10 @@ tasks.withType<JacocoReport> {
             ),
         )
     }
-    executionData.setFrom("$buildDir/jacoco/test.exec")
+    executionData.setFrom(layout.buildDirectory.file("jacoco/test.exec"))
 }
 
-task<Test>("integrationTest") {
+tasks.register<Test>("integrationTest") {
     useJUnitPlatform { includeTags("integration-test") }
     mustRunAfter(tasks["test"])
     group = "Verification"

@@ -34,7 +34,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import java.time.Instant
-import javax.servlet.FilterChain
+import jakarta.servlet.FilterChain
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
@@ -82,7 +82,7 @@ internal class FirebaseTokenAuthenticationFilterTest {
     @Test
     fun `should set authentication when user exist in local DB`() {
         // GIVEN
-        val request = MockHttpServletRequest(HttpMethod.GET.name, "/test")
+        val request = MockHttpServletRequest(HttpMethod.GET.name(), "/test")
         val token = "firebaseTokenMock"
         request.addHeader("Authorization", "Bearer $token")
         val response = MockHttpServletResponse()
@@ -115,7 +115,7 @@ internal class FirebaseTokenAuthenticationFilterTest {
     @Test
     fun `should skip token verification when bearer token is missing`() {
         // GIVEN
-        val request = MockHttpServletRequest(HttpMethod.GET.name, "/test")
+        val request = MockHttpServletRequest(HttpMethod.GET.name(), "/test")
         val response = MockHttpServletResponse()
         val filterChain = FilterChain { _, _ -> }
 
@@ -136,7 +136,7 @@ internal class FirebaseTokenAuthenticationFilterTest {
     @Test
     fun `should skip token verification when authentication already exists`() {
         // GIVEN
-        val request = MockHttpServletRequest(HttpMethod.GET.name, "/test")
+        val request = MockHttpServletRequest(HttpMethod.GET.name(), "/test")
         val response = MockHttpServletResponse()
         val filterChain = FilterChain { _, _ -> }
         SecurityContextHolder.getContext().authentication =
@@ -162,7 +162,7 @@ internal class FirebaseTokenAuthenticationFilterTest {
     @Test
     fun `should set authentication when user not exist in local DB`() {
         // GIVEN
-        val requestMock = MockHttpServletRequest(HttpMethod.GET.name, "/test")
+        val requestMock = MockHttpServletRequest(HttpMethod.GET.name(), "/test")
         val tokenMock = "firebaseTokenMock"
         requestMock.addHeader("Authorization", "Bearer $tokenMock")
         val responseMock = MockHttpServletResponse()
@@ -206,7 +206,7 @@ internal class FirebaseTokenAuthenticationFilterTest {
     @Test
     fun `should set authentication by NULL when token invalid`() {
         // GIVEN
-        val requestMock = MockHttpServletRequest(HttpMethod.GET.name, "/test")
+        val requestMock = MockHttpServletRequest(HttpMethod.GET.name(), "/test")
         val tokenMock = "firebaseTokenMock"
         requestMock.addHeader("Authorization", "Bearer $tokenMock")
         val responseMock = MockHttpServletResponse()
@@ -238,7 +238,7 @@ internal class FirebaseTokenAuthenticationFilterTest {
     @Test
     fun `should set authentication by NULL when error occurred`() {
         // GIVEN
-        val requestMock = MockHttpServletRequest(HttpMethod.GET.name, "/test")
+        val requestMock = MockHttpServletRequest(HttpMethod.GET.name(), "/test")
         val tokenMock = "firebaseTokenMock"
         requestMock.addHeader("Authorization", "Bearer $tokenMock")
         val responseMock = MockHttpServletResponse()
@@ -265,7 +265,7 @@ internal class FirebaseTokenAuthenticationFilterTest {
     @Test
     fun `should set authentication by NULL when user not exist in local DB and not returning from firebase DB`() {
         // GIVEN
-        val requestMock = MockHttpServletRequest(HttpMethod.GET.name, "/test")
+        val requestMock = MockHttpServletRequest(HttpMethod.GET.name(), "/test")
         val tokenMock = "firebaseTokenMock"
         requestMock.addHeader("Authorization", "Bearer $tokenMock")
         val responseMock = MockHttpServletResponse()
@@ -297,9 +297,9 @@ internal class FirebaseTokenAuthenticationFilterTest {
     fun `should reuse cached verified token for repeated bearer token`() {
         // GIVEN
         val token = "firebaseTokenMock"
-        val firstRequest = MockHttpServletRequest(HttpMethod.GET.name, "/test")
+        val firstRequest = MockHttpServletRequest(HttpMethod.GET.name(), "/test")
         firstRequest.addHeader("Authorization", "Bearer $token")
-        val secondRequest = MockHttpServletRequest(HttpMethod.GET.name, "/test")
+        val secondRequest = MockHttpServletRequest(HttpMethod.GET.name(), "/test")
         secondRequest.addHeader("Authorization", "Bearer $token")
         val response = MockHttpServletResponse()
         val filterChain = FilterChain { _, _ -> }

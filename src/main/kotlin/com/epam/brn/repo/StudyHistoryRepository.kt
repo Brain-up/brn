@@ -105,7 +105,7 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
 
     @Query(
         "SELECT COALESCE(sum(s.executionSeconds), 0) FROM StudyHistory s " +
-            " WHERE date_trunc('day', s.startTime) = :day" +
+            " WHERE cast(s.startTime as date) = cast(:day as date)" +
             " AND s.userAccount.id = :userId",
     )
     fun getDayTimer(
@@ -115,7 +115,7 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
 
     @Query(
         "SELECT COALESCE(sum(COALESCE(s.executionSeconds, 0)), 0) FROM StudyHistory s " +
-            " WHERE date_trunc('day', now()) = date_trunc('day', s.startTime)" +
+            " WHERE cast(s.startTime as date) = current_date" +
             " AND s.userAccount.id = :userId",
     )
     fun getTodayDayTimer(userId: Long): Int
@@ -139,15 +139,15 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
     @Query(
         "SELECT MIN(s.startTime) AS firstStudy, MAX(s.startTime) AS lastStudy," +
             " COALESCE(SUM(s.spentTimeInSeconds), 0) AS spentTime, COUNT (DISTINCT s.exercise.id) as doneExercises" +
-            " FROM StudyHistory s WHERE user_id = :userId",
+            " FROM StudyHistory s WHERE s.userAccount.id = :userId",
     )
     fun getStatisticsByUserAccountId(userId: Long?): UserStatisticView
 
     @Query(
         "SELECT s FROM StudyHistory s " +
             "JOIN FETCH s.exercise " +
-            "WHERE EXTRACT(MONTH FROM s.startTime) = :month " +
-            "AND EXTRACT(YEAR FROM s.startTime) = :year " +
+            "WHERE month(s.startTime) = :month " +
+            "AND year(s.startTime) = :year " +
             "AND s.userAccount.id = :userId",
     )
     fun getMonthHistories(
@@ -158,7 +158,7 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
 
     @Query(
         "SELECT s FROM StudyHistory s " +
-            " WHERE date_trunc('day', now()) = date_trunc('day', s.startTime) " +
+            " WHERE cast(s.startTime as date) = current_date " +
             " AND s.userAccount.id = :userId",
     )
     fun getTodayHistories(userId: Long): List<StudyHistory>

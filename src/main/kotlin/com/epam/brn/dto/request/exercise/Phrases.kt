@@ -2,7 +2,7 @@ package com.epam.brn.dto.request.exercise
 
 import com.epam.brn.validator.WithoutPunctuation
 import io.swagger.v3.oas.annotations.media.Schema
-import javax.validation.constraints.NotEmpty
+import jakarta.validation.constraints.NotEmpty
 
 @Schema(name = "Phrases", description = "Phrases for creating exercise. Phrases should not contain punctuation marks.")
 data class Phrases(

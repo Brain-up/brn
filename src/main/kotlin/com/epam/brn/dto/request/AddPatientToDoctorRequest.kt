@@ -1,7 +1,7 @@
 package com.epam.brn.dto.request
 
-import javax.validation.constraints.Min
-import javax.validation.constraints.NotBlank
+import jakarta.validation.constraints.Min
+import jakarta.validation.constraints.NotBlank
 
 data class AddPatientToDoctorRequest(
     @field:Min(value = 1)

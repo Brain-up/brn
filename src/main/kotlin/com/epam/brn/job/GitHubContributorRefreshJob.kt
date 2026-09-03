@@ -9,6 +9,7 @@ import com.epam.brn.webclient.GitHubApiClient
 import org.apache.logging.log4j.kotlin.logger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.context.event.ApplicationReadyEvent
+import org.springframework.context.annotation.Profile
 import org.springframework.context.event.EventListener
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional
 import java.util.Optional
 
 @Service
+@Profile("!dev")
 class GitHubContributorRefreshJob(
     val gitHubApiClient: GitHubApiClient,
     val gitHubUserRepository: GitHubUserRepository,

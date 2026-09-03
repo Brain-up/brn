@@ -1,7 +1,7 @@
 package com.epam.brn.dto.response
 
 import com.epam.brn.enums.AudiometryType
-import javax.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotBlank
 
 data class AudiometryResponse(
     val id: Long?,

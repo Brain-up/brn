@@ -1,6 +1,6 @@
 package com.epam.brn.dto
 
-import javax.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotBlank
 
 data class ExerciseGroupDto(
     val id: Long?,

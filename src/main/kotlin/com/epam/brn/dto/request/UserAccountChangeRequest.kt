@@ -2,7 +2,7 @@ package com.epam.brn.dto.request
 
 import com.epam.brn.enums.BrnGender
 import com.fasterxml.jackson.annotation.JsonInclude
-import javax.validation.constraints.Min
+import jakarta.validation.constraints.Min
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class UserAccountChangeRequest(
