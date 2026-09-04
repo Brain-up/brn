@@ -103,11 +103,12 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
     testImplementation("org.junit.jupiter:junit-jupiter-params:$junitVersion")
 
-    testImplementation("org.testcontainers:testcontainers")
+    testImplementation("org.testcontainers:testcontainers:$testContainersVersion")
     testImplementation("com.natpryce:hamkrest:1.8.0.1")
-    testImplementation("org.testcontainers:junit-jupiter:$testContainersVersion")
-    testImplementation("org.testcontainers:postgresql:$testContainersVersion")
-    testImplementation("org.testcontainers:localstack:$testContainersVersion")
+    testImplementation("org.testcontainers:testcontainers-junit-jupiter:$testContainersVersion")
+    testImplementation("org.testcontainers:testcontainers-postgresql:$testContainersVersion")
+    testImplementation("org.testcontainers:testcontainers-jdbc:$testContainersVersion")
+    testImplementation("org.testcontainers:testcontainers-localstack:$testContainersVersion")
     testImplementation("com.amazonaws:aws-java-sdk:1.11.808")
     testImplementation("com.squareup.okhttp3:okhttp:$okhttp3Version")
     testImplementation("com.squareup.okhttp3:mockwebserver:$okhttp3Version")
@@ -182,12 +183,12 @@ tasks.withType<Test>().configureEach {
             languageVersion.set(JavaLanguageVersion.of(17))
         },
     )
-    useJUnitPlatform {
-        excludeTags("integration-test")
-    }
 }
 
 tasks.test {
+    useJUnitPlatform {
+        excludeTags("integration-test")
+    }
     finalizedBy("jacocoTestReport")
 }
 

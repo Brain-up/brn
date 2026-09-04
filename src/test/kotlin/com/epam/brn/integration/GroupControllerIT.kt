@@ -199,7 +199,6 @@ class GroupControllerIT : BaseIT() {
 
     fun insertTask(exercise: Exercise): Task = taskRepository.save(
         Task(
-            id = 1,
             name = "${exercise.name} Task",
             serialNumber = 1,
             exercise = exercise,
