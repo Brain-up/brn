@@ -3,8 +3,8 @@ package com.epam.brn.integration
 import com.epam.brn.dto.response.BrnResponse
 import com.epam.brn.dto.statistics.DayStudyStatistics
 import com.epam.brn.dto.statistics.MonthStudyStatistics
-import com.epam.brn.dto.statistics.UserDailyDetailStatisticsDto
 import com.epam.brn.enums.BrnRole
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.core.type.TypeReference
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.AfterEach
@@ -226,10 +226,10 @@ class UserSubGroupStatisticsControllerV2IT : BaseIT() {
                 .getContentAsString(StandardCharsets.UTF_8)
 
         val data = objectMapper.readValue(response, BrnResponse::class.java).data
-        val resultStatistic: List<UserDailyDetailStatisticsDto> =
+        val resultStatistic: List<DailyDetailStatistics> =
             objectMapper.readValue(
                 objectMapper.writeValueAsString(data),
-                object : TypeReference<List<UserDailyDetailStatisticsDto>>() {},
+                object : TypeReference<List<DailyDetailStatistics>>() {},
             )
 
         // THEN
@@ -291,10 +291,10 @@ class UserSubGroupStatisticsControllerV2IT : BaseIT() {
                 .getContentAsString(StandardCharsets.UTF_8)
 
         val data = objectMapper.readValue(response, BrnResponse::class.java).data
-        val resultStatistic: List<UserDailyDetailStatisticsDto> =
+        val resultStatistic: List<DailyDetailStatistics> =
             objectMapper.readValue(
                 objectMapper.writeValueAsString(data),
-                object : TypeReference<List<UserDailyDetailStatisticsDto>>() {},
+                object : TypeReference<List<DailyDetailStatistics>>() {},
             )
 
         // THEN
@@ -315,4 +315,19 @@ class UserSubGroupStatisticsControllerV2IT : BaseIT() {
         userDailyDetailStatisticsDto2.doneExercisesSuccessfullyFromFirstTime shouldBe 1
         userDailyDetailStatisticsDto2.listenWordsCount shouldBe 5
     }
+
+    /**
+     * Test-local view of UserDailyDetailStatisticsDto without the `duration` field. jackson-module-kotlin
+     * can serialize kotlin.time.Duration but not deserialize it, and `duration` is not asserted here, so we
+     * read the response into this DTO instead of adding a production-side Duration deserializer.
+     */
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    private data class DailyDetailStatistics(
+        val seriesName: String,
+        val allDoneExercises: Int,
+        val uniqueDoneExercises: Int,
+        val repeatedExercises: Int,
+        val doneExercisesSuccessfullyFromFirstTime: Int,
+        val listenWordsCount: Int,
+    )
 }

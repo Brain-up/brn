@@ -122,7 +122,6 @@ class TaskControllerIT : BaseIT() {
 
     private fun insertSeries(exerciseGroup: ExerciseGroup): Series = seriesRepository.save(
         Series(
-            id = 1,
             description = "desc",
             name = "series",
             exerciseGroup = exerciseGroup,
@@ -137,7 +136,6 @@ class TaskControllerIT : BaseIT() {
 
     private fun insertExercise(subGroup: SubGroup): Exercise = exerciseRepository.save(
         Exercise(
-            id = 1,
             subGroup = subGroup,
             level = 0,
             name = "exercise",
@@ -146,7 +144,6 @@ class TaskControllerIT : BaseIT() {
 
     private fun insertTask(exercise: Exercise): Task = taskRepository.save(
         Task(
-            id = 1,
             name = "${exercise.name} Task",
             serialNumber = 1,
             exercise = exercise,
