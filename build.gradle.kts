@@ -5,6 +5,9 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 val kotestAssertionsVersion: String by properties
 val kotlinVersion: String by properties
 val flywayVersion: String by properties
+val commonsLang3Version: String by properties
+val assertjVersion: String by properties
+val plexusUtilsVersion: String by properties
 val log4jApiKotlinVersion: String by properties
 val jsonVersion: String by properties
 val junitVersion: String by properties
@@ -50,6 +53,14 @@ dependencyManagement {
     imports {
         mavenBom("software.amazon.awssdk:bom:2.31.78")
     }
+    dependencies {
+        // Override the version managed by the Spring Boot BOM (3.17.0) to patch CVE-2025-48924.
+        dependency("org.apache.commons:commons-lang3:$commonsLang3Version")
+        // Override the version managed by the Spring Boot BOM (3.27.3) to patch CVE-2026-24400 (XXE in isXmlEqualTo).
+        dependency("org.assertj:assertj-core:$assertjVersion")
+        // Force the version pulled transitively via spring-cloud-contract-wiremock (3.5.1) to patch CVE-2025-67030 (path traversal / RCE).
+        dependency("org.codehaus.plexus:plexus-utils:$plexusUtilsVersion")
+    }
 }
 
 dependencies {
@@ -92,7 +103,7 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-webflux")
     testImplementation("org.springframework.cloud:spring-cloud-contract-wiremock:$springCloudContractWiremockVersion")
     testImplementation("org.amshove.kluent:kluent:1.68") // should be deleted after kotest move all of it
-    testImplementation("org.jetbrains.kotlin:kotlin-test:1.3.72") // should be deleted after kotest move all of it
+    testImplementation(kotlin("test")) // should be deleted after kotest move all of it
     testImplementation("io.kotest:kotest-assertions-core:$kotestAssertionsVersion")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
@@ -109,7 +120,6 @@ dependencies {
     testImplementation("org.testcontainers:testcontainers-postgresql:$testContainersVersion")
     testImplementation("org.testcontainers:testcontainers-jdbc:$testContainersVersion")
     testImplementation("org.testcontainers:testcontainers-localstack:$testContainersVersion")
-    testImplementation("com.amazonaws:aws-java-sdk:1.11.808")
     testImplementation("com.squareup.okhttp3:okhttp:$okhttp3Version")
     testImplementation("com.squareup.okhttp3:mockwebserver:$okhttp3Version")
 }
