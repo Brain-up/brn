@@ -3,16 +3,16 @@ package com.epam.brn.service.statistics.progress.status.requirements.impl
 import com.epam.brn.dto.statistics.StatusRequirements
 import com.epam.brn.dto.statistics.UserExercisingPeriod
 import com.epam.brn.dto.statistics.UserExercisingProgressStatus
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.core.env.Environment
 import javax.naming.OperationNotSupportedException
-import kotlin.test.assertEquals
 
 /**
  * @author Nikolai Lazarev
@@ -49,7 +49,7 @@ internal class ApplicationPropertiesRequirementsRetrieverTest {
         val requirementsForStatus = retrieverApplicationProperties.getRequirementsForStatus(status, period)
 
         // THEN
-        assertEquals(expectedRequirements, requirementsForStatus)
+        requirementsForStatus shouldBe expectedRequirements
     }
 
     @Test
@@ -64,7 +64,7 @@ internal class ApplicationPropertiesRequirementsRetrieverTest {
         every { env.getProperty("$basePath.$periodName.status.$statusName.minimal") } returns null
 
         // THEN
-        assertThrows<OperationNotSupportedException> {
+        shouldThrow<OperationNotSupportedException> {
             retrieverApplicationProperties.getRequirementsForStatus(status, period)
         }
     }

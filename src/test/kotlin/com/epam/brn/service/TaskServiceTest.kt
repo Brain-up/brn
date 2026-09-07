@@ -1,7 +1,5 @@
 package com.epam.brn.service
 
-import com.epam.brn.service.findSyllableCount
-import com.epam.brn.service.toResourceDtoSet
 import com.epam.brn.dto.response.TaskResponse
 import com.epam.brn.dto.response.TaskWordsGroupResponse
 import com.epam.brn.enums.BrnLocale
@@ -18,12 +16,12 @@ import com.epam.brn.repo.TaskRepository
 import com.epam.brn.service.cloud.CloudService
 import io.kotest.assertions.throwables.shouldThrowExactly
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeSameInstanceAs
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import org.apache.commons.lang3.math.NumberUtils.LONG_ONE
-import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -31,7 +29,6 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 import java.util.Optional
-import kotlin.test.assertSame
 
 @ExtendWith(MockKExtension::class)
 @DisplayName("TaskService test using MockK")
@@ -366,7 +363,7 @@ internal class TaskServiceTest {
             val taskById = taskService.getTaskById(LONG_ONE)
 
             // THEN
-            assertSame(taskDto, taskById)
+            taskById shouldBeSameInstanceAs taskDto
             (taskById as TaskWordsGroupResponse).exerciseMechanism shouldBe ExerciseMechanism.MATRIX
             taskById.shouldBeWithPictures shouldBe true
         }
@@ -481,19 +478,19 @@ internal class TaskServiceTest {
         @ParameterizedTest
         @ValueSource(strings = ["мышь", "кот", "смрад"])
         fun `should find Syllable 1 Count`(word: String) {
-            Assertions.assertThat(word.findSyllableCount()).isEqualTo(1)
+            word.findSyllableCount() shouldBe 1
         }
 
         @ParameterizedTest
         @ValueSource(strings = ["мышка", "кошка", "муан", "портфель"])
         fun `should find Syllable 2 Count`(word: String) {
-            Assertions.assertThat(word.findSyllableCount()).isEqualTo(2)
+            word.findSyllableCount() shouldBe 2
         }
 
         @ParameterizedTest
         @ValueSource(strings = ["машина", "королёв", "моошка"])
         fun `should find Syllable 3 Count`(word: String) {
-            Assertions.assertThat(word.findSyllableCount()).isEqualTo(3)
+            word.findSyllableCount() shouldBe 3
         }
 
         @Test
@@ -509,12 +506,12 @@ internal class TaskServiceTest {
             // WHEN
             val result = words.toResourceDtoSet()
             // THEN
-            Assertions.assertThat(result.first { it.word == "круг" }.columnNumber).isEqualTo(0)
-            Assertions.assertThat(result.first { it.word == "спать" }.columnNumber).isEqualTo(0)
-            Assertions.assertThat(result.first { it.word == "мышь" }.columnNumber).isEqualTo(0)
-            Assertions.assertThat(result.first { it.word == "машина" }.columnNumber).isEqualTo(1)
-            Assertions.assertThat(result.first { it.word == "рубашка" }.columnNumber).isEqualTo(1)
-            Assertions.assertThat(result.first { it.word == "голова" }.columnNumber).isEqualTo(1)
+            result.first { it.word == "круг" }.columnNumber shouldBe 0
+            result.first { it.word == "спать" }.columnNumber shouldBe 0
+            result.first { it.word == "мышь" }.columnNumber shouldBe 0
+            result.first { it.word == "машина" }.columnNumber shouldBe 1
+            result.first { it.word == "рубашка" }.columnNumber shouldBe 1
+            result.first { it.word == "голова" }.columnNumber shouldBe 1
         }
     }
 }

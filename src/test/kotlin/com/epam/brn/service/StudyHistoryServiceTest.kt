@@ -21,8 +21,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.time.LocalDateTime
 import java.util.Optional
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 import kotlin.time.Duration
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
@@ -240,7 +238,7 @@ internal class StudyHistoryServiceTest {
         val statistics = statisticsForPeriod.first()
 
         // THEN
-        assertEquals(expectedStatistic, statistics)
+        statistics shouldBe expectedStatistic
     }
 
     @Test
@@ -289,7 +287,7 @@ internal class StudyHistoryServiceTest {
         val statistics = statisticsForPeriod.first()
 
         // THEN
-        assertEquals(expectedStatistic, statistics)
+        statistics shouldBe expectedStatistic
     }
 
     @Test
@@ -334,9 +332,9 @@ internal class StudyHistoryServiceTest {
         val statisticsForPeriod = studyHistoryService.getUserDailyStatistics(exerciseDate, userId)
 
         // THEN
-        assertEquals(1, statisticsForPeriod.size)
+        statisticsForPeriod.size shouldBe 1
         val statistics = statisticsForPeriod.first()
-        assertEquals(expectedStatistic, statistics)
+        statistics shouldBe expectedStatistic
     }
 
     @Test
@@ -428,10 +426,10 @@ internal class StudyHistoryServiceTest {
         val statisticsForPeriod = studyHistoryService.getUserDailyStatistics(exerciseDate, userId)
 
         // THEN
-        assertEquals(2, statisticsForPeriod.size)
+        statisticsForPeriod.size shouldBe 2
 
-        assertEquals(expectedStatistic1, statisticsForPeriod[0])
-        assertEquals(expectedStatistic2, statisticsForPeriod[1])
+        statisticsForPeriod[0] shouldBe expectedStatistic1
+        statisticsForPeriod[1] shouldBe expectedStatistic2
     }
 
     @Test
@@ -451,6 +449,6 @@ internal class StudyHistoryServiceTest {
         val statisticForPeriod = studyHistoryService.getUserDailyStatistics(day, userId)
 
         // THEN
-        assertTrue(statisticForPeriod.isEmpty())
+        statisticForPeriod.isEmpty() shouldBe true
     }
 }

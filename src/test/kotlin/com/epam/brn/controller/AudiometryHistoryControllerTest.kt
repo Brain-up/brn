@@ -2,6 +2,7 @@ package com.epam.brn.controller
 
 import com.epam.brn.dto.request.AudiometryHistoryRequest
 import com.epam.brn.service.AudiometryHistoryService
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -10,7 +11,6 @@ import io.mockk.verify
 import org.apache.http.HttpStatus
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import kotlin.test.assertEquals
 
 @ExtendWith(MockKExtension::class)
 internal class AudiometryHistoryControllerTest {
@@ -33,8 +33,8 @@ internal class AudiometryHistoryControllerTest {
         val save = audiometryHistoryController.save(audiometryHistory)
 
         // THEN
-        assertEquals(HttpStatus.SC_OK, save.statusCode.value())
-        assertEquals(baseSingleObjectResponseDto, save.body!!.data)
+        save.statusCode.value() shouldBe HttpStatus.SC_OK
+        save.body!!.data shouldBe baseSingleObjectResponseDto
         verify(exactly = 1) { audiometryHistoryService.save(audiometryHistory) }
     }
 }

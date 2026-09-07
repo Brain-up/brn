@@ -16,15 +16,14 @@ import com.epam.brn.repo.UserAccountRepository
 import com.fasterxml.jackson.core.type.TypeReference
 import com.google.gson.Gson
 import io.kotest.matchers.collections.shouldContainAll
+import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.web.servlet.ResultActions
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch
@@ -253,16 +252,12 @@ class UserDetailsControllerIT : BaseIT() {
                 gson.toJson(baseResponse.data),
                 object : TypeReference<List<HeadphonesDto>>() {},
             )
-        Assertions
-            .assertThat(returnedHeadphones)
-            .hasSize(3)
-            .usingElementComparatorOnFields("name", "type")
-            .containsAll(
-                listOf(
-                    HeadphonesDto(name = "first", active = true, type = HeadphonesType.IN_EAR_NO_BLUETOOTH),
-                    HeadphonesDto(name = "second", active = true, type = HeadphonesType.IN_EAR_BLUETOOTH),
-                    HeadphonesDto(name = "third", active = true, type = HeadphonesType.OVER_EAR_BLUETOOTH),
-                ),
+        returnedHeadphones shouldHaveSize 3
+        returnedHeadphones.map { it.name to it.type } shouldContainAll
+            listOf(
+                "first" to HeadphonesType.IN_EAR_NO_BLUETOOTH,
+                "second" to HeadphonesType.IN_EAR_BLUETOOTH,
+                "third" to HeadphonesType.OVER_EAR_BLUETOOTH,
             )
     }
 
@@ -287,16 +282,12 @@ class UserDetailsControllerIT : BaseIT() {
                 object : TypeReference<List<HeadphonesDto>>() {},
             )
         returnedHeadphones shouldNotBe null
-        Assertions
-            .assertThat(returnedHeadphones)
-            .hasSize(3)
-            .usingElementComparatorOnFields("name", "type")
-            .containsAll(
-                listOf(
-                    HeadphonesDto(name = "first", active = true, type = HeadphonesType.IN_EAR_NO_BLUETOOTH),
-                    HeadphonesDto(name = "second", active = true, type = HeadphonesType.IN_EAR_BLUETOOTH),
-                    HeadphonesDto(name = "third", active = true, type = HeadphonesType.OVER_EAR_BLUETOOTH),
-                ),
+        returnedHeadphones shouldHaveSize 3
+        returnedHeadphones.map { it.name to it.type } shouldContainAll
+            listOf(
+                "first" to HeadphonesType.IN_EAR_NO_BLUETOOTH,
+                "second" to HeadphonesType.IN_EAR_BLUETOOTH,
+                "third" to HeadphonesType.OVER_EAR_BLUETOOTH,
             )
     }
 
@@ -333,8 +324,7 @@ class UserDetailsControllerIT : BaseIT() {
         val response =
             mockMvc
                 .perform(
-                    MockMvcRequestBuilders
-                        .get(baseUrl)
+                    get(baseUrl)
                         .param("role", BrnRole.ADMIN),
                 ).andExpect(status().isOk)
                 .andReturn()

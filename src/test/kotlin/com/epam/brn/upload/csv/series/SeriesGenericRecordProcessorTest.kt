@@ -4,13 +4,13 @@ import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.Series
 import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.service.ExerciseGroupsService
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import io.mockk.verify
-import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
@@ -57,7 +57,7 @@ internal class SeriesGenericRecordProcessorTest {
         val actual = seriesGenericRecordProcessor.process(records)
         // THEN
         for (i in expected.indices) {
-            Assertions.assertThat(actual[i]).isEqualTo(expected[i])
+            actual[i] shouldBe expected[i]
         }
         verify(exactly = records.size) { exerciseGroupsService.findGroupByCode(ofType(String::class)) }
         verify(exactly = records.size) {
@@ -85,7 +85,7 @@ internal class SeriesGenericRecordProcessorTest {
         val actual = seriesGenericRecordProcessor.process(records)
         // THEN
         for (i in expected.indices) {
-            Assertions.assertThat(actual[i]).isEqualTo(expected[i])
+            actual[i] shouldBe expected[i]
         }
         verify(exactly = records.size) { exerciseGroupsService.findGroupByCode(ofType(String::class)) }
         verify(exactly = records.size) {

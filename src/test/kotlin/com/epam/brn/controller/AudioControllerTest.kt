@@ -3,6 +3,7 @@ package com.epam.brn.controller
 import com.epam.brn.dto.AudioFileMetaData
 import com.epam.brn.dto.azure.tts.AzureRates
 import com.epam.brn.service.UserAnalyticsService
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -13,7 +14,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.io.ByteArrayInputStream
 import java.io.InputStream
-import kotlin.test.assertEquals
 
 @ExtendWith(MockKExtension::class)
 internal class AudioControllerTest {
@@ -36,7 +36,7 @@ internal class AudioControllerTest {
         val audioByteArray = controller.getAudioByteArray(text, 1, locale, "", "1")
 
         // THEN
-        assertEquals(HttpStatus.SC_OK, audioByteArray.statusCode.value())
+        audioByteArray.statusCode.value() shouldBe HttpStatus.SC_OK
         verify(exactly = 1) { userAnalyticsService.prepareAudioStreamForUser(1, audioFileMetaData) }
     }
 }

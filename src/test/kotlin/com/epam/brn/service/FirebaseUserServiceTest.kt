@@ -2,6 +2,7 @@ package com.epam.brn.service
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserRecord
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -10,7 +11,6 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import kotlin.test.assertEquals
 
 @ExtendWith(MockKExtension::class)
 internal class FirebaseUserServiceTest {
@@ -31,7 +31,7 @@ internal class FirebaseUserServiceTest {
         val result = firebaseUserService.getUserByUuid(uuid)
 
         // THEN
-        assertEquals(userMock, result)
+        result shouldBe userMock
         verify(exactly = 1) { firebaseAuth.getUser(uuid) }
         verify(exactly = 0) { firebaseAuth.getUserByEmail(any()) }
     }

@@ -4,6 +4,8 @@ import com.epam.brn.dto.StudyHistoryDto
 import com.epam.brn.dto.response.BrnResponse
 import com.epam.brn.enums.BrnRole
 import com.fasterxml.jackson.core.type.TypeReference
+import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.springframework.security.test.context.support.WithMockUser
@@ -12,9 +14,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import java.nio.charset.StandardCharsets
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
-import kotlin.test.assertTrue
 
 class StudyHistoryControllerV2IT : BaseIT() {
     private val baseUrl = "/v2/study-history"
@@ -64,8 +63,8 @@ class StudyHistoryControllerV2IT : BaseIT() {
                 object : TypeReference<List<StudyHistoryDto>>() {},
             )
 
-        assertNotNull(studyHistories)
-        assertEquals(expectedStudyHistories, studyHistories)
+        studyHistories.shouldNotBeNull()
+        studyHistories shouldBe expectedStudyHistories
     }
 
     @Test
@@ -106,8 +105,8 @@ class StudyHistoryControllerV2IT : BaseIT() {
                 object : TypeReference<List<StudyHistoryDto>>() {},
             )
 
-        assertNotNull(studyHistories)
-        assertEquals(expectedStudyHistories, studyHistories)
+        studyHistories.shouldNotBeNull()
+        studyHistories shouldBe expectedStudyHistories
     }
 
     @Test
@@ -134,7 +133,7 @@ class StudyHistoryControllerV2IT : BaseIT() {
         val data = objectMapper.readValue(response, BrnResponse::class.java).data
         val isUserHasStatistics: Boolean =
             objectMapper.readValue(objectMapper.writeValueAsString(data), object : TypeReference<Boolean>() {})
-        assertTrue(isUserHasStatistics)
+        isUserHasStatistics shouldBe true
     }
 
     @Test
@@ -161,6 +160,6 @@ class StudyHistoryControllerV2IT : BaseIT() {
         val data = objectMapper.readValue(response, BrnResponse::class.java).data
         val isUserHasStatistics: Boolean =
             objectMapper.readValue(objectMapper.writeValueAsString(data), object : TypeReference<Boolean>() {})
-        assertTrue(isUserHasStatistics)
+        isUserHasStatistics shouldBe true
     }
 }

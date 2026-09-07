@@ -5,6 +5,7 @@ import com.epam.brn.dto.response.BrnResponse
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.repo.StudyHistoryRepository
 import com.google.gson.Gson
+import io.kotest.matchers.nulls.shouldNotBeNull
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,7 +16,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.nio.charset.StandardCharsets
 import java.time.LocalDateTime
-import kotlin.test.assertNotNull
 
 @WithMockUser(username = "test@test.test", roles = [BrnRole.USER])
 class StudyHistoryControllerIT : BaseIT() {
@@ -59,7 +59,7 @@ class StudyHistoryControllerIT : BaseIT() {
             ).andExpect(status().isOk)
 
         // THEN
-        assertNotNull(repository.findById(studyHistoryDtoId))
+        repository.findById(studyHistoryDtoId).shouldNotBeNull()
     }
 
     @Test
@@ -79,6 +79,6 @@ class StudyHistoryControllerIT : BaseIT() {
         val singleObjectResponseDto = gson.fromJson(response, BrnResponse::class.java)
 
         // THEN
-        assertNotNull(singleObjectResponseDto)
+        singleObjectResponseDto.shouldNotBeNull()
     }
 }

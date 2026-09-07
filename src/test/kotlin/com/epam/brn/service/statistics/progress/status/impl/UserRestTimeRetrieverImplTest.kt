@@ -4,6 +4,7 @@ import com.epam.brn.dto.UserAccountDto
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.service.UserAccountService
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -14,7 +15,6 @@ import org.junit.jupiter.api.extension.ExtendWith
 import java.sql.Date
 import java.time.LocalDate
 import java.time.LocalDateTime
-import kotlin.test.assertEquals
 
 @ExtendWith(MockKExtension::class)
 internal class UserRestTimeRetrieverImplTest {
@@ -73,7 +73,7 @@ internal class UserRestTimeRetrieverImplTest {
         val maximalUserCoolDown = userCoolDownRetrieverImpl.getMaximalUserRestTime(userId, date, date)
 
         // THEN
-        assertEquals(1, maximalUserCoolDown)
+        maximalUserCoolDown shouldBe 1
     }
 
     @Test
@@ -97,6 +97,6 @@ internal class UserRestTimeRetrieverImplTest {
         val maximalUserCoolDown = userCoolDownRetrieverImpl.getMaximalUserRestTime(userId, date, date)
 
         // THEN
-        assertEquals(3, maximalUserCoolDown)
+        maximalUserCoolDown shouldBe 3
     }
 }

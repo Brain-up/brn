@@ -13,6 +13,8 @@ import com.epam.brn.service.DoctorService
 import com.epam.brn.service.UserAccountService
 import com.epam.brn.service.UserAnalyticsService
 import com.google.firebase.auth.FirebaseAuth
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -24,14 +26,12 @@ import io.mockk.verify
 import org.apache.commons.lang3.math.NumberUtils
 import org.apache.commons.lang3.math.NumberUtils.INTEGER_ONE
 import org.apache.http.HttpStatus
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.data.domain.Pageable
-import kotlin.test.assertEquals
 
 @ExtendWith(MockKExtension::class)
 internal class UserDetailControllerTest {
@@ -82,8 +82,8 @@ internal class UserDetailControllerTest {
 
             // THEN
             verify(exactly = 1) { userAccountService.findUserDtoById(userId) }
-            assertThat(savedUserAccountDto[0]).isEqualTo(userAccountDto)
-            assertThat(savedUserAccountDto).hasSize(INTEGER_ONE)
+            savedUserAccountDto[0] shouldBe userAccountDto
+            savedUserAccountDto shouldHaveSize INTEGER_ONE
         }
 
         @Test
@@ -97,8 +97,8 @@ internal class UserDetailControllerTest {
 
             // THEN
             verify(exactly = 1) { userAccountService.getCurrentUserDto() }
-            assertThat(savedUserAccountDto[0]).isEqualTo(userAccountDto)
-            assertThat(savedUserAccountDto).hasSize(INTEGER_ONE)
+            savedUserAccountDto[0] shouldBe userAccountDto
+            savedUserAccountDto shouldHaveSize INTEGER_ONE
         }
 
         @Test
@@ -123,7 +123,7 @@ internal class UserDetailControllerTest {
             // THEN
             verify(exactly = 1) { userAccountService.updateAvatarForCurrentUser(avatarUrl) }
             userAccountDto.avatar = avatarUrl
-            assertEquals(userAccountDto, response)
+            response shouldBe userAccountDto
         }
 
         @Test
@@ -152,7 +152,7 @@ internal class UserDetailControllerTest {
 
             // THEN
             verify(exactly = 1) { userAccountService.updateCurrentUser(changeRequest) }
-            assertEquals(userAccountDto, response)
+            response shouldBe userAccountDto
         }
 
         @Test
@@ -171,7 +171,7 @@ internal class UserDetailControllerTest {
 
             // THEN
             verify(exactly = 1) { userAccountService.addHeadphonesToUser(1L, headphonesDto) }
-            assertEquals(headphonesDto, response)
+            response shouldBe headphonesDto
         }
 
         @Test
@@ -190,7 +190,7 @@ internal class UserDetailControllerTest {
 
             // THEN
             verify(exactly = 1) { userAccountService.addHeadphonesToCurrentUser(headphonesDto) }
-            assertEquals(headphonesDto, response)
+            response shouldBe headphonesDto
         }
 
         @Test
@@ -230,7 +230,8 @@ internal class UserDetailControllerTest {
 
             // THEN
             verify(exactly = 1) { userAccountService.getAllHeadphonesForUser(1L) }
-            assertThat(response).hasSize(2).containsExactly(headphonesDto, headphonesDtoSecond)
+            response shouldHaveSize 2
+            response.shouldContainExactly(headphonesDto, headphonesDtoSecond)
         }
     }
 

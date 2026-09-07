@@ -6,15 +6,15 @@ import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.repo.SubGroupRepository
 import com.epam.brn.service.UserAccountService
 import com.epam.brn.service.statistics.impl.UserStatisticServiceImpl
+import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.verify
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import kotlin.test.assertNotNull
 
 /**
  * @author Nikolai Lazarev
@@ -56,10 +56,10 @@ internal class UserStatisticsServiceImplTest {
         // THEN
         verify(exactly = 1) { studyHistoryRepository.getDoneExercises(any(), any()) }
         verify(exactly = 1) { exerciseRepository.findExerciseIdsBySubGroupId(any()) }
-        assertNotNull(result)
-        Assertions.assertTrue(result.first().subGroupId == subGroupIds.first())
-        Assertions.assertTrue(result.first().completedExercises == 0)
-        Assertions.assertTrue(result.first().totalExercises == 2)
+        result.shouldNotBeNull()
+        result.first().subGroupId shouldBe subGroupIds.first()
+        result.first().completedExercises shouldBe 0
+        result.first().totalExercises shouldBe 2
     }
 
     @Test
@@ -72,6 +72,6 @@ internal class UserStatisticsServiceImplTest {
 
         // THEN
         verify(exactly = 1) { userAccountService.getCurrentUserDto() }
-        Assertions.assertTrue(result.isEmpty())
+        result.isEmpty() shouldBe true
     }
 }

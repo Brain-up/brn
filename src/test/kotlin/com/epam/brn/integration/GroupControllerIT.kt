@@ -13,8 +13,8 @@ import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.repo.SubGroupRepository
 import com.epam.brn.repo.TaskRepository
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
@@ -22,7 +22,6 @@ import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import kotlin.test.assertFalse
 
 @WithMockUser(username = "test@test.test", roles = [BrnRole.USER])
 class GroupControllerIT : BaseIT() {
@@ -74,8 +73,8 @@ class GroupControllerIT : BaseIT() {
             .andExpect(status().isOk)
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
         val response = resultAction.andReturn().response.contentAsString
-        assertTrue(response.contains(groupRu.name))
-        assertFalse(response.contains(groupEn.name))
+        response.contains(groupRu.name) shouldBe true
+        response.contains(groupEn.name) shouldBe false
     }
 
     @Test
@@ -95,7 +94,7 @@ class GroupControllerIT : BaseIT() {
             .andExpect(status().isOk)
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
         val response = resultAction.andReturn().response.contentAsString
-        assertTrue(response.contains(existingExerciseGroup.name))
+        response.contains(existingExerciseGroup.name) shouldBe true
     }
 
     @Test
@@ -124,7 +123,7 @@ class GroupControllerIT : BaseIT() {
                     .value(existingExerciseGroup.series[1].id),
             )
         val response = resultAction.andReturn().response.contentAsString
-        assertTrue(response.contains(existingExerciseGroup.name))
+        response.contains(existingExerciseGroup.name) shouldBe true
     }
 
     fun insertExerciseGroup(

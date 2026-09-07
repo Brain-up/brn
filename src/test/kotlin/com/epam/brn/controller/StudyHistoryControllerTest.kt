@@ -14,7 +14,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.http.HttpStatus
 import java.time.LocalDateTime
-import kotlin.test.assertEquals
 
 @ExtendWith(MockKExtension::class)
 internal class StudyHistoryControllerTest {
@@ -48,7 +47,7 @@ internal class StudyHistoryControllerTest {
 
         // THEN
         verify(exactly = 1) { studyHistoryService.save(dto) }
-        assertEquals(HttpStatus.OK, result.statusCode)
+        result.statusCode shouldBe HttpStatus.OK
     }
 
     @Test

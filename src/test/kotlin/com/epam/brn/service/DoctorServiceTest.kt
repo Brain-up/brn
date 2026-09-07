@@ -4,6 +4,7 @@ import com.epam.brn.dto.UserAccountDto
 import com.epam.brn.enums.BrnGender
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.model.UserAccount
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -13,7 +14,6 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(MockKExtension::class)
@@ -88,7 +88,7 @@ internal class DoctorServiceTest {
         every { userAccountService.getCurrentUser().toDto() } returns doctor
 
         // WHEN
-        assertThrows<IllegalArgumentException> {
+        shouldThrow<IllegalArgumentException> {
             doctorService.addPatientToDoctorAsDoctor(anotherDoctor.id!!, user1.id!!)
         }
 
@@ -102,7 +102,7 @@ internal class DoctorServiceTest {
         every { userAccountService.getCurrentUser().toDto() } returns fakeDoctorUser
 
         // WHEN
-        assertThrows<IllegalArgumentException> {
+        shouldThrow<IllegalArgumentException> {
             doctorService.addPatientToDoctorAsDoctor(fakeDoctorUser.id!!, user1.id!!)
         }
 
@@ -117,7 +117,7 @@ internal class DoctorServiceTest {
         user1.doctorId = anotherDoctor.id
 
         // WHEN
-        assertThrows<IllegalArgumentException> {
+        shouldThrow<IllegalArgumentException> {
             doctorService.addPatientToDoctorAsDoctor(doctor.id!!, user1.id!!)
         }
 
@@ -131,7 +131,7 @@ internal class DoctorServiceTest {
         every { userAccountService.getCurrentUser().toDto() } returns doctor
 
         // WHEN
-        assertThrows<IllegalArgumentException> {
+        shouldThrow<IllegalArgumentException> {
             doctorService.addPatientToDoctorAsDoctor(doctor.id!!, anotherDoctor.id!!)
         }
 
@@ -162,7 +162,7 @@ internal class DoctorServiceTest {
         user1.doctorId = doctor.id
 
         // WHEN
-        assertThrows<IllegalArgumentException> {
+        shouldThrow<IllegalArgumentException> {
             doctorService.deleteDoctorFromPatientAsDoctor(fakeDoctorUser.id!!, user1.id!!)
         }
 
@@ -177,7 +177,7 @@ internal class DoctorServiceTest {
         user1.doctorId = anotherDoctor.id
 
         // WHEN
-        assertThrows<IllegalArgumentException> {
+        shouldThrow<IllegalArgumentException> {
             doctorService.deleteDoctorFromPatientAsDoctor(doctor.id!!, user1.id!!)
         }
 
@@ -248,7 +248,7 @@ internal class DoctorServiceTest {
         every { userAccountService.getCurrentUser().toDto() } returns doctor
 
         // WHEN
-        assertThrows<IllegalArgumentException> {
+        shouldThrow<IllegalArgumentException> {
             doctorService.getPatientsForDoctor(anotherDoctor.id!!)
         }
 
@@ -295,7 +295,7 @@ internal class DoctorServiceTest {
         user1.doctorId = null
 
         // WHEN
-        assertThrows<IllegalArgumentException> {
+        shouldThrow<IllegalArgumentException> {
             doctorService.getDoctorAssignedToPatient(user1.id!!)
         }
 
@@ -309,7 +309,7 @@ internal class DoctorServiceTest {
         every { userAccountService.getCurrentUser().toDto() } returns user1.also { it.doctorId = doctor.id }
 
         // WHEN
-        assertThrows<IllegalArgumentException> {
+        shouldThrow<IllegalArgumentException> {
             doctorService.getDoctorAssignedToPatient(user2.id!!)
         }
 
@@ -343,7 +343,7 @@ internal class DoctorServiceTest {
                 email = "test@test.test",
             )
 
-        assertThrows<IllegalArgumentException> {
+        shouldThrow<IllegalArgumentException> {
             doctorService.checkUserIsNotAdmin(admin, DoctorService.USING_ADMIN_ID_FOR_PATIENT_WARN)
         }
     }

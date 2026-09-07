@@ -6,12 +6,14 @@ import com.epam.brn.service.TaskService
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.shouldBe
 import io.mockk.junit5.MockKExtension
 import io.mockk.verify
 import org.apache.commons.lang3.math.NumberUtils.INTEGER_ONE
 import org.apache.commons.lang3.math.NumberUtils.INTEGER_TWO
 import org.apache.commons.lang3.math.NumberUtils.LONG_ONE
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -45,7 +47,7 @@ class TaskControllerTest {
 
             // THEN
             verify(exactly = 1) { taskService.getTaskById(taskId) }
-            assertThat(actualResult).isEqualTo(task)
+            actualResult shouldBe task
         }
 
         @Test
@@ -73,9 +75,8 @@ class TaskControllerTest {
 
             // THEN
             verify(exactly = 1) { taskService.getTasksByExerciseId(exerciseId) }
-            assertThat(actualResult)
-                .hasSize(INTEGER_TWO)
-                .containsExactly(taskFirst, taskSecond)
+            actualResult shouldHaveSize INTEGER_TWO
+            actualResult shouldContainExactly listOf(taskFirst, taskSecond)
         }
     }
 }

@@ -4,12 +4,12 @@ import com.epam.brn.dto.SeriesDto
 import com.epam.brn.enums.ExerciseType
 import com.epam.brn.service.SeriesService
 import com.epam.brn.upload.CsvUploadService
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.verify
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
@@ -38,8 +38,8 @@ internal class SeriesControllerTest {
 
         // THEN
         verify(exactly = 1) { seriesService.findSeriesForGroup(groupId) }
-        assertTrue(actualResult.body.toString().contains("testName1"))
-        assertTrue(actualResult.body.toString().contains("testName2"))
+        actualResult.body.toString().contains("testName1") shouldBe true
+        actualResult.body.toString().contains("testName2") shouldBe true
     }
 
     @Test
@@ -54,6 +54,6 @@ internal class SeriesControllerTest {
 
         // THEN
         verify(exactly = 1) { seriesService.findSeriesDtoForId(seriesId) }
-        assertTrue(actualResult.body.toString().contains("testName"))
+        actualResult.body.toString().contains("testName") shouldBe true
     }
 }

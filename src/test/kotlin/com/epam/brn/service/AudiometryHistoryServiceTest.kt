@@ -12,6 +12,8 @@ import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.AudiometryHistoryRepository
 import com.epam.brn.repo.AudiometryTaskRepository
 import com.epam.brn.repo.SinAudiometryResultRepository
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -23,8 +25,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.time.LocalDateTime.now
 import java.util.Optional
-import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
 
 @ExtendWith(MockKExtension::class)
 internal class AudiometryHistoryServiceTest {
@@ -96,7 +96,7 @@ internal class AudiometryHistoryServiceTest {
         // WHEN
         val result = audiometryHistoryService.save(audiometryHistoryRequest)
         // THEN
-        assertEquals(2L, result)
+        result shouldBe 2L
         verify { userAccountService.getCurrentUser() }
         verify { audiometryTaskRepository.findById(1L) }
         verify { audiometryHistoryRepository.save(audiometryHistory) }
@@ -141,7 +141,7 @@ internal class AudiometryHistoryServiceTest {
         // WHEN
         val result = audiometryHistoryService.save(audiometryHistoryRequest)
         // THEN
-        assertEquals(2L, result)
+        result shouldBe 2L
         verify { userAccountService.getCurrentUser() }
         verify { audiometryTaskRepository.findById(1L) }
         verify { audiometryHistoryRepository.save(audiometryHistory) }
@@ -156,7 +156,7 @@ internal class AudiometryHistoryServiceTest {
         every { audiometryTaskRepository.findById(1L) } returns Optional.of(audiometryTask)
         every { audiometryHistoryRequest.headphones } returns null
 
-        assertFailsWith<IllegalArgumentException> {
+        shouldThrow<IllegalArgumentException> {
             audiometryHistoryService.save(audiometryHistoryRequest)
         }
     }
@@ -168,7 +168,7 @@ internal class AudiometryHistoryServiceTest {
         every { audiometryHistoryRequest.audiometryTaskId } returns 1L
         every { audiometryTaskRepository.findById(1L) } returns Optional.empty()
 
-        assertFailsWith<EntityNotFoundException> {
+        shouldThrow<EntityNotFoundException> {
             audiometryHistoryService.save(audiometryHistoryRequest)
         }
     }

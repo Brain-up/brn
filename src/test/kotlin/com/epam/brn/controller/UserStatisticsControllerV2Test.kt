@@ -19,7 +19,6 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.time.LocalDateTime
-import kotlin.test.assertEquals
 
 @ExtendWith(MockKExtension::class)
 @DisplayName("UserStatisticControllerV2 test using MockK")
@@ -54,8 +53,8 @@ internal class UserStatisticsControllerV2Test {
 
         // THEN
         verify(exactly = 1) { userDayStatisticService.getStatisticsForPeriod(from, to) }
-        assertEquals(HttpStatus.SC_OK, userWeeklyStatistic.statusCodeValue)
-        assertEquals(dayStudyStatisticList, (userWeeklyStatistic.body as BrnResponse).data)
+        userWeeklyStatistic.statusCodeValue shouldBe HttpStatus.SC_OK
+        (userWeeklyStatistic.body as BrnResponse).data shouldBe dayStudyStatisticList
     }
 
     @Test
@@ -73,8 +72,8 @@ internal class UserStatisticsControllerV2Test {
 
         // THEN
         verify(exactly = 1) { userMonthStatisticService.getStatisticsForPeriod(from, to) }
-        assertEquals(HttpStatus.SC_OK, userYearlyStatistic.statusCodeValue)
-        assertEquals(monthStudyStatisticList, (userYearlyStatistic.body as BrnResponse).data)
+        userYearlyStatistic.statusCodeValue shouldBe HttpStatus.SC_OK
+        (userYearlyStatistic.body as BrnResponse).data shouldBe monthStudyStatisticList
     }
 
     @Test
