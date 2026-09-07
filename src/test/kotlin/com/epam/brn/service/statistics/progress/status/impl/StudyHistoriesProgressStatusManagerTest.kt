@@ -4,6 +4,7 @@ import com.epam.brn.dto.statistics.UserExercisingPeriod
 import com.epam.brn.dto.statistics.UserExercisingProgressStatus
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.service.statistics.progress.status.ExercisingStatusRetriever
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -11,7 +12,6 @@ import io.mockk.impl.annotations.SpyK
 import io.mockk.junit5.MockKExtension
 import io.mockk.verify
 import org.junit.jupiter.api.extension.ExtendWith
-import kotlin.test.assertEquals
 
 /**
  * @author Nikolai Lazarev
@@ -52,7 +52,7 @@ internal class StudyHistoriesProgressStatusManagerTest {
         // THEN
         verify(exactly = 1) { dayRetriever.getStatus(progress) }
         verify(exactly = 1) { weekRetriever.getStatus(progress) }
-        assertEquals(UserExercisingProgressStatus.GOOD, status)
+        status shouldBe UserExercisingProgressStatus.GOOD
     }
 
     // @Test
@@ -76,6 +76,6 @@ internal class StudyHistoriesProgressStatusManagerTest {
         // THEN
         verify(exactly = 1) { dayRetriever.getStatus(progress) }
         verify(exactly = 0) { weekRetriever.getStatus(progress) }
-        assertEquals(UserExercisingProgressStatus.GOOD, status)
+        status shouldBe UserExercisingProgressStatus.GOOD
     }
 }

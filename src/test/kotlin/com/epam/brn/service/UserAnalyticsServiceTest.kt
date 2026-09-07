@@ -16,6 +16,7 @@ import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.service.impl.UserAnalyticsServiceImpl
 import com.epam.brn.service.statistics.UserPeriodStatisticsService
 import com.epam.brn.exception.EntityNotFoundException
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -24,7 +25,6 @@ import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.data.domain.Pageable
 import java.io.InputStream
@@ -323,7 +323,7 @@ internal class UserAnalyticsServiceTest {
 
         // WHEN & THEN
         val exception =
-            assertThrows<EntityNotFoundException> {
+            shouldThrow<EntityNotFoundException> {
                 userAnalyticsService.prepareAudioFileMetaData(exerciseId, audioFileMetaData)
             }
         exception.message shouldBe "No exercise found for id=$exerciseId"

@@ -4,6 +4,8 @@ import com.epam.brn.enums.BrnRole
 import com.epam.brn.model.Role
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.UserAccountRepository
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -13,8 +15,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import java.util.Optional
-import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
 
 @ExtendWith(MockKExtension::class)
 internal class BrainUpUserDetailsServiceTest {
@@ -35,9 +35,9 @@ internal class BrainUpUserDetailsServiceTest {
         val secondLookup = brainUpUserDetailsService.loadUserByUsername(email)
 
         // THEN
-        assertEquals(email, firstLookup.username)
-        assertEquals(email, secondLookup.username)
-        assertEquals(1, firstLookup.authorities.size)
+        firstLookup.username shouldBe email
+        secondLookup.username shouldBe email
+        firstLookup.authorities.size shouldBe 1
 
         verify(exactly = 1) { userAccountRepository.findAuthenticationUserByEmail(email) }
         verify(exactly = 0) { userAccountRepository.findUserAccountByEmail(any()) }
@@ -59,8 +59,8 @@ internal class BrainUpUserDetailsServiceTest {
         val secondLookup = brainUpUserDetailsService.loadUserByUsername(email)
 
         // THEN
-        assertEquals(email, firstLookup.username)
-        assertEquals(email, secondLookup.username)
+        firstLookup.username shouldBe email
+        secondLookup.username shouldBe email
 
         verify(exactly = 2) { userAccountRepository.findAuthenticationUserByEmail(email) }
     }
@@ -73,12 +73,12 @@ internal class BrainUpUserDetailsServiceTest {
 
         // WHEN
         val exception =
-            assertFailsWith<UsernameNotFoundException> {
+            shouldThrow<UsernameNotFoundException> {
                 brainUpUserDetailsService.loadUserByUsername(email)
             }
 
         // THEN
-        assertEquals("User with email: $email doesn't exist", exception.message)
+        exception.message shouldBe "User with email: $email doesn't exist"
         verify(exactly = 1) { userAccountRepository.findAuthenticationUserByEmail(email) }
     }
 

@@ -13,9 +13,9 @@ import com.epam.brn.upload.csv.seriesPhrases.SeriesPhrasesRecordMappingIteratorP
 import com.epam.brn.upload.csv.seriesWords.SeriesWordsRecord
 import com.epam.brn.upload.csv.seriesWords.SeriesWordsRecordMappingIteratorProvider
 import com.epam.brn.upload.csv.subgroup.SubGroupGenericRecordMappingIteratorProvider
-import org.assertj.core.api.Assertions.assertThat
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.matchers.collections.shouldContainAll
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import java.nio.charset.StandardCharsets
 
 class CsvParserTest {
@@ -43,7 +43,7 @@ class CsvParserTest {
 
         val result = parser.parse(input)
 
-        assertThat(result).containsAll(
+        result shouldContainAll
             listOf(
                 GroupRecord(
                     "NON_SPEECH_RU_RU",
@@ -57,8 +57,7 @@ class CsvParserTest {
                     "Речевые упражнения",
                     "Речевые упражнения",
                 ),
-            ),
-        )
+            )
     }
 
     @Test
@@ -71,7 +70,7 @@ class CsvParserTest {
 
         val result = parser.parse(input)
 
-        assertThat(result).containsAll(
+        result shouldContainAll
             listOf(
                 SeriesGenericRecord(
                     "NON_SPEECH_RU_RU",
@@ -80,8 +79,7 @@ class CsvParserTest {
                     "Составление предложений",
                     "Это составление предложений",
                 ),
-            ),
-        )
+            )
     }
 
     @Test
@@ -95,7 +93,7 @@ class CsvParserTest {
 
         val result = parser.parse(input)
 
-        assertThat(result).containsAll(
+        result shouldContainAll
             listOf(
                 SeriesWordsRecord(
                     1,
@@ -113,8 +111,7 @@ class CsvParserTest {
                     0,
                     "",
                 ),
-            ),
-        )
+            )
     }
 
     @Test
@@ -125,7 +122,7 @@ class CsvParserTest {
             1,longShortPhrases,Фразы разной длительности,(Мамочка идёт. Мамочка быстро идёт в магазин.),0,
             """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
         val result = parser.parse(input)
-        assertThat(result).containsAll(
+        result shouldContainAll
             listOf(
                 SeriesPhrasesRecord(
                     1,
@@ -135,8 +132,7 @@ class CsvParserTest {
                     0,
                     "",
                 ),
-            ),
-        )
+            )
     }
 
     @Test
@@ -150,7 +146,7 @@ class CsvParserTest {
 
         val result = parser.parse(input)
 
-        assertThat(result).containsAll(
+        result shouldContainAll
             listOf(
                 SignalSeriesRecord(
                     code = "durationSignals",
@@ -166,8 +162,7 @@ class CsvParserTest {
                     exerciseType = ExerciseType.FREQUENCY_SIGNALS,
                     signals = listOf("500 120", "1500 120"),
                 ),
-            ),
-        )
+            )
     }
 
     @Test
@@ -178,7 +173,7 @@ class CsvParserTest {
             incorrect string
             """.trimIndent().byteInputStream(StandardCharsets.UTF_8)
 
-        assertThrows<CsvParser.ParseException> {
+        shouldThrow<CsvParser.ParseException> {
             parser.parse(input)
         }
     }

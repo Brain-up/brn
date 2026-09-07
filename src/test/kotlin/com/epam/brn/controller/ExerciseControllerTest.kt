@@ -12,6 +12,7 @@ import com.epam.brn.enums.BrnLocale
 import com.epam.brn.service.ExerciseService
 import com.epam.brn.service.RoleService
 import com.epam.brn.upload.CsvUploadService
+import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.shouldBe
 import io.mockk.Runs
 import io.mockk.every
@@ -22,8 +23,6 @@ import io.mockk.just
 import io.mockk.mockk
 import io.mockk.verify
 import org.apache.http.HttpStatus
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.web.multipart.MultipartFile
@@ -58,7 +57,7 @@ internal class ExerciseControllerTest {
 
         // THEN
         verify(exactly = 1) { exerciseService.findExercisesBySubGroupForCurrentUser(subGroupId) }
-        assertTrue(actualResultData.contains(exercise))
+        actualResultData shouldContain exercise
     }
 
     @Test
@@ -74,7 +73,7 @@ internal class ExerciseControllerTest {
 
         // THEN
         verify(exactly = 1) { exerciseService.findExerciseById(exerciseID) }
-        assertEquals(actualResultData, exercise)
+        actualResultData shouldBe exercise
     }
 
     @Test

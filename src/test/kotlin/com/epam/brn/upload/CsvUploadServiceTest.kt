@@ -7,13 +7,12 @@ import com.epam.brn.model.Series
 import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.upload.csv.CsvParser
 import com.epam.brn.upload.csv.RecordProcessor
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.util.Optional
@@ -51,14 +50,14 @@ level,code,exerciseName,words,noiseLevel,noiseUrl
 3,family,Семья,(бабушка муж внучка),0,
 4,family,Семья,(сын ребёнок родители дочь мама папа),0,
             """.trimIndent()
-        assertThat(actual).isEqualTo(expected)
+        actual shouldBe expected
     }
 
     @Test
     fun `should throw exception for invalid series id`() {
         val invalidSeriesId: Long = Long.MAX_VALUE
         every { seriesRepository.findById(invalidSeriesId) } returns Optional.empty()
-        assertThrows(EntityNotFoundException::class.java) {
+        shouldThrow<EntityNotFoundException> {
             uploadService.getSampleStringForSeriesExerciseFile(
                 invalidSeriesId,
             )
@@ -95,7 +94,7 @@ level,code,exerciseName,words,noiseLevel,noiseUrl
         val fileName = "file_es.csv"
 
         // when & then
-        assertThrows(IllegalArgumentException::class.java) {
+        shouldThrow<IllegalArgumentException> {
             uploadService.getLocaleFromFileName(fileName)
         }
     }

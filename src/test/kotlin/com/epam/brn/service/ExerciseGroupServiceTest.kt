@@ -4,16 +4,16 @@ import com.epam.brn.dto.ExerciseGroupDto
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.repo.ExerciseGroupRepository
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
-import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.util.Optional
-import kotlin.test.assertFailsWith
 
 @ExtendWith(MockKExtension::class)
 internal class ExerciseGroupServiceTest {
@@ -34,7 +34,7 @@ internal class ExerciseGroupServiceTest {
         // WHEN
         val actualResult: ExerciseGroupDto = exerciseGroupsService.findGroupDtoById(groupId)
         // THEN
-        assertEquals(actualResult, exerciseGroupDtoMock)
+        actualResult shouldBe exerciseGroupDtoMock
     }
 
     @Test
@@ -47,7 +47,7 @@ internal class ExerciseGroupServiceTest {
         // WHEN
         val actualResult: ExerciseGroup = exerciseGroupsService.findGroupByCode(groupCode)
         // THEN
-        assertEquals(actualResult, exerciseGroupMock)
+        actualResult shouldBe exerciseGroupMock
     }
 
     @Test
@@ -61,8 +61,8 @@ internal class ExerciseGroupServiceTest {
         val actualResult: List<ExerciseGroupDto> = exerciseGroupsService.findByLocale(locale)
         // THEN
         actualResult.isNotEmpty()
-        assertEquals(1L, actualResult.first().id)
-        assertEquals("ru-ru", actualResult.first().locale)
+        actualResult.first().id shouldBe 1L
+        actualResult.first().locale shouldBe "ru-ru"
     }
 
     @Test
@@ -71,7 +71,7 @@ internal class ExerciseGroupServiceTest {
         val groupCode = "NOT_EXISTS_CODE"
         every { exerciseGroupRepository.findByCode(groupCode) } returns (Optional.empty())
         // WHEN
-        assertFailsWith<EntityNotFoundException> {
+        shouldThrow<EntityNotFoundException> {
             exerciseGroupsService.findGroupByCode(groupCode)
         }
     }

@@ -10,6 +10,7 @@ import com.epam.brn.model.Contact
 import com.epam.brn.model.Contributor
 import com.epam.brn.repo.ContributorRepository
 import com.fasterxml.jackson.core.type.TypeReference
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -19,7 +20,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.nio.charset.StandardCharsets
-import kotlin.test.assertEquals
 
 @WithMockUser(username = "test@test.test", roles = [BrnRole.ADMIN])
 class ContributorControllerIT : BaseIT() {
@@ -61,7 +61,7 @@ class ContributorControllerIT : BaseIT() {
                 objectMapper.writeValueAsString(data),
                 object : TypeReference<List<ContributorResponse>>() {},
             )
-        assertEquals(2, contributors.size)
+        contributors.size shouldBe 2
     }
 
     @Test
@@ -94,8 +94,8 @@ class ContributorControllerIT : BaseIT() {
                 objectMapper.writeValueAsString(data),
                 object : TypeReference<List<ContributorResponse>>() {},
             )
-        assertEquals(1, contributors.size)
-        assertEquals("QA", contributors[0].name)
+        contributors.size shouldBe 1
+        contributors[0].name shouldBe "QA"
     }
 
     @Test
@@ -126,8 +126,8 @@ class ContributorControllerIT : BaseIT() {
                 objectMapper.writeValueAsString(data),
                 object : TypeReference<ContributorResponse>() {},
             )
-        assertEquals(contributorRequest.name, newContributor.name)
-        assertEquals(contributorRequest.type, newContributor.type)
+        newContributor.name shouldBe contributorRequest.name
+        newContributor.type shouldBe contributorRequest.type
     }
 
     @Test
@@ -159,7 +159,7 @@ class ContributorControllerIT : BaseIT() {
                 objectMapper.writeValueAsString(data),
                 object : TypeReference<ContributorResponse>() {},
             )
-        assertEquals(contributorRequest.name, updatedContributor.name)
+        updatedContributor.name shouldBe contributorRequest.name
     }
 
     private fun insertContributor(

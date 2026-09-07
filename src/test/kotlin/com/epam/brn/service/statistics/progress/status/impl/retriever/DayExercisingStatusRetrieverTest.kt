@@ -5,13 +5,13 @@ import com.epam.brn.dto.statistics.UserExercisingPeriod
 import com.epam.brn.dto.statistics.UserExercisingProgressStatus
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.service.statistics.progress.status.requirements.StatusRequirementsManager
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import kotlin.test.assertEquals
 
 /**
  * @author Nikolai Lazarev
@@ -65,7 +65,7 @@ internal class DayExercisingStatusRetrieverTest {
         val status = retriever.getStatus(listOf(goodStudyHistory, greatStudyHistory, worstStudyHistory))
 
         // THEN
-        assertEquals(UserExercisingProgressStatus.GREAT, status)
+        status shouldBe UserExercisingProgressStatus.GREAT
     }
 
     @Test
@@ -79,7 +79,7 @@ internal class DayExercisingStatusRetrieverTest {
         val status = retriever.getStatus(listOf(goodStudyHistory, worstStudyHistory))
 
         // THEN
-        assertEquals(UserExercisingProgressStatus.GOOD, status)
+        status shouldBe UserExercisingProgressStatus.GOOD
     }
 
     @Test
@@ -92,7 +92,7 @@ internal class DayExercisingStatusRetrieverTest {
         val status = retriever.getStatus(listOf(worstStudyHistory))
 
         // THEN
-        assertEquals(UserExercisingProgressStatus.BAD, status)
+        status shouldBe UserExercisingProgressStatus.BAD
     }
 
     @Test
@@ -104,6 +104,6 @@ internal class DayExercisingStatusRetrieverTest {
         val expectedPeriods = listOf(UserExercisingPeriod.WEEK, UserExercisingPeriod.DAY)
 
         // THEN
-        assertEquals(expectedPeriods, supportedPeriods)
+        supportedPeriods shouldBe expectedPeriods
     }
 }

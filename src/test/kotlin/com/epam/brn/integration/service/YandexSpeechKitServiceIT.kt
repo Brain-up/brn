@@ -4,6 +4,9 @@ import com.epam.brn.dto.AudioFileMetaData
 import com.epam.brn.enums.BrnLocale
 import com.epam.brn.enums.Voice
 import com.epam.brn.service.YandexSpeechKitService
+import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeSameInstanceAs
 import org.apache.commons.codec.digest.DigestUtils
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Tag
@@ -14,9 +17,6 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 import java.io.File
 import java.io.InputStream
-import kotlin.test.assertNotNull
-import kotlin.test.assertSame
-import kotlin.test.assertTrue
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -33,8 +33,8 @@ internal class YandexSpeechKitServiceIT {
         val iamToken1 = yandexSpeechKitService.getYandexIamTokenForAudioGeneration()
         val iamToken2 = yandexSpeechKitService.getYandexIamTokenForAudioGeneration()
         // THEN
-        assertNotNull(iamToken1)
-        assertSame(iamToken1, iamToken2)
+        iamToken1.shouldNotBeNull()
+        iamToken1 shouldBeSameInstanceAs iamToken2
     }
 
     @Test
@@ -52,10 +52,10 @@ internal class YandexSpeechKitServiceIT {
         val expectedFilePhrase = File("audioTest/ogg/$locale/$voice/$speed/${DigestUtils.md5Hex(meta2.text)}.ogg")
 //        assertEquals(expectedFileWord, fileWordResult)
 //        assertEquals(expectedFilePhrase, filePhraseResult)
-        assertTrue(fileWordResult.toString().isNotEmpty())
-        assertTrue(filePhraseResult.toString().isNotEmpty())
-        assertTrue(expectedFileWord.exists())
-        assertTrue(expectedFilePhrase.exists())
+        fileWordResult.toString().isNotEmpty() shouldBe true
+        filePhraseResult.toString().isNotEmpty() shouldBe true
+        expectedFileWord.exists() shouldBe true
+        expectedFilePhrase.exists() shouldBe true
         expectedFileWord.deleteOnExit()
         expectedFilePhrase.deleteOnExit()
     }

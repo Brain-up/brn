@@ -17,7 +17,6 @@ import com.epam.brn.repo.SubGroupRepository
 import com.epam.brn.repo.TaskRepository
 import com.epam.brn.repo.UserAccountRepository
 import com.fasterxml.jackson.databind.ObjectMapper
-import org.amshove.kluent.internal.platformClassName
 import org.junit.jupiter.api.Tag
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -136,7 +135,7 @@ abstract class BaseIT {
         ),
     )
 
-    fun insertDefaultSeries(seriesName: String = "Series for ${platformClassName()}"): Series = seriesRepository.save(
+    fun insertDefaultSeries(seriesName: String = "Series for ${javaClass.simpleName}"): Series = seriesRepository.save(
         Series(
             name = seriesName,
             exerciseGroup = insertDefaultExerciseGroup("${seriesName}ExerciseGroup"),
@@ -145,7 +144,7 @@ abstract class BaseIT {
         ),
     )
 
-    fun insertDefaultExerciseGroup(name: String = "Test exercise group for ${platformClassName()}"): ExerciseGroup =
+    fun insertDefaultExerciseGroup(name: String = "Test exercise group for ${javaClass.simpleName}"): ExerciseGroup =
         exerciseGroupRepository.save(
             ExerciseGroup(
                 code = "CODE",

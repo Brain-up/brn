@@ -15,6 +15,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.FirebaseToken
 import com.google.firebase.auth.UserRecord
+import io.kotest.matchers.nulls.shouldBeNull
+import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.shouldBe
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -35,9 +38,6 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import java.time.Instant
 import jakarta.servlet.FilterChain
-import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
-import kotlin.test.assertNull
 
 @ExtendWith(MockKExtension::class)
 @DisplayName("FirebaseTokenAuthenticationFilter test using MockK")
@@ -99,10 +99,10 @@ internal class FirebaseTokenAuthenticationFilterTest {
 
         // THEN
         val authentication = SecurityContextHolder.getContext().authentication
-        assertNotNull(authentication)
+        authentication.shouldNotBeNull()
         authentication is UsernamePasswordAuthenticationToken
-        assertEquals(email, authentication.name)
-        assertEquals(1, authentication.authorities.size)
+        authentication.name shouldBe email
+        authentication.authorities.size shouldBe 1
 
         verify(exactly = 1) { tokenHelperUtils.getBearerToken(request) }
         verify(exactly = 1) { firebaseAuth.verifyIdToken(token, true) }
@@ -125,7 +125,7 @@ internal class FirebaseTokenAuthenticationFilterTest {
         firebaseTokenAuthenticationFilter.doFilter(request, response, filterChain)
 
         // THEN
-        assertNull(SecurityContextHolder.getContext().authentication)
+        SecurityContextHolder.getContext().authentication.shouldBeNull()
 
         verify(exactly = 1) { tokenHelperUtils.getBearerToken(request) }
         verify(exactly = 0) { firebaseAuth.verifyIdToken(any(), any()) }
@@ -146,7 +146,7 @@ internal class FirebaseTokenAuthenticationFilterTest {
         firebaseTokenAuthenticationFilter.doFilter(request, response, filterChain)
 
         // THEN
-        assertNotNull(SecurityContextHolder.getContext().authentication)
+        SecurityContextHolder.getContext().authentication.shouldNotBeNull()
 
         verify(exactly = 0) { tokenHelperUtils.getBearerToken(any()) }
         verify(exactly = 0) { firebaseAuth.verifyIdToken(any(), any()) }
@@ -190,10 +190,10 @@ internal class FirebaseTokenAuthenticationFilterTest {
 
         // THEN
         val authentication = SecurityContextHolder.getContext().authentication
-        assertNotNull(authentication)
+        authentication.shouldNotBeNull()
         authentication is UsernamePasswordAuthenticationToken
-        assertEquals(email, authentication.name)
-        assertEquals(1, authentication.authorities.size)
+        authentication.name shouldBe email
+        authentication.authorities.size shouldBe 1
 
         verify(exactly = 1) { tokenHelperUtils.getBearerToken(requestMock) }
         verify(exactly = 1) { firebaseAuth.verifyIdToken(tokenMock, true) }
@@ -225,7 +225,7 @@ internal class FirebaseTokenAuthenticationFilterTest {
 
         // THEN
         val authentication = SecurityContextHolder.getContext().authentication
-        assertNull(authentication)
+        authentication.shouldBeNull()
 
         verify(exactly = 1) { tokenHelperUtils.getBearerToken(requestMock) }
         verify(exactly = 1) { firebaseAuth.verifyIdToken(tokenMock, true) }
@@ -252,7 +252,7 @@ internal class FirebaseTokenAuthenticationFilterTest {
 
         // THEN
         val authentication = SecurityContextHolder.getContext().authentication
-        assertNull(authentication)
+        authentication.shouldBeNull()
 
         verify(exactly = 1) { tokenHelperUtils.getBearerToken(requestMock) }
         verify(exactly = 1) { firebaseAuth.verifyIdToken(tokenMock, true) }
@@ -283,7 +283,7 @@ internal class FirebaseTokenAuthenticationFilterTest {
 
         // THEN
         val authentication = SecurityContextHolder.getContext().authentication
-        assertNull(authentication)
+        authentication.shouldBeNull()
 
         verify(exactly = 1) { tokenHelperUtils.getBearerToken(requestMock) }
         verify(exactly = 1) { firebaseAuth.verifyIdToken(tokenMock, true) }

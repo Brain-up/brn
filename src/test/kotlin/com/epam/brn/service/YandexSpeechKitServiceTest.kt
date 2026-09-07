@@ -1,6 +1,7 @@
 package com.epam.brn.service
 
 import com.epam.brn.exception.YandexServiceException
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -15,7 +16,6 @@ import org.apache.http.impl.client.CloseableHttpClient
 import org.apache.http.impl.client.HttpClientBuilder
 import org.apache.http.util.EntityUtils
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
@@ -46,7 +46,7 @@ internal class YandexSpeechKitServiceTest {
     @ValueSource(strings = ["ruru", "en-en", "tr"])
     fun `should failed on locale validation`(locale: String) {
         // WHEN
-        assertThrows<IllegalArgumentException> { yandexSpeechKitService.validateLocaleAndVoice(locale, "") }
+        shouldThrow<IllegalArgumentException> { yandexSpeechKitService.validateLocaleAndVoice(locale, "") }
     }
 
     @ParameterizedTest
@@ -66,7 +66,7 @@ internal class YandexSpeechKitServiceTest {
         every { timeService.now() } returns LocalDateTime.now()
         every { wordsService.getVoicesForLocale("ru-ru") } returns yandexVoices
         // WHEN
-        assertThrows<IllegalArgumentException> { yandexSpeechKitService.validateLocaleAndVoice("ru-ru", voice) }
+        shouldThrow<IllegalArgumentException> { yandexSpeechKitService.validateLocaleAndVoice("ru-ru", voice) }
     }
 
     @Test
@@ -131,6 +131,6 @@ internal class YandexSpeechKitServiceTest {
         every { httpClient.execute(any()) } returns httpResponse
         every { httpResponse.statusLine.statusCode } returns 100
         // WHEN & THEN
-        assertThrows<YandexServiceException> { yandexSpeechKitService.getYandexIamTokenForAudioGeneration() }
+        shouldThrow<YandexServiceException> { yandexSpeechKitService.getYandexIamTokenForAudioGeneration() }
     }
 }

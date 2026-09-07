@@ -14,6 +14,9 @@ import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.service.impl.UserAccountServiceImpl
 import com.google.firebase.auth.UserRecord
 import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.nulls.shouldBeNull
+import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -23,8 +26,6 @@ import io.mockk.mockkClass
 import io.mockk.slot
 import io.mockk.verify
 import org.apache.commons.lang3.math.NumberUtils
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -39,9 +40,6 @@ import java.time.ZoneOffset
 import java.util.Optional
 import java.util.concurrent.Executor
 import java.util.concurrent.RejectedExecutionException
-import kotlin.test.assertFailsWith
-import kotlin.test.assertNotNull
-import kotlin.test.assertNull
 
 @ExtendWith(MockKExtension::class)
 @DisplayName("UserAccountService test using MockK")
@@ -101,7 +99,7 @@ internal class UserAccountServiceTest {
             // WHEN
             val userAccountDtoReturned = userAccountService.findUserDtoById(NumberUtils.LONG_ONE)
             // THEN
-            assertThat(userAccountDtoReturned.name).isEqualTo(userName)
+            userAccountDtoReturned.name shouldBe userName
         }
 
         @Test
@@ -114,7 +112,7 @@ internal class UserAccountServiceTest {
             // WHEN
             val userAccountDtoReturned = userAccountService.findUserByEmail(email)
             // THEN
-            assertThat(userAccountDtoReturned.email).isEqualTo(email)
+            userAccountDtoReturned.email shouldBe email
         }
 
         @Test
@@ -136,8 +134,8 @@ internal class UserAccountServiceTest {
             // WHEN
             val userAccountDtoReturned = userAccountService.findUserDtoByUuid(uuid)
             // THEN
-            assertNotNull(userAccountDtoReturned)
-            assertThat(userAccountDtoReturned.userId).isEqualTo(uuid)
+            userAccountDtoReturned.shouldNotBeNull()
+            userAccountDtoReturned.userId shouldBe uuid
         }
 
         @Test
@@ -150,7 +148,7 @@ internal class UserAccountServiceTest {
             // WHEN
             val userAccountDtoReturned = userAccountService.findUserDtoByUuid(uuid)
             // THEN
-            assertNull(userAccountDtoReturned)
+            userAccountDtoReturned.shouldBeNull()
         }
 
         @Test
@@ -158,7 +156,7 @@ internal class UserAccountServiceTest {
             // GIVEN
             every { userAccountRepository.findUserAccountById(NumberUtils.LONG_ONE) } returns Optional.empty()
             // THEN
-            assertFailsWith<EntityNotFoundException> {
+            shouldThrow<EntityNotFoundException> {
                 userAccountService.findUserDtoById(NumberUtils.LONG_ONE)
             }
         }
@@ -187,11 +185,11 @@ internal class UserAccountServiceTest {
             // WHEN
             val userAccountDtoReturned = userAccountService.createUser(firebaseUserRecord)
             // THEN
-            assertThat(userAccountDtoReturned.name).isEqualTo(userName)
-            assertThat(userAccountDtoReturned.userId).isEqualTo(uid)
-            assertThat(userAccountDtoReturned.email).isEqualTo(email)
-            assertNotNull(userAccountDtoReturned.roles)
-            assertThat(userAccountDtoReturned.roles.size).isEqualTo(1)
+            userAccountDtoReturned.name shouldBe userName
+            userAccountDtoReturned.userId shouldBe uid
+            userAccountDtoReturned.email shouldBe email
+            userAccountDtoReturned.roles.shouldNotBeNull()
+            userAccountDtoReturned.roles.size shouldBe 1
 
             verify(exactly = 1) { userAccountRepository.findUserAccountByEmail(email) }
             verify(exactly = 1) { userAccountRepository.save(captureMyObject.captured) }
@@ -211,7 +209,7 @@ internal class UserAccountServiceTest {
                     userAccount,
                 )
             // THEN
-            assertFailsWith<IllegalArgumentException> {
+            shouldThrow<IllegalArgumentException> {
                 userAccountService.createUser(firebaseUserRecord)
             }
             verify(exactly = 1) { userAccountRepository.findUserAccountByEmail(email) }
@@ -252,9 +250,9 @@ internal class UserAccountServiceTest {
             verify { userAccountRepository.findUserAccountByEmail(email) }
             verify { userAccountRepository.save(userArgumentCaptor.captured) }
             val userForSave = userArgumentCaptor.captured
-            assertThat(userForSave.avatar).isEqualTo(avatarUrl)
-            assertThat(userForSave.id).isEqualTo(userAccount.id)
-            assertThat(userForSave.fullName).isEqualTo(userAccount.fullName)
+            userForSave.avatar shouldBe avatarUrl
+            userForSave.id shouldBe userAccount.id
+            userForSave.fullName shouldBe userAccount.fullName
         }
 
         @Test
@@ -301,11 +299,11 @@ internal class UserAccountServiceTest {
             verify { userAccountRepository.findUserAccountByEmail(email) }
             verify { userAccountRepository.save(userArgumentCaptor.captured) }
             val userForSave = userArgumentCaptor.captured
-            assertThat(userForSave.avatar).isEqualTo(avatarUrl)
-            assertThat(userForSave.photo).isEqualTo(photoUrl)
-            assertThat(userForSave.description).isEqualTo(description)
-            assertThat(userForSave.fullName).isEqualTo("newName")
-            assertThat(userForSave.id).isEqualTo(userAccount.id)
+            userForSave.avatar shouldBe avatarUrl
+            userForSave.photo shouldBe photoUrl
+            userForSave.description shouldBe description
+            userForSave.fullName shouldBe "newName"
+            userForSave.id shouldBe userAccount.id
         }
 
         @Test
@@ -430,7 +428,7 @@ internal class UserAccountServiceTest {
             // WHEN
             val returnedListOfHeadphones = userAccountService.getAllHeadphonesForUser(1L)
             // THEN
-            assertThat(returnedListOfHeadphones).isEqualTo(listOfHeadphones)
+            returnedListOfHeadphones shouldBe listOfHeadphones
         }
 
         @Test
@@ -443,7 +441,7 @@ internal class UserAccountServiceTest {
             // WHEN
             val returnedListOfHeadphones = userAccountService.addHeadphonesToUser(1L, headphonesToAdd)
             // THEN
-            assertThat(returnedListOfHeadphones).isEqualTo(headphonesToAdd)
+            returnedListOfHeadphones shouldBe headphonesToAdd
         }
 
         @Test
@@ -470,7 +468,7 @@ internal class UserAccountServiceTest {
             // WHEN
             val returnedListOfHeadphones = userAccountService.addHeadphonesToCurrentUser(headphonesToAdd)
             // THEN
-            assertThat(returnedListOfHeadphones).isEqualTo(headphonesToAdd)
+            returnedListOfHeadphones shouldBe headphonesToAdd
         }
 
         @Test
@@ -482,7 +480,7 @@ internal class UserAccountServiceTest {
             // WHEN
             val returnedListOfHeadphones = userAccountService.getAllHeadphonesForUser(1L)
             // THEN
-            assertThat(returnedListOfHeadphones).isEqualTo(headphonesToAdd)
+            returnedListOfHeadphones shouldBe headphonesToAdd
         }
 
         @Test
@@ -509,10 +507,10 @@ internal class UserAccountServiceTest {
             val returnedListOfHeadphones = userAccountService.getAllHeadphonesForCurrentUser().toList()
 
             // THEN
-            assertThat(returnedListOfHeadphones)
-                .hasSize(NumberUtils.INTEGER_ONE)
-                .usingElementComparatorOnFields("name", "type")
-                .containsExactly(headphones.toDto())
+            returnedListOfHeadphones shouldHaveSize NumberUtils.INTEGER_ONE
+            val actualHeadphones = returnedListOfHeadphones.first()
+            actualHeadphones.name shouldBe headphones.toDto().name
+            actualHeadphones.type shouldBe headphones.toDto().type
         }
 
         @Test
@@ -636,7 +634,7 @@ internal class UserAccountServiceTest {
         ReflectionTestUtils.setField(userAccountService, "prefix", prefix)
 
         // WHEN & THEN
-        assertThrows(IllegalArgumentException::class.java) {
+        shouldThrow<IllegalArgumentException> {
             userAccountService.deleteAutoTestUserByEmail(email)
         }
     }

@@ -1,5 +1,7 @@
 package com.epam.brn.service
 
+import io.kotest.matchers.nulls.shouldBeNull
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -9,8 +11,6 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import jakarta.servlet.http.HttpServletRequest
-import kotlin.test.assertEquals
-import kotlin.test.assertNull
 
 @ExtendWith(MockKExtension::class)
 @DisplayName("TokenHelperUtils test using MockK")
@@ -28,7 +28,7 @@ internal class TokenHelperUtilsTest {
         // WHEN
         val bearerToken = tokenHelperUtils.getBearerToken(httpServletRequest)
         // THEN
-        assertNull(bearerToken)
+        bearerToken.shouldBeNull()
         verify(exactly = 1) { httpServletRequest.getHeader("Authorization") }
     }
 
@@ -39,7 +39,7 @@ internal class TokenHelperUtilsTest {
         // WHEN
         val bearerToken = tokenHelperUtils.getBearerToken(httpServletRequest)
         // THEN
-        assertNull(bearerToken)
+        bearerToken.shouldBeNull()
         verify(exactly = 1) { httpServletRequest.getHeader("Authorization") }
     }
 
@@ -50,7 +50,7 @@ internal class TokenHelperUtilsTest {
         // WHEN
         val bearerToken = tokenHelperUtils.getBearerToken(httpServletRequest)
         // THEN
-        assertNull(bearerToken)
+        bearerToken.shouldBeNull()
         verify(exactly = 1) { httpServletRequest.getHeader("Authorization") }
     }
 
@@ -62,7 +62,7 @@ internal class TokenHelperUtilsTest {
         // WHEN
         val bearerToken = tokenHelperUtils.getBearerToken(httpServletRequest)
         // THEN
-        assertEquals(expectedToken, bearerToken)
+        bearerToken shouldBe expectedToken
         verify(exactly = 1) { httpServletRequest.getHeader("Authorization") }
     }
 }

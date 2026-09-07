@@ -17,6 +17,7 @@ import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.repo.SubGroupRepository
 import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.service.UserAccountService
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -32,7 +33,6 @@ import java.time.ZoneId
 import java.time.temporal.ChronoUnit
 import java.util.Date
 import kotlin.random.Random
-import kotlin.test.assertEquals
 
 @WithMockUser(username = "test@test.test", roles = [BrnRole.USER])
 class StudyHistoryIT : BaseIT() {
@@ -100,7 +100,7 @@ class StudyHistoryIT : BaseIT() {
         // WHEN
         val result = existingUser.id?.let { studyHistoryRepository.findLastByUserAccountId(it) }
         // THEN
-        assertEquals(2, result?.size)
+        result?.size shouldBe 2
     }
 
     @Test
@@ -136,7 +136,7 @@ class StudyHistoryIT : BaseIT() {
                 )
             }
         // THEN
-        assertEquals(1, result?.size)
+        result?.size shouldBe 1
     }
 
     @Test
@@ -170,7 +170,7 @@ class StudyHistoryIT : BaseIT() {
                     .getDayTimer(it, Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()))
             }
         // THEN
-        assertEquals(488, result)
+        result shouldBe 488
     }
 
     @Test
@@ -236,7 +236,7 @@ class StudyHistoryIT : BaseIT() {
         // WHEN
         val result = studyHistoryRepository.getTodayDayTimer(user.id!!)
         // THEN
-        assertEquals(0, result)
+        result shouldBe 0
     }
 
     @Test
@@ -302,9 +302,9 @@ class StudyHistoryIT : BaseIT() {
             }
 
         // THEN
-        assertEquals(2, count)
-        assertEquals(0, result1?.size)
-        assertEquals(0, result2?.size)
+        count shouldBe 2L
+        result1?.size shouldBe 0
+        result2?.size shouldBe 0
     }
 
     @Test
@@ -345,8 +345,8 @@ class StudyHistoryIT : BaseIT() {
             }
 
         // THEN
-        assertEquals(1, count)
-        assertEquals(0, result1?.size)
+        count shouldBe 1L
+        result1?.size shouldBe 0
     }
 
     private fun insertStudyHistory(

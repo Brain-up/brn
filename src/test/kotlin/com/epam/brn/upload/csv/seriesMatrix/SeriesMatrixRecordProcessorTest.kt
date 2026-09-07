@@ -16,12 +16,13 @@ import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.repo.SubGroupRepository
 import com.epam.brn.repo.TaskRepository
 import com.epam.brn.service.WordsService
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.verify
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -136,7 +137,7 @@ internal class SeriesMatrixRecordProcessorTest {
                     ),
                 ).first()
         // THEN
-        assertThat(actual).isEqualTo(expected)
+        actual shouldBe expected
         verify { exerciseRepositoryMock.save(expected) }
     }
 
@@ -163,7 +164,7 @@ internal class SeriesMatrixRecordProcessorTest {
                 .tasks
                 .first()
         // THEN
-        assertThat(actual).isEqualTo(expectedTask)
+        actual shouldBe expectedTask
     }
 
     @Test
@@ -198,7 +199,7 @@ internal class SeriesMatrixRecordProcessorTest {
                 .first()
                 .answerOptions
         // THEN
-        assertThat(actual).containsExactlyElementsOf(expectedResources)
+        actual shouldContainExactly expectedResources
     }
 
     private fun createExercise(): Exercise {

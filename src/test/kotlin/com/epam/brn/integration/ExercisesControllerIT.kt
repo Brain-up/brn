@@ -21,9 +21,9 @@ import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.repo.SubGroupRepository
 import com.epam.brn.repo.UserAccountRepository
+import io.kotest.matchers.shouldBe
 import org.json.JSONObject
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
@@ -34,7 +34,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPat
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.LocalDateTime
 import kotlin.random.Random
-import kotlin.test.assertFalse
 
 @WithMockUser(username = "test@test.test", roles = [BrnRole.USER])
 class ExercisesControllerIT : BaseIT() {
@@ -113,12 +112,10 @@ class ExercisesControllerIT : BaseIT() {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         val jsonResponse = JSONObject(resultAction.andReturn().response.contentAsString)
         val jsonDataObject = jsonResponse.getJSONObject("data")
-        Assertions.assertEquals(exerciseName, jsonDataObject.get("name"))
-        Assertions.assertEquals(50, jsonDataObject.getJSONObject("noise").get("level"))
-        Assertions.assertEquals(
-            "https://somebucket.s3.us-east-2.amazonaws.com/testNoiseUrl",
-            jsonDataObject.getJSONObject("noise").get("url"),
-        )
+        jsonDataObject.get("name") shouldBe exerciseName
+        jsonDataObject.getJSONObject("noise").get("level") shouldBe 50
+        jsonDataObject.getJSONObject("noise").get("url") shouldBe
+            "https://somebucket.s3.us-east-2.amazonaws.com/testNoiseUrl"
     }
 
     @Test
@@ -144,7 +141,7 @@ class ExercisesControllerIT : BaseIT() {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         val jsonResponse = JSONObject(resultAction.andReturn().response.contentAsString)
         val jsonDataObject = jsonResponse.getJSONArray("data").getLong(0)
-        Assertions.assertTrue(jsonDataObject == exercise.id!!)
+        (jsonDataObject == exercise.id!!) shouldBe true
     }
 
     @Test
@@ -161,7 +158,7 @@ class ExercisesControllerIT : BaseIT() {
         resultAction
             .andExpect(status().isOk)
         exerciseRepository.findById(existingExercise.id!!)
-        assertFalse(exerciseRepository.findById(existingExercise.id!!).get().active)
+        exerciseRepository.findById(existingExercise.id!!).get().active shouldBe false
     }
 
     @Test

@@ -9,6 +9,7 @@ import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.service.UserAccountService
 import com.epam.brn.service.statistics.impl.UserMonthStatisticsService
 import com.epam.brn.service.statistics.progress.status.ProgressStatusManager
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -17,8 +18,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.time.LocalDateTime
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 
 @ExtendWith(MockKExtension::class)
 internal class UserMonthStatisticsServiceTest {
@@ -96,7 +95,7 @@ internal class UserMonthStatisticsServiceTest {
         val statistics = statisticsForPeriod.first()
 
         // THEN
-        assertEquals(expectedStatistic, statistics)
+        statistics shouldBe expectedStatistic
     }
 
     @Test
@@ -143,15 +142,11 @@ internal class UserMonthStatisticsServiceTest {
         val statisticForPeriod = userMonthStatisticsService.getStatisticsForPeriod(from, to)
 
         // THEN
-        assertEquals(2, statisticForPeriod.size)
-        assertEquals(
-            firstExpectedStudyStatistic,
-            statisticForPeriod.first { it.date.month == firstExpectedStudyStatistic.date.month },
-        )
-        assertEquals(
-            secondExpectedStudyStatistic,
-            statisticForPeriod.first { it.date.month == secondExpectedStudyStatistic.date.month },
-        )
+        statisticForPeriod.size shouldBe 2
+        statisticForPeriod.first { it.date.month == firstExpectedStudyStatistic.date.month } shouldBe
+            firstExpectedStudyStatistic
+        statisticForPeriod.first { it.date.month == secondExpectedStudyStatistic.date.month } shouldBe
+            secondExpectedStudyStatistic
     }
 
     @Test
@@ -163,6 +158,6 @@ internal class UserMonthStatisticsServiceTest {
         val statisticForPeriod = userMonthStatisticsService.getStatisticsForPeriod(from, to)
 
         // THEN
-        assertTrue(statisticForPeriod.isEmpty())
+        statisticForPeriod.isEmpty() shouldBe true
     }
 }

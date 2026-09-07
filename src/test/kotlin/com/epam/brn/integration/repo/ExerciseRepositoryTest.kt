@@ -10,7 +10,10 @@ import com.epam.brn.model.Task
 import com.epam.brn.repo.ExerciseGroupRepository
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.ResourceRepository
-import org.assertj.core.api.Assertions.assertThat
+import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
+import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldStartWith
 import org.hibernate.SessionFactory
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Tag
@@ -61,7 +64,7 @@ class ExerciseRepositoryTest {
         val preparedStatementsAfterFetch = statistics.prepareStatementCount
         val persistenceUnitUtil = entityManagerFactory.persistenceUnitUtil
 
-        assertThat(exercises).hasSize(1)
+        exercises shouldHaveSize 1
 
         val exercise = exercises.single()
         val subGroup = exercise.subGroup!!
@@ -72,18 +75,18 @@ class ExerciseRepositoryTest {
                 .flatMap { task -> task.answerOptions.toList() }
                 .map { resource -> resource.word }
 
-        assertThat(exercise.name).isEqualTo("Exercise")
-        assertThat(subGroup.series.name).startsWith("Series")
-        assertThat(tasks).hasSize(1)
-        assertThat(signals).hasSize(1)
-        assertThat(answerWords).containsExactlyInAnyOrder("alpha", "beta")
+        exercise.name shouldBe "Exercise"
+        subGroup.series.name shouldStartWith "Series"
+        tasks shouldHaveSize 1
+        signals shouldHaveSize 1
+        answerWords shouldContainExactlyInAnyOrder listOf("alpha", "beta")
 
-        assertThat(persistenceUnitUtil.isLoaded(exercise, "subGroup")).isTrue()
-        assertThat(persistenceUnitUtil.isLoaded(subGroup, "series")).isTrue()
-        assertThat(persistenceUnitUtil.isLoaded(exercise, "tasks")).isTrue()
-        assertThat(persistenceUnitUtil.isLoaded(tasks.first(), "answerOptions")).isTrue()
-        assertThat(persistenceUnitUtil.isLoaded(exercise, "signals")).isTrue()
-        assertThat(statistics.prepareStatementCount).isEqualTo(preparedStatementsAfterFetch)
+        persistenceUnitUtil.isLoaded(exercise, "subGroup") shouldBe true
+        persistenceUnitUtil.isLoaded(subGroup, "series") shouldBe true
+        persistenceUnitUtil.isLoaded(exercise, "tasks") shouldBe true
+        persistenceUnitUtil.isLoaded(tasks.first(), "answerOptions") shouldBe true
+        persistenceUnitUtil.isLoaded(exercise, "signals") shouldBe true
+        statistics.prepareStatementCount shouldBe preparedStatementsAfterFetch
     }
 
     private fun insertExerciseGraph(): Long {

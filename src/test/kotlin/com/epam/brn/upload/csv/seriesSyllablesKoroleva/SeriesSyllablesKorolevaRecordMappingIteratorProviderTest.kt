@@ -1,16 +1,14 @@
 package com.epam.brn.upload.csv.seriesSyllablesKoroleva
 
 import com.fasterxml.jackson.databind.MappingIterator
+import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.mock.web.MockMultipartFile
 import java.io.File
 import java.io.FileInputStream
 import java.io.InputStream
-import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertNotNull
-import kotlin.test.assertTrue
 
 internal class SeriesSyllablesKorolevaRecordMappingIteratorProviderTest {
     private lateinit var inputStream: InputStream
@@ -33,16 +31,16 @@ internal class SeriesSyllablesKorolevaRecordMappingIteratorProviderTest {
     operator fun iterator() {
         val actualIterator: MappingIterator<SeriesSyllablesKorolevaRecord> =
             seriesSyllablesKorolevaProvider.iterator(inputStream)
-        assertNotNull(actualIterator)
+        actualIterator.shouldNotBeNull()
         val seriesSyllablesKorolevaRecords: List<SeriesSyllablesKorolevaRecord> = actualIterator.readAll()
-        assertTrue(seriesSyllablesKorolevaRecords.isNotEmpty())
-        assertEquals(3, seriesSyllablesKorolevaRecords[0].wordsColumns)
-        assertEquals("быль", seriesSyllablesKorolevaRecords[0].words[2])
+        seriesSyllablesKorolevaRecords.isNotEmpty() shouldBe true
+        seriesSyllablesKorolevaRecords[0].wordsColumns shouldBe 3
+        seriesSyllablesKorolevaRecords[0].words[2] shouldBe "быль"
     }
 
     @Test
     fun isApplicable() {
-        assertTrue(seriesSyllablesKorolevaProvider.isApplicable(SeriesSyllablesKorolevaRecord.FORMAT))
-        assertFalse(seriesSyllablesKorolevaProvider.isApplicable("missingFormat"))
+        seriesSyllablesKorolevaProvider.isApplicable(SeriesSyllablesKorolevaRecord.FORMAT) shouldBe true
+        seriesSyllablesKorolevaProvider.isApplicable("missingFormat") shouldBe false
     }
 }

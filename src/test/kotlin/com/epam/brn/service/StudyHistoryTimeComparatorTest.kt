@@ -1,6 +1,7 @@
 package com.epam.brn.service
 
 import com.epam.brn.model.StudyHistory
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -8,7 +9,6 @@ import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.time.LocalDateTime
-import kotlin.test.assertEquals
 
 @ExtendWith(MockKExtension::class)
 internal class StudyHistoryTimeComparatorTest {
@@ -29,7 +29,7 @@ internal class StudyHistoryTimeComparatorTest {
 
         val comparingResult = comparator.compare(studyHistory1, studyHistory2)
 
-        assertEquals(-1, comparingResult)
+        comparingResult shouldBe -1
     }
 
     @Test
@@ -40,7 +40,7 @@ internal class StudyHistoryTimeComparatorTest {
 
         val comparingResult = comparator.compare(studyHistory1, studyHistory2)
 
-        assertEquals(1, comparingResult)
+        comparingResult shouldBe 1
     }
 
     @Test
@@ -51,6 +51,6 @@ internal class StudyHistoryTimeComparatorTest {
 
         val comparingResult = comparator.compare(studyHistory1, studyHistory2)
 
-        assertEquals(0, comparingResult)
+        comparingResult shouldBe 0
     }
 }

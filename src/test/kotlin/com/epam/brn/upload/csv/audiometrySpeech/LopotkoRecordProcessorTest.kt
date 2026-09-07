@@ -13,12 +13,13 @@ import com.epam.brn.repo.AudiometryRepository
 import com.epam.brn.repo.AudiometryTaskRepository
 import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.service.WordsService
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.verify
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -121,7 +122,7 @@ internal class LopotkoRecordProcessorTest {
         // when
         val actual = lopotkoRecordProcessor.process(mutableListOf(lopotkoRecord)).first()
         val expected = savedAudiometryTask
-        assertThat(actual).isEqualTo(expected)
+        actual shouldBe expected
         verify { audiometryTaskRepository.save(ofType(AudiometryTask::class)) }
     }
 
@@ -151,7 +152,7 @@ internal class LopotkoRecordProcessorTest {
         // when
         val actualtask = lopotkoRecordProcessor.process(mutableListOf(lopotkoRecord)).first()
         // then
-        assertThat(actualtask.answerOptions).containsExactlyElementsOf(resources)
+        actualtask.answerOptions shouldContainExactly resources
     }
 
     private fun resource_бал(): Resource = Resource(

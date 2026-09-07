@@ -4,6 +4,7 @@ import com.epam.brn.dto.response.ResourceResponse
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Resource
 import com.epam.brn.repo.ResourceRepository
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -11,7 +12,6 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.verify
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.data.repository.findByIdOrNull
 
@@ -100,7 +100,7 @@ internal class ResourceServiceTest {
 
         // WHEN
         val exception =
-            assertThrows<EntityNotFoundException> {
+            shouldThrow<EntityNotFoundException> {
                 resourceService.updateDescription(id, description)
             }
 

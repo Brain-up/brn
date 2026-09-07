@@ -102,8 +102,6 @@ dependencies {
 
     testImplementation("org.springframework.boot:spring-boot-starter-webflux")
     testImplementation("org.springframework.cloud:spring-cloud-contract-wiremock:$springCloudContractWiremockVersion")
-    testImplementation("org.amshove.kluent:kluent:1.68") // should be deleted after kotest move all of it
-    testImplementation(kotlin("test")) // should be deleted after kotest move all of it
     testImplementation("io.kotest:kotest-assertions-core:$kotestAssertionsVersion")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
@@ -115,7 +113,6 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-params:$junitVersion")
 
     testImplementation("org.testcontainers:testcontainers:$testContainersVersion")
-    testImplementation("com.natpryce:hamkrest:1.8.0.1")
     testImplementation("org.testcontainers:testcontainers-junit-jupiter:$testContainersVersion")
     testImplementation("org.testcontainers:testcontainers-postgresql:$testContainersVersion")
     testImplementation("org.testcontainers:testcontainers-jdbc:$testContainersVersion")

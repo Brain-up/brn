@@ -2,15 +2,14 @@ package com.epam.brn.controller
 
 import com.epam.brn.dto.ExerciseGroupDto
 import com.epam.brn.service.ExerciseGroupsService
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.verify
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import kotlin.test.assertEquals
 
 @ExtendWith(MockKExtension::class)
 internal class GroupControllerTest {
@@ -34,7 +33,7 @@ internal class GroupControllerTest {
 
         // THEN
         verify(exactly = 1) { exerciseGroupsService.findByLocale("") }
-        assertTrue(actualResultData.contains(group))
+        actualResultData.contains(group) shouldBe true
     }
 
     @Test
@@ -49,6 +48,6 @@ internal class GroupControllerTest {
 
         // THEN
         verify(exactly = 1) { exerciseGroupsService.findGroupDtoById(groupId) }
-        assertEquals(actualResultData, group)
+        actualResultData shouldBe group
     }
 }
