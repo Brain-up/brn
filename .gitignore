@@ -44,6 +44,11 @@ out/
 /node_modules/
 /webpack.generated.js
 
+### Claude Code ###
+# Per-developer, machine-local permission grants — never commit.
+# Shared team tooling under .claude/commands/ and .claude/skills/ stays tracked.
+.claude/settings.local.json
+
 ### logs ###
 **/*.log
 **/*.log.*.gz

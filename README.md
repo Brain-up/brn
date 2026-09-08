@@ -56,7 +56,7 @@ Autotest Python team chat: ask Elena
 - Back-end: KOTLIN + Spring boot. Rest api as integration layer.
 - Front-end: Ember (user app), Angular (admin panel).
 - DB: Postgres 13.
-- TestContainers for running integration tests.
+- Testing: JUnit 5 + MockK (mocks) + kotest-assertions (assertions). TestContainers for running integration tests.
 
 # GETTING STARTED!
 ## Resources:

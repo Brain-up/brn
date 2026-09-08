@@ -28,7 +28,10 @@ Building the project also installs git hooks by pointing `core.hooksPath` to `.g
 
 ### Test conventions
 
-- Unit tests use JUnit 5 + MockK + Kotest/Kluent assertions.
+- **Standardized test stack: JUnit 5 (runner) + MockK (mocks) + kotest-assertions (assertions).** This is the only sanctioned combination — do not introduce Mockito/mockito-kotlin, AssertJ, Kluent, `kotlin.test`, or JUnit's `org.junit.jupiter.api.Assertions`/`assertThrows`/`assertAll`.
+  - Mocks: MockK only (`io.mockk`) — `@MockK`/`@InjectMockKs` with `MockKExtension`, `every { } returns`, `verify { }`, `coEvery`/`coVerify` for suspend. Chosen because the codebase is Kotlin (final-by-default classes, coroutines, `object`s) where MockK is idiomatic and Mockito needs workarounds.
+  - Assertions: kotest-assertions only (`io.kotest.matchers.*`, `io.kotest.assertions.*`) — e.g. `x shouldBe y`, `shouldThrow<T> { }`, `x.shouldNotBeNull()`, `assertSoftly { }`.
+  - One intentional exception: `integration/service/BrainUpUserDetailsServiceTestIT.kt` keeps JUnit `Assertions.assertThrows(Class)` because it asserts on a dynamic `Class<out Exception>?` with no clean reified kotest equivalent.
 - Integration tests live under `src/test/kotlin/com/epam/brn/integration/`, extend `BaseIT`, and are marked `@Tag("integration-test")`. The JUnit config in `build.gradle.kts` excludes this tag from the normal `test` task and includes it only in `integrationTest`.
 
 ## Frontend commands
@@ -67,4 +70,5 @@ Angular admin app (`frontend-angular/`, npm):
 
 - Branch names: `#GitHub_TaskNumber-# issue description`, task number in range 0–1999.
 - Always run `gradlew ktlintFormat` (or IDEA `Ctrl+Alt+L`) before committing Kotlin.
+- Tests use **MockK** for mocks and **kotest-assertions** for assertions — never Mockito, AssertJ, Kluent, `kotlin.test`, or JUnit `Assertions` (see [Test conventions](#test-conventions)).
 - Coverage/Sonar exclude `dto`, `model`, `config`, `exception`, data loaders, and TTS config — don't chase coverage on those.
