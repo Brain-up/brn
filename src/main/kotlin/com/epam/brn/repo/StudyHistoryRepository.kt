@@ -4,6 +4,7 @@ import com.epam.brn.model.Exercise
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.projection.ExerciseLastAttemptView
 import com.epam.brn.model.projection.UserStatisticView
+import com.epam.brn.model.projection.UserStatisticsWithIdView
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 import org.springframework.data.repository.query.Param
@@ -167,4 +168,29 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
         "select count (s) > 0 from StudyHistory s where s.userAccount.id = :userId",
     )
     fun isUserHasStatistics(userId: Long): Boolean
+
+    @Query(
+        "SELECT s FROM StudyHistory s " +
+            "JOIN FETCH s.exercise e " +
+            "LEFT JOIN FETCH e.subGroup sg " +
+            "LEFT JOIN FETCH sg.series " +
+            "WHERE s.startTime >= :from " +
+            "AND s.startTime <= :to " +
+            "AND s.userAccount.id IN :userIds " +
+            "ORDER BY s.startTime",
+    )
+    fun getHistoriesByUserIds(
+        @Param("userIds") userIds: Collection<Long>,
+        @Param("from") from: LocalDateTime,
+        @Param("to") to: LocalDateTime,
+    ): List<StudyHistory>
+
+    @Query(
+        "SELECT s.userAccount.id AS userId, MIN(s.startTime) AS firstStudy, MAX(s.startTime) AS lastStudy," +
+            " COALESCE(SUM(s.spentTimeInSeconds), 0) AS spentTime, COUNT(DISTINCT s.exercise.id) AS doneExercises" +
+            " FROM StudyHistory s WHERE s.userAccount.id IN :userIds GROUP BY s.userAccount.id",
+    )
+    fun getStatisticsByUserIds(
+        @Param("userIds") userIds: Collection<Long>,
+    ): List<UserStatisticsWithIdView>
 }
