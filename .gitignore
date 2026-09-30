@@ -48,6 +48,8 @@ out/
 # Per-developer, machine-local permission grants — never commit.
 # Shared team tooling under .claude/commands/ and .claude/skills/ stays tracked.
 .claude/settings.local.json
+# Transient verifier output — overwritten each run, local-only, never committed.
+.verification/
 
 ### logs ###
 **/*.log

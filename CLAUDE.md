@@ -26,6 +26,20 @@ Use the Gradle wrapper (`./gradlew` / `gradlew.bat` on Windows).
 
 Building the project also installs git hooks by pointing `core.hooksPath` to `.githooks` (done automatically by `build.gradle.kts`).
 
+### Verification (agent loop)
+
+Single fast entry point: **`gradlew verify`** (registered in `build.gradle.kts`) — runs `ktlintCheck` + unit `test`, no Docker. Use it as the default gate after backend code changes.
+
+Policy — treat these as binding:
+
+1. After changing Kotlin code, run `gradlew verify` and do **not** consider the task done until it exits 0.
+2. For repo/migration/`*IT` changes, also run `gradlew integrationTest` (needs Docker — Postgres Testcontainer). This is a **manual / pre-PR** step, intentionally **not** part of `verify`.
+3. If a check fails, fix the **implementation**. Do **not** weaken, skip, or delete a test to make it pass unless the test itself is provably wrong — and if you change a test, say so explicitly and why.
+4. Run `gradlew ktlintFormat` before finishing (the ktlint gate fails the build).
+5. `gradlew verify` is a fast local gate, not a replacement for CI/Sonar — CI stays the authoritative source of truth before merge.
+
+For a thorough, independent pass on a larger change, delegate to the `verifier` subagent (`.claude/agents/verifier.md`); for the step-by-step routine, use the `verify` skill (`.claude/skills/verify/`).
+
 ### Test conventions
 
 - **Standardized test stack: JUnit 5 (runner) + MockK (mocks) + kotest-assertions (assertions).** This is the only sanctioned combination — do not introduce Mockito/mockito-kotlin, AssertJ, Kluent, `kotlin.test`, or JUnit's `org.junit.jupiter.api.Assertions`/`assertThrows`/`assertAll`.

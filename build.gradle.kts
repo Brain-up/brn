@@ -239,6 +239,14 @@ tasks.register<Test>("integrationTest") {
     description = "Runs the integration tests on Postgres Test Container."
 }
 
+// Single, fast entry point for the agent verification loop: Kotlin style + unit tests, no Docker.
+// Integration tests (Testcontainers/Postgres) stay a separate, manual step: `gradlew integrationTest`.
+tasks.register("verify") {
+    group = LifecycleBasePlugin.VERIFICATION_GROUP
+    description = "Fast local verification: ktlint code style + unit tests (no Docker)."
+    dependsOn("ktlintCheck", "test")
+}
+
 sonarqube {
     properties {
         // Root project information
