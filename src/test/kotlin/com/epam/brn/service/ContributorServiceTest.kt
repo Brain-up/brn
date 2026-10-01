@@ -170,6 +170,51 @@ internal class ContributorServiceTest {
     }
 
     @Test
+    fun `should classify new github contributor from auto-tests-python repository as autotester`() {
+        // GIVEN
+        val autoTestsRepositoryName = "auto-tests-python"
+        val gitHubUserMockK = mockk<GitHubUser>()
+        val capturedContributor = slot<Contributor>()
+        every { contributorRepository.findByGitHubUser(gitHubUserMockK) } returns null
+        every { contributorRepository.save(capture(capturedContributor)) } answers { capturedContributor.captured }
+        every { gitHubUserMockK.name } returns "name"
+        every { gitHubUserMockK.company } returns "company"
+        every { gitHubUserMockK.avatarUrl } returns "avatarUrl"
+        every { gitHubUserMockK.bio } returns "bio"
+        every { gitHubUserMockK.email } returns null
+        every { gitHubUserMockK.contributions } returns 1
+
+        // WHEN
+        contributorService.createOrUpdateByGitHubUser(gitHubUserMockK, autoTestsRepositoryName)
+
+        // THEN
+        capturedContributor.captured.type shouldBe ContributorType.AUTOTESTER
+        capturedContributor.captured.repositoryName shouldBe autoTestsRepositoryName
+    }
+
+    @Test
+    fun `should classify new github contributor from a regular repository as developer`() {
+        // GIVEN
+        val gitHubUserMockK = mockk<GitHubUser>()
+        val capturedContributor = slot<Contributor>()
+        every { contributorRepository.findByGitHubUser(gitHubUserMockK) } returns null
+        every { contributorRepository.save(capture(capturedContributor)) } answers { capturedContributor.captured }
+        every { gitHubUserMockK.name } returns "name"
+        every { gitHubUserMockK.company } returns "company"
+        every { gitHubUserMockK.avatarUrl } returns "avatarUrl"
+        every { gitHubUserMockK.bio } returns "bio"
+        every { gitHubUserMockK.email } returns null
+        every { gitHubUserMockK.contributions } returns 1
+
+        // WHEN
+        contributorService.createOrUpdateByGitHubUser(gitHubUserMockK, githubRepositoryName)
+
+        // THEN
+        capturedContributor.captured.type shouldBe ContributorType.DEVELOPER
+        capturedContributor.captured.repositoryName shouldBe githubRepositoryName
+    }
+
+    @Test
     fun `should update contributor by github user without contacts`() {
         // GIVEN
         val gitHubUserMockK = mockk<GitHubUser>()
