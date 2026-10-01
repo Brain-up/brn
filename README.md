@@ -156,6 +156,13 @@ docker rm $(docker ps -a -q) # Remove all stopped containers
 8. Before load config files check them with https://orfogrammka.ru/ service.
 9. Integration tests does not run in build process, it can/should be run locally with run job verification/integrationTests.
 
+### Specifications (OpenSpec):
+We document existing backend behaviour as [OpenSpec](https://github.com/Fission-AI/OpenSpec) capabilities so the "what the system does and why" is written down (the project has no dedicated Business Analyst).
+1. Human-readable specs of current behaviour live under `openspec/specs/<capability>/spec.md` (e.g. `exercise-content-hierarchy`, `users-roles-authorization`, `audio-generation`, `contributors`). Read them to understand a domain before changing it.
+2. Each capability is added one coherent chunk at a time through a change under `openspec/changes/`, then archived under `openspec/changes/archive/` once applied. The flow is propose → apply (verify every requirement against the code, back-fill characterization tests for gaps) → sync the delta into the main spec → archive.
+3. Validate specs with `openspec validate --specs`; validate a single change with `openspec validate <change-name> --strict`.
+4. When you change backend behaviour that a spec covers, update the corresponding spec in the same PR so code and specs stay in sync.
+
 ### Code style:
 1. Please refer for details to kb resources: https://github.com/Brain-up/brn/wiki/Coding-Standards
 2. Always use Ctrl+Alt+L in IDEA to update code formatting before committing!

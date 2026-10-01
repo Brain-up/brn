@@ -74,6 +74,13 @@ Angular admin app (`frontend-angular/`, npm):
 - **External integrations:** AWS S3 and Google Cloud Storage for media/pictures; Azure & Yandex TTS for speech generation; GitHub API client for contributor data.
 - **Ember data layer:** requests flow through a WarpDrive `RequestManager` pipeline (Auth → API normalization → Fetch → Cache). `BrnApiHandler` normalizes the backend's plain REST responses into JSON:API for the WarpDrive cache; models are JSON schemas under `app/schemas/`, not class-based.
 
+## Specifications (OpenSpec)
+
+- Existing backend behaviour is documented as **OpenSpec** capabilities under `openspec/specs/<capability>/spec.md` (e.g. `exercise-content-hierarchy`, `users-roles-authorization`, `audio-generation`, `contributors`). Treat these as the behavioural source of truth for the domains they cover — read the relevant spec before changing that area.
+- New capabilities are added one coherent chunk at a time via a change under `openspec/changes/<name>/` (proposal/specs/design/tasks), then moved to `openspec/changes/archive/<YYYY-MM-DD>-<name>/` once applied. Workflow (driven by the `/opsx:*` skills): **propose** → **apply** (verify every requirement against the code and back-fill characterization tests for genuine gaps) → **sync** the delta into the main spec → **archive**.
+- When you change backend behaviour a spec covers, update that spec in the same change — keep code and specs in sync. These are documentation of real behaviour, not aspiration: ground every requirement in actual controller/service/repo code.
+- Validate with `openspec validate --specs` (all main specs) or `openspec validate <change-name> --strict` (one change). Specs are documentation-only and are **not** part of `gradlew verify`/coverage.
+
 ## Versions / toolchain
 
 - JDK **17** toolchain, Kotlin **2.1.20**, Spring Boot **3.5.3** (uses `jakarta.*` namespace).
