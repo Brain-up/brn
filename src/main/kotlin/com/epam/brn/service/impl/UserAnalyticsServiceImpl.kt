@@ -11,7 +11,7 @@ import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.repo.UserAccountRepository
-import com.epam.brn.service.ExerciseService
+import com.epam.brn.service.ExerciseSuccessCalculator
 import com.epam.brn.service.TextToSpeechService
 import com.epam.brn.service.TimeService
 import com.epam.brn.service.UserAccountService
@@ -37,7 +37,7 @@ class UserAnalyticsServiceImpl(
     private val timeService: TimeService,
     private val textToSpeechService: TextToSpeechService,
     private val userAccountService: UserAccountService,
-    private val exerciseService: ExerciseService,
+    private val exerciseSuccessCalculator: ExerciseSuccessCalculator,
     private val wordsService: WordsService,
 ) : UserAnalyticsService {
     private val listTextExercises = listOf(ExerciseType.SENTENCE, ExerciseType.PHRASES)
@@ -125,9 +125,9 @@ class UserAnalyticsServiceImpl(
             Voice.LERA.name
     }
 
-    fun isDoneBad(lastHistory: StudyHistory?): Boolean = lastHistory != null && !exerciseService.isDoneWell(lastHistory)
+    fun isDoneBad(lastHistory: StudyHistory?): Boolean = lastHistory != null && !exerciseSuccessCalculator.isSuccessful(lastHistory)
 
-    fun isDoneWell(lastHistory: StudyHistory?): Boolean = lastHistory != null && exerciseService.isDoneWell(lastHistory)
+    fun isDoneWell(lastHistory: StudyHistory?): Boolean = lastHistory != null && exerciseSuccessCalculator.isSuccessful(lastHistory)
 
     fun isMultiWords(seriesType: ExerciseType): Boolean =
         seriesType == ExerciseType.PHRASES || seriesType == ExerciseType.SENTENCE || seriesType == ExerciseType.WORDS_SEQUENCES

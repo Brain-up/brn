@@ -52,15 +52,22 @@ already order-preserving one, so it becomes the canonical algorithm:
 These are believed equivalent to the entity path today; characterization tests
 (Decision 4) confirm it before the merge lands.
 
-**3. One quality judgement, two thin adapters — but keep both public entry points.**
-Judge the last attempt from its counters only, via a single core
-`isDoneWell(tasksCount, wrongAnswers, replaysCount)`. Each availability path
-converts its own last-attempt representation into those counters:
-`StudyHistory` for the entity path, `ExerciseLastAttemptView` for the projection
-path. The public `isDoneWell(StudyHistory)` overload MUST stay — it is called
+**3. One quality judgement in a dedicated bean, two thin adapters — but keep both public entry points.**
+Judge the last attempt from its counters only, via a single
+`ExerciseSuccessCalculator.isSuccessful(tasksCount, wrongAnswers, replaysCount)`.
+The threshold formula and the `minRepetitionIndex` / `minRightAnswersIndex`
+properties move onto this dedicated bean (rather than a private method on
+`ExerciseService`) so the single source of truth is shared cleanly by
+`ExerciseService`, `StudyHistoryService`, and `UserAnalyticsServiceImpl` — the
+latter now depends on the calculator directly instead of reaching through
+`ExerciseService`. The calculator also exposes `StudyHistory` and
+`ExerciseLastAttemptView` convenience overloads, so each availability path passes
+its own last-attempt representation. The public
+`ExerciseService.isDoneWell(StudyHistory)` method MUST stay — it is called
 outside this service by `UserAnalyticsServiceImpl` — so it becomes a thin
-delegator to the core; the private `isDoneWell(ExerciseLastAttemptView)` overload
-also delegates to the core and its duplicated formula is removed.
+delegator to the calculator; the former private
+`isDoneWell(ExerciseLastAttemptView)` overload is removed and the availability
+core calls the calculator directly, eliminating the duplicated formula.
 Keep both repository queries (`findLastBySubGroupAndUserAccount` and
 `findLastAttemptBySubGroupAndUserAccount`): the former is only called by the
 entity path we are refactoring, but it is mocked across many existing

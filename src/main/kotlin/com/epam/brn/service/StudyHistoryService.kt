@@ -17,6 +17,7 @@ class StudyHistoryService(
     private val studyHistoryRepository: StudyHistoryRepository,
     private val exerciseRepository: ExerciseRepository,
     private val userAccountService: UserAccountService,
+    private val exerciseSuccessCalculator: ExerciseSuccessCalculator,
 ) {
     fun getTodayTimer(): Int {
         val currentUser = userAccountService.getCurrentUserDto()
@@ -105,6 +106,11 @@ class StudyHistoryService(
                 val uniqueDoneExercisesCount =
                     studyHistoryByExercise
                         .count()
+                val doneExercisesSuccessfullyFromFirstTimeCount =
+                    studyHistoryByExercise.count { (_, exerciseHistories) ->
+                        val firstAttempt = exerciseHistories.minByOrNull { it.startTime }!!
+                        exerciseSuccessCalculator.isSuccessful(firstAttempt)
+                    }
                 val listenWordsCount = histories.sumOf { it.tasksCount.toInt() }
                 val seconds = histories.sumOf { it.spentTimeInSeconds ?: 0L }
                 val userDailyDetailStatisticsDto =
@@ -112,7 +118,7 @@ class StudyHistoryService(
                         seriesName = seriesName,
                         allDoneExercises = allDoneExercisesCount,
                         uniqueDoneExercises = uniqueDoneExercisesCount,
-                        doneExercisesSuccessfullyFromFirstTime = uniqueDoneExercisesCount,
+                        doneExercisesSuccessfullyFromFirstTime = doneExercisesSuccessfullyFromFirstTimeCount,
                         repeatedExercises = allDoneExercisesCount - uniqueDoneExercisesCount,
                         listenWordsCount = listenWordsCount,
                         duration = (seconds.toDouble() / 60).toDuration(DurationUnit.MINUTES),

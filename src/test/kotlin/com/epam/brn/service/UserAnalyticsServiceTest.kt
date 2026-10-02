@@ -58,7 +58,7 @@ internal class UserAnalyticsServiceTest {
     lateinit var userAccountService: UserAccountService
 
     @MockK
-    lateinit var exerciseService: ExerciseService
+    lateinit var exerciseSuccessCalculator: ExerciseSuccessCalculator
 
     @MockK
     lateinit var pageable: Pageable
@@ -129,7 +129,7 @@ internal class UserAnalyticsServiceTest {
         every {
             studyHistoryRepository.findLastByUserAccountIdAndExerciseId(currentUserId, exerciseId)
         } returns studyHistory
-        every { exerciseService.isDoneWell(studyHistory) } returns true
+        every { exerciseSuccessCalculator.isSuccessful(studyHistory) } returns true
         every { exerciseRepository.findTypeByExerciseId(exerciseId) } returns ExerciseType.SINGLE_SIMPLE_WORDS.name
         val audioFileMetaData =
             AudioFileMetaData("мама папа", BrnLocale.RU.locale, Voice.FILIPP.name, "1", AzureRates.DEFAULT)
@@ -153,7 +153,7 @@ internal class UserAnalyticsServiceTest {
         every {
             studyHistoryRepository.findLastByUserAccountIdAndExerciseId(currentUserId, exerciseId)
         } returns studyHistory
-        every { exerciseService.isDoneWell(studyHistory) } returns true
+        every { exerciseSuccessCalculator.isSuccessful(studyHistory) } returns true
         every { exerciseRepository.findTypeByExerciseId(exerciseId) } returns ExerciseType.PHRASES.name
         every { wordsService.getDefaultWomanVoiceForLocale(any()) } returns Voice.FILIPP.name
         val audioFileMetaData =
@@ -178,7 +178,7 @@ internal class UserAnalyticsServiceTest {
         every {
             studyHistoryRepository.findLastByUserAccountIdAndExerciseId(currentUserId, exerciseId)
         } returns studyHistory
-        every { exerciseService.isDoneWell(studyHistory) } returns false
+        every { exerciseSuccessCalculator.isSuccessful(studyHistory) } returns false
         every { exerciseRepository.findTypeByExerciseId(exerciseId) } returns ExerciseType.SINGLE_SIMPLE_WORDS.name
         every { wordsService.getDefaultWomanVoiceForLocale(any()) } returns Voice.FILIPP.name
         val audioFileMetaData =
@@ -205,7 +205,7 @@ internal class UserAnalyticsServiceTest {
         every {
             studyHistoryRepository.findLastByUserAccountIdAndExerciseId(currentUserId, exerciseId)
         } returns studyHistory
-        every { exerciseService.isDoneWell(studyHistory) } returns true
+        every { exerciseSuccessCalculator.isSuccessful(studyHistory) } returns true
         every { exerciseRepository.findTypeByExerciseId(exerciseId) } returns ExerciseType.SINGLE_SIMPLE_WORDS.name
         val audioFileMetaData =
             AudioFileMetaData("мама папа", BrnLocale.RU.locale, "", "1", AzureRates.DEFAULT)
@@ -227,7 +227,7 @@ internal class UserAnalyticsServiceTest {
         every {
             studyHistoryRepository.findLastByUserAccountIdAndExerciseId(currentUserId, exerciseId)
         } returns studyHistory
-        every { exerciseService.isDoneWell(studyHistory) } returns false
+        every { exerciseSuccessCalculator.isSuccessful(studyHistory) } returns false
         every { exerciseRepository.findTypeByExerciseId(exerciseId) } returns ExerciseType.PHRASES.name
         every { wordsService.getDefaultWomanVoiceForLocale(any()) } returns Voice.FILIPP.name
         val audioFileMetaData =
@@ -253,7 +253,7 @@ internal class UserAnalyticsServiceTest {
         every {
             studyHistoryRepository.findLastByUserAccountIdAndExerciseId(currentUserId, exerciseId)
         } returns studyHistory
-        every { exerciseService.isDoneWell(studyHistory) } returns true
+        every { exerciseSuccessCalculator.isSuccessful(studyHistory) } returns true
         every { exerciseRepository.findTypeByExerciseId(exerciseId) } returns ExerciseType.SINGLE_SIMPLE_WORDS.name
         every { wordsService.getDefaultWomanVoiceForLocale(any()) } returns Voice.FILIPP.name
         val audioFileMetaData =
@@ -279,7 +279,7 @@ internal class UserAnalyticsServiceTest {
         every {
             studyHistoryRepository.findLastByUserAccountIdAndExerciseId(currentUserId, exerciseId)
         } returns studyHistory
-        every { exerciseService.isDoneWell(studyHistory) } returns false
+        every { exerciseSuccessCalculator.isSuccessful(studyHistory) } returns false
         every { exerciseRepository.findTypeByExerciseId(exerciseId) } returns ExerciseType.SINGLE_SIMPLE_WORDS.name
         every { wordsService.getDefaultWomanVoiceForLocale(any()) } returns Voice.FILIPP.name
         val audioFileMetaData =
@@ -341,7 +341,7 @@ internal class UserAnalyticsServiceTest {
         every {
             studyHistoryRepository.findLastByUserAccountIdAndExerciseId(currentUserId, exerciseId)
         } returns studyHistory
-        every { exerciseService.isDoneWell(studyHistory) } returns false
+        every { exerciseSuccessCalculator.isSuccessful(studyHistory) } returns false
         every { exerciseRepository.findTypeByExerciseId(exerciseId) } returns ExerciseType.SINGLE_SIMPLE_WORDS.name
         val audioFileMetaData =
             AudioFileMetaData("text", BrnLocale.RU.locale, Voice.FILIPP.name, "1", AzureRates.DEFAULT)

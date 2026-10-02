@@ -35,6 +35,7 @@ import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
+import io.mockk.impl.annotations.SpyK
 import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import io.mockk.mockkClass
@@ -69,6 +70,9 @@ internal class ExerciseServiceTest {
 
     @MockK
     lateinit var recordProcessors: List<RecordProcessor<out Any, out Any>>
+
+    @SpyK
+    var exerciseSuccessCalculator = ExerciseSuccessCalculator()
 
     private val series =
         Series(
@@ -113,8 +117,8 @@ internal class ExerciseServiceTest {
     @Test
     fun `should get 2 exercises with 2 available for user-admin`() {
         // GIVEN
-        ReflectionTestUtils.setField(exerciseService, "minRepetitionIndex", 0.8)
-        ReflectionTestUtils.setField(exerciseService, "minRightAnswersIndex", 0.8)
+        ReflectionTestUtils.setField(exerciseSuccessCalculator, "minRepetitionIndex", 0.8)
+        ReflectionTestUtils.setField(exerciseSuccessCalculator, "minRightAnswersIndex", 0.8)
         val subGroupId = 2L
         val userId = 2L
         val exercise1 = Exercise(id = 1, name = "pets", level = 2)
@@ -142,8 +146,8 @@ internal class ExerciseServiceTest {
     @Test
     fun `should get 2 exercises for user-specialist`() {
         // GIVEN
-        ReflectionTestUtils.setField(exerciseService, "minRepetitionIndex", 0.8)
-        ReflectionTestUtils.setField(exerciseService, "minRightAnswersIndex", 0.8)
+        ReflectionTestUtils.setField(exerciseSuccessCalculator, "minRepetitionIndex", 0.8)
+        ReflectionTestUtils.setField(exerciseSuccessCalculator, "minRightAnswersIndex", 0.8)
         val subGroupId = 2L
         val userId = 2L
         val exercise1 = Exercise(id = 1, name = "pets", level = 2)
@@ -171,8 +175,8 @@ internal class ExerciseServiceTest {
     @Test
     fun `should get 3 exercises with 1 available for user without history for USER`() {
         // GIVEN
-        ReflectionTestUtils.setField(exerciseService, "minRepetitionIndex", 0.8)
-        ReflectionTestUtils.setField(exerciseService, "minRightAnswersIndex", 0.8)
+        ReflectionTestUtils.setField(exerciseSuccessCalculator, "minRepetitionIndex", 0.8)
+        ReflectionTestUtils.setField(exerciseSuccessCalculator, "minRightAnswersIndex", 0.8)
         val subGroupId = 2L
         val userId = 2L
         val exercise1 = Exercise(id = 1, name = "pets", level = 1)
@@ -186,7 +190,7 @@ internal class ExerciseServiceTest {
                 exercise2,
                 exercise3,
             )
-        every { studyHistoryRepository.findLastBySubGroupAndUserAccount(subGroupId, userId) } returns emptyList()
+        every { studyHistoryRepository.findAllAttemptsBySubGroupAndUserAccount(subGroupId, userId) } returns emptyList()
         every { urlConversionService.makeUrlForNoise(ofType(String::class)) } returns noiseUrl
         every { userAccountService.getCurrentUserRoles() } returns setOf(BrnRole.USER)
 
@@ -199,7 +203,7 @@ internal class ExerciseServiceTest {
         verify(exactly = 1) { exerciseRepository.findExercisesWithSubGroupBySubGroupId(subGroupId) }
         verify(exactly = 1) { studyHistoryRepository.getDoneExercises(ofType(Long::class), ofType(Long::class)) }
         verify(exactly = 1) {
-            studyHistoryRepository.findLastBySubGroupAndUserAccount(
+            studyHistoryRepository.findAllAttemptsBySubGroupAndUserAccount(
                 ofType(Long::class),
                 ofType(Long::class),
             )
@@ -212,19 +216,14 @@ internal class ExerciseServiceTest {
     @Test
     fun `should get 3 exercises with 1 available for USER with bad history`() {
         // GIVEN
-        ReflectionTestUtils.setField(exerciseService, "minRepetitionIndex", 0.8)
-        ReflectionTestUtils.setField(exerciseService, "minRightAnswersIndex", 0.8)
+        ReflectionTestUtils.setField(exerciseSuccessCalculator, "minRepetitionIndex", 0.8)
+        ReflectionTestUtils.setField(exerciseSuccessCalculator, "minRightAnswersIndex", 0.8)
         val subGroupId = 2L
         val userId = 2L
         val exercise1 = Exercise(id = 1, name = "pets")
         val exercise2 = Exercise(id = 2, name = "pets")
         val exercise3 = Exercise(id = 3, name = "pets")
         val noiseUrl = "noiseUrl"
-        val lastStudyHistoryMockk = mockkClass(StudyHistory::class)
-        every { lastStudyHistoryMockk.exercise } returns exercise1
-        every { lastStudyHistoryMockk.tasksCount } returns 10
-        every { lastStudyHistoryMockk.replaysCount } returns 2
-        every { lastStudyHistoryMockk.wrongAnswers } returns 5
         every { studyHistoryRepository.getDoneExercises(subGroupId, userId) } returns listOf(exercise1)
         every { exerciseRepository.findExercisesWithSubGroupBySubGroupId(subGroupId) } returns
             listOf(
@@ -232,9 +231,9 @@ internal class ExerciseServiceTest {
                 exercise2,
                 exercise3,
             )
-        every { studyHistoryRepository.findLastBySubGroupAndUserAccount(subGroupId, userId) } returns
+        every { studyHistoryRepository.findAllAttemptsBySubGroupAndUserAccount(subGroupId, userId) } returns
             listOf(
-                lastStudyHistoryMockk,
+                exerciseLastAttemptView(exerciseId = 1L, replaysCount = 2, wrongAnswers = 5),
             )
         every { urlConversionService.makeUrlForNoise(ofType(String::class)) } returns noiseUrl
         every { userAccountService.getCurrentUserRoles() } returns setOf(BrnRole.USER)
@@ -248,7 +247,7 @@ internal class ExerciseServiceTest {
         verify(exactly = 1) { exerciseRepository.findExercisesWithSubGroupBySubGroupId(subGroupId) }
         verify(exactly = 1) { studyHistoryRepository.getDoneExercises(ofType(Long::class), ofType(Long::class)) }
         verify(exactly = 1) {
-            studyHistoryRepository.findLastBySubGroupAndUserAccount(
+            studyHistoryRepository.findAllAttemptsBySubGroupAndUserAccount(
                 ofType(Long::class),
                 ofType(Long::class),
             )
@@ -258,8 +257,8 @@ internal class ExerciseServiceTest {
     @Test
     fun `should get 3 exercises with 3 available for USER with all exercises done`() {
         // GIVEN
-        ReflectionTestUtils.setField(exerciseService, "minRepetitionIndex", 0.8)
-        ReflectionTestUtils.setField(exerciseService, "minRightAnswersIndex", 0.8)
+        ReflectionTestUtils.setField(exerciseSuccessCalculator, "minRepetitionIndex", 0.8)
+        ReflectionTestUtils.setField(exerciseSuccessCalculator, "minRightAnswersIndex", 0.8)
         val subGroupId = 2L
         val userId = 2L
         val exercise1 = Exercise(id = 1, name = "pets")
@@ -285,8 +284,8 @@ internal class ExerciseServiceTest {
     @Test
     fun `should get available exercise ids without loading exercise DTOs for user`() {
         // GIVEN
-        ReflectionTestUtils.setField(exerciseService, "minRepetitionIndex", 0.8)
-        ReflectionTestUtils.setField(exerciseService, "minRightAnswersIndex", 0.8)
+        ReflectionTestUtils.setField(exerciseSuccessCalculator, "minRepetitionIndex", 0.8)
+        ReflectionTestUtils.setField(exerciseSuccessCalculator, "minRightAnswersIndex", 0.8)
         val requestedExerciseId = 1L
         val subGroupId = 2L
         val userId = 3L
@@ -308,7 +307,7 @@ internal class ExerciseServiceTest {
                 exercise3,
             )
         every { studyHistoryRepository.getDoneExerciseIds(subGroupId, userId) } returns listOf(1L)
-        every { studyHistoryRepository.findLastAttemptBySubGroupAndUserAccount(subGroupId, userId) } returns
+        every { studyHistoryRepository.findAllAttemptsBySubGroupAndUserAccount(subGroupId, userId) } returns
             listOf(
                 lastAttempt,
             )
@@ -321,7 +320,7 @@ internal class ExerciseServiceTest {
         verify(exactly = 1) { exerciseRepository.findSubGroupIdByExerciseId(requestedExerciseId) }
         verify(exactly = 1) { exerciseRepository.findExerciseAvailabilityBySubGroupId(subGroupId) }
         verify(exactly = 1) { studyHistoryRepository.getDoneExerciseIds(subGroupId, userId) }
-        verify(exactly = 1) { studyHistoryRepository.findLastAttemptBySubGroupAndUserAccount(subGroupId, userId) }
+        verify(exactly = 1) { studyHistoryRepository.findAllAttemptsBySubGroupAndUserAccount(subGroupId, userId) }
         verify(exactly = 0) { exerciseRepository.findExercisesWithSubGroupBySubGroupId(any()) }
         verify(exactly = 0) { studyHistoryRepository.getDoneExercises(any(), any()) }
     }
@@ -347,7 +346,7 @@ internal class ExerciseServiceTest {
         verify(exactly = 1) { exerciseRepository.findExerciseIdsBySubGroupId(subGroupId) }
         verify(exactly = 0) { exerciseRepository.findExerciseAvailabilityBySubGroupId(any()) }
         verify(exactly = 0) { studyHistoryRepository.getDoneExerciseIds(any(), any()) }
-        verify(exactly = 0) { studyHistoryRepository.findLastAttemptBySubGroupAndUserAccount(any(), any()) }
+        verify(exactly = 0) { studyHistoryRepository.findAllAttemptsBySubGroupAndUserAccount(any(), any()) }
         verify(exactly = 0) { exerciseRepository.findExercisesWithSubGroupBySubGroupId(any()) }
     }
 
@@ -371,14 +370,14 @@ internal class ExerciseServiceTest {
         verify(exactly = 1) { exerciseRepository.findExerciseIdsBySubGroupId(subGroupId) }
         verify(exactly = 0) { exerciseRepository.findExerciseAvailabilityBySubGroupId(any()) }
         verify(exactly = 0) { studyHistoryRepository.getDoneExerciseIds(any(), any()) }
-        verify(exactly = 0) { studyHistoryRepository.findLastAttemptBySubGroupAndUserAccount(any(), any()) }
+        verify(exactly = 0) { studyHistoryRepository.findAllAttemptsBySubGroupAndUserAccount(any(), any()) }
     }
 
     @Test
     fun `should return all exercise ids for user when every exercise is already done`() {
         // GIVEN
-        ReflectionTestUtils.setField(exerciseService, "minRepetitionIndex", 0.8)
-        ReflectionTestUtils.setField(exerciseService, "minRightAnswersIndex", 0.8)
+        ReflectionTestUtils.setField(exerciseSuccessCalculator, "minRepetitionIndex", 0.8)
+        ReflectionTestUtils.setField(exerciseSuccessCalculator, "minRightAnswersIndex", 0.8)
         val requestedExerciseId = 1L
         val subGroupId = 2L
         val userId = 3L
@@ -398,7 +397,7 @@ internal class ExerciseServiceTest {
                 exercise3,
             )
         every { studyHistoryRepository.getDoneExerciseIds(subGroupId, userId) } returns listOf(1L, 2L, 3L)
-        every { studyHistoryRepository.findLastAttemptBySubGroupAndUserAccount(subGroupId, userId) } returns emptyList()
+        every { studyHistoryRepository.findAllAttemptsBySubGroupAndUserAccount(subGroupId, userId) } returns emptyList()
 
         // WHEN
         val actualResult = exerciseService.getAvailableExerciseIds(listOf(requestedExerciseId))
@@ -410,8 +409,8 @@ internal class ExerciseServiceTest {
     @Test
     fun `should preserve level order when available exercise names are interleaved`() {
         // GIVEN
-        ReflectionTestUtils.setField(exerciseService, "minRepetitionIndex", 0.8)
-        ReflectionTestUtils.setField(exerciseService, "minRightAnswersIndex", 0.8)
+        ReflectionTestUtils.setField(exerciseSuccessCalculator, "minRepetitionIndex", 0.8)
+        ReflectionTestUtils.setField(exerciseSuccessCalculator, "minRightAnswersIndex", 0.8)
         val requestedExerciseId = 1L
         val subGroupId = 2L
         val userId = 3L
@@ -438,7 +437,7 @@ internal class ExerciseServiceTest {
             )
         every { studyHistoryRepository.getDoneExerciseIds(subGroupId, userId) } returns listOf(1L, 2L)
         every {
-            studyHistoryRepository.findLastAttemptBySubGroupAndUserAccount(subGroupId, userId)
+            studyHistoryRepository.findAllAttemptsBySubGroupAndUserAccount(subGroupId, userId)
         } returns
             listOf(
                 lastAttempt1,
@@ -455,8 +454,8 @@ internal class ExerciseServiceTest {
     @Test
     fun `should not unlock next exercise when last attempt is missing`() {
         // GIVEN
-        ReflectionTestUtils.setField(exerciseService, "minRepetitionIndex", 0.8)
-        ReflectionTestUtils.setField(exerciseService, "minRightAnswersIndex", 0.8)
+        ReflectionTestUtils.setField(exerciseSuccessCalculator, "minRepetitionIndex", 0.8)
+        ReflectionTestUtils.setField(exerciseSuccessCalculator, "minRightAnswersIndex", 0.8)
         val requestedExerciseId = 1L
         val subGroupId = 2L
         val userId = 3L
@@ -476,7 +475,7 @@ internal class ExerciseServiceTest {
                 exercise3,
             )
         every { studyHistoryRepository.getDoneExerciseIds(subGroupId, userId) } returns listOf(1L)
-        every { studyHistoryRepository.findLastAttemptBySubGroupAndUserAccount(subGroupId, userId) } returns emptyList()
+        every { studyHistoryRepository.findAllAttemptsBySubGroupAndUserAccount(subGroupId, userId) } returns emptyList()
 
         // WHEN
         val actualResult = exerciseService.getAvailableExerciseIds(listOf(requestedExerciseId))
@@ -488,8 +487,8 @@ internal class ExerciseServiceTest {
     @Test
     fun `should not unlock next exercise when last attempt is not done well`() {
         // GIVEN
-        ReflectionTestUtils.setField(exerciseService, "minRepetitionIndex", 0.8)
-        ReflectionTestUtils.setField(exerciseService, "minRightAnswersIndex", 0.8)
+        ReflectionTestUtils.setField(exerciseSuccessCalculator, "minRepetitionIndex", 0.8)
+        ReflectionTestUtils.setField(exerciseSuccessCalculator, "minRightAnswersIndex", 0.8)
         val requestedExerciseId = 1L
         val subGroupId = 2L
         val userId = 3L
@@ -510,7 +509,7 @@ internal class ExerciseServiceTest {
                 exercise3,
             )
         every { studyHistoryRepository.getDoneExerciseIds(subGroupId, userId) } returns listOf(1L)
-        every { studyHistoryRepository.findLastAttemptBySubGroupAndUserAccount(subGroupId, userId) } returns
+        every { studyHistoryRepository.findAllAttemptsBySubGroupAndUserAccount(subGroupId, userId) } returns
             listOf(
                 lastAttempt,
             )
@@ -525,8 +524,8 @@ internal class ExerciseServiceTest {
     @Test
     fun `should return empty available ids when subgroup has no exercises`() {
         // GIVEN
-        ReflectionTestUtils.setField(exerciseService, "minRepetitionIndex", 0.8)
-        ReflectionTestUtils.setField(exerciseService, "minRightAnswersIndex", 0.8)
+        ReflectionTestUtils.setField(exerciseSuccessCalculator, "minRepetitionIndex", 0.8)
+        ReflectionTestUtils.setField(exerciseSuccessCalculator, "minRightAnswersIndex", 0.8)
         val requestedExerciseId = 1L
         val subGroupId = 2L
         val userId = 3L
@@ -537,7 +536,7 @@ internal class ExerciseServiceTest {
         every { userAccountService.getCurrentUser() } returns currentUser
         every { exerciseRepository.findExerciseAvailabilityBySubGroupId(subGroupId) } returns emptyList()
         every { studyHistoryRepository.getDoneExerciseIds(subGroupId, userId) } returns emptyList()
-        every { studyHistoryRepository.findLastAttemptBySubGroupAndUserAccount(subGroupId, userId) } returns emptyList()
+        every { studyHistoryRepository.findAllAttemptsBySubGroupAndUserAccount(subGroupId, userId) } returns emptyList()
 
         // WHEN
         val actualResult = exerciseService.getAvailableExerciseIds(listOf(requestedExerciseId))
@@ -562,8 +561,8 @@ internal class ExerciseServiceTest {
     @Test
     fun `should make only the first exercise of each name available when user has no history at all`() {
         // GIVEN
-        ReflectionTestUtils.setField(exerciseService, "minRepetitionIndex", 0.8)
-        ReflectionTestUtils.setField(exerciseService, "minRightAnswersIndex", 0.8)
+        ReflectionTestUtils.setField(exerciseSuccessCalculator, "minRepetitionIndex", 0.8)
+        ReflectionTestUtils.setField(exerciseSuccessCalculator, "minRightAnswersIndex", 0.8)
         val requestedExerciseId = 1L
         val subGroupId = 2L
         val userId = 3L
@@ -583,7 +582,7 @@ internal class ExerciseServiceTest {
                 betaLevel1,
             )
         every { studyHistoryRepository.getDoneExerciseIds(subGroupId, userId) } returns emptyList()
-        every { studyHistoryRepository.findLastAttemptBySubGroupAndUserAccount(subGroupId, userId) } returns emptyList()
+        every { studyHistoryRepository.findAllAttemptsBySubGroupAndUserAccount(subGroupId, userId) } returns emptyList()
 
         // WHEN
         val actualResult = exerciseService.getAvailableExerciseIds(listOf(requestedExerciseId))
@@ -601,7 +600,7 @@ internal class ExerciseServiceTest {
         val alphaLevel2 = Exercise(id = 2, name = "alpha", level = 2)
         val betaLevel1 = Exercise(id = 3, name = "beta", level = 1)
         val subGroupExercises = listOf(alphaLevel1, alphaLevel2, betaLevel1)
-        every { studyHistoryRepository.findLastBySubGroupAndUserAccount(subGroupId, userId) } returns emptyList()
+        every { studyHistoryRepository.findAllAttemptsBySubGroupAndUserAccount(subGroupId, userId) } returns emptyList()
 
         // WHEN
         val actualResult = exerciseService.getAvailableExercisesForSubGroup(emptyList(), subGroupExercises, userId, subGroupId)
@@ -614,8 +613,8 @@ internal class ExerciseServiceTest {
     @Test
     fun `isDoneWell should return true when both indices meet the minimums`() {
         // GIVEN — repetitionIndex = 5/(1+5) = 0.833, rightAnswersIndex = 1 - 1/5 = 0.8 (boundary)
-        ReflectionTestUtils.setField(exerciseService, "minRepetitionIndex", 0.8)
-        ReflectionTestUtils.setField(exerciseService, "minRightAnswersIndex", 0.8)
+        ReflectionTestUtils.setField(exerciseSuccessCalculator, "minRepetitionIndex", 0.8)
+        ReflectionTestUtils.setField(exerciseSuccessCalculator, "minRightAnswersIndex", 0.8)
         val studyHistory =
             StudyHistory(
                 exercise = mockk(),
@@ -634,8 +633,8 @@ internal class ExerciseServiceTest {
     @Test
     fun `isDoneWell should return false when the repetition index is below the minimum`() {
         // GIVEN — repetitionIndex = 3/(1+3) = 0.75 < 0.8, rightAnswersIndex = 1.0
-        ReflectionTestUtils.setField(exerciseService, "minRepetitionIndex", 0.8)
-        ReflectionTestUtils.setField(exerciseService, "minRightAnswersIndex", 0.8)
+        ReflectionTestUtils.setField(exerciseSuccessCalculator, "minRepetitionIndex", 0.8)
+        ReflectionTestUtils.setField(exerciseSuccessCalculator, "minRightAnswersIndex", 0.8)
         val studyHistory =
             StudyHistory(
                 exercise = mockk(),
@@ -654,8 +653,8 @@ internal class ExerciseServiceTest {
     @Test
     fun `isDoneWell should return false when the right answers index is below the minimum`() {
         // GIVEN — repetitionIndex = 1.0, rightAnswersIndex = 1 - 3/10 = 0.7 < 0.8
-        ReflectionTestUtils.setField(exerciseService, "minRepetitionIndex", 0.8)
-        ReflectionTestUtils.setField(exerciseService, "minRightAnswersIndex", 0.8)
+        ReflectionTestUtils.setField(exerciseSuccessCalculator, "minRepetitionIndex", 0.8)
+        ReflectionTestUtils.setField(exerciseSuccessCalculator, "minRightAnswersIndex", 0.8)
         val studyHistory =
             StudyHistory(
                 exercise = mockk(),
@@ -675,8 +674,8 @@ internal class ExerciseServiceTest {
     fun `isDoneWell should judge from the counters and ignore the stored repetition index`() {
         // GIVEN — counters give repetitionIndex = 4/(0+4) = 1.0 (passes), but the stored
         // repetitionIndex field is fabricated below the threshold; the judgement must ignore it.
-        ReflectionTestUtils.setField(exerciseService, "minRepetitionIndex", 0.8)
-        ReflectionTestUtils.setField(exerciseService, "minRightAnswersIndex", 0.8)
+        ReflectionTestUtils.setField(exerciseSuccessCalculator, "minRepetitionIndex", 0.8)
+        ReflectionTestUtils.setField(exerciseSuccessCalculator, "minRightAnswersIndex", 0.8)
         val studyHistory =
             StudyHistory(
                 exercise = mockk(),
@@ -819,19 +818,10 @@ internal class ExerciseServiceTest {
         val ex4 = Exercise(id = 4, name = "pets ddd", subGroup = subGroup)
         val listAll = listOf(ex1, ex2, ex3, ex4)
         val listDone = listOf(ex1)
-        val studyHistory1 =
-            StudyHistory(
-                exercise = ex1,
-                userAccount = mockkClass(UserAccount::class),
-                startTime = LocalDateTime.now(),
-                executionSeconds = 122,
-                tasksCount = 12,
-                wrongAnswers = 5,
-                replaysCount = 0,
-            )
-        every { studyHistoryRepository.findLastBySubGroupAndUserAccount(subGroupId, 1) } returns listOf(studyHistory1)
-        ReflectionTestUtils.setField(exerciseService, "minRepetitionIndex", 0.8)
-        ReflectionTestUtils.setField(exerciseService, "minRightAnswersIndex", 0.8)
+        every { studyHistoryRepository.findAllAttemptsBySubGroupAndUserAccount(subGroupId, 1) } returns
+            listOf(exerciseLastAttemptView(exerciseId = 1L, tasksCount = 12, replaysCount = 0, wrongAnswers = 5))
+        ReflectionTestUtils.setField(exerciseSuccessCalculator, "minRepetitionIndex", 0.8)
+        ReflectionTestUtils.setField(exerciseSuccessCalculator, "minRightAnswersIndex", 0.8)
 
         // WHEN
         val actualResult = exerciseService.getAvailableExercisesForSubGroup(listDone, listAll, 1, subGroupId)
@@ -859,33 +849,13 @@ internal class ExerciseServiceTest {
         val ex4 = Exercise(id = 4, name = "pets ddd", subGroup = subGroup)
         val listAll = listOf(ex1, ex2, ex3, ex4)
         val listDone = listOf(ex1, ex3)
-        val studyHistoryWithExercise1 =
-            StudyHistory(
-                exercise = ex1,
-                userAccount = mockkClass(UserAccount::class),
-                startTime = LocalDateTime.now(),
-                executionSeconds = 122,
-                tasksCount = 12,
-                wrongAnswers = 0,
-                replaysCount = 0,
-            )
-        val studyHistoryWithExercise3 =
-            StudyHistory(
-                exercise = ex3,
-                userAccount = mockkClass(UserAccount::class),
-                startTime = LocalDateTime.now(),
-                executionSeconds = 122,
-                tasksCount = 12,
-                wrongAnswers = 1,
-                replaysCount = 1,
-            )
-        every { studyHistoryRepository.findLastBySubGroupAndUserAccount(subGroupId, userId) } returns
+        every { studyHistoryRepository.findAllAttemptsBySubGroupAndUserAccount(subGroupId, userId) } returns
             listOf(
-                studyHistoryWithExercise1,
-                studyHistoryWithExercise3,
+                exerciseLastAttemptView(exerciseId = 1L, tasksCount = 12, replaysCount = 0, wrongAnswers = 0),
+                exerciseLastAttemptView(exerciseId = 3L, tasksCount = 12, replaysCount = 1, wrongAnswers = 1),
             )
-        ReflectionTestUtils.setField(exerciseService, "minRepetitionIndex", 0.8)
-        ReflectionTestUtils.setField(exerciseService, "minRightAnswersIndex", 0.8)
+        ReflectionTestUtils.setField(exerciseSuccessCalculator, "minRepetitionIndex", 0.8)
+        ReflectionTestUtils.setField(exerciseSuccessCalculator, "minRightAnswersIndex", 0.8)
 
         // WHEN
         val actualResult = exerciseService.getAvailableExercisesForSubGroup(listDone, listAll, 1, subGroupId)
@@ -914,34 +884,14 @@ internal class ExerciseServiceTest {
         val userAccountId = 1L
         val listAll = listOf(ex1, ex2, ex3, ex4, ex5)
         val listDone = listOf(ex1, ex2)
-        val studyHistoryWithExercise1 =
-            StudyHistory(
-                exercise = ex1,
-                userAccount = mockk(),
-                startTime = LocalDateTime.now(),
-                executionSeconds = 122,
-                tasksCount = 12,
-                wrongAnswers = 0,
-                replaysCount = 0,
-            )
-        val studyHistoryWithExercise2 =
-            StudyHistory(
-                exercise = ex2,
-                userAccount = mockk(),
-                startTime = LocalDateTime.now(),
-                executionSeconds = 122,
-                tasksCount = 12,
-                wrongAnswers = 5,
-                replaysCount = 1,
-            )
-        every { studyHistoryRepository.findLastBySubGroupAndUserAccount(subGroupId, userAccountId) } returns
+        every { studyHistoryRepository.findAllAttemptsBySubGroupAndUserAccount(subGroupId, userAccountId) } returns
             listOf(
-                studyHistoryWithExercise1,
-                studyHistoryWithExercise2,
+                exerciseLastAttemptView(exerciseId = 1L, tasksCount = 12, replaysCount = 0, wrongAnswers = 0),
+                exerciseLastAttemptView(exerciseId = 2L, tasksCount = 12, replaysCount = 1, wrongAnswers = 5),
             )
 
-        ReflectionTestUtils.setField(exerciseService, "minRepetitionIndex", 0.8)
-        ReflectionTestUtils.setField(exerciseService, "minRightAnswersIndex", 0.8)
+        ReflectionTestUtils.setField(exerciseSuccessCalculator, "minRepetitionIndex", 0.8)
+        ReflectionTestUtils.setField(exerciseSuccessCalculator, "minRightAnswersIndex", 0.8)
 
         // WHEN
         val actualResult = exerciseService.getAvailableExercisesForSubGroup(listDone, listAll, 1, subGroupId)
@@ -981,53 +931,155 @@ internal class ExerciseServiceTest {
         val listAll = listOf(ex1, ex2, ex3, ex4, ex11, ex12, ex13, ex14)
         val userAccountId = 1L
         val listDone = listOf(ex1, ex2, ex11)
-        val studyHistoryWithExercise1 =
-            StudyHistory(
-                exercise = ex1,
-                userAccount = mockkClass(UserAccount::class),
-                startTime = LocalDateTime.now(),
-                executionSeconds = 122,
-                tasksCount = 12,
-                wrongAnswers = 0,
-                replaysCount = 0,
-            )
-        val studyHistoryWithExercise2 =
-            StudyHistory(
-                exercise = ex2,
-                userAccount = mockkClass(UserAccount::class),
-                startTime = LocalDateTime.now(),
-                executionSeconds = 122,
-                tasksCount = 12,
-                wrongAnswers = 2,
-                replaysCount = 2,
-            )
-
-        val studyHistoryWithExercise11 =
-            StudyHistory(
-                exercise = ex11,
-                userAccount = mockk(),
-                startTime = LocalDateTime.now(),
-                executionSeconds = 122,
-                tasksCount = 12,
-                wrongAnswers = 6,
-                replaysCount = 4,
-            )
-
-        every { studyHistoryRepository.findLastBySubGroupAndUserAccount(subGroupId, userAccountId) } returns
+        every { studyHistoryRepository.findAllAttemptsBySubGroupAndUserAccount(subGroupId, userAccountId) } returns
             listOf(
-                studyHistoryWithExercise1,
-                studyHistoryWithExercise2,
-                studyHistoryWithExercise11,
+                exerciseLastAttemptView(exerciseId = 1L, tasksCount = 12, replaysCount = 0, wrongAnswers = 0),
+                exerciseLastAttemptView(exerciseId = 2L, tasksCount = 12, replaysCount = 2, wrongAnswers = 2),
+                exerciseLastAttemptView(exerciseId = 11L, tasksCount = 12, replaysCount = 4, wrongAnswers = 6),
             )
 
-        ReflectionTestUtils.setField(exerciseService, "minRepetitionIndex", 0.8)
-        ReflectionTestUtils.setField(exerciseService, "minRightAnswersIndex", 0.8)
+        ReflectionTestUtils.setField(exerciseSuccessCalculator, "minRepetitionIndex", 0.8)
+        ReflectionTestUtils.setField(exerciseSuccessCalculator, "minRightAnswersIndex", 0.8)
 
         // WHEN
         val actualResult = exerciseService.getAvailableExercisesForSubGroup(listDone, listAll, 1, subGroupId)
         // THEN
         actualResult shouldHaveSize 5
         actualResult shouldContainAll listOf(ex1, ex2, ex3, ex11, ex13)
+    }
+
+    @Test
+    fun `availability is consistent across entity and projection paths for a regular user`() {
+        // GIVEN — same subgroup, done ids and last attempts fed to both paths:
+        // "pets": ex1 done well -> unlocks ex2; "pets ddd": ex3 done NOT well -> ex4 stays locked.
+        ReflectionTestUtils.setField(exerciseSuccessCalculator, "minRepetitionIndex", 0.8)
+        ReflectionTestUtils.setField(exerciseSuccessCalculator, "minRightAnswersIndex", 0.8)
+        val subGroupId = 5L
+        val userId = 3L
+        val requestedExerciseId = 1L
+        val currentUser = UserAccount(id = userId, email = "user@example.com", fullName = "User")
+        currentUser.roleSet.add(Role(id = 1L, name = BrnRole.USER))
+        val subGroup = SubGroup(id = subGroupId, series = series, level = 1, code = "code", name = "subGroup name")
+        val ex1 = Exercise(id = 1, name = "pets", level = 1, subGroup = subGroup)
+        val ex2 = Exercise(id = 2, name = "pets", level = 2, subGroup = subGroup)
+        val ex3 = Exercise(id = 3, name = "pets ddd", level = 1, subGroup = subGroup)
+        val ex4 = Exercise(id = 4, name = "pets ddd", level = 2, subGroup = subGroup)
+        val allExercises = listOf(ex1, ex2, ex3, ex4)
+        val doneExercises = listOf(ex1, ex3)
+
+        // both paths read the same attempt history
+        every { exerciseRepository.findSubGroupIdByExerciseId(requestedExerciseId) } returns subGroupId
+        every { userAccountService.getCurrentUser() } returns currentUser
+        every { exerciseRepository.findExerciseAvailabilityBySubGroupId(subGroupId) } returns
+            listOf(
+                exerciseAvailabilityView(id = 1L, name = "pets", level = 1),
+                exerciseAvailabilityView(id = 2L, name = "pets", level = 2),
+                exerciseAvailabilityView(id = 3L, name = "pets ddd", level = 1),
+                exerciseAvailabilityView(id = 4L, name = "pets ddd", level = 2),
+            )
+        every { studyHistoryRepository.getDoneExerciseIds(subGroupId, userId) } returns listOf(1L, 3L)
+        every { studyHistoryRepository.findAllAttemptsBySubGroupAndUserAccount(subGroupId, userId) } returns
+            listOf(
+                exerciseLastAttemptView(exerciseId = 1L, replaysCount = 0, wrongAnswers = 0),
+                exerciseLastAttemptView(exerciseId = 3L, replaysCount = 0, wrongAnswers = 5),
+            )
+
+        // WHEN
+        val entityPathIds =
+            exerciseService
+                .getAvailableExercisesForSubGroup(doneExercises, allExercises, userId, subGroupId)
+                .mapNotNull { it.id }
+                .toSet()
+        val projectionPathIds = exerciseService.getAvailableExerciseIds(listOf(requestedExerciseId)).toSet()
+
+        // THEN
+        entityPathIds shouldBe projectionPathIds
+        entityPathIds shouldBe setOf(1L, 2L, 3L)
+    }
+
+    @Test
+    fun `unlock stays available after a later unsuccessful attempt on both access paths`() {
+        // GIVEN — ex1 (level 1) was done well in an earlier attempt and replayed badly afterwards;
+        // the sticky rule keeps ex2 unlocked on both access paths.
+        ReflectionTestUtils.setField(exerciseSuccessCalculator, "minRepetitionIndex", 0.8)
+        ReflectionTestUtils.setField(exerciseSuccessCalculator, "minRightAnswersIndex", 0.8)
+        val subGroupId = 5L
+        val userId = 3L
+        val requestedExerciseId = 1L
+        val currentUser = UserAccount(id = userId, email = "user@example.com", fullName = "User")
+        currentUser.roleSet.add(Role(id = 1L, name = BrnRole.USER))
+        val subGroup = SubGroup(id = subGroupId, series = series, level = 1, code = "code", name = "subGroup name")
+        val ex1 = Exercise(id = 1, name = "pets", level = 1, subGroup = subGroup)
+        val ex2 = Exercise(id = 2, name = "pets", level = 2, subGroup = subGroup)
+        val allExercises = listOf(ex1, ex2)
+        val doneExercises = listOf(ex1)
+
+        // ex1 history: an earlier successful attempt followed by a recent unsuccessful one
+        every { studyHistoryRepository.findAllAttemptsBySubGroupAndUserAccount(subGroupId, userId) } returns
+            listOf(
+                exerciseLastAttemptView(exerciseId = 1L, replaysCount = 0, wrongAnswers = 0),
+                exerciseLastAttemptView(exerciseId = 1L, replaysCount = 5, wrongAnswers = 9),
+            )
+
+        // projection path lookups
+        every { exerciseRepository.findSubGroupIdByExerciseId(requestedExerciseId) } returns subGroupId
+        every { userAccountService.getCurrentUser() } returns currentUser
+        every { exerciseRepository.findExerciseAvailabilityBySubGroupId(subGroupId) } returns
+            listOf(
+                exerciseAvailabilityView(id = 1L, name = "pets", level = 1),
+                exerciseAvailabilityView(id = 2L, name = "pets", level = 2),
+            )
+        every { studyHistoryRepository.getDoneExerciseIds(subGroupId, userId) } returns listOf(1L)
+
+        // WHEN
+        val entityPathIds =
+            exerciseService
+                .getAvailableExercisesForSubGroup(doneExercises, allExercises, userId, subGroupId)
+                .mapNotNull { it.id }
+                .toSet()
+        val projectionPathIds = exerciseService.getAvailableExerciseIds(listOf(requestedExerciseId)).toSet()
+
+        // THEN
+        entityPathIds shouldBe projectionPathIds
+        entityPathIds shouldBe setOf(1L, 2L)
+    }
+
+    @Test
+    fun `availability is consistent across both access paths for a privileged role`() {
+        // GIVEN — ADMIN sees every exercise available on both access paths
+        val subGroupId = 5L
+        val userId = 3L
+        val requestedExerciseId = 1L
+        val currentUser = UserAccount(id = userId, email = "admin@example.com", fullName = "Admin")
+        currentUser.roleSet.add(Role(id = 1L, name = BrnRole.ADMIN))
+        val subGroup = SubGroup(id = subGroupId, series = series, level = 1, code = "code", name = "subGroup name")
+        val ex1 = Exercise(id = 1, name = "pets", level = 1, subGroup = subGroup)
+        val ex2 = Exercise(id = 2, name = "pets", level = 2, subGroup = subGroup)
+        val ex3 = Exercise(id = 3, name = "pets ddd", level = 1, subGroup = subGroup)
+        val allExercises = listOf(ex1, ex2, ex3)
+
+        // entity-based listing path short-circuits for a privileged role
+        every { exerciseRepository.findExercisesWithSubGroupBySubGroupId(subGroupId) } returns allExercises
+        every { userAccountService.getCurrentUserRoles() } returns setOf(BrnRole.ADMIN)
+        every { urlConversionService.makeUrlForNoise(ofType(String::class)) } returns "noiseUrl"
+
+        // projection-based ids path short-circuits for a privileged role
+        every { exerciseRepository.findSubGroupIdByExerciseId(requestedExerciseId) } returns subGroupId
+        every { userAccountService.getCurrentUser() } returns currentUser
+        every { exerciseRepository.findExerciseIdsBySubGroupId(subGroupId) } returns listOf(1L, 2L, 3L)
+
+        // WHEN
+        val listingAvailableIds =
+            exerciseService
+                .findExercisesByUserIdAndSubGroupId(userId, subGroupId)
+                .filter { it.available }
+                .mapNotNull { it.id }
+                .toSet()
+        val lookupIds = exerciseService.getAvailableExerciseIds(listOf(requestedExerciseId)).toSet()
+
+        // THEN
+        listingAvailableIds shouldBe lookupIds
+        lookupIds shouldBe setOf(1L, 2L, 3L)
     }
 
     @Test

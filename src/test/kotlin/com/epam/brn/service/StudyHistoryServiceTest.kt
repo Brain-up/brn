@@ -55,6 +55,9 @@ internal class StudyHistoryServiceTest {
     @MockK
     lateinit var toMock: LocalDateTime
 
+    @MockK
+    lateinit var exerciseSuccessCalculator: ExerciseSuccessCalculator
+
     @Test
     fun `should return today timer`() {
         // GIVEN
@@ -216,6 +219,8 @@ internal class StudyHistoryServiceTest {
         every { studyHistoryMockK.exercise.id } returns exerciseId
         every { studyHistoryMockK.tasksCount } returns listenWordsCount.toShort()
         every { studyHistoryMockK.spentTimeInSeconds } returns 3600L
+        every { studyHistoryMockK.startTime } returns exerciseDate
+        every { exerciseSuccessCalculator.isSuccessful(any<StudyHistory>()) } returns true
 
         val userDailyDetailStatistics = listOf(studyHistoryMockK)
         every {
@@ -265,6 +270,8 @@ internal class StudyHistoryServiceTest {
         every { studyHistoryMockK.tasksCount } returns listenWordsCount.toShort()
         every { userAccountServiceMock.getCurrentUserDto().id } returns userId
         every { studyHistoryMockK.spentTimeInSeconds } returns 3600L
+        every { studyHistoryMockK.startTime } returns exerciseDate
+        every { exerciseSuccessCalculator.isSuccessful(any<StudyHistory>()) } returns true
 
         val userDailyDetailStatistics = listOf(studyHistoryMockK)
         every {
@@ -312,6 +319,8 @@ internal class StudyHistoryServiceTest {
         every { studyHistoryMockK.exercise.id } returns exerciseId
         every { studyHistoryMockK.tasksCount } returns listenWordsCount.toShort()
         every { studyHistoryMockK.spentTimeInSeconds } returns 3600L
+        every { studyHistoryMockK.startTime } returns exerciseDate
+        every { exerciseSuccessCalculator.isSuccessful(any<StudyHistory>()) } returns true
         val userDailyDetailStatistics = listOf(studyHistoryMockK, studyHistoryMockK)
         every {
             studyHistoryRepositoryMock.getHistories(userId, any(), any())
@@ -389,6 +398,8 @@ internal class StudyHistoryServiceTest {
             spentTimeInSeconds2,
             spentTimeInSeconds3,
         )
+        every { studyHistoryMockK.startTime } returns exerciseDate
+        every { exerciseSuccessCalculator.isSuccessful(any<StudyHistory>()) } returns true
 
         val userDailyDetailStatistics =
             listOf(
@@ -450,5 +461,75 @@ internal class StudyHistoryServiceTest {
 
         // THEN
         statisticForPeriod.isEmpty() shouldBe true
+    }
+
+    @Test
+    fun `getDailyStatistics should not count an exercise when its first attempt was failed`() {
+        // GIVEN — one exercise with two attempts; the earliest (first) attempt is failed
+        val userId = 1L
+        val day = LocalDateTime.now()
+        val seriesName = "seriesName"
+        val exerciseId = 1L
+
+        val firstAttempt = mockk<StudyHistory>()
+        val secondAttempt = mockk<StudyHistory>()
+        listOf(firstAttempt, secondAttempt).forEach {
+            every {
+                it.exercise.subGroup!!
+                    .series.name
+            } returns seriesName
+            every { it.exercise.id } returns exerciseId
+            every { it.tasksCount } returns 10.toShort()
+            every { it.spentTimeInSeconds } returns 60L
+        }
+        every { firstAttempt.startTime } returns day
+        every { secondAttempt.startTime } returns day.plusMinutes(5)
+        every { exerciseSuccessCalculator.isSuccessful(firstAttempt) } returns false
+        every { exerciseSuccessCalculator.isSuccessful(secondAttempt) } returns true
+        every {
+            studyHistoryRepositoryMock.getHistories(userId, any(), any())
+        } returns listOf(secondAttempt, firstAttempt)
+
+        // WHEN
+        val statistics = studyHistoryService.getUserDailyStatistics(day, userId).first()
+
+        // THEN — the failed first attempt must not inflate the "from first time" counter
+        statistics.uniqueDoneExercises shouldBe 1
+        statistics.doneExercisesSuccessfullyFromFirstTime shouldBe 0
+    }
+
+    @Test
+    fun `getDailyStatistics should count an exercise when its first attempt was successful even if a later one failed`() {
+        // GIVEN — one exercise with two attempts; only the earliest (first) attempt is successful
+        val userId = 1L
+        val day = LocalDateTime.now()
+        val seriesName = "seriesName"
+        val exerciseId = 1L
+
+        val firstAttempt = mockk<StudyHistory>()
+        val secondAttempt = mockk<StudyHistory>()
+        listOf(firstAttempt, secondAttempt).forEach {
+            every {
+                it.exercise.subGroup!!
+                    .series.name
+            } returns seriesName
+            every { it.exercise.id } returns exerciseId
+            every { it.tasksCount } returns 10.toShort()
+            every { it.spentTimeInSeconds } returns 60L
+        }
+        every { firstAttempt.startTime } returns day
+        every { secondAttempt.startTime } returns day.plusMinutes(5)
+        every { exerciseSuccessCalculator.isSuccessful(firstAttempt) } returns true
+        every { exerciseSuccessCalculator.isSuccessful(secondAttempt) } returns false
+        every {
+            studyHistoryRepositoryMock.getHistories(userId, any(), any())
+        } returns listOf(secondAttempt, firstAttempt)
+
+        // WHEN
+        val statistics = studyHistoryService.getUserDailyStatistics(day, userId).first()
+
+        // THEN — success is judged by the first attempt only
+        statistics.uniqueDoneExercises shouldBe 1
+        statistics.doneExercisesSuccessfullyFromFirstTime shouldBe 1
     }
 }
