@@ -246,7 +246,7 @@ class UserSubGroupStatisticsControllerV2IT : BaseIT() {
         userDailyDetailStatisticsDto2.allDoneExercises shouldBe 1
         userDailyDetailStatisticsDto2.uniqueDoneExercises shouldBe 1
         userDailyDetailStatisticsDto2.repeatedExercises shouldBe 0
-        userDailyDetailStatisticsDto2.doneExercisesSuccessfullyFromFirstTime shouldBe 1
+        userDailyDetailStatisticsDto2.doneExercisesSuccessfullyFromFirstTime shouldBe 0
         userDailyDetailStatisticsDto2.listenWordsCount shouldBe 5
     }
 
@@ -311,7 +311,7 @@ class UserSubGroupStatisticsControllerV2IT : BaseIT() {
         userDailyDetailStatisticsDto2.allDoneExercises shouldBe 1
         userDailyDetailStatisticsDto2.uniqueDoneExercises shouldBe 1
         userDailyDetailStatisticsDto2.repeatedExercises shouldBe 0
-        userDailyDetailStatisticsDto2.doneExercisesSuccessfullyFromFirstTime shouldBe 1
+        userDailyDetailStatisticsDto2.doneExercisesSuccessfullyFromFirstTime shouldBe 0
         userDailyDetailStatisticsDto2.listenWordsCount shouldBe 5
     }
 
