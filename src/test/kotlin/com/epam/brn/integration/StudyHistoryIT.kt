@@ -349,6 +349,99 @@ class StudyHistoryIT : BaseIT() {
         result1?.size shouldBe 0
     }
 
+    @Test
+    fun `getStatisticsByUserAccountIds should return all-time stats per user in one query`() {
+        // GIVEN
+        val user1 = insertUser("batch-user1@test.test")
+        val user2 = insertUser("batch-user2@test.test")
+        val series = insertSeries()
+        val subGroup = insertSubGroup(series)
+        val exerciseA = insertExercise("A", subGroup)
+        val exerciseB = insertExercise("B", subGroup)
+        val now = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS)
+        studyHistoryRepository.saveAll(
+            listOf(
+                insertStudyHistory(user1, exerciseA, now.minusDays(1)),
+                insertStudyHistory(user1, exerciseB, now),
+                insertStudyHistory(user2, exerciseA, now),
+            ),
+        )
+
+        // WHEN
+        val stats = studyHistoryRepository.getStatisticsByUserAccountIds(listOf(user1.id!!, user2.id!!))
+
+        // THEN
+        stats.size shouldBe 2
+        val user1Stats = stats.first { it.userId == user1.id }
+        user1Stats.doneExercises shouldBe 2
+        user1Stats.firstStudy shouldBe now.minusDays(1)
+        user1Stats.lastStudy shouldBe now
+        val user2Stats = stats.first { it.userId == user2.id }
+        user2Stats.doneExercises shouldBe 1
+    }
+
+    @Test
+    fun `getHistoriesForUsers should return histories for the given users within the period`() {
+        // GIVEN
+        val user1 = insertUser("batch-user1@test.test")
+        val user2 = insertUser("batch-user2@test.test")
+        val series = insertSeries()
+        val subGroup = insertSubGroup(series)
+        val exerciseA = insertExercise("A", subGroup)
+        val now = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS)
+        studyHistoryRepository.saveAll(
+            listOf(
+                insertStudyHistory(user1, exerciseA, now.minusDays(1)),
+                insertStudyHistory(user1, exerciseA, now),
+                insertStudyHistory(user2, exerciseA, now),
+                insertStudyHistory(user1, exerciseA, now.minusDays(10)), // out of range
+            ),
+        )
+
+        // WHEN
+        val histories =
+            studyHistoryRepository.getHistoriesForUsers(
+                listOf(user1.id!!, user2.id!!),
+                now.minusDays(2),
+                now.plusDays(1),
+            )
+
+        // THEN
+        histories.size shouldBe 3
+        histories.map { it.userAccount.id } shouldBe listOf(user1.id, user1.id, user2.id)
+    }
+
+    @Test
+    fun `countStudyDaysForUsers should count distinct exercising days per user`() {
+        // GIVEN
+        val user1 = insertUser("batch-user1@test.test")
+        val user2 = insertUser("batch-user2@test.test")
+        val series = insertSeries()
+        val subGroup = insertSubGroup(series)
+        val exerciseA = insertExercise("A", subGroup)
+        val now = LocalDateTime.now().truncatedTo(ChronoUnit.DAYS)
+        studyHistoryRepository.saveAll(
+            listOf(
+                insertStudyHistory(user1, exerciseA, now.plusHours(1)),
+                insertStudyHistory(user1, exerciseA, now.plusHours(3)), // same day as above
+                insertStudyHistory(user1, exerciseA, now.minusDays(1)),
+                insertStudyHistory(user2, exerciseA, now),
+            ),
+        )
+
+        // WHEN
+        val studyDays =
+            studyHistoryRepository.countStudyDaysForUsers(
+                listOf(user1.id!!, user2.id!!),
+                now.minusDays(5),
+                now.plusDays(1),
+            )
+
+        // THEN
+        studyDays.first { it.userId == user1.id }.studyDays shouldBe 2
+        studyDays.first { it.userId == user2.id }.studyDays shouldBe 1
+    }
+
     private fun insertStudyHistory(
         existingUser: UserAccount,
         existingExercise: Exercise,
@@ -366,12 +459,14 @@ class StudyHistoryIT : BaseIT() {
         ),
     )
 
-    private fun insertUser(): UserAccount = userAccountRepository.save(
+    private fun insertUser(): UserAccount = insertUser("test@test.test")
+
+    private fun insertUser(email: String): UserAccount = userAccountRepository.save(
         UserAccount(
             fullName = "testUserFirstName",
             gender = BrnGender.MALE.toString(),
             bornYear = 2000,
-            email = "test@test.test",
+            email = email,
             active = true,
         ),
     )
