@@ -2,7 +2,6 @@ package com.epam.brn.service.impl
 
 import com.epam.brn.dto.AudioFileMetaData
 import com.epam.brn.dto.response.UserWithAnalyticsResponse
-import com.epam.brn.dto.statistics.DayStudyStatistics
 import com.epam.brn.enums.ExerciseType
 import com.epam.brn.enums.Voice
 import com.epam.brn.exception.EntityNotFoundException
@@ -17,7 +16,7 @@ import com.epam.brn.service.TimeService
 import com.epam.brn.service.UserAccountService
 import com.epam.brn.service.UserAnalyticsService
 import com.epam.brn.service.WordsService
-import com.epam.brn.service.statistics.UserPeriodStatisticsService
+import com.epam.brn.service.statistics.impl.UserDayStatisticsService
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import java.io.InputStream
@@ -33,7 +32,7 @@ class UserAnalyticsServiceImpl(
     private val userAccountRepository: UserAccountRepository,
     private val studyHistoryRepository: StudyHistoryRepository,
     private val exerciseRepository: ExerciseRepository,
-    private val userDayStatisticsService: UserPeriodStatisticsService<DayStudyStatistics>,
+    private val userDayStatisticsService: UserDayStatisticsService,
     private val timeService: TimeService,
     private val textToSpeechService: TextToSpeechService,
     private val userAccountService: UserAccountService,
@@ -47,6 +46,8 @@ class UserAnalyticsServiceImpl(
         role: String,
     ): List<UserWithAnalyticsResponse> {
         val users = userAccountRepository.findUsersAccountsByRole(role).map { it.toAnalyticsDto() }
+        if (users.isEmpty()) return users
+        val userIds = users.mapNotNull { it.id }
 
         val now = timeService.now()
         val firstWeekDay = WeekFields.of(Locale.getDefault()).dayOfWeek()
@@ -55,19 +56,29 @@ class UserAnalyticsServiceImpl(
         val to = startDay.plusDays(7L).with(LocalTime.MAX)
         val startOfCurrentMonth = now.withDayOfMonth(1).with(LocalTime.MIN)
 
-        users.onEach { user ->
-            user.lastWeek = userDayStatisticsService.getStatisticsForPeriod(from, to, user.id)
-            user.studyDaysInCurrentMonth =
-                countWorkDaysForMonth(
-                    userDayStatisticsService.getStatisticsForPeriod(startOfCurrentMonth, now, user.id),
-                )
+        // Fetch analytics for every user in a few aggregate queries instead of 3 queries per user.
+        val weekHistoriesByUser =
+            studyHistoryRepository
+                .getHistoriesForUsers(userIds, from, to)
+                .groupBy { it.userAccount.id }
+        val studyDaysByUser =
+            studyHistoryRepository
+                .countStudyDaysForUsers(userIds, startOfCurrentMonth, now)
+                .associate { it.userId to it.studyDays }
+        val statisticsByUser =
+            studyHistoryRepository
+                .getStatisticsByUserAccountIds(userIds)
+                .associateBy { it.userId }
 
-            val userStatistic = studyHistoryRepository.getStatisticsByUserAccountId(user.id)
-            user.apply {
-                this.firstDone = userStatistic.firstStudy
-                this.lastDone = userStatistic.lastStudy
-                this.spentTime = userStatistic.spentTime.toDuration(DurationUnit.SECONDS)
-                this.doneExercises = userStatistic.doneExercises
+        users.onEach { user ->
+            user.lastWeek = userDayStatisticsService.buildDayStatistics(weekHistoriesByUser[user.id].orEmpty())
+            user.studyDaysInCurrentMonth = studyDaysByUser[user.id] ?: 0
+
+            statisticsByUser[user.id]?.let { userStatistic ->
+                user.firstDone = userStatistic.firstStudy
+                user.lastDone = userStatistic.lastStudy
+                user.spentTime = userStatistic.spentTime.toDuration(DurationUnit.SECONDS)
+                user.doneExercises = userStatistic.doneExercises
             }
         }
         return users
@@ -131,9 +142,4 @@ class UserAnalyticsServiceImpl(
 
     fun isMultiWords(seriesType: ExerciseType): Boolean =
         seriesType == ExerciseType.PHRASES || seriesType == ExerciseType.SENTENCE || seriesType == ExerciseType.WORDS_SEQUENCES
-
-    fun countWorkDaysForMonth(dayStudyStatistics: List<DayStudyStatistics>): Int = dayStudyStatistics
-        .map { it.date }
-        .groupBy { it.dayOfMonth }
-        .keys.size
 }
