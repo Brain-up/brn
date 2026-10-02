@@ -49,30 +49,11 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
     fun findLastByUserAccountId(userId: Long): List<StudyHistory>
 
     @Query(
-        "SELECT s FROM StudyHistory s " +
-            " WHERE (s.userAccount.id, s.startTime) " +
-            " IN (SELECT userAccount.id, max(startTime) " +
-            "       FROM StudyHistory " +
-            "       WHERE exercise.subGroup.id = :subGroupId  " +
-            "       GROUP BY exercise.id, userAccount.id " +
-            "       HAVING userAccount.id = :userId)",
-    )
-    fun findLastBySubGroupAndUserAccount(
-        subGroupId: Long,
-        userId: Long,
-    ): List<StudyHistory>
-
-    @Query(
         "SELECT s.exercise.id AS exerciseId, s.tasksCount AS tasksCount, " +
             "s.wrongAnswers AS wrongAnswers, s.replaysCount AS replaysCount FROM StudyHistory s " +
-            "WHERE (s.userAccount.id, s.exercise.id, s.startTime) " +
-            "IN (SELECT userAccount.id, exercise.id, max(startTime) " +
-            "      FROM StudyHistory " +
-            "      WHERE exercise.subGroup.id = :subGroupId " +
-            "      GROUP BY exercise.id, userAccount.id " +
-            "      HAVING userAccount.id = :userId)",
+            "WHERE s.exercise.subGroup.id = :subGroupId AND s.userAccount.id = :userId",
     )
-    fun findLastAttemptBySubGroupAndUserAccount(
+    fun findAllAttemptsBySubGroupAndUserAccount(
         @Param("subGroupId") subGroupId: Long,
         @Param("userId") userId: Long,
     ): List<ExerciseLastAttemptView>

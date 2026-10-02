@@ -44,8 +44,13 @@ name group the system SHALL:
 
 - always make the first exercise available as the entry point;
 - make every already-completed exercise of that name available;
-- unlock the next not-yet-completed exercise only when the most recent attempt of
-  the last completed exercise in that name group was done well.
+- unlock the next not-yet-completed exercise only when the last completed exercise
+  in that name group was done well **at least once** (in any recorded attempt, not
+  only its most recent one).
+
+Unlocking is sticky: once the next exercise has been unlocked by a successful
+attempt, a later unsuccessful attempt on an already-completed exercise SHALL NOT
+re-lock it.
 
 Exercises in other name groups SHALL be unaffected by a given name group's progress.
 
@@ -63,8 +68,16 @@ Exercises in other name groups SHALL be unaffected by a given name group's progr
 #### Scenario: Last attempt was not done well
 
 - **WHEN** the last completed exercise of a name has a most recent attempt that was not done well
+- **AND** no earlier attempt of that exercise was done well
 - **THEN** only the completed exercises of that name (plus the always-available first) are available
 - **AND** the next not-yet-completed exercise remains locked
+
+#### Scenario: Unlock stays after a later unsuccessful attempt
+
+- **WHEN** the last completed exercise of a name was done well in an earlier attempt
+- **AND** its most recent attempt was not done well
+- **AND** at least one exercise of that name is not yet completed
+- **THEN** all completed exercises of that name plus the next not-yet-completed exercise remain available
 
 #### Scenario: No recorded attempt for the last completed exercise
 
@@ -93,3 +106,21 @@ values.
 
 - **WHEN** an attempt's repetition index or right-answers index is below its configured minimum
 - **THEN** the attempt is not considered done well
+
+### Requirement: Consistent Availability Across Access Paths
+
+The system SHALL compute the same exercise availability for a given user and
+subgroup regardless of which access path is used to obtain it — the subgroup
+exercise listing or the available-exercise-ids lookup. Both paths SHALL apply the
+availability rules defined in this capability identically.
+
+#### Scenario: Both paths agree for a regular user
+
+- **WHEN** a regular user's availability for a subgroup is obtained via the subgroup exercise listing
+- **AND** the available-exercise-ids lookup is obtained for the same user and subgroup
+- **THEN** the set of exercises marked available by the listing equals the set of exercise ids returned by the lookup
+
+#### Scenario: Both paths agree for a privileged role
+
+- **WHEN** an `ADMIN` or `SPECIALIST` obtains availability for a subgroup via either access path
+- **THEN** both paths report every exercise in the subgroup as available
