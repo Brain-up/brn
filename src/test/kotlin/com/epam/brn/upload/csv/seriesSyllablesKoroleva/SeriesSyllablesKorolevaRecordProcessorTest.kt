@@ -13,13 +13,14 @@ import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.repo.SubGroupRepository
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.verify
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -119,7 +120,7 @@ internal class SeriesSyllablesKorolevaRecordProcessorTest {
                     ),
                 ).first()
 
-        assertThat(actual).isEqualTo(expected)
+        actual shouldBe expected
         verify { exerciseRepositoryMock.save(expected) }
     }
 
@@ -153,7 +154,7 @@ internal class SeriesSyllablesKorolevaRecordProcessorTest {
                 .tasks
 
         tasks.forEach {
-            assertThat(it.answerOptions).containsExactlyElementsOf(expected)
+            it.answerOptions shouldContainExactly expected
         }
         verify { resourceRepositoryMock.saveAll(expected) }
     }
@@ -161,7 +162,7 @@ internal class SeriesSyllablesKorolevaRecordProcessorTest {
     @Test
     fun `should throw EntityNotFoundException`() {
         every { subGroupRepositoryMock.findByCodeAndLocale("code", BrnLocale.RU.locale) } returns null
-        assertThrows(EntityNotFoundException::class.java) {
+        shouldThrow<EntityNotFoundException> {
             seriesSyllablesKorolevaProcessor.process(
                 mutableListOf(
                     SeriesSyllablesKorolevaRecord(

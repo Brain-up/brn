@@ -5,9 +5,9 @@ import com.epam.brn.dto.statistics.UserExercisingPeriod
 import com.epam.brn.dto.statistics.UserExercisingProgressStatus
 import com.epam.brn.integration.BaseIT
 import com.epam.brn.service.statistics.progress.status.requirements.impl.StatusRequirementsManagerImpl
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import kotlin.test.assertEquals
 
 /**
  *@author Nikolai Lazarev
@@ -37,7 +37,7 @@ class StatusRequirementsManagerImplIT : BaseIT() {
         val periodRequirements = manager.getPeriodRequirements(UserExercisingPeriod.WEEK)
 
         // THEN
-        assertEquals(periodRequirementsWeek, periodRequirements)
+        periodRequirements shouldBe periodRequirementsWeek
     }
 
     @Test
@@ -46,6 +46,6 @@ class StatusRequirementsManagerImplIT : BaseIT() {
         val periodRequirements = manager.getPeriodRequirements(UserExercisingPeriod.DAY)
 
         // THEN
-        assertEquals(periodRequirementsDay, periodRequirements)
+        periodRequirements shouldBe periodRequirementsDay
     }
 }

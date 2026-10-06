@@ -7,8 +7,8 @@ import com.epam.brn.model.Exercise
 import com.epam.brn.repo.ExerciseRepository
 import com.fasterxml.jackson.core.type.TypeReference
 import com.google.gson.Gson
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
@@ -86,10 +86,10 @@ class UserSubGroupStatisticsControllerIT : BaseIT() {
             objectMapper.readValue(baseResponseJson, object : TypeReference<List<SubGroupStatisticsResponse>>() {})
 
         // THEN
-        assertEquals(1, resultStatistic.first().totalExercises)
-        assertEquals(1, resultStatistic.first().completedExercises)
+        resultStatistic.first().totalExercises shouldBe 1
+        resultStatistic.first().completedExercises shouldBe 1
 
-        assertEquals(0, resultStatistic[1].completedExercises)
-        assertEquals(1, resultStatistic[1].totalExercises)
+        resultStatistic[1].completedExercises shouldBe 0
+        resultStatistic[1].totalExercises shouldBe 1
     }
 }

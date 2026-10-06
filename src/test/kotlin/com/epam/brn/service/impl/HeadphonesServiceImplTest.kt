@@ -3,10 +3,8 @@ package com.epam.brn.service.impl
 import com.epam.brn.enums.HeadphonesType
 import com.epam.brn.model.Headphones
 import com.epam.brn.repo.HeadphonesRepository
-import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.equalTo
-import com.natpryce.hamkrest.hasSize
-import com.natpryce.hamkrest.sameInstance
+import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.types.shouldBeSameInstanceAs
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -35,7 +33,7 @@ internal class HeadphonesServiceImplTest {
         val headphonesDto = headphonesServiceImpl.save(headphonesEntity)
 
         // THEN
-        assertThat(headphonesDto.name, sameInstance(headphonesName))
+        headphonesDto.name shouldBeSameInstanceAs headphonesName
     }
 
     @Test
@@ -47,6 +45,6 @@ internal class HeadphonesServiceImplTest {
         val allHeadphonesForUser = headphonesServiceImpl.getAllHeadphonesForUser(1L)
 
         // THEN
-        assertThat(allHeadphonesForUser, hasSize(equalTo(2)))
+        allHeadphonesForUser shouldHaveSize 2
     }
 }

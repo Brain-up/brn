@@ -5,6 +5,10 @@ import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.model.Series
 import com.epam.brn.repo.ExerciseGroupRepository
 import com.epam.brn.repo.SeriesRepository
+import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
@@ -12,11 +16,6 @@ import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
-import kotlin.test.assertEquals
-import kotlin.test.assertNotEquals
-import kotlin.test.assertNotNull
-import org.assertj.core.api.Assertions.assertThat
-import kotlin.test.assertTrue
 
 @DataJpaTest
 @Tag("integration-test")
@@ -46,8 +45,8 @@ class SeriesRepositoryTest {
         val result = seriesRepository.findByIdAndActiveTrue(series1.id!!)
 
         // THEN
-        assertEquals(true, result?.active)
-        assertNotEquals(series2.id!!, result?.id)
+        result?.active shouldBe true
+        result?.id shouldNotBe series2.id!!
     }
 
     @Test
@@ -61,11 +60,11 @@ class SeriesRepositoryTest {
         val result = seriesRepository.findByExerciseGroupIdWithSubGroups(group.id!!)
 
         // THEN
-        assertNotNull(result)
-        assertThat(result).hasSize(1)
-        assertTrue(result[0].active)
-        assertEquals(series1.id!!, result[0].id)
-        assertNotEquals(series2.id!!, result[0].id)
+        result.shouldNotBeNull()
+        result shouldHaveSize 1
+        result[0].active shouldBe true
+        result[0].id shouldBe series1.id!!
+        result[0].id shouldNotBe series2.id!!
     }
 
     private fun insertGroup(): ExerciseGroup {

@@ -1,0 +1,50 @@
+schema: spec-driven
+
+context: |
+  Project: BrainUp — auditory-training platform. Monorepo.
+  Backend (repo root): Kotlin 2.1.20 + Spring Boot 3.5.3 (jakarta.*), JDK 17, Gradle wrapper.
+    Package root com.epam.brn. Layering: controller -> service -> repo, with dto (request/response) and model (JPA entities).
+    Persistence: Spring Data JPA over Postgres 13; schema via Flyway migrations in src/main/resources/db/migration
+      named V2yearmonthday_taskNumber.sql (e.g. V220210804_899.sql).
+    Auth: Firebase bearer token validated by auth/filter/FirebaseTokenAuthenticationFilter.
+  Frontends: frontend/ (Ember 4.12 Octane, pnpm), frontend-angular/ (Angular 11, npm).
+  Test stack (mandatory, no exceptions beyond one documented keep): JUnit 5 runner + MockK (io.mockk) mocks
+    + kotest-assertions (io.kotest.matchers.*). No Mockito, no AssertJ, no Kluent, no kotlin.test, no JUnit Assertions/assertThrows.
+    Unit tests: JUnit5 + MockK + Kotest. Integration tests under src/test/.../integration extend BaseIT,
+    tagged @Tag("integration-test"), run via `gradlew integrationTest` against a Postgres Testcontainer (excluded from `test`/`build`).
+  Style: ktlint 1.5.0 gate — a failing ktlint FAILS the build (compileKotlin depends on ktlintCheck).
+    No wildcard imports, no unused imports; import order kotest before mockk before org.*. Run `gradlew ktlintFormat` before committing.
+  Coverage/Sonar exclude dto, model, config, exception, data loaders, TTS config — do not chase coverage there.
+  Conventions: branches `#GitHub_TaskNumber-# issue description` (task number 0-1999).
+
+# Per-artifact rules (optional)
+# Add custom rules for specific artifacts.
+# Example:
+#   rules:
+#     proposal:
+#       - Keep proposals under 500 words
+#       - Always include a "Non-goals" section
+#     tasks:
+#       - Break tasks into chunks of max 2 hours
+
+# Per-artifact rules (optional)
+# Add custom rules for specific artifacts.
+# Example:
+#   rules:
+#     proposal:
+#       - Keep proposals under 500 words
+#       - Always include a "Non-goals" section
+#     tasks:
+#       - Break tasks into chunks of max 2 hours
+
+# Per-operation guidance (optional)
+# Add advisory guidance for how apply and archive work should be conducted.
+# This is separate from artifact rules above.
+# Example:
+#   operations:
+#     apply:
+#       guidance:
+#         - Keep test summaries concise
+#     archive:
+#       guidance:
+#         - Summarize the archive outcome before finishing

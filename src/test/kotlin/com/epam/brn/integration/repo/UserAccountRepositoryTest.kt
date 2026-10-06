@@ -2,8 +2,9 @@ package com.epam.brn.integration.repo
 
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.UserAccountRepository
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.assertDoesNotThrow
+import io.kotest.assertions.throwables.shouldNotThrowAny
+import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -48,9 +49,9 @@ class UserAccountRepositoryTest {
 
         // THEN
         val retrievedUser = testEntityManager.find(UserAccount::class.java, savedUser.id)
-        assertThat(retrievedUser).isNotNull
+        retrievedUser.shouldNotBeNull()
         val actualLastVisit = retrievedUser.lastVisit?.truncatedTo(ChronoUnit.MILLIS)
-        assertThat(actualLastVisit).isEqualTo(today)
+        actualLastVisit shouldBe today
     }
 
     @Test
@@ -60,7 +61,7 @@ class UserAccountRepositoryTest {
         val email = "404.test@email.com"
 
         // WHEN & THEN
-        assertDoesNotThrow {
+        shouldNotThrowAny {
             repository.updateLastVisitByEmail(email, today)
         }
     }
@@ -91,8 +92,8 @@ class UserAccountRepositoryTest {
 
         // THEN
         val retrievedUser = testEntityManager.find(UserAccount::class.java, savedUser.id)
-        assertThat(retrievedUser).isNotNull
+        retrievedUser.shouldNotBeNull()
         val actualLastVisit = retrievedUser.lastVisit?.truncatedTo(ChronoUnit.MILLIS)
-        assertThat(actualLastVisit).isEqualTo(recentVisit)
+        actualLastVisit shouldBe recentVisit
     }
 }

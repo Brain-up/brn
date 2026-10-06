@@ -1,6 +1,7 @@
 package com.epam.brn.job
 
 import com.epam.brn.service.cloud.CloudService
+import io.kotest.matchers.shouldBe
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -11,7 +12,6 @@ import io.mockk.slot
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.test.util.ReflectionTestUtils
-import kotlin.test.assertEquals
 
 @ExtendWith(MockKExtension::class)
 internal class UnverifiedPicturesClearJobTest {
@@ -36,6 +36,6 @@ internal class UnverifiedPicturesClearJobTest {
         unverifiedPicturesClearJob.clearUnusedPictures()
 
         // THEN
-        assertEquals(capturedFileNames.captured, listOf("unverifiedPicturesPath/file2.png"))
+        capturedFileNames.captured shouldBe listOf("unverifiedPicturesPath/file2.png")
     }
 }

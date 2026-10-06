@@ -4,14 +4,19 @@ import com.epam.brn.dto.github.GitHubContributorDto
 import com.epam.brn.dto.github.GitHubUserDto
 import com.epam.brn.webclient.config.GitHubApiClientConfig
 import com.epam.brn.webclient.property.GitHubApiClientProperty
+import io.kotest.assertions.assertSoftly
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.collections.shouldNotBeEmpty
+import io.kotest.matchers.nulls.shouldBeNull
+import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeInstanceOf
 import io.mockk.junit5.MockKExtension
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
@@ -89,12 +94,12 @@ internal class GitHubApiClientTest {
 
         val contributors = client.getGitHubContributors("Brain-Up", "brn", 50)
 
-        assertAll(
-            { assertThat(contributors).isNotEmpty },
-            { assertThat(contributors.size).isEqualTo(56) },
-            { assertThat(contributors[0]).isInstanceOf(GitHubContributorDto::class.java) },
-            { assertThat(contributors[0]).isEqualTo(contributor) },
-        )
+        assertSoftly {
+            contributors.shouldNotBeEmpty()
+            contributors.size shouldBe 56
+            contributors[0].shouldBeInstanceOf<GitHubContributorDto>()
+            contributors[0] shouldBe contributor
+        }
     }
 
     @ParameterizedTest
@@ -109,9 +114,7 @@ internal class GitHubApiClientTest {
 
         val contributors = client.getGitHubContributors("Brain-Up", "brn", 50)
 
-        assertAll(
-            { assertThat(contributors).isEmpty() },
-        )
+        contributors.shouldBeEmpty()
     }
 
     @Test
@@ -137,11 +140,11 @@ internal class GitHubApiClientTest {
 
         val user = client.getGitHubUser("test-user")
 
-        assertAll(
-            { assertThat(user).isNotNull },
-            { assertThat(user).isInstanceOf(GitHubUserDto::class.java) },
-            { assertThat(user).isEqualTo(expectedUser) },
-        )
+        assertSoftly {
+            user.shouldNotBeNull()
+            user.shouldBeInstanceOf<GitHubUserDto>()
+            user shouldBe expectedUser
+        }
     }
 
     @ParameterizedTest
@@ -156,9 +159,7 @@ internal class GitHubApiClientTest {
 
         val user = client.getGitHubUser("test-user")
 
-        assertAll(
-            { assertThat(user).isNull() },
-        )
+        user.shouldBeNull()
     }
 
     private fun readResourceAsString(fileName: String) = this::class.java.getResource("/inputData/githubapi/$fileName").readText()

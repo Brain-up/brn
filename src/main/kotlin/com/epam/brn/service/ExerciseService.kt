@@ -12,12 +12,10 @@ import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.projection.ExerciseAvailabilityView
-import com.epam.brn.model.projection.ExerciseLastAttemptView
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.upload.csv.RecordProcessor
 import org.apache.logging.log4j.kotlin.logger
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -29,13 +27,8 @@ class ExerciseService(
     private val urlConversionService: UrlConversionService,
     private val taskService: TaskService,
     private val recordProcessors: List<RecordProcessor<out Any, out Any>>,
+    private val exerciseSuccessCalculator: ExerciseSuccessCalculator,
 ) {
-    @Value(value = "\${minRepetitionIndex}")
-    private lateinit var minRepetitionIndex: Number
-
-    @Value(value = "\${minRightAnswersIndex}")
-    private lateinit var minRightAnswersIndex: Number
-
     private val log = logger()
 
     @Transactional(readOnly = true)
@@ -113,11 +106,8 @@ class ExerciseService(
         }
         val subGroupExercises = exerciseRepository.findExerciseAvailabilityBySubGroupId(subGroupId)
         val doneExerciseIds = studyHistoryRepository.getDoneExerciseIds(subGroupId, currentUserId).toSet()
-        val lastAttemptsByExerciseId =
-            studyHistoryRepository
-                .findLastAttemptBySubGroupAndUserAccount(subGroupId, currentUserId)
-                .associateBy { it.exerciseId }
-        return calculateAvailableExerciseIds(subGroupExercises, doneExerciseIds, lastAttemptsByExerciseId)
+        val everPassedExerciseIds = findEverPassedExerciseIds(subGroupId, currentUserId)
+        return calculateAvailableExerciseIds(subGroupExercises, doneExerciseIds, everPassedExerciseIds)
     }
 
     fun getAvailableExercisesForSubGroup(
@@ -128,52 +118,30 @@ class ExerciseService(
     ): Set<Exercise> {
         if (doneSubGroupExercises.size == subGroupExercises.size)
             return doneSubGroupExercises.toSet()
-        val mapDoneNameToExercise = doneSubGroupExercises.groupBy({ it.name }, { it })
-        val availableExercises = mutableSetOf<Exercise>()
-        val lastHistoryMap =
-            studyHistoryRepository
-                .findLastBySubGroupAndUserAccount(subGroupId, userId)
-                .groupBy({ it.exercise }, { it })
-        subGroupExercises
-            .groupBy({ it.name }, { it })
-            .forEach { (name, currentNameExercises) ->
-                run {
-                    availableExercises.add(currentNameExercises[0])
-                    val currentDoneExercises = mapDoneNameToExercise[name]
-                    if (currentDoneExercises.isNullOrEmpty()) {
-                        availableExercises.add(currentNameExercises[0])
-                        return@forEach
-                    }
-                    val lastDoneExercise = currentDoneExercises.last()
-                    val lastHistory = lastHistoryMap[lastDoneExercise]
-                    if (lastHistory.isNullOrEmpty()) {
-                        availableExercises.addAll(currentDoneExercises)
-                        return@forEach
-                    }
-                    if (!isDoneWell(lastHistory[0])) {
-                        availableExercises.addAll(currentDoneExercises)
-                        return@forEach
-                    }
-                    availableExercises.addAll(currentDoneExercises)
-                    val closedExercises = currentNameExercises.minus(doneSubGroupExercises)
-                    if (closedExercises.isNotEmpty())
-                        availableExercises.add(closedExercises.first())
-                }
-            }
-        return availableExercises
+        val everPassedExerciseIds = findEverPassedExerciseIds(subGroupId, userId)
+        val availableIds =
+            computeAvailableExerciseIds(
+                subGroupExercises.map { AvailabilityExercise(it.id!!, it.name) },
+                doneSubGroupExercises.mapNotNull { it.id }.toSet(),
+                everPassedExerciseIds,
+            ).toSet()
+        return subGroupExercises.filter { it.id in availableIds }.toSet()
     }
 
-    fun isDoneWell(studyHistory: StudyHistory): Boolean {
-        val repetitionIndex = studyHistory.tasksCount.toFloat() / (studyHistory.replaysCount + studyHistory.tasksCount)
-        val rightAnswersIndex = 1F - studyHistory.wrongAnswers.toFloat() / studyHistory.tasksCount
-        return (repetitionIndex >= minRepetitionIndex.toFloat() && rightAnswersIndex >= minRightAnswersIndex.toFloat())
-    }
+    /**
+     * Exercise ids in the subgroup that the user has done well in at least one recorded attempt.
+     * Derived from the full attempt history (not only the last attempt) so that unlocking is sticky.
+     */
+    private fun findEverPassedExerciseIds(
+        subGroupId: Long,
+        userId: Long,
+    ): Set<Long> = studyHistoryRepository
+        .findAllAttemptsBySubGroupAndUserAccount(subGroupId, userId)
+        .filter { exerciseSuccessCalculator.isSuccessful(it) }
+        .map { it.exerciseId }
+        .toSet()
 
-    private fun isDoneWell(lastAttempt: ExerciseLastAttemptView): Boolean {
-        val repetitionIndex = lastAttempt.tasksCount.toFloat() / (lastAttempt.replaysCount + lastAttempt.tasksCount)
-        val rightAnswersIndex = 1F - lastAttempt.wrongAnswers.toFloat() / lastAttempt.tasksCount
-        return (repetitionIndex >= minRepetitionIndex.toFloat() && rightAnswersIndex >= minRightAnswersIndex.toFloat())
-    }
+    fun isDoneWell(studyHistory: StudyHistory): Boolean = exerciseSuccessCalculator.isSuccessful(studyHistory)
 
     fun updateNoiseExerciseDto(exerciseDto: ExerciseDto): ExerciseDto {
         exerciseDto.noise.url = urlConversionService.makeUrlForNoise(exerciseDto.noise.url)
@@ -188,7 +156,7 @@ class ExerciseService(
         exerciseId: Long,
         active: Boolean,
     ) {
-        var exercise = exerciseRepository.findById(exerciseId).get()
+        val exercise = exerciseRepository.findById(exerciseId).get()
         exercise.active = active
         exerciseRepository.save(exercise)
     }
@@ -248,14 +216,35 @@ class ExerciseService(
     private fun calculateAvailableExerciseIds(
         subGroupExercises: List<ExerciseAvailabilityView>,
         doneExerciseIds: Set<Long>,
-        lastAttemptsByExerciseId: Map<Long, ExerciseLastAttemptView>,
+        everPassedExerciseIds: Set<Long>,
+    ): List<Long> = computeAvailableExerciseIds(
+        subGroupExercises.map { AvailabilityExercise(it.id, it.name) },
+        doneExerciseIds,
+        everPassedExerciseIds,
+    )
+
+    /**
+     * Single source of truth for progressive exercise unlocking within a subgroup, shared by both
+     * the entity-based ([getAvailableExercisesForSubGroup]) and projection-based
+     * ([calculateAvailableExerciseIds]) access paths. Works on minimal inputs — exercises in order
+     * (`id`, `name`), the set of done ids, and the set of ids done well at least once — and returns
+     * the available ids preserving the input order.
+     *
+     * Rules: the first exercise of every name is always available; every done exercise is available;
+     * the next not-yet-done exercise of a name is unlocked when the last done exercise of that name was
+     * done well in any attempt. Unlocking is sticky — a later unsuccessful attempt never re-locks it.
+     */
+    private fun computeAvailableExerciseIds(
+        subGroupExercises: List<AvailabilityExercise>,
+        doneExerciseIds: Set<Long>,
+        everPassedExerciseIds: Set<Long>,
     ): List<Long> {
         if (subGroupExercises.isEmpty()) return emptyList()
-        if (doneExerciseIds.size == subGroupExercises.size) return subGroupExercises.map(ExerciseAvailabilityView::id)
+        if (doneExerciseIds.size == subGroupExercises.size) return subGroupExercises.map(AvailabilityExercise::id)
 
         val availableExerciseIds = linkedSetOf<Long>()
         subGroupExercises
-            .groupBy(ExerciseAvailabilityView::name)
+            .groupBy(AvailabilityExercise::name)
             .forEach { (_, currentNameExercises) ->
                 val firstExercise = currentNameExercises.first()
                 availableExerciseIds.add(firstExercise.id)
@@ -263,17 +252,21 @@ class ExerciseService(
                 val currentDoneExercises = currentNameExercises.filter { doneExerciseIds.contains(it.id) }
                 if (currentDoneExercises.isEmpty()) return@forEach
 
-                availableExerciseIds.addAll(currentDoneExercises.map(ExerciseAvailabilityView::id))
+                availableExerciseIds.addAll(currentDoneExercises.map(AvailabilityExercise::id))
                 val lastDoneExercise = currentDoneExercises.last()
-                val lastAttempt = lastAttemptsByExerciseId[lastDoneExercise.id] ?: return@forEach
-                if (!isDoneWell(lastAttempt)) return@forEach
+                if (lastDoneExercise.id !in everPassedExerciseIds) return@forEach
 
                 val nextClosedExercise =
                     currentNameExercises.firstOrNull { !doneExerciseIds.contains(it.id) } ?: return@forEach
                 availableExerciseIds.add(nextClosedExercise.id)
             }
         return subGroupExercises
-            .map(ExerciseAvailabilityView::id)
+            .map(AvailabilityExercise::id)
             .filter(availableExerciseIds::contains)
     }
+
+    private data class AvailabilityExercise(
+        val id: Long,
+        val name: String,
+    )
 }

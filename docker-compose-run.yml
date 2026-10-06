@@ -14,6 +14,7 @@ services:
   brn:
     container_name: brn
     image: brainup/brn-backend
+    restart: unless-stopped
     command: >
       java -Xms128m -Xmx256m -XX:MaxMetaspaceSize=192m
       -XX:+UseSerialGC -XX:MaxRAM=400m
@@ -32,7 +33,7 @@ services:
       SPRING_PROFILE: prod
       aws.credentialsPath: /run/secrets/aws-key
       GOOGLE_APPLICATION_CREDENTIALS: /run/secrets/firebase_config_json
-      YANDEX_AUTH_TOKEN: _YANDEX_AUTH_TOKEN_
+      YANDEX_API_KEY: _YANDEX_API_KEY_
       YANDEX_FOLDER_ID: _YANDEX_FOLDER_ID_
       API_GITHUB_TOKEN: _API_GITHUB_TOKEN_
     secrets:
@@ -50,6 +51,7 @@ services:
   brn_fe_with_tls:
     image: brainup/brn-frontend-with-tls:latest
     container_name: brn_fe_with_tls
+    restart: unless-stopped
     ports:
       - 80:80
       - 443:443

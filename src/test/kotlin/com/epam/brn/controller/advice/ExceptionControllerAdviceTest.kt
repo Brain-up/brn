@@ -4,10 +4,10 @@ import com.epam.brn.dto.response.BrnResponse
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.exception.FileFormatException
 import com.epam.brn.upload.csv.CsvParser
+import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.springframework.context.annotation.PropertySource
 import org.springframework.core.MethodParameter
@@ -23,7 +23,6 @@ import java.io.IOException
 import java.lang.reflect.Method
 import java.nio.charset.StandardCharsets
 import java.time.format.DateTimeParseException
-import kotlin.test.assertNotNull
 
 @PropertySource("classpath:errorMessages.properties")
 internal class ExceptionControllerAdviceTest {
@@ -37,9 +36,9 @@ internal class ExceptionControllerAdviceTest {
         // WHEN
         val responseEntity = exceptionControllerAdvice.handleEntityNotFoundException(exception)
         // THEN
-        assertTrue((responseEntity.body as BrnResponse).errors.toString().contains("tasks were not found"))
-        assertEquals(HttpStatus.NOT_FOUND, responseEntity.statusCode)
-        assertEquals(MediaType.APPLICATION_JSON, responseEntity.headers.contentType)
+        (responseEntity.body as BrnResponse).errors.toString().contains("tasks were not found") shouldBe true
+        responseEntity.statusCode shouldBe HttpStatus.NOT_FOUND
+        responseEntity.headers.contentType shouldBe MediaType.APPLICATION_JSON
     }
 
     // @Test
@@ -63,17 +62,15 @@ internal class ExceptionControllerAdviceTest {
         val responseEntity = exceptionControllerAdvice.handleMethodArgumentNotValidException(exception)
 
         // THEN
-        assertTrue(
-            (responseEntity.body as BrnResponse).errors.containsAll(
-                listOf(
-                    "INCORRECT_FIELD_FORMAT",
-                    "FIRST_NAME_MUST_NOT_HAVE_SPACES",
-                ),
+        (responseEntity.body as BrnResponse).errors.containsAll(
+            listOf(
+                "INCORRECT_FIELD_FORMAT",
+                "FIRST_NAME_MUST_NOT_HAVE_SPACES",
             ),
-        )
-        assertNotNull((responseEntity.body as BrnResponse).errors)
-        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.statusCode)
-        assertEquals(MediaType.APPLICATION_JSON, responseEntity.headers.contentType)
+        ) shouldBe true
+        (responseEntity.body as BrnResponse).errors.shouldNotBeNull()
+        responseEntity.statusCode shouldBe HttpStatus.BAD_REQUEST
+        responseEntity.headers.contentType shouldBe MediaType.APPLICATION_JSON
     }
 
     @Test
@@ -83,9 +80,9 @@ internal class ExceptionControllerAdviceTest {
         // WHEN
         val responseEntity = exceptionControllerAdvice.handleCsvFileParseException(exception)
         // THEN
-        assertTrue((responseEntity.body as BrnResponse).errors.toString().contains("Csv file parsing exception"))
-        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.statusCode)
-        assertEquals(MediaType.APPLICATION_JSON, responseEntity.headers.contentType)
+        (responseEntity.body as BrnResponse).errors.toString().contains("Csv file parsing exception") shouldBe true
+        responseEntity.statusCode shouldBe HttpStatus.BAD_REQUEST
+        responseEntity.headers.contentType shouldBe MediaType.APPLICATION_JSON
     }
 
     @Test
@@ -95,9 +92,9 @@ internal class ExceptionControllerAdviceTest {
         // WHEN
         val responseEntity = exceptionControllerAdvice.handleIllegalArgumentException(exception)
         // THEN
-        assertTrue((responseEntity.body as BrnResponse).errors.toString().contains("IllegalArgumentException"))
-        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.statusCode)
-        assertEquals(MediaType.APPLICATION_JSON, responseEntity.headers.contentType)
+        (responseEntity.body as BrnResponse).errors.toString().contains("IllegalArgumentException") shouldBe true
+        responseEntity.statusCode shouldBe HttpStatus.BAD_REQUEST
+        responseEntity.headers.contentType shouldBe MediaType.APPLICATION_JSON
     }
 
     @Test
@@ -107,9 +104,9 @@ internal class ExceptionControllerAdviceTest {
         // WHEN
         val responseEntity = exceptionControllerAdvice.handleBadCredentialsException(exception)
         // THEN
-        assertTrue((responseEntity.body as BrnResponse).errors.toString().contains("Forbidden"))
-        assertEquals(HttpStatus.UNAUTHORIZED, responseEntity.statusCode)
-        assertEquals(MediaType.APPLICATION_JSON, responseEntity.headers.contentType)
+        (responseEntity.body as BrnResponse).errors.toString().contains("Forbidden") shouldBe true
+        responseEntity.statusCode shouldBe HttpStatus.UNAUTHORIZED
+        responseEntity.headers.contentType shouldBe MediaType.APPLICATION_JSON
     }
 
     @Test
@@ -119,9 +116,9 @@ internal class ExceptionControllerAdviceTest {
         // WHEN
         val responseEntity = exceptionControllerAdvice.handleUninitializedPropertyAccessException(exception)
         // THEN
-        assertTrue((responseEntity.body as BrnResponse).errors.toString().contains("some exception"))
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.statusCode)
-        assertEquals(MediaType.APPLICATION_JSON, responseEntity.headers.contentType)
+        (responseEntity.body as BrnResponse).errors.toString().contains("some exception") shouldBe true
+        responseEntity.statusCode shouldBe HttpStatus.INTERNAL_SERVER_ERROR
+        responseEntity.headers.contentType shouldBe MediaType.APPLICATION_JSON
     }
 
     @Test
@@ -131,9 +128,9 @@ internal class ExceptionControllerAdviceTest {
         // WHEN
         val responseEntity = exceptionControllerAdvice.handleIOException(exception)
         // THEN
-        assertTrue((responseEntity.body as BrnResponse).errors.toString().contains("some exception"))
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.statusCode)
-        assertEquals(MediaType.APPLICATION_JSON, responseEntity.headers.contentType)
+        (responseEntity.body as BrnResponse).errors.toString().contains("some exception") shouldBe true
+        responseEntity.statusCode shouldBe HttpStatus.INTERNAL_SERVER_ERROR
+        responseEntity.headers.contentType shouldBe MediaType.APPLICATION_JSON
     }
 
     @Test
@@ -143,9 +140,9 @@ internal class ExceptionControllerAdviceTest {
         // WHEN
         val responseEntity = exceptionControllerAdvice.handleException(exception)
         // THEN
-        assertTrue((responseEntity.body as BrnResponse).errors.toString().contains("some exception"))
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.statusCode)
-        assertEquals(MediaType.APPLICATION_JSON, responseEntity.headers.contentType)
+        (responseEntity.body as BrnResponse).errors.toString().contains("some exception") shouldBe true
+        responseEntity.statusCode shouldBe HttpStatus.INTERNAL_SERVER_ERROR
+        responseEntity.headers.contentType shouldBe MediaType.APPLICATION_JSON
     }
 
     @Test
@@ -155,13 +152,11 @@ internal class ExceptionControllerAdviceTest {
         // WHEN
         val responseEntity = exceptionControllerAdvice.handleFileFormatException(exception)
         // THEN
-        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.statusCode)
-        assertEquals(MediaType.APPLICATION_JSON, responseEntity.headers.contentType)
-        assertTrue(
-            (responseEntity.body as BrnResponse)
-                .errors
-                .contains("Formatting error. Please upload file with csv extension."),
-        )
+        responseEntity.statusCode shouldBe HttpStatus.BAD_REQUEST
+        responseEntity.headers.contentType shouldBe MediaType.APPLICATION_JSON
+        (responseEntity.body as BrnResponse)
+            .errors
+            .contains("Formatting error. Please upload file with csv extension.") shouldBe true
     }
 
     @Test
@@ -171,9 +166,9 @@ internal class ExceptionControllerAdviceTest {
         // WHEN
         val responseEntity = exceptionControllerAdvice.createInternalErrorResponse(exception)
         // THEN
-        assertTrue((responseEntity.body as BrnResponse).errors.toString().contains("some test exception"))
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.statusCode)
-        assertEquals(MediaType.APPLICATION_JSON, responseEntity.headers.contentType)
+        (responseEntity.body as BrnResponse).errors.toString().contains("some test exception") shouldBe true
+        responseEntity.statusCode shouldBe HttpStatus.INTERNAL_SERVER_ERROR
+        responseEntity.headers.contentType shouldBe MediaType.APPLICATION_JSON
     }
 
     @Test
@@ -185,8 +180,8 @@ internal class ExceptionControllerAdviceTest {
         // WHEN
         val responseEntity = exceptionControllerAdvice.handleHttpMessageNotReadableException(exception)
         // THEN
-        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.statusCode)
-        assertEquals(MediaType.APPLICATION_JSON, responseEntity.headers.contentType)
+        responseEntity.statusCode shouldBe HttpStatus.BAD_REQUEST
+        responseEntity.headers.contentType shouldBe MediaType.APPLICATION_JSON
     }
 
     @Test
@@ -198,8 +193,8 @@ internal class ExceptionControllerAdviceTest {
         // WHEN
         val responseEntity = exceptionControllerAdvice.handleAccessDeniedException(exception)
         // THEN
-        assertTrue((responseEntity.body as BrnResponse).errors.toString().contains("some exception"))
-        assertEquals(HttpStatus.FORBIDDEN, responseEntity.statusCode)
-        assertEquals(MediaType.APPLICATION_JSON, responseEntity.headers.contentType)
+        (responseEntity.body as BrnResponse).errors.toString().contains("some exception") shouldBe true
+        responseEntity.statusCode shouldBe HttpStatus.FORBIDDEN
+        responseEntity.headers.contentType shouldBe MediaType.APPLICATION_JSON
     }
 }

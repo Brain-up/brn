@@ -7,9 +7,9 @@ import com.epam.brn.model.Series
 import com.epam.brn.repo.ExerciseGroupRepository
 import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.repo.SubGroupRepository
+import io.kotest.matchers.shouldBe
 import org.hamcrest.CoreMatchers.containsString
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
@@ -58,9 +58,9 @@ class SubGroupControllerIT : BaseIT() {
             .andExpect(status().isOk)
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
         val response = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
-        Assertions.assertTrue(response.contains("subGroupName1"))
-        Assertions.assertTrue(response.contains("subGroupName2"))
-        Assertions.assertTrue(response.contains("exercises"))
+        response.contains("subGroupName1") shouldBe true
+        response.contains("subGroupName2") shouldBe true
+        response.contains("exercises") shouldBe true
     }
 
     @Test
@@ -80,8 +80,8 @@ class SubGroupControllerIT : BaseIT() {
             .andExpect(status().isOk)
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
         val response = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
-        Assertions.assertTrue(response.contains("subGroupName1"))
-        Assertions.assertTrue(response.contains("exercises"))
+        response.contains("subGroupName1") shouldBe true
+        response.contains("exercises") shouldBe true
     }
 
     @Test

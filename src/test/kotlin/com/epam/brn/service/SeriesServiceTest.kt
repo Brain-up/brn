@@ -4,14 +4,14 @@ import com.epam.brn.dto.SeriesDto
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Series
 import com.epam.brn.repo.SeriesRepository
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
@@ -40,7 +40,7 @@ internal class SeriesServiceTest {
 
         // THEN
         verify(exactly = 1) { seriesRepository.findByExerciseGroupIdWithSubGroups(groupId) }
-        assertEquals(expectedResult, actualResult)
+        actualResult shouldBe expectedResult
     }
 
     @Test
@@ -55,7 +55,7 @@ internal class SeriesServiceTest {
 
         // THEN
         verify(exactly = 1) { seriesRepository.findByExerciseGroupIdWithSubGroups(groupId) }
-        assertEquals(emptyList<SeriesDto>(), actualResult)
+        actualResult shouldBe emptyList<SeriesDto>()
     }
 
     @Test
@@ -82,7 +82,7 @@ internal class SeriesServiceTest {
         every { seriesRepository.findByIdAndActiveTrue(seriesId) } returns null
 
         // WHEN
-        assertThrows(EntityNotFoundException::class.java) { seriesService.findSeriesDtoForId(seriesId) }
+        shouldThrow<EntityNotFoundException> { seriesService.findSeriesDtoForId(seriesId) }
 
         // THEN
         verify(exactly = 1) { seriesRepository.findByIdAndActiveTrue(seriesId) }
@@ -95,7 +95,7 @@ internal class SeriesServiceTest {
         every { seriesRepository.findByIdAndActiveTrue(seriesId) } returns null
 
         // WHEN
-        assertThrows(EntityNotFoundException::class.java) { seriesService.findSeriesDtoForId(seriesId) }
+        shouldThrow<EntityNotFoundException> { seriesService.findSeriesDtoForId(seriesId) }
 
         // THEN
         verify(exactly = 1) { seriesRepository.findByIdAndActiveTrue(seriesId) }

@@ -9,6 +9,7 @@ import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.service.UserAccountService
 import com.epam.brn.service.statistics.impl.UserDayStatisticsService
 import com.epam.brn.service.statistics.progress.status.ProgressStatusManager
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -17,8 +18,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.time.LocalDateTime
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 
 @ExtendWith(MockKExtension::class)
 internal class UserDayStatisticsServiceTest {
@@ -84,7 +83,7 @@ internal class UserDayStatisticsServiceTest {
         val statisticForPeriod = userDayStatisticsService.getStatisticsForPeriod(from, to)
 
         // THEN
-        assertEquals(expectedStatistic, statisticForPeriod.first())
+        statisticForPeriod.first() shouldBe expectedStatistic
     }
 
     @Test
@@ -98,6 +97,6 @@ internal class UserDayStatisticsServiceTest {
         val statisticForPeriod = userDayStatisticsService.getStatisticsForPeriod(from, to)
 
         // THEN
-        assertTrue(statisticForPeriod.isEmpty())
+        statisticForPeriod.isEmpty() shouldBe true
     }
 }

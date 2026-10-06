@@ -3,6 +3,7 @@ package com.epam.brn.job
 import com.epam.brn.model.Resource
 import com.epam.brn.service.ResourceService
 import com.epam.brn.service.cloud.CloudService
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -12,9 +13,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.test.util.ReflectionTestUtils
-import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
 
 @ExtendWith(MockKExtension::class)
 internal class ResourcePictureUrlUpdateJobTest {
@@ -54,12 +52,12 @@ internal class ResourcePictureUrlUpdateJobTest {
         val jobResponse = resourcePictureUrlUpdateJob.updatePictureUrl()
 
         // THEN
-        assertEquals(resource.pictureFileUrl, defaultFolderPictures[resource.word])
-        assertEquals(1, jobResponse.inDefaultFolderPicturesCount)
-        assertEquals(1, jobResponse.inUnverifiedFolderPicturesCount)
-        assertEquals(1, jobResponse.withCorrectDefaultUrlResources)
-        assertEquals(0, jobResponse.withUnverifiedUrlResources)
-        assertTrue(jobResponse.success)
+        resource.pictureFileUrl shouldBe defaultFolderPictures[resource.word]
+        jobResponse.inDefaultFolderPicturesCount shouldBe 1
+        jobResponse.inUnverifiedFolderPicturesCount shouldBe 1
+        jobResponse.withCorrectDefaultUrlResources shouldBe 1
+        jobResponse.withUnverifiedUrlResources shouldBe 0
+        jobResponse.success shouldBe true
     }
 
     @Test
@@ -80,12 +78,12 @@ internal class ResourcePictureUrlUpdateJobTest {
         val jobResponse = resourcePictureUrlUpdateJob.updatePictureUrl()
 
         // THEN
-        assertEquals(resource.pictureFileUrl, unverifiedFolderPictures[resource.word])
-        assertEquals(1, jobResponse.inDefaultFolderPicturesCount)
-        assertEquals(1, jobResponse.inUnverifiedFolderPicturesCount)
-        assertEquals(0, jobResponse.withCorrectDefaultUrlResources)
-        assertEquals(1, jobResponse.withUnverifiedUrlResources)
-        assertTrue(jobResponse.success)
+        resource.pictureFileUrl shouldBe unverifiedFolderPictures[resource.word]
+        jobResponse.inDefaultFolderPicturesCount shouldBe 1
+        jobResponse.inUnverifiedFolderPicturesCount shouldBe 1
+        jobResponse.withCorrectDefaultUrlResources shouldBe 0
+        jobResponse.withUnverifiedUrlResources shouldBe 1
+        jobResponse.success shouldBe true
     }
 
     @Test
@@ -126,13 +124,13 @@ internal class ResourcePictureUrlUpdateJobTest {
         val jobResponse = resourcePictureUrlUpdateJob.updatePictureUrl()
 
         // THEN
-        assertTrue(resource.pictureFileUrl!!.isEmpty())
-        assertEquals(1, jobResponse.inDefaultFolderPicturesCount)
-        assertEquals(1, jobResponse.inUnverifiedFolderPicturesCount)
-        assertEquals(0, jobResponse.withUnverifiedUrlResources)
-        assertEquals(0, jobResponse.withCorrectDefaultUrlResources)
-        assertEquals(1, jobResponse.resourcesWithoutPictures)
-        assertTrue(jobResponse.success)
+        resource.pictureFileUrl!!.isEmpty() shouldBe true
+        jobResponse.inDefaultFolderPicturesCount shouldBe 1
+        jobResponse.inUnverifiedFolderPicturesCount shouldBe 1
+        jobResponse.withUnverifiedUrlResources shouldBe 0
+        jobResponse.withCorrectDefaultUrlResources shouldBe 0
+        jobResponse.resourcesWithoutPictures shouldBe 1
+        jobResponse.success shouldBe true
     }
 
     @Test
@@ -145,7 +143,7 @@ internal class ResourcePictureUrlUpdateJobTest {
         val jobResponse = resourcePictureUrlUpdateJob.updatePictureUrl()
 
         // THEN
-        assertFalse(jobResponse.success)
-        assertEquals(errorMessage, jobResponse.errorMessage)
+        jobResponse.success shouldBe false
+        jobResponse.errorMessage shouldBe errorMessage
     }
 }
