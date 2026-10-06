@@ -4,35 +4,26 @@ import com.epam.brn.dto.AudioFileMetaData
 import com.epam.brn.enums.BrnLocale
 import com.epam.brn.exception.YandexServiceException
 import org.apache.http.NameValuePair
-import org.apache.http.client.methods.CloseableHttpResponse
 import org.apache.http.client.methods.HttpPost
 import org.apache.http.client.utils.URIBuilder
 import org.apache.http.impl.client.HttpClientBuilder
 import org.apache.http.message.BasicNameValuePair
-import org.apache.http.util.EntityUtils
 import org.apache.logging.log4j.kotlin.logger
-import org.json.JSONObject
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Primary
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import java.io.InputStream
-import java.time.LocalDateTime
-import java.time.ZoneOffset
 
 @Service
 @Primary
 @ConditionalOnProperty(name = ["default.tts.provider"], havingValue = "yandex")
 class YandexSpeechKitService(
     private val wordsService: WordsService,
-    private val timeService: TimeService,
 ) : TextToSpeechService {
-    @Value("\${yandex.getTokenLink}")
-    lateinit var uriGetIamToken: String
-
-    @Value("\${yandex.authToken}")
-    lateinit var authToken: String
+    @Value("\${yandex.apiKey}")
+    lateinit var apiKey: String
 
     @Value("\${yandex.generationAudioLink}")
     lateinit var uriGenerationAudioFile: String
@@ -46,38 +37,14 @@ class YandexSpeechKitService(
     @Value("\${yandex.emotions}")
     lateinit var emotions: List<String>
 
-    var iamToken: String = ""
-    var iamTokenExpiresTime: LocalDateTime = LocalDateTime.now(ZoneOffset.UTC)
-
     private val log = logger()
 
-    fun getYandexIamTokenForAudioGeneration(): String {
-        if (iamToken.isNotEmpty() && iamTokenExpiresTime.isAfter(timeService.now()))
-            return iamToken
-        val parameters = ArrayList<NameValuePair>()
-        parameters.add(BasicNameValuePair("yandexPassportOauthToken", authToken))
-        val uriBuilder = URIBuilder(uriGetIamToken)
-        uriBuilder.addParameters(parameters)
-        val postRequest = HttpPost(uriBuilder.build())
-        val httpClient = HttpClientBuilder.create().build()
-        val response: CloseableHttpResponse = httpClient.execute(postRequest)
-        val statusCode = response.statusLine.statusCode
-        if (statusCode != HttpStatus.OK.value())
-            throw YandexServiceException("Can't get yandex iam token, httpStatus={$statusCode}")
-        val entity = EntityUtils.toString(response.entity)
-        val jsonObject = JSONObject(entity)
-        iamToken = jsonObject.getString("iamToken")
-        val tokenExpiresTimeValue = jsonObject.getString("expiresAt")
-        iamTokenExpiresTime = timeService.now()
-        log.info("Get iam token from yandex cloud successfully, it will expire at $tokenExpiresTimeValue")
-        return iamToken
-    }
-
     /**
-     * Generate stream of .ogg audio file from yandex cloud speech kit service
+     * Generate stream of .ogg audio file from yandex cloud speech kit service.
+     * Authenticates with a service account API key (Api-Key authorization) — Yandex Passport
+     * OAuth tokens are no longer accepted for new credentials since 2026-06-01.
      */
     fun generateAudioStream(audioFileMetaData: AudioFileMetaData): InputStream {
-        val token = getYandexIamTokenForAudioGeneration()
         val emotion = emotions.first()
         val parameters =
             ArrayList<NameValuePair>().apply {
@@ -94,7 +61,7 @@ class YandexSpeechKitService(
         uriBuilder.addParameters(parameters)
 
         val postRequest = HttpPost(uriBuilder.build())
-        postRequest.setHeader("Authorization", "Bearer $token")
+        postRequest.setHeader("Authorization", "Api-Key $apiKey")
 
         val httpClient = HttpClientBuilder.create().build()
         val response = httpClient.execute(postRequest)
