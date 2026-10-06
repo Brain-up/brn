@@ -24,7 +24,7 @@ Product Vision: [https://github.com/Brain-up/brn/wiki/Product-Vision](https://gi
 1. Front-end developers: Ember, Angular. 
 2. Server-side developers: Kotlin and Java. Components, REST and algorithms.
 3. IoS developers.
-4. Android developers.
+4. Android developers: Kotlin.
 5. DevOps: Continuous integration and delivery.
 6. UX: Creative designers for UX research and prototype testing. Your ideas how to improve user retention are welcome.
 7. Paintest: for creation pictures for exercises. 
