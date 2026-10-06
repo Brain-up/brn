@@ -20,14 +20,6 @@ Product Vision: [https://github.com/Brain-up/brn/wiki/Product-Vision](https://gi
 - https://wearecommunity.io/communities/community-platform/articles/753 01.12.2020 russian 
 - https://habr.com/ru/company/epam_systems/blog/530824 01.12.2020
 
-Closed for public:
-- https://aw.club/global/en/blog/volunteer/brain-up?utm_source=telegram&utm_medium=social&utm_campaign=ongoing 11.08.2022 (russian, english) will be fixed soon
-- https://anywhere.epam.com/volunteer/pages-1/brainApp.html (will be fixed soon) 05.05.2020
-
-Only for Epamers:
-- https://info.epam.com/content/infoepam/topics/locations/russia/articles/2020/may/pro-bono-volunteers_ru.html 
-- https://info.epam.com/topics/global/industries/articles/2020/jul/brain-up_en.html 
-
 ## WE ARE LOOKING FOR
 1. Front-end developers: Ember, Angular. 
 2. Server-side developers: Kotlin and Java. Components, REST and algorithms.
