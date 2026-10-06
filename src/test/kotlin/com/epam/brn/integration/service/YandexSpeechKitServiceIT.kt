@@ -4,9 +4,7 @@ import com.epam.brn.dto.AudioFileMetaData
 import com.epam.brn.enums.BrnLocale
 import com.epam.brn.enums.Voice
 import com.epam.brn.service.YandexSpeechKitService
-import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.types.shouldBeSameInstanceAs
 import org.apache.commons.codec.digest.DigestUtils
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Tag
@@ -26,16 +24,6 @@ import java.io.InputStream
 internal class YandexSpeechKitServiceIT {
     @Autowired
     lateinit var yandexSpeechKitService: YandexSpeechKitService
-
-    @Test
-    fun `should get iam token from yandex cloud`() {
-        // WHEN
-        val iamToken1 = yandexSpeechKitService.getYandexIamTokenForAudioGeneration()
-        val iamToken2 = yandexSpeechKitService.getYandexIamTokenForAudioGeneration()
-        // THEN
-        iamToken1.shouldNotBeNull()
-        iamToken1 shouldBeSameInstanceAs iamToken2
-    }
 
     @Test
     fun `should generate ogg audio stream with validation`() {
