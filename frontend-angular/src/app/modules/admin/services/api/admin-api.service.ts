@@ -99,7 +99,7 @@ export class AdminApiService {
             };
             user.progress = user.diagnosticProgress.SIGNALS;
             return user;
-          }).slice(0, 10),
+          }),
         ),
       );
   }

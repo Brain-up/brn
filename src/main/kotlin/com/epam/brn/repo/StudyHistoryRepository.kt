@@ -3,7 +3,9 @@ package com.epam.brn.repo
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.projection.ExerciseLastAttemptView
+import com.epam.brn.model.projection.UserStatisticByIdView
 import com.epam.brn.model.projection.UserStatisticView
+import com.epam.brn.model.projection.UserStudyDaysView
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 import org.springframework.data.repository.query.Param
@@ -123,6 +125,41 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
             " FROM StudyHistory s WHERE s.userAccount.id = :userId",
     )
     fun getStatisticsByUserAccountId(userId: Long?): UserStatisticView
+
+    @Query(
+        "SELECT s.userAccount.id AS userId, MIN(s.startTime) AS firstStudy, MAX(s.startTime) AS lastStudy," +
+            " COALESCE(SUM(s.spentTimeInSeconds), 0) AS spentTime, COUNT (DISTINCT s.exercise.id) as doneExercises" +
+            " FROM StudyHistory s WHERE s.userAccount.id IN :userIds" +
+            " GROUP BY s.userAccount.id",
+    )
+    fun getStatisticsByUserAccountIds(userIds: List<Long>): List<UserStatisticByIdView>
+
+    @Query(
+        "SELECT s FROM StudyHistory s " +
+            "WHERE s.startTime >= :from " +
+            "AND s.startTime <= :to " +
+            "AND s.userAccount.id IN :userIds " +
+            "ORDER BY s.userAccount.id, s.startTime",
+    )
+    fun getHistoriesForUsers(
+        userIds: List<Long>,
+        from: LocalDateTime,
+        to: LocalDateTime,
+    ): List<StudyHistory>
+
+    @Query(
+        "SELECT s.userAccount.id AS userId, COUNT(DISTINCT cast(s.startTime as date)) AS studyDays " +
+            "FROM StudyHistory s " +
+            "WHERE s.startTime >= :from " +
+            "AND s.startTime <= :to " +
+            "AND s.userAccount.id IN :userIds " +
+            "GROUP BY s.userAccount.id",
+    )
+    fun countStudyDaysForUsers(
+        userIds: List<Long>,
+        from: LocalDateTime,
+        to: LocalDateTime,
+    ): List<UserStudyDaysView>
 
     @Query(
         "SELECT s FROM StudyHistory s " +
