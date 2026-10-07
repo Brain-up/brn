@@ -12,6 +12,7 @@ import {
   faTimesCircle,
   faCheckCircle,
   faChevronLeft,
+  faGaugeHigh,
 } from '@fortawesome/free-solid-svg-icons';
 
 // Disable auto CSS injection into <head>.
@@ -32,4 +33,5 @@ library.add(
   faTimesCircle,
   faCheckCircle,
   faChevronLeft,
+  faGaugeHigh,
 );
