@@ -3,6 +3,7 @@ package com.epam.brn.controller
 import com.epam.brn.dto.response.AudiometryResponse
 import com.epam.brn.enums.AudiometryType
 import com.epam.brn.service.AudiometryService
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -11,7 +12,6 @@ import io.mockk.verify
 import org.apache.http.HttpStatus
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import kotlin.test.assertEquals
 
 @ExtendWith(MockKExtension::class)
 internal class AudiometryControllerTest {
@@ -41,8 +41,8 @@ internal class AudiometryControllerTest {
         val audiometrics = audiometryController.getAudiometrics(locale)
 
         // THEN
-        assertEquals(HttpStatus.SC_OK, audiometrics.statusCode.value())
-        assertEquals(listOf(audiometryResponse), audiometrics.body!!.data)
+        audiometrics.statusCode.value() shouldBe HttpStatus.SC_OK
+        audiometrics.body!!.data shouldBe listOf(audiometryResponse)
     }
 
     @Test
@@ -66,8 +66,8 @@ internal class AudiometryControllerTest {
         val audiometry = audiometryController.getAudiometry(audiometryId)
 
         // THEN
-        assertEquals(HttpStatus.SC_OK, audiometry.statusCode.value())
-        assertEquals(audiometryResponse, audiometry.body!!.data)
+        audiometry.statusCode.value() shouldBe HttpStatus.SC_OK
+        audiometry.body!!.data shouldBe audiometryResponse
         verify(exactly = 1) { audiometryController.getAudiometry(audiometryId) }
     }
 }

@@ -1,4 +1,4 @@
-import Service, { inject as service } from '@ember/service';
+import Service, { service } from '@ember/service';
 import Session from 'ember-simple-auth/services/session';
 import Router from '@ember/routing/router-service';
 import NetworkService, { UserDTO } from 'brn/services/network';
@@ -14,6 +14,16 @@ export default class UserDataService extends Service {
 
   @tracked
   userModel!: UserDTO | undefined;
+
+  @tracked roles: string[] = [];
+
+  get isSpecialist(): boolean {
+    return this.roles.some((r) => r === 'SPECIALIST' || r === 'ROLE_SPECIALIST');
+  }
+
+  get isAdmin(): boolean {
+    return this.roles.some((r) => r === 'ADMIN' || r === 'ROLE_ADMIN');
+  }
 
   get userAvatar(): string {
     return this.userModel?.avatar || '1';
@@ -38,7 +48,7 @@ export default class UserDataService extends Service {
   }
 
   shouldUpdateRoute() {
-    const prefix = this.router.currentRouteName.split('.')[0];
+    const prefix = this.router.currentRouteName?.split('.')[0];
 
     return prefix === 'groups' || prefix === 'group';
   }

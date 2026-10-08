@@ -9,12 +9,13 @@ import com.epam.brn.model.Signal
 import com.epam.brn.model.SubGroup
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.SubGroupRepository
+import io.kotest.matchers.collections.shouldContain
+import io.kotest.matchers.collections.shouldContainAll
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.verify
-import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -95,7 +96,7 @@ internal class SignalSeriesRecordProcessorTest {
 
         verify { subGroupRepositoryMock.findByCodeAndLocale("durationSignals", locale) }
 
-        Assertions.assertThat(actual).contains(exercise)
+        actual shouldContain exercise
         verify { exerciseRepositoryMock.save(exercise) }
     }
 
@@ -132,7 +133,7 @@ internal class SignalSeriesRecordProcessorTest {
                 ),
             )
         // THEN
-        Assertions.assertThat(actual).containsAll(listOf(ex1, ex2))
+        actual shouldContainAll listOf(ex1, ex2)
         verify { exerciseRepositoryMock.save(ex1) }
         verify { exerciseRepositoryMock.save(ex2) }
     }
@@ -158,7 +159,7 @@ internal class SignalSeriesRecordProcessorTest {
         // WHEN
         val actual = signalSeriesRecordProcessor.process(listOf(record), locale)
         // THEN
-        Assertions.assertThat(actual).contains(exercise)
+        actual shouldContain exercise
         verify { exerciseRepositoryMock.save(exercise) }
     }
 

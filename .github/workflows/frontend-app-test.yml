@@ -8,41 +8,91 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: rwjblue/setup-volta@v1
-      - uses: H1D/actions-ember-testing@8ca8da615c2db5889b7fbd3834e4093706754435
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 22
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: frontend/package.json
       - name: Install dependencies
         working-directory: ./frontend
-        run: yarn install
+        run: pnpm install
       - name: Lint *.js files
         working-directory: ./frontend
-        run: yarn lint:js
-      - name: Lint *.hbs files
+        run: pnpm lint:js
+      - name: Lint *.gts/*.gjs templates
         working-directory: ./frontend
-        run: yarn lint:hbs
+        run: pnpm lint:hbs
       - name: Run tests
         working-directory: ./frontend
-        run: yarn test
-      - name: Run test deploy
+        run: pnpm test
+      - name: Run test build
         working-directory: ./frontend
-        run: node node_modules/ember-cli/bin/ember deploy production
+        run: pnpm build
 
   coverage:
     name: Test coverage changes
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: rwjblue/setup-volta@v1
-      - uses: H1D/actions-ember-testing@8ca8da615c2db5889b7fbd3834e4093706754435
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 22
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: frontend/package.json
       - name: Install dependencies
         working-directory: ./frontend
-        run: yarn install
-      - uses: mydea/ember-cli-code-coverage-action@e4130abc6c57d272d9d123870c26b8c284128adc
+        run: pnpm install
+      - name: Run coverage on PR branch
+        working-directory: ./frontend
+        run: pnpm test:coverage
+      - name: Save PR coverage
+        id: pr_coverage
+        run: |
+          coverage=$(node -e "const c=require('./frontend/coverage/coverage-summary.json'); console.log(c.total.statements.pct)")
+          echo "value=$coverage" >> "$GITHUB_OUTPUT"
+          echo "PR coverage: $coverage%"
+      - name: Checkout base branch for reference coverage
+        run: |
+          git fetch origin ${{ github.event.pull_request.base.ref }}
+          git checkout origin/${{ github.event.pull_request.base.ref }}
+      - name: Install base branch dependencies
+        working-directory: ./frontend
+        run: pnpm install
+      - name: Run coverage on base branch
+        id: base_coverage
+        working-directory: ./frontend
+        run: |
+          rm -rf coverage
+          pnpm test:coverage || true
+          if [ -f coverage/coverage-summary.json ]; then
+            coverage=$(node -e "const c=require('./coverage/coverage-summary.json'); console.log(c.total.statements.pct)")
+          else
+            coverage=0
+          fi
+          echo "value=$coverage" >> "$GITHUB_OUTPUT"
+          echo "Base coverage: $coverage%"
+      - name: Post coverage comment
+        uses: actions/github-script@v7
         with:
-          working-directory: ./frontend
-          test-command: "yarn test:coverage"
-          coverage-file: "./frontend/coverage/coverage-summary.json"
-          repo-token: "${{ secrets.GITHUB_TOKEN }}"
-          message: "Frontend test coverage: {testCoverage}%"
+          script: |
+            const prCoverage = '${{ steps.pr_coverage.outputs.value }}';
+            const baseCoverage = '${{ steps.base_coverage.outputs.value }}';
+            const diff = (parseFloat(prCoverage) - parseFloat(baseCoverage)).toFixed(2);
+            const sign = diff >= 0 ? '+' : '';
+            const body = `Frontend test coverage: **${prCoverage}%** (${sign}${diff}% compared to ${baseCoverage}% on base)`;
+            try {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body,
+              });
+            } catch (e) {
+              console.log('Could not post comment:', e.message);
+              console.log(body);
+            }
 
 #  build:
 #    name: App build

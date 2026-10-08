@@ -1,16 +1,14 @@
 package com.epam.brn.upload.csv.seriesWordsKoroleva
 
 import com.fasterxml.jackson.databind.MappingIterator
+import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.mock.web.MockMultipartFile
 import java.io.File
 import java.io.FileInputStream
 import java.io.InputStream
-import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertNotNull
-import kotlin.test.assertTrue
 
 internal class SeriesWordsKorolevaRecordMappingIteratorProviderTest {
     private lateinit var inputStream: InputStream
@@ -33,17 +31,17 @@ internal class SeriesWordsKorolevaRecordMappingIteratorProviderTest {
     operator fun iterator() {
         val actualIterator: MappingIterator<SeriesWordsKorolevaRecord> =
             seriesWordsKorolevaRecordMappingIteratorProvider.iterator(inputStream)
-        assertNotNull(actualIterator)
+        actualIterator.shouldNotBeNull()
         val seriesWordsKorolevaRecords: List<SeriesWordsKorolevaRecord> = actualIterator.readAll()
-        assertTrue(seriesWordsKorolevaRecords.isNotEmpty())
-        assertEquals(3, seriesWordsKorolevaRecords[0].wordsColumns)
-        assertEquals(1, seriesWordsKorolevaRecords[0].playWordsCount)
-        assertEquals("быль", seriesWordsKorolevaRecords[0].words[2])
+        seriesWordsKorolevaRecords.isNotEmpty() shouldBe true
+        seriesWordsKorolevaRecords[0].wordsColumns shouldBe 3
+        seriesWordsKorolevaRecords[0].playWordsCount shouldBe 1
+        seriesWordsKorolevaRecords[0].words[2] shouldBe "быль"
     }
 
     @Test
     fun isApplicable() {
-        assertTrue(seriesWordsKorolevaRecordMappingIteratorProvider.isApplicable(SeriesWordsKorolevaRecord.FORMAT))
-        assertFalse(seriesWordsKorolevaRecordMappingIteratorProvider.isApplicable("missingFormat"))
+        seriesWordsKorolevaRecordMappingIteratorProvider.isApplicable(SeriesWordsKorolevaRecord.FORMAT) shouldBe true
+        seriesWordsKorolevaRecordMappingIteratorProvider.isApplicable("missingFormat") shouldBe false
     }
 }

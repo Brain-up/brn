@@ -1,0 +1,47 @@
+import { module, test } from 'qunit';
+import { setupIntl } from 'ember-intl/test-support';
+import { setupRenderingTest } from 'ember-qunit';
+import { render } from '@ember/test-helpers';
+import pageObject from './test-support/page-object';
+import SeriesNavigation from 'brn/components/series-navigation';
+
+const TEST_EXERCISE_NAMES = ['Type 1', 'Type 2'];
+
+module('Integration | Component | series-navigation', function (hooks) {
+  setupRenderingTest(hooks);
+  setupIntl(hooks, 'en-us');
+
+  hooks.beforeEach(async function () {
+    const store = this.owner.lookup('service:store');
+    const testSeries = store.createRecord('series');
+    const exercises = TEST_EXERCISE_NAMES.map((name, index) =>
+      store.createRecord('exercise', {
+        name,
+        id: String(index),
+        order: TEST_EXERCISE_NAMES.length - index,
+        series: testSeries,
+        tasks: [
+          store.createRecord('task', {
+            order: 1,
+            name: 'бал',
+          }),
+        ],
+      }),
+    );
+
+    this.set('exercises', exercises);
+
+    const self = this;
+
+
+
+
+    await render(<template><SeriesNavigation
+    @exercises={{self.exercises}} /></template>);
+  });
+
+  test('renders all exercises', async function (assert) {
+    assert.deepEqual(pageObject.headers.length, 2);
+    assert.equal(pageObject.links.length, 2);
+  });
+});

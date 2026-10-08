@@ -4,17 +4,18 @@ import com.epam.brn.dto.response.TaskResponse
 import com.epam.brn.dto.response.TaskWordsGroupResponse
 import com.epam.brn.enums.ExerciseType
 import com.epam.brn.enums.shouldBeWithPictures
-import javax.persistence.CascadeType
-import javax.persistence.Entity
-import javax.persistence.FetchType
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
-import javax.persistence.JoinColumn
-import javax.persistence.JoinTable
-import javax.persistence.ManyToMany
-import javax.persistence.ManyToOne
-import javax.persistence.OneToOne
+import org.hibernate.annotations.BatchSize
+import jakarta.persistence.CascadeType
+import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.JoinTable
+import jakarta.persistence.ManyToMany
+import jakarta.persistence.ManyToOne
+import jakarta.persistence.OneToOne
 
 @Entity
 class Task(
@@ -35,6 +36,7 @@ class Task(
         joinColumns = [JoinColumn(name = "task_id", referencedColumnName = "id")],
         inverseJoinColumns = [JoinColumn(name = "resource_id", referencedColumnName = "id")],
     )
+    @BatchSize(size = 100)
     var answerOptions: MutableSet<Resource> = hashSetOf(),
     @ManyToMany(cascade = [(CascadeType.MERGE)])
     @JoinTable(

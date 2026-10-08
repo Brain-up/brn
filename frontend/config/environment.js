@@ -11,7 +11,7 @@ module.exports = function (environment) {
     modulePrefix: 'brn',
     environment,
     rootURL: '/',
-    locationType: 'auto',
+    locationType: 'history',
     idleTimeout: 10000,
     EmberENV: {
       FEATURES: {
@@ -28,6 +28,7 @@ module.exports = function (environment) {
       authDomain: firebaseAuthDomain,
       projectId: firebaseProjectId,
     },
+    exportApplicationGlobal: false,
     APP: {},
   };
 

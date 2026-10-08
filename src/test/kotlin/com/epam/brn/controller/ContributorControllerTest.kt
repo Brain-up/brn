@@ -4,16 +4,15 @@ import com.epam.brn.dto.request.contributor.ContributorRequest
 import com.epam.brn.dto.response.ContributorResponse
 import com.epam.brn.enums.ContributorType
 import com.epam.brn.service.ContributorService
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import kotlin.test.assertEquals
 
 @ExtendWith(MockKExtension::class)
 internal class ContributorControllerTest {
@@ -39,7 +38,7 @@ internal class ContributorControllerTest {
 
         // THEN
         verify(exactly = 1) { contributorService.getAllContributors() }
-        assertTrue(actualResultData.containsAll(contributorList))
+        actualResultData.containsAll(contributorList) shouldBe true
     }
 
     @Test
@@ -62,7 +61,7 @@ internal class ContributorControllerTest {
 
         // THEN
         verify(exactly = 1) { contributorService.getContributors(locale, ContributorType.SPECIALIST) }
-        assertTrue(actualResultData.contains(contributor))
+        actualResultData.contains(contributor) shouldBe true
     }
 
     @Test
@@ -77,7 +76,7 @@ internal class ContributorControllerTest {
 
         // THEN
         verify(exactly = 1) { contributorService.createContributor(contributorDto) }
-        assertEquals(actualResultData, contributorResponse)
+        actualResultData shouldBe contributorResponse
     }
 
     @Test
@@ -93,6 +92,6 @@ internal class ContributorControllerTest {
 
         // THEN
         verify(exactly = 1) { contributorService.updateContributor(contributorId, contributorDto) }
-        assertEquals(actualResultData, contributorResponse)
+        actualResultData shouldBe contributorResponse
     }
 }

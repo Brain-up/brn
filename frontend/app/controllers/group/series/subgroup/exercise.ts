@@ -1,30 +1,39 @@
 import Controller from '@ember/controller';
-import { inject as service } from '@ember/service';
-import { task } from 'ember-concurrency';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { service } from '@ember/service';
+import { dropTask, didCancel } from 'ember-concurrency';
 import customTimeout from 'brn/utils/custom-timeout';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { tracked } from '@glimmer/tracking';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { action } from '@ember/object';
-import StatsService, { IStatsExerciseStats } from 'brn/services/stats';
+import type StatsService from 'brn/services/stats';
+import type { IStatsExerciseStats } from 'brn/services/stats';
+import type GamificationService from 'brn/services/gamification';
 import Router from '@ember/routing/router-service';
-import TasksManagerService from 'brn/services/tasks-manager';
-import StudyingTimerService from 'brn/services/studying-timer';
-import Exercise from 'brn/models/exercise';
+import type TasksManagerService from 'brn/services/tasks-manager';
+import type StudyingTimerService from 'brn/services/studying-timer';
+import type { Exercise } from 'brn/schemas/exercise';
 import { getOwner } from '@ember/application';
+import type GroupSeriesSubgroupController from 'brn/controllers/group/series/subgroup';
 
 export default class GroupSeriesSubgroupExerciseController extends Controller {
+  declare model: Exercise;
+
   @service('router') router!: Router;
   @service('tasks-manager') tasksManager!: TasksManagerService;
   @service('studying-timer') studyingTimer!: StudyingTimerService;
   @service('stats') stats!: StatsService;
+  @service('gamification') gamification!: GamificationService;
 
   @tracked correctnessWidgetIsShown = false;
   @tracked showExerciseStats = false;
   @tracked exerciseStats = {};
 
   get exerciseIsCompletedInCurrentCycle() {
-    return this.model
-      .get('tasks')
-      .every((task: any) => task.get('completedInCurrentCycle'));
+    const tasksArray = Array.from(this.model.tasks);
+    if (tasksArray.length === 0) return false;
+    return tasksArray.every((task) => (task as { completedInCurrentCycle: boolean }).completedInCurrentCycle);
   }
 
   goToSeries() {
@@ -39,57 +48,77 @@ export default class GroupSeriesSubgroupExerciseController extends Controller {
     this.studyingTimer.pause();
     this.model.trackTime('end');
     this.model.postHistory(this.modelStats);
+    this.gamification.completeExercise({
+      wrongAnswersCount: this.modelStats.wrongAnswersCount,
+      countedSeconds: this.modelStats.countedSeconds,
+    });
     return this.modelStats;
   }
 
-  @(task(function* (
-    this: GroupSeriesSubgroupExerciseController,
-    isCorrect = false,
-  ) {
+  runCorrectnessWidgetTimer = dropTask(async (isCorrect = false) => {
     const waitingTime = isCorrect ? 3000 : 2000;
     this.correctnessWidgetIsShown = true;
-    yield customTimeout(waitingTime);
+    await customTimeout(waitingTime);
     this.correctnessWidgetIsShown = false;
-  }).drop())
-  runCorrectnessWidgetTimer;
+  });
 
   @action
   async greedOnCompletedExercise() {
+    const currentModel = this.model;
     const stats = this.saveExercise();
-    await this.runCorrectnessWidgetTimer.perform(true);
+    try {
+      await this.runCorrectnessWidgetTimer.perform(true);
+    } catch (e) {
+      if (didCancel(e)) return;
+      throw e;
+    }
+    // Guard: user may have navigated away during the timer
+    if (this.model !== currentModel) return;
     this.showExerciseStats = true;
     this.exerciseStats = stats;
   }
 
-  @action startStatsTracking(_, [model]) {
+  @action startStatsTracking(_element: unknown, [model]: [Exercise]) {
     this.stats.registerModel(model);
+    this.gamification.resetSession();
   }
 
-  @action stopStatsTracking(_, [model]) {
+  @action stopStatsTracking(_element: unknown, [model]: [Exercise]) {
     this.stats.unregisterModel(model);
   }
 
   enableNextExercise(model: Exercise) {
     // to-do add integration test for it
-    const children = model.parent.exercises.toArray();
-    const index = children.indexOf(this.model);
+    const children = Array.from(model.parent.exercises);
+    const index = children.indexOf(this.model as unknown as typeof children[number]);
     const nextIndex = index + 1;
-    model.set('isManuallyCompleted', true);
+    model.isManuallyCompleted = true;
+
+    // Persist the completion in tasksManager so the subgroup view still
+    // shows this exercise as completed after navigating away and back —
+    // the server history is only re-read on login/app start, so without
+    // this the green check disappears on the next visit.
+    if (model.id != null) {
+      this.tasksManager.completedExerciseIds = new Set([
+        ...this.tasksManager.completedExerciseIds,
+        String(model.id),
+      ]);
+    }
 
     if (children[nextIndex]) {
-      children[nextIndex].set('available', true);
+      children[nextIndex].available = true;
     }
   }
 
   @action
   async afterCompleted() {
-    this.enableNextExercise(this.model as Exercise);
+    this.enableNextExercise(this.model);
 
-    await getOwner(this)
-      .lookup(`controller:group.series.subgroup`)
-      .exerciseAvailabilityCalculationTask.perform();
+    const subgroupController = getOwner(this)!.lookup(`controller:group.series.subgroup`) as GroupSeriesSubgroupController;
+    await subgroupController.exerciseAvailabilityCalculationTask.perform();
     this.showExerciseStats = false;
     this.exerciseStats = {};
+    this.gamification.flashBadge();
     this.goToSeries();
   }
 
@@ -104,6 +133,6 @@ export default class GroupSeriesSubgroupExerciseController extends Controller {
 
   @action
   enableBodyScroll() {
-    this.bodyStyleNode.overflow = 'scroll';
+    this.bodyStyleNode.overflow = 'auto';
   }
 }

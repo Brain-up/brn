@@ -3,6 +3,6 @@ export function createStubTasks(store, tasksInfo) {
   let subGroup = store.createRecord('subgroup', { parent: parentOne });
   let parent = store.createRecord('exercise', { parent: subGroup });
   return tasksInfo.map((taskInfo) =>
-    store.createRecord('task', { ...taskInfo, id: taskInfo.order, parent }),
+    store.createRecord('task', { ...taskInfo, id: String(taskInfo.order), parent }),
   );
 }

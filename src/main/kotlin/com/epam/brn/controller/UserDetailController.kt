@@ -1,6 +1,5 @@
 package com.epam.brn.controller
 
-import com.epam.brn.config.UserDetailControllerConfig
 import com.epam.brn.dto.HeadphonesDto
 import com.epam.brn.dto.UserAccountDto
 import com.epam.brn.dto.request.UserAccountChangeRequest
@@ -9,7 +8,6 @@ import com.epam.brn.enums.BrnRole
 import com.epam.brn.service.DoctorService
 import com.epam.brn.service.UserAccountService
 import com.epam.brn.service.UserAnalyticsService
-import com.epam.brn.service.UserAnalyticsServiceV1
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.data.domain.Pageable
@@ -28,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
-import javax.annotation.security.RolesAllowed
+import jakarta.annotation.security.RolesAllowed
 
 @RestController
 @RequestMapping("/users")
@@ -37,9 +35,7 @@ import javax.annotation.security.RolesAllowed
 class UserDetailController(
     private val userAccountService: UserAccountService,
     private val doctorService: DoctorService,
-    private val config: UserDetailControllerConfig,
     private val userAnalyticsService: UserAnalyticsService,
-    private val userAnalyticsServiceV1: UserAnalyticsServiceV1,
 ) {
     @GetMapping
     @Operation(summary = "Get all users with/without analytic data")
@@ -51,10 +47,7 @@ class UserDetailController(
     ): ResponseEntity<Any> {
         val users =
             if (withAnalytics)
-                if (config.isUseNewAnalyticsService)
-                    userAnalyticsServiceV1.getUsersWithAnalytics(pageable, role)
-                else
-                    userAnalyticsService.getUsersWithAnalytics(pageable, role)
+                userAnalyticsService.getUsersWithAnalytics(pageable, role)
             else
                 userAccountService.getUsers(pageable, role)
         return ResponseEntity.ok().body(BrnResponse(data = users))

@@ -61,6 +61,8 @@ class Session extends Service.extend(Evented) {
     authenticate(...args: any[]): RSVP.Promise;
     invalidate(...args: any): RSVP.Promise;
     authorize(...args: any[]): RSVP.Promise;
+    requireAuthentication(transition: unknown, routeOrCallback: string | (() => void)): boolean;
+    prohibitAuthentication(routeOrCallback: string | (() => void)): boolean;
 }
 
 declare module 'ember-simple-auth/services/session' {

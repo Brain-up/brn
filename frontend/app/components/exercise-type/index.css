@@ -1,0 +1,38 @@
+/*! purgecss start ignore */
+
+.c-exercise-type {
+  background-color: #daf0fc;
+  border-radius: 10px;
+
+  .card {
+    align-items: center;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+    max-width: 410px;
+    width: 100%;
+  }
+
+  .card-img {
+    width: 100%;
+    flex: 1 1 auto;
+    min-height: 0;
+    object-fit: cover;
+  }
+
+  .card:focus {
+    outline: none;
+  }
+
+}
+
+@media (max-width: 640px) {
+  .c-exercise-type .card {
+    max-width: 220px;
+    width: 100%;
+  }
+}
+
+/*! purgecss end ignore */

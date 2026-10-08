@@ -1,8 +1,13 @@
+import org.gradle.jvm.toolchain.JavaLanguageVersion
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val kotestAssertionsVersion: String by properties
 val kotlinVersion: String by properties
 val flywayVersion: String by properties
+val commonsLang3Version: String by properties
+val assertjVersion: String by properties
+val plexusUtilsVersion: String by properties
 val log4jApiKotlinVersion: String by properties
 val jsonVersion: String by properties
 val junitVersion: String by properties
@@ -21,13 +26,23 @@ plugins {
     kotlin("plugin.jpa")
     id("org.jetbrains.kotlin.plugin.allopen")
     jacoco
-    id("org.sonarqube") version "3.0"
+    id("org.sonarqube") version "6.2.0.5505"
+}
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+    }
+}
+
+kotlin {
+    jvmToolchain(17)
 }
 
 allOpen {
-    annotation("javax.persistence.Entity")
-    annotation("javax.persistence.MappedSuperclass")
-    annotation("javax.persistence.Embeddable")
+    annotation("jakarta.persistence.Entity")
+    annotation("jakarta.persistence.MappedSuperclass")
+    annotation("jakarta.persistence.Embeddable")
 }
 
 repositories {
@@ -36,7 +51,15 @@ repositories {
 
 dependencyManagement {
     imports {
-        mavenBom("software.amazon.awssdk:bom:2.17.198")
+        mavenBom("software.amazon.awssdk:bom:2.31.78")
+    }
+    dependencies {
+        // Override the version managed by the Spring Boot BOM (3.17.0) to patch CVE-2025-48924.
+        dependency("org.apache.commons:commons-lang3:$commonsLang3Version")
+        // Override the version managed by the Spring Boot BOM (3.27.3) to patch CVE-2026-24400 (XXE in isXmlEqualTo).
+        dependency("org.assertj:assertj-core:$assertjVersion")
+        // Force the version pulled transitively via spring-cloud-contract-wiremock (3.5.1) to patch CVE-2025-67030 (path traversal / RCE).
+        dependency("org.codehaus.plexus:plexus-utils:$plexusUtilsVersion")
     }
 }
 
@@ -47,19 +70,20 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    implementation("org.springframework.boot:spring-boot-starter-batch")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-cache")
-    implementation("org.springframework.security:spring-security-test")
-    implementation("org.springframework.boot:spring-boot-devtools")
+    implementation("com.github.ben-manes.caffeine:caffeine:3.2.0")
+    testImplementation("org.springframework.security:spring-security-test")
+    developmentOnly("org.springframework.boot:spring-boot-devtools")
 
     implementation("org.postgresql:postgresql")
     implementation("org.flywaydb:flyway-core:$flywayVersion")
+    implementation("org.flywaydb:flyway-database-postgresql:$flywayVersion")
 
-    implementation("com.google.firebase:firebase-admin:8.1.0")
+    implementation("com.google.firebase:firebase-admin:9.9.0")
 
-    implementation("com.auth0:java-jwt:3.10.3")
+    implementation("com.auth0:java-jwt:4.5.0")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-csv")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml")
@@ -68,19 +92,16 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactive:$kotlinxCoroutinesCoreVersion")
     implementation("org.apache.logging.log4j:log4j-api-kotlin:$log4jApiKotlinVersion")
 
-    implementation("org.springdoc:springdoc-openapi-ui:$springDocOpenApiVersion")
-    implementation("org.springdoc:springdoc-openapi-kotlin:$springDocOpenApiVersion")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springDocOpenApiVersion")
 
     implementation("software.amazon.awssdk:s3")
-    implementation("com.google.cloud:google-cloud-storage:1.110.0")
+    implementation("com.google.cloud:google-cloud-storage:2.69.0")
 
     implementation("org.json:json:$jsonVersion")
     implementation("commons-io:commons-io:2.17.0")
 
     testImplementation("org.springframework.boot:spring-boot-starter-webflux")
     testImplementation("org.springframework.cloud:spring-cloud-contract-wiremock:$springCloudContractWiremockVersion")
-    testImplementation("org.amshove.kluent:kluent:1.68") // should be deleted after kotest move all of it
-    testImplementation("org.jetbrains.kotlin:kotlin-test:1.3.72") // should be deleted after kotest move all of it
     testImplementation("io.kotest:kotest-assertions-core:$kotestAssertionsVersion")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
@@ -90,23 +111,20 @@ dependencies {
     testImplementation("io.mockk:mockk:$mockkVersion")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
     testImplementation("org.junit.jupiter:junit-jupiter-params:$junitVersion")
-    testImplementation("org.mockito.kotlin:mockito-kotlin:4.0.0")
-    testImplementation("org.powermock:powermock-mockito-release-full:1.5.4")
 
-    testImplementation("org.testcontainers:testcontainers")
-    testImplementation("com.natpryce:hamkrest:1.8.0.1")
-    testImplementation("org.testcontainers:junit-jupiter:$testContainersVersion")
-    testImplementation("org.testcontainers:postgresql:$testContainersVersion")
-    testImplementation("org.testcontainers:localstack:$testContainersVersion")
-    testImplementation("com.amazonaws:aws-java-sdk:1.11.808")
+    testImplementation("org.testcontainers:testcontainers:$testContainersVersion")
+    testImplementation("org.testcontainers:testcontainers-junit-jupiter:$testContainersVersion")
+    testImplementation("org.testcontainers:testcontainers-postgresql:$testContainersVersion")
+    testImplementation("org.testcontainers:testcontainers-jdbc:$testContainersVersion")
+    testImplementation("org.testcontainers:testcontainers-localstack:$testContainersVersion")
     testImplementation("com.squareup.okhttp3:okhttp:$okhttp3Version")
     testImplementation("com.squareup.okhttp3:mockwebserver:$okhttp3Version")
 }
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions {
-        freeCompilerArgs = listOf("-Xjsr305=strict")
-        jvmTarget = "17"
+    compilerOptions {
+        freeCompilerArgs.add("-Xjsr305=strict")
+        jvmTarget.set(JvmTarget.JVM_17)
     }
 }
 
@@ -158,19 +176,26 @@ tasks.register<JavaExec>("ktlintFormat") {
     )
 }
 
-project.exec {
-    commandLine = "git config core.hooksPath .githooks".split(" ")
-}
+providers
+    .exec {
+        commandLine("git", "config", "core.hooksPath", ".githooks")
+    }.result
+    .get()
 
 tasks.named("compileKotlin") { dependsOn("ktlintCheck") }
 
-tasks.withType<Test> {
-    useJUnitPlatform {
-        excludeTags("integration-test")
-    }
+tasks.withType<Test>().configureEach {
+    javaLauncher.set(
+        javaToolchains.launcherFor {
+            languageVersion.set(JavaLanguageVersion.of(17))
+        },
+    )
 }
 
 tasks.test {
+    useJUnitPlatform {
+        excludeTags("integration-test")
+    }
     finalizedBy("jacocoTestReport")
 }
 
@@ -180,9 +205,9 @@ tasks.withType<JacocoReport> {
     reports {
         xml.required.set(true)
         html.required.set(true)
-        xml.outputLocation.set(file("$buildDir/jacoco/coverage.xml"))
+        xml.outputLocation.set(layout.buildDirectory.file("jacoco/coverage.xml"))
         csv.required.set(false)
-        html.outputLocation.set(file("$buildDir/jacoco/html"))
+        html.outputLocation.set(layout.buildDirectory.dir("jacoco/html"))
     }
     afterEvaluate {
         classDirectories.setFrom(
@@ -204,14 +229,22 @@ tasks.withType<JacocoReport> {
             ),
         )
     }
-    executionData.setFrom("$buildDir/jacoco/test.exec")
+    executionData.setFrom(layout.buildDirectory.file("jacoco/test.exec"))
 }
 
-task<Test>("integrationTest") {
+tasks.register<Test>("integrationTest") {
     useJUnitPlatform { includeTags("integration-test") }
     mustRunAfter(tasks["test"])
     group = "Verification"
     description = "Runs the integration tests on Postgres Test Container."
+}
+
+// Single, fast entry point for the agent verification loop: Kotlin style + unit tests, no Docker.
+// Integration tests (Testcontainers/Postgres) stay a separate, manual step: `gradlew integrationTest`.
+tasks.register("verify") {
+    group = LifecycleBasePlugin.VERIFICATION_GROUP
+    description = "Fast local verification: ktlint code style + unit tests (no Docker)."
+    dependsOn("ktlintCheck", "test")
 }
 
 sonarqube {

@@ -2,13 +2,13 @@ package com.epam.brn.upload.csv.group
 
 import com.epam.brn.model.ExerciseGroup
 import com.epam.brn.repo.ExerciseGroupRepository
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import io.mockk.verify
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.util.Optional
@@ -33,7 +33,7 @@ internal class GroupRecordProcessorTest {
         val actual = groupRecordProcessor.process(records)
         // THEN
         for (i in 0 until expected.size) {
-            assertThat(actual[i]).isEqualTo(expected[i])
+            actual[i] shouldBe expected[i]
         }
         verify(exactly = records.size) { exerciseGroupRepository.findByCode(ofType(String::class)) }
         verify(exactly = records.size) { exerciseGroupRepository.save(ofType(ExerciseGroup::class)) }
@@ -51,7 +51,7 @@ internal class GroupRecordProcessorTest {
         val actual = groupRecordProcessor.process(records)
         // THEN
         for (i in 0 until expected.size) {
-            assertThat(actual[i]).isEqualTo(expected[i])
+            actual[i] shouldBe expected[i]
         }
         verify(exactly = records.size) { exerciseGroupRepository.findByCode(ofType(String::class)) }
         verify(inverse = true) { exerciseGroupRepository.save(ofType(ExerciseGroup::class)) }

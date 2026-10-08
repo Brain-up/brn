@@ -3,11 +3,11 @@ package com.epam.brn.config
 import io.swagger.v3.oas.models.OpenAPI
 import io.swagger.v3.oas.models.info.Contact
 import io.swagger.v3.oas.models.info.Info
-import org.springdoc.core.customizers.OpenApiCustomiser
+import org.springdoc.core.customizers.OpenApiCustomizer
 import org.springdoc.core.customizers.OperationCustomizer
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import javax.annotation.security.RolesAllowed
+import jakarta.annotation.security.RolesAllowed
 
 @Configuration
 class SwaggerConfig {
@@ -28,16 +28,18 @@ class SwaggerConfig {
     fun rolesAllowedCustomizer(): OperationCustomizer? = OperationCustomizer { operation, handlerMethod ->
         var allowedRoles: Array<String>? = null
         var rolesAllowedAnnotation = handlerMethod.getMethodAnnotation(RolesAllowed::class.java)
-        if (rolesAllowedAnnotation != null)
+        if (rolesAllowedAnnotation != null) {
             allowedRoles = rolesAllowedAnnotation.value
-         else
+        } else {
             rolesAllowedAnnotation = handlerMethod.method.declaringClass.getAnnotation(RolesAllowed::class.java)
-            if (rolesAllowedAnnotation != null) allowedRoles = rolesAllowedAnnotation.value
+            if (rolesAllowedAnnotation != null)
+                allowedRoles = rolesAllowedAnnotation.value
+        }
 
         val sb = StringBuilder("Roles: ")
         if (allowedRoles != null)
             sb.append("**${allowedRoles.joinToString(",")}**")
-         else
+        else
             sb.append("**PUBLIC**")
 
         operation.description?.let {
@@ -50,5 +52,5 @@ class SwaggerConfig {
     }
 
     @Bean
-    fun sortTagsCustomiser(): OpenApiCustomiser = OpenApiCustomiser { openApi -> openApi.tags.sortBy { it.name } }
+    fun sortTagsCustomiser(): OpenApiCustomizer = OpenApiCustomizer { openApi -> openApi.tags.sortBy { it.name } }
 }

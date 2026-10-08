@@ -5,6 +5,8 @@ import com.epam.brn.integration.BaseIT
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.service.BrainUpUserDetailsService
+import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -15,8 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import java.util.Objects.nonNull
-import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
 
 internal class BrainUpUserDetailsServiceTestIT : BaseIT() {
     @Autowired
@@ -74,12 +74,12 @@ internal class BrainUpUserDetailsServiceTestIT : BaseIT() {
                 Assertions.assertThrows(ex) {
                     brainUpUserDetailsService.loadUserByUsername(sourceUserEmail)
                 }
-            assertEquals(actualException.message, exMessage)
+            actualException.message shouldBe exMessage
             return
         }
         val userDetails: UserDetails = brainUpUserDetailsService.loadUserByUsername(sourceUserEmail)
-        assertNotNull(userDetails)
-        assertEquals(userDetails.username, sourceUserEmail)
+        userDetails.shouldNotBeNull()
+        userDetails.username shouldBe sourceUserEmail
     }
 
     companion object {

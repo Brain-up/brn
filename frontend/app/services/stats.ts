@@ -1,6 +1,8 @@
-import Service, { inject as service } from '@ember/service';
-import Exercise from 'brn/models/exercise';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import Service, { service } from '@ember/service';
+import type { Exercise } from 'brn/schemas/exercise';
 import StudyingTimerService from './studying-timer';
+import type GamificationService from './gamification';
 export enum StatEvents {
   Start = 'start',
   Finish = 'finish',
@@ -24,6 +26,7 @@ export interface IStatsExerciseStats {
 
 export default class StatsService extends Service {
   @service('studying-timer') studyingTimer!: StudyingTimerService;
+  @service('gamification') gamification!: GamificationService;
   stats = new WeakMap();
   lastModel: Exercise | null = null;
   emptyStats() {
@@ -74,6 +77,7 @@ export default class StatsService extends Service {
       item.repeatsCount++;
     } else if (eventName === StatEvents.RightAnswer) {
       item.rightAnswersCount++;
+      this.gamification.addRightAnswerXp();
     } else if (eventName === StatEvents.PlayAudio) {
       item.playsCount++;
     }

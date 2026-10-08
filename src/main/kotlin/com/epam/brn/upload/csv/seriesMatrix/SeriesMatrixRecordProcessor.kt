@@ -1,6 +1,5 @@
 package com.epam.brn.upload.csv.seriesMatrix
 
-import com.epam.brn.dto.AudioFileMetaData
 import com.epam.brn.enums.BrnLocale
 import com.epam.brn.enums.WordType
 import com.epam.brn.exception.EntityNotFoundException
@@ -17,7 +16,7 @@ import com.epam.brn.upload.csv.RecordProcessor
 import com.epam.brn.upload.toStringWithoutBraces
 import org.apache.commons.lang3.StringUtils
 import org.springframework.stereotype.Component
-import javax.transaction.Transactional
+import jakarta.transaction.Transactional
 
 @Component
 class SeriesMatrixRecordProcessor(
@@ -79,19 +78,10 @@ class SeriesMatrixRecordProcessor(
         wordType: WordType,
         locale: BrnLocale,
     ): Resource {
-        val audioPath =
-            wordsService.getSubFilePathForWord(
-                AudioFileMetaData(
-                    word,
-                    locale.locale,
-                    wordsService.getDefaultManVoiceForLocale(locale.locale),
-                ),
-            )
         val resource =
             resourceRepository
                 .findFirstByWordAndLocaleAndWordType(word, locale.locale, wordType.name)
                 .orElse(Resource(word = word, locale = locale.locale))
-        resource.audioFileUrl = audioPath
         resource.wordType = wordType.name
         return resource
     }

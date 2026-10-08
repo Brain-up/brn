@@ -1,7 +1,6 @@
 package com.epam.brn.upload.csv.seriesPhrases
 
 import com.epam.brn.enums.BrnLocale
-import com.epam.brn.enums.Voice
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.Resource
@@ -9,7 +8,6 @@ import com.epam.brn.model.SubGroup
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.SubGroupRepository
-import com.epam.brn.service.WordsService
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldHaveSize
@@ -39,9 +37,6 @@ internal class SeriesPhrasesRecordProcessorTest {
     @MockK
     private lateinit var resourceRepository: ResourceRepository
 
-    @MockK
-    private lateinit var wordsService: WordsService
-
     @Test
     fun `should create correct exercise`() {
         // GIVEN
@@ -58,8 +53,6 @@ internal class SeriesPhrasesRecordProcessorTest {
         val exercise = mockk<Exercise>()
         every { exerciseRepository.findExerciseByNameAndLevel(any(), any()) } returns Optional.empty()
         every { subGroupRepository.findByCodeAndLocale(any(), any()) } returns subGroup
-        every { wordsService.getDefaultManVoiceForLocale(any()) } returns Voice.FILIPP.name
-        every { wordsService.getSubFilePathForWord(any()) } returns ""
         every { resourceRepository.findFirstByWordAndLocaleAndWordType(any(), any(), any()) } returns Optional.empty()
         every { resourceRepository.saveAll(any<List<Resource>>()) } returns emptyList()
         every { exerciseRepository.save(any()) } returns exercise
@@ -70,8 +63,6 @@ internal class SeriesPhrasesRecordProcessorTest {
         // THEN
         verify(exactly = 1) { exerciseRepository.findExerciseByNameAndLevel(any(), any()) }
         verify(exactly = 1) { subGroupRepository.findByCodeAndLocale(any(), any()) }
-        verify(exactly = 2) { wordsService.getDefaultManVoiceForLocale(any()) }
-        verify(exactly = 2) { wordsService.getSubFilePathForWord(any()) }
         verify(exactly = 2) { resourceRepository.findFirstByWordAndLocaleAndWordType(any(), any(), any()) }
         verify(exactly = 1) { resourceRepository.saveAll(any<List<Resource>>()) }
         verify(exactly = 1) { exerciseRepository.save(any()) }

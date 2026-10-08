@@ -81,6 +81,7 @@ class SubGroupService(
 
     fun toSubGroupResponse(subGroup: SubGroup): SubGroupResponse {
         val pictureUrl = urlConversionService.makeUrlForSubGroupPicture(subGroup.code)
-        return subGroup.toResponse(pictureUrl)
+        val exerciseIds = exerciseRepository.findExerciseIdsBySubGroupId(subGroup.id!!)
+        return subGroup.toResponse(pictureUrl, exerciseIds)
     }
 }

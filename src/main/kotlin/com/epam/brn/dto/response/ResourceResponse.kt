@@ -4,7 +4,6 @@ import com.epam.brn.enums.WordType
 
 data class ResourceResponse(
     var id: Long? = null,
-    var audioFileUrl: String? = "",
     val word: String? = "",
     val wordPronounce: String? = "",
     val wordType: WordType?,

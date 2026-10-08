@@ -149,7 +149,7 @@ internal class CloudUploadServiceTest {
     }
 
     @Test
-    fun `should throw IllegalArgumentException when unverified picture file is exist in cloud default picture folder`() {
+    fun `should log when unverified picture file is exist in cloud default picture folder`() {
         // GIVEN
         val word = "Word"
         val fullFileName = "$word.png"
@@ -161,19 +161,15 @@ internal class CloudUploadServiceTest {
         every { cloudService.isFileExist(defaultPicturesPath, word) } returns true
 
         // WHEN
-        val exception =
-            shouldThrowExactly<IllegalArgumentException> {
-                cloudUploadService.uploadUnverifiedPictureFile(mockMultipartFile)
-            }
+        cloudUploadService.uploadUnverifiedPictureFile(mockMultipartFile)
 
         // THEN
-        exception.message shouldBe "File \"$fullFileName\" is exist in cloud default path"
         verify(exactly = 1) { cloudService.isFileExist(defaultPicturesPath, word) }
         verify(exactly = 0) { cloudService.isFileExist(unverifiedPicturesPath, word) }
     }
 
     @Test
-    fun `should throw IllegalArgumentException when file is exist in cloud unverified picture folder`() {
+    fun `should log when file is exist in cloud unverified picture folder`() {
         // GIVEN
         val word = "Word"
         val fullFileName = "$word.png"
@@ -186,13 +182,9 @@ internal class CloudUploadServiceTest {
         every { cloudService.isFileExist(unverifiedPicturesPath, word) } returns true
 
         // WHEN
-        val exception =
-            shouldThrowExactly<IllegalArgumentException> {
-                cloudUploadService.uploadUnverifiedPictureFile(mockMultipartFile)
-            }
+        cloudUploadService.uploadUnverifiedPictureFile(mockMultipartFile)
 
         // THEN
-        exception.message shouldBe "File \"$fullFileName\" is exist in cloud path \"$unverifiedPicturesPath\""
         verify(exactly = 1) { cloudService.isFileExist(defaultPicturesPath, word) }
         verify(exactly = 1) { cloudService.isFileExist(unverifiedPicturesPath, word) }
     }

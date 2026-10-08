@@ -1,5 +1,5 @@
 import type { FFmpeg } from '@ffmpeg/ffmpeg';
-import Ember from 'ember';
+import { isTesting } from '@embroider/macros';
 
 let ffmpeg: FFmpeg | null = null;
 let hasFFmpegError = false;
@@ -42,7 +42,8 @@ export async function transcodeFile(file: ArrayBuffer) {
   ffmpeg.FS('unlink', inputName);
   ffmpeg.FS('unlink', outputName);
 
-  return await new Blob([data.buffer], { type: 'audio/wav' }).arrayBuffer();
+  const arrayBuffer = new Uint8Array(data).buffer as ArrayBuffer;
+  return await new Blob([arrayBuffer], { type: 'audio/wav' }).arrayBuffer();
 }
 
 export const TIMINGS = {
@@ -57,7 +58,7 @@ export const TIMINGS = {
   },
 
   get SUCCESS_ANSWER_NOTIFICATION() {
-    return Ember.testing ? 200 : 3000;
+    return isTesting() ? 200 : 3000;
   },
   get SUCCESS_ANSWER_NOTIFICATION_STARTED() {
     return this.SUCCESS_ANSWER_NOTIFICATION - this._step;
@@ -102,7 +103,7 @@ export function toMilliseconds(value: number) {
 
 export function createAudioContext() {
   const AudioContext =
-    window.AudioContext || (window as any).webkitAudioContext;
+    window.AudioContext || (window as unknown as { webkitAudioContext: typeof window.AudioContext }).webkitAudioContext;
   return new AudioContext();
 }
 
@@ -118,7 +119,7 @@ export function createSource(
   const source = context.createBufferSource();
   const gainNode: GainNode = context.createGain
     ? context.createGain()
-    : (context as any).createGainNode();
+    : (context as unknown as { createGainNode(): GainNode }).createGainNode();
   source.buffer = buffer;
   source.loop = false;
   source.connect(gainNode);
@@ -165,7 +166,7 @@ export class BufferLoader {
           const fileClone = file.slice(0);
           try {
             result = await this.context.decodeAudioData(file);
-          } catch (e) {
+          } catch (_e) {
             hasOGGDecodingError = true;
             if (!hasFFmpegError) {
               try {
@@ -173,7 +174,7 @@ export class BufferLoader {
                 result = await this.context.decodeAudioData(
                   await transcodeFile(fileClone),
                 );
-              } catch (e) {
+              } catch (_e) {
                 hasFFmpegError = true;
               }
             }
@@ -189,7 +190,7 @@ export class BufferLoader {
   }
 }
 
-const AudioCache = new Map();
+const AudioCache = new Map<string, ArrayBuffer>();
 
 export function preloadAudioFile(url: string, token: string) {
   return arrayBufferRequest(url, token);
@@ -203,7 +204,7 @@ function arrayBufferRequest(
     const urlObj = new URL(url);
     return new Promise((resolve) => {
       if (AudioCache.has(url)) {
-        return resolve(AudioCache.get(url).slice());
+        return resolve(AudioCache.get(url)!.slice());
       }
       const request = new XMLHttpRequest();
       request.open('GET', url, true);

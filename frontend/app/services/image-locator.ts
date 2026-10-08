@@ -1,9 +1,14 @@
-import Service, { inject as service } from '@ember/service';
+import Service, { service } from '@ember/service';
+import type Session from 'ember-simple-auth/services/session';
 import UserDataService from 'brn/services/user-data';
+import type NetworkService from 'brn/services/network';
 
 export default class ImageLocatorService extends Service {
   cache: Map<string, string> = new Map();
+  uploadedWords: Set<string> = new Set();
   @service('user-data') userData!: UserDataService;
+  @service('network') network!: NetworkService;
+  @service('session') session!: Session;
   async getPictureForWordAsDataURL(word: string): Promise<string|null> {
     const url = await this.getPictureForWord(word);
     if (!url) {
@@ -20,10 +25,22 @@ export default class ImageLocatorService extends Service {
         const ctx = canvas.getContext('2d');
         ctx?.drawImage(img, 0, 0);
         const dataURL = canvas.toDataURL('image/png');
+        this.maybeUploadImage(word, canvas);
         resolve(dataURL);
       };
       img.onerror = () => reject(null);
     });
+  }
+  private maybeUploadImage(word: string, canvas: HTMLCanvasElement): void {
+    if (!this.session.isAuthenticated) return;
+    if (this.uploadedWords.has(word)) return;
+    if (this.isDestroying) return;
+    this.uploadedWords.add(word);
+    canvas.toBlob((blob) => {
+      if (this.isDestroying || this.isDestroyed) return;
+      if (!blob || blob.size >= 512 * 1024) return;
+      this.network.uploadPictureFile(blob, `${word}.png`).catch(() => {});
+    }, 'image/png');
   }
   async getPictureForWord(word: string): Promise<string | null> {
     if (!this.cache.has(word)) {
@@ -90,8 +107,8 @@ export default class ImageLocatorService extends Service {
         return [];
       }
       const data = await request.json();
-      return data.def[0].tr.map((e: any) => e.text);
-    } catch (e) {
+      return data.def[0].tr.map((e: { text: string }) => e.text);
+    } catch (_e) {
       return [];
     }
   }
@@ -179,7 +196,7 @@ export default class ImageLocatorService extends Service {
         return `https://static.arasaac.org/pictograms/${id}/${id}_500.png`;
       }
       return null;
-    } catch (e) {
+    } catch (_e) {
       return null;
     }
   }
@@ -199,7 +216,7 @@ export default class ImageLocatorService extends Service {
         return data[0].image_url;
       }
       return null;
-    } catch (e) {
+    } catch (_e) {
       return null;
     }
   }

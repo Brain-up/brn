@@ -1,0 +1,89 @@
+/*! purgecss start ignore */
+
+.streak-counter {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.streak-counter__text {
+  color: white;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+/* Fire SVG with subtle flicker animation */
+.streak-counter__flame {
+  display: inline-flex;
+  align-items: center;
+  animation: flame-flicker 1.5s ease-in-out infinite alternate;
+  transform-origin: bottom center;
+}
+
+.streak-counter__flame-svg {
+  width: 18px;
+  height: 18px;
+}
+
+@keyframes flame-flicker {
+  0% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+  25% {
+    transform: scale(1.05) rotate(-2deg);
+    opacity: 0.9;
+  }
+  50% {
+    transform: scale(0.95) rotate(1deg);
+    opacity: 1;
+  }
+  75% {
+    transform: scale(1.08) rotate(-1deg);
+    opacity: 0.85;
+  }
+  100% {
+    transform: scale(1) rotate(2deg);
+    opacity: 0.95;
+  }
+}
+
+/* High streak celebration (5+ days) - more energetic flame */
+.streak-counter--high .streak-counter__flame {
+  animation: flame-flicker-intense 1s ease-in-out infinite alternate;
+  filter: drop-shadow(0 0 4px rgba(251, 146, 60, 0.5));
+}
+
+@keyframes flame-flicker-intense {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+  20% {
+    transform: scale(1.1) rotate(-3deg);
+  }
+  40% {
+    transform: scale(0.95) rotate(2deg);
+  }
+  60% {
+    transform: scale(1.12) rotate(-2deg);
+  }
+  80% {
+    transform: scale(0.97) rotate(1deg);
+  }
+  100% {
+    transform: scale(1.05) rotate(-1deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .streak-counter__flame {
+    animation: none;
+  }
+
+  .streak-counter--high .streak-counter__flame {
+    animation: none;
+    filter: none;
+  }
+}
+
+/*! purgecss end ignore */

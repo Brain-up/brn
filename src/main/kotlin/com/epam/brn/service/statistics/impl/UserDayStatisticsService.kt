@@ -28,17 +28,21 @@ class UserDayStatisticsService(
                 from = from,
                 to = to,
             )
-        return studyHistories
-            .map {
-                val filteredStudyHistories =
-                    studyHistories.filter { studyHistoryFilter ->
-                        studyHistoryFilter.startTime.toLocalDate() == it.startTime.toLocalDate()
-                    }
-                DayStudyStatistics(
-                    exercisingTimeSeconds = filteredStudyHistories.sumOf { dayStudyHistory -> dayStudyHistory.executionSeconds },
-                    date = it.startTime,
-                    progress = progressManager.getStatus(UserExercisingPeriod.DAY, filteredStudyHistories),
-                )
-            }.distinctBy { it.date.toLocalDate() }
+        return buildDayStatistics(studyHistories)
     }
+
+    /**
+     * Builds per-day statistics from already-loaded histories (expected to be ordered by startTime).
+     * Extracted so callers that fetch histories for many users in one query can reuse the same logic
+     * without issuing a query per user.
+     */
+    fun buildDayStatistics(studyHistories: List<StudyHistory>): List<DayStudyStatistics> = studyHistories
+        .groupBy { it.startTime.toLocalDate() }
+        .map { (_, dayHistories) ->
+            DayStudyStatistics(
+                exercisingTimeSeconds = dayHistories.sumOf { it.executionSeconds },
+                date = dayHistories.first().startTime,
+                progress = progressManager.getStatus(UserExercisingPeriod.DAY, dayHistories),
+            )
+        }
 }

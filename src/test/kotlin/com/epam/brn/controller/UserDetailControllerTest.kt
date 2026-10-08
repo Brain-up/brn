@@ -1,6 +1,5 @@
 package com.epam.brn.controller
 
-import com.epam.brn.config.UserDetailControllerConfig
 import com.epam.brn.dto.HeadphonesDto
 import com.epam.brn.dto.UserAccountDto
 import com.epam.brn.dto.request.UserAccountChangeRequest
@@ -13,12 +12,13 @@ import com.epam.brn.enums.HeadphonesType
 import com.epam.brn.service.DoctorService
 import com.epam.brn.service.UserAccountService
 import com.epam.brn.service.UserAnalyticsService
-import com.epam.brn.service.UserAnalyticsServiceV1
+import com.google.firebase.auth.FirebaseAuth
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
-import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.justRun
 import io.mockk.mockk
@@ -26,34 +26,29 @@ import io.mockk.verify
 import org.apache.commons.lang3.math.NumberUtils
 import org.apache.commons.lang3.math.NumberUtils.INTEGER_ONE
 import org.apache.http.HttpStatus
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.data.domain.Pageable
-import kotlin.test.assertEquals
 
 @ExtendWith(MockKExtension::class)
 internal class UserDetailControllerTest {
     @InjectMockKs
     lateinit var userDetailController: UserDetailController
 
-    @RelaxedMockK
-    lateinit var config: UserDetailControllerConfig
-
     @MockK
     lateinit var userAccountService: UserAccountService
+
+    @MockK
+    lateinit var firebaseAuth: FirebaseAuth
 
     @MockK
     private lateinit var doctorService: DoctorService
 
     @MockK
     private lateinit var userAnalyticsService: UserAnalyticsService
-
-    @MockK
-    private lateinit var userAnalyticsServiceV1: UserAnalyticsServiceV1
 
     lateinit var userAccountDto: UserAccountDto
 
@@ -87,8 +82,8 @@ internal class UserDetailControllerTest {
 
             // THEN
             verify(exactly = 1) { userAccountService.findUserDtoById(userId) }
-            assertThat(savedUserAccountDto[0]).isEqualTo(userAccountDto)
-            assertThat(savedUserAccountDto).hasSize(INTEGER_ONE)
+            savedUserAccountDto[0] shouldBe userAccountDto
+            savedUserAccountDto shouldHaveSize INTEGER_ONE
         }
 
         @Test
@@ -102,8 +97,8 @@ internal class UserDetailControllerTest {
 
             // THEN
             verify(exactly = 1) { userAccountService.getCurrentUserDto() }
-            assertThat(savedUserAccountDto[0]).isEqualTo(userAccountDto)
-            assertThat(savedUserAccountDto).hasSize(INTEGER_ONE)
+            savedUserAccountDto[0] shouldBe userAccountDto
+            savedUserAccountDto shouldHaveSize INTEGER_ONE
         }
 
         @Test
@@ -128,7 +123,7 @@ internal class UserDetailControllerTest {
             // THEN
             verify(exactly = 1) { userAccountService.updateAvatarForCurrentUser(avatarUrl) }
             userAccountDto.avatar = avatarUrl
-            assertEquals(userAccountDto, response)
+            response shouldBe userAccountDto
         }
 
         @Test
@@ -157,7 +152,7 @@ internal class UserDetailControllerTest {
 
             // THEN
             verify(exactly = 1) { userAccountService.updateCurrentUser(changeRequest) }
-            assertEquals(userAccountDto, response)
+            response shouldBe userAccountDto
         }
 
         @Test
@@ -176,7 +171,7 @@ internal class UserDetailControllerTest {
 
             // THEN
             verify(exactly = 1) { userAccountService.addHeadphonesToUser(1L, headphonesDto) }
-            assertEquals(headphonesDto, response)
+            response shouldBe headphonesDto
         }
 
         @Test
@@ -195,7 +190,7 @@ internal class UserDetailControllerTest {
 
             // THEN
             verify(exactly = 1) { userAccountService.addHeadphonesToCurrentUser(headphonesDto) }
-            assertEquals(headphonesDto, response)
+            response shouldBe headphonesDto
         }
 
         @Test
@@ -235,7 +230,8 @@ internal class UserDetailControllerTest {
 
             // THEN
             verify(exactly = 1) { userAccountService.getAllHeadphonesForUser(1L) }
-            assertThat(response).hasSize(2).containsExactly(headphonesDto, headphonesDtoSecond)
+            response shouldHaveSize 2
+            response.shouldContainExactly(headphonesDto, headphonesDtoSecond)
         }
     }
 
@@ -307,25 +303,6 @@ internal class UserDetailControllerTest {
 
         // THEN
         verify(exactly = 1) { userAnalyticsService.getUsersWithAnalytics(pageable, role) }
-        users.statusCodeValue shouldBe HttpStatus.SC_OK
-        (users.body as BrnResponse<*>).data shouldBe listOf(userWithAnalyticsResponse)
-    }
-
-    @Test
-    fun `getUsers should return users with statistics when withAnalytics is true for V1 analytics service version`() {
-        // GIVEN
-        val withAnalytics = true
-        val role = BrnRole.USER
-        val pageable = mockk<Pageable>()
-        val userWithAnalyticsResponse = mockk<UserWithAnalyticsResponse>()
-        every { config.isUseNewAnalyticsService } returns true
-        every { userAnalyticsServiceV1.getUsersWithAnalytics(pageable, role) } returns listOf(userWithAnalyticsResponse)
-
-        // WHEN
-        val users = userDetailController.getUsers(withAnalytics, role, pageable)
-
-        // THEN
-        verify(exactly = 1) { userAnalyticsServiceV1.getUsersWithAnalytics(pageable, role) }
         users.statusCodeValue shouldBe HttpStatus.SC_OK
         (users.body as BrnResponse<*>).data shouldBe listOf(userWithAnalyticsResponse)
     }

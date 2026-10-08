@@ -9,6 +9,7 @@ import com.epam.brn.service.statistics.UserPeriodStatisticsService
 import com.epam.brn.service.statistics.progress.status.ProgressStatusManager
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
+import java.time.YearMonth
 import java.time.temporal.ChronoUnit
 
 @Service
@@ -30,25 +31,16 @@ class UserMonthStatisticsService(
                 to = to,
             )
         return histories
-            .map {
-                val filteredHistories =
-                    histories.filter { historyFilter ->
-                        historyFilter.startTime.month == it.startTime.month
-                    }
+            .groupBy { YearMonth.from(it.startTime) }
+            .map { (_, monthHistories) ->
                 MonthStudyStatistics(
-                    date = it.startTime,
-                    exercisingTimeSeconds = filteredHistories.sumOf { studyHistory -> studyHistory.executionSeconds },
-                    progress = progressManager.getStatus(UserExercisingPeriod.WEEK, filteredHistories),
+                    date = monthHistories.first().startTime,
+                    exercisingTimeSeconds = monthHistories.sumOf { it.executionSeconds },
+                    progress = progressManager.getStatus(UserExercisingPeriod.WEEK, monthHistories),
                     exercisingDays =
-                        filteredHistories
-                            .distinctBy { studyHistory ->
-                                studyHistory.startTime.truncatedTo(ChronoUnit.DAYS)
-                            }.size,
-                )
-            }.distinctBy {
-                listOf(
-                    it.date.month,
-                    it.date.year,
+                        monthHistories
+                            .distinctBy { it.startTime.truncatedTo(ChronoUnit.DAYS) }
+                            .size,
                 )
             }
     }

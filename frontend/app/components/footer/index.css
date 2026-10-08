@@ -1,0 +1,27 @@
+.c-footer {
+  min-height: 50px;
+  font-size: 12px;
+
+  a[rel='noopener'] {
+    display: block;
+    max-height: 100%;
+    max-width: 70px;
+    overflow: hidden;
+  }
+
+  .c-footer__sponsors li {
+    margin: 3px;
+    padding: 2px;
+    border: 1px solid #fff;
+    border-radius: 10px;
+  }
+
+  .c-footer__sponsors li:hover {
+    border: 1px solid #f3f3f5;
+  }
+
+  a img {
+    object-fit: contain;
+    height: 48px;
+  }
+}

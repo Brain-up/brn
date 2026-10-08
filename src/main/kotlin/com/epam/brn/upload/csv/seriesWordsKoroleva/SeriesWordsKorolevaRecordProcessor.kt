@@ -1,6 +1,5 @@
 package com.epam.brn.upload.csv.seriesWordsKoroleva
 
-import com.epam.brn.dto.AudioFileMetaData
 import com.epam.brn.enums.BrnLocale
 import com.epam.brn.enums.WordType
 import com.epam.brn.exception.EntityNotFoundException
@@ -63,14 +62,6 @@ class SeriesWordsKorolevaRecordProcessor(
         word: String,
         locale: BrnLocale,
     ): Resource {
-        val audioPath =
-            wordsService.getSubFilePathForWord(
-                AudioFileMetaData(
-                    word,
-                    locale.locale,
-                    wordsService.getDefaultWomanVoiceForLocale(locale.locale),
-                ),
-            )
         val resource =
             resourceRepository
                 .findFirstByWordAndLocaleAndWordType(word, locale.locale, WordType.OBJECT.toString())
@@ -80,7 +71,6 @@ class SeriesWordsKorolevaRecordProcessor(
                         locale = locale.locale,
                     ),
                 )
-        resource.audioFileUrl = audioPath
         resource.wordType = WordType.OBJECT.toString()
         return resource
     }

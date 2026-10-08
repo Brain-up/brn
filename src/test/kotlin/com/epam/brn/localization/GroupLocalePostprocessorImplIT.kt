@@ -1,7 +1,8 @@
 package com.epam.brn.localization
 
 import com.epam.brn.dto.ExerciseGroupDto
-import org.junit.jupiter.api.Assertions.assertNotNull
+import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
@@ -12,7 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.test.context.ActiveProfiles
 import java.util.Locale
-import kotlin.test.assertEquals
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -30,8 +30,8 @@ internal class GroupLocalePostprocessorImplIT {
     ) {
         LocaleContextHolder.setLocale(Locale(sourceDto.locale))
         val actualExerciseGroupDto: ExerciseGroupDto = groupLocalePostprocessor.postprocess(sourceDto)
-        assertNotNull(actualExerciseGroupDto)
-        assertEquals(expectedMessage, actualExerciseGroupDto.name)
+        actualExerciseGroupDto.shouldNotBeNull()
+        actualExerciseGroupDto.name shouldBe expectedMessage
     }
 
     companion object {

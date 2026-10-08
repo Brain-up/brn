@@ -6,6 +6,7 @@ import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Role
 import com.epam.brn.repo.RoleRepository
 import com.epam.brn.service.impl.RoleServiceImpl
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -16,8 +17,6 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.util.Optional
-import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
 
 @ExtendWith(MockKExtension::class)
 @DisplayName("RoleServiceImplTest test using MockK")
@@ -44,7 +43,7 @@ internal class RoleServiceImplTest {
 
         // THEN
         verify(exactly = 1) { roleRepository.findById(roleIdLong) }
-        assertEquals(roleById, role)
+        roleById shouldBe role
     }
 
     @Test
@@ -63,7 +62,7 @@ internal class RoleServiceImplTest {
 
         // THEN
         verify(exactly = 1) { roleRepository.findByName(roleName) }
-        assertEquals(foundRole, role)
+        foundRole shouldBe role
     }
 
     @Test
@@ -73,7 +72,7 @@ internal class RoleServiceImplTest {
         every { roleRepository.findById(roleId) } returns Optional.empty()
 
         // WHEN
-        assertFailsWith<EntityNotFoundException> {
+        shouldThrow<EntityNotFoundException> {
             roleServiceImpl.findById(roleId)
         }
     }
@@ -85,7 +84,7 @@ internal class RoleServiceImplTest {
         every { roleRepository.findByName(roleName) } returns null
 
         // WHEN
-        assertFailsWith<EntityNotFoundException> {
+        shouldThrow<EntityNotFoundException> {
             roleServiceImpl.findByName(roleName)
         }
     }
@@ -103,7 +102,7 @@ internal class RoleServiceImplTest {
         val resultSaving = roleServiceImpl.save(role)
         // THEN
         verify(exactly = 1) { roleRepository.save(role) }
-        assertEquals(role, resultSaving)
+        resultSaving shouldBe role
     }
 
     @Test
@@ -120,7 +119,7 @@ internal class RoleServiceImplTest {
         val allRoles = roleServiceImpl.findAll()
         // THEN
         verify(exactly = 1) { roleRepository.findAll() }
-        assertEquals(1, allRoles.size)
+        allRoles.size shouldBe 1
     }
 
     @Test

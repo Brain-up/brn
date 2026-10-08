@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import javax.annotation.security.RolesAllowed
+import jakarta.annotation.security.RolesAllowed
 
 @RestController
 @RequestMapping("/resources")
@@ -47,5 +47,11 @@ class ResourceController(
     @RolesAllowed(BrnRole.ADMIN)
     @Operation(summary = "Update picture URL for all resources")
     fun updateResourceUrls(): ResponseEntity<ResourcePictureUrlUpdateJobResponse> =
+        ResponseEntity.ok(resourcePictureUpdateJob.updatePictureUrl())
+
+    @GetMapping("/update")
+    @RolesAllowed(BrnRole.ADMIN)
+    @Operation(summary = "Update picture URL for all resources")
+    fun updateResourcePictureUrls(): ResponseEntity<ResourcePictureUrlUpdateJobResponse> =
         ResponseEntity.ok(resourcePictureUpdateJob.updatePictureUrl())
 }

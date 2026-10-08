@@ -13,7 +13,6 @@ import com.epam.brn.enums.ExerciseType.WORDS_SEQUENCES
 import com.epam.brn.enums.ExerciseType.valueOf
 import com.epam.brn.enums.toMechanism
 import com.epam.brn.exception.EntityNotFoundException
-import com.epam.brn.model.Exercise
 import com.epam.brn.model.Resource
 import com.epam.brn.model.Task
 import com.epam.brn.repo.ExerciseRepository
@@ -35,17 +34,14 @@ class TaskService(
 ) {
     private val log = logger()
 
-    private val tempPictureStorageUrl = "https://brnup.s3.eu-north-1.amazonaws.com/pictures/"
-
     @Cacheable("tasksByExerciseId")
     fun getTasksByExerciseId(exerciseId: Long): List<Any> {
-        val exercise: Exercise =
-            exerciseRepository
-                .findById(exerciseId)
-                .orElseThrow { EntityNotFoundException("No exercise found for id=$exerciseId") }
+        val exerciseType =
+            exerciseRepository.findTypeByExerciseId(exerciseId)
+                ?: throw EntityNotFoundException("No exercise found for id=$exerciseId")
         val tasks = taskRepository.findTasksByExerciseIdWithJoinedAnswers(exerciseId)
         tasks.forEach { task -> processAnswerOptions(task) }
-        return when (val type = valueOf(exercise.subGroup!!.series.type)) {
+        return when (val type = valueOf(exerciseType)) {
             SINGLE_SIMPLE_WORDS, FREQUENCY_WORDS, SYLLABLES_KOROLEVA, PHRASES ->
                 tasks.map { task -> task.toTaskResponse(type) }
 
@@ -67,14 +63,10 @@ class TaskService(
         val task =
             taskRepository.findById(taskId).orElseThrow { EntityNotFoundException("No task found for id=$taskId") }
         processAnswerOptions(task)
-        return when (
-            val type =
-                valueOf(
-                    task.exercise!!
-                        .subGroup!!
-                        .series.type,
-                )
-        ) {
+        val exerciseType =
+            taskRepository.findExerciseTypeByTaskId(taskId)
+                ?: throw EntityNotFoundException("No exercise type found for taskId=$taskId")
+        return when (val type = valueOf(exerciseType)) {
             SINGLE_SIMPLE_WORDS, FREQUENCY_WORDS, SYLLABLES_KOROLEVA, PHRASES ->
                 task.toTaskResponse(type)
 
@@ -88,11 +80,25 @@ class TaskService(
         }
     }
 
-    private fun processAnswerOptions(task: Task) {
+    public fun processAnswerOptions(task: Task) {
         task.answerOptions
             .forEach { resource ->
+                val word = resource.word
                 if (!resource.pictureFileUrl.isNullOrEmpty()) {
                     resource.pictureFileUrl = cloudService.baseFileUrl() + "/" + resource.pictureFileUrl
+                    log.info("Picture url for word $word is ${resource.pictureFileUrl}")
+                } else {
+                    var isExistOnS3AndUrl = cloudService.isPictureExistInMainFolder(word)
+                    log.info("Picture for $word on main s3 /pictures folder exist = $isExistOnS3AndUrl")
+                    if (!isExistOnS3AndUrl.first) {
+                        isExistOnS3AndUrl = cloudService.isPictureExistInUnverifiedFolder(word)
+                        log.info("Picture for $word on main s3 /unverifiedPictures folder exist = $isExistOnS3AndUrl")
+                    }
+                    if (isExistOnS3AndUrl.first) {
+                        resource.pictureFileUrl = isExistOnS3AndUrl.second
+                    } else {
+                        log.info("Picture for word $word not found on s3.")
+                    }
                 }
             }
     }

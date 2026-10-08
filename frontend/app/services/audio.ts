@@ -1,12 +1,14 @@
-import Ember from 'ember';
-import { isArray } from '@ember/array';
+import { isTesting } from '@embroider/macros';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { action } from '@ember/object';
 import {
   task,
+  enqueueTask,
+  keepLatestTask,
   timeout,
-  Task as TaskGenerator,
   TaskInstance,
 } from 'ember-concurrency';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { tracked } from '@glimmer/tracking';
 import { getOwner } from '@ember/application';
 import {
@@ -14,22 +16,26 @@ import {
   createNoizeBuffer,
   loadAudioFiles,
   createAudioContext,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   toSeconds,
   toMilliseconds,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   TIMINGS,
   ISource,
   preloadAudioFile,
 } from 'brn/utils/audio-api';
-import Service, { inject as service } from '@ember/service';
-import TimerComponent from 'brn/components/timer/component';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import Service, { service } from '@ember/service';
+import TimerComponent from 'brn/components/timer';
 import NetworkService from './network';
 import StatsService, { StatEvents } from './stats';
-import { ToneObject } from 'brn/components/audio-player/component';
-import SignalModel from 'brn/models/signal';
+import { ToneObject } from 'brn/components/audio-player';
+import type { Signal as SignalModel } from 'brn/schemas/signal';
 import Intl from 'ember-intl/services/intl';
 import { PolySynth, Synth, SynthOptions } from 'tone';
 import UserDataService from './user-data';
-import Exercise from 'brn/models/exercise';
+import StudyingTimerService from './studying-timer';
+import type { Exercise } from 'brn/schemas/exercise';
 
 type ISourceCollection = (ISource | IToneSource | null)[];
 export interface IToneSource {
@@ -47,7 +53,15 @@ export default class AudioService extends Service {
   @service('stats') declare stats: StatsService;
   @service('intl') declare intl: Intl;
   @service('user-data') declare userData: UserDataService;
+  @service('studying-timer') declare studyingTimer: StudyingTimerService;
   context!: AudioContext;
+
+  willDestroy(): void {
+    super.willDestroy();
+    if (this.context && this.context.state !== 'closed') {
+      this.context.close();
+    }
+  }
   @tracked
   player: null | TimerComponent = null;
   register(player: TimerComponent) {
@@ -56,26 +70,31 @@ export default class AudioService extends Service {
   buffers: (AudioBuffer | null | ToneObject)[] = [];
   startTime: null | number = 0;
   totalDuration = 0;
-  noiseNode!: any;
+  noiseNode!: ISource | null;
   sources!: ISourceCollection;
-  noiseTaskInstance!: TaskInstance<any>;
+  noiseTaskInstance!: TaskInstance<void>;
   @tracked isPlaying = false;
+  @tracked isProcessing = false;
+
+  get isBusy() {
+    return this.isPlaying || this.isProcessing;
+  }
 
   @tracked audioPlayingProgress = 0;
 
   @tracked audioFileUrl: null | string | string[] | ToneObject = null;
 
-  @(task(function* (this: AudioService) {
+  trackProgress = enqueueTask(async () => {
     try {
       this.startTime = Date.now();
       this.setProgress(0);
       while (this.isPlaying) {
         this.updatePlayingProgress();
-        yield timeout(32);
+        await timeout(32);
       }
-      yield timeout(100);
+      await timeout(100);
       this.setProgress(0);
-    } catch (e) {
+    } catch (_e) {
       // NOP
     } finally {
       if (!this.isDestroyed && !this.isDestroying) {
@@ -83,8 +102,7 @@ export default class AudioService extends Service {
         this.startTime = null;
       }
     }
-  }).enqueue())
-  trackProgress!: TaskGenerator<any, any>;
+  });
 
   // for tests
   _lastText: null | string = null;
@@ -98,41 +116,50 @@ export default class AudioService extends Service {
       window.location.host +
       `/api/audio?text=${encodeURIComponent(text)}&locale=${encodeURIComponent(
         this.intl.primaryLocale,
-      )}&exerciseId=${encodeURIComponent(exercise?.get('id') ?? '0')}`
+      )}&exerciseId=${encodeURIComponent(exercise?.id ?? '0')}`
     );
   }
 
   @action async startPlayTask(filesToPlay = this.filesToPlay) {
-    if (this.isPlaying) {
+    if (this.isBusy) {
       return;
     }
-    
-    this.stats.addEvent(StatEvents.PlayAudio);
-    await this.setAudioElements(filesToPlay as string[]);
-    await this.playAudio();
+    this.isProcessing = true;
+    try {
+      this.stats.addEvent(StatEvents.PlayAudio);
+      await this.setAudioElements(filesToPlay as string[]);
+      await this.playAudio();
+    } catch (e) {
+      // Log and swallow errors: callers invoke startPlayTask fire-and-forget
+      // without awaiting, matching the pattern used in playAudio().
+      console.error(e);
+    } finally {
+      if (!this.isDestroyed && !this.isDestroying) {
+        this.isProcessing = false;
+      }
+    }
   }
 
   get currentExerciseNoiseUrl() {
-    if (Ember.testing) {
+    if (isTesting()) {
       return null;
     }
     return this.currentExercise?.noiseUrl ?? null;
   }
   get currentExercise(): Exercise | null {
-    if (Ember.testing) {
+    if (isTesting()) {
       return null;
     }
-    const owner = getOwner(this);
-    const model = owner
-      .lookup('route:application')
-      .modelFor('group.series.subgroup.exercise');
+    const owner = getOwner(this)!;
+    const route = owner.lookup('route:application') as { modelFor(name: string): unknown } | undefined;
+    const model = route?.modelFor('group.series.subgroup.exercise');
     if (!model) {
       return null;
     }
     return model as Exercise;
   }
   get currentExerciseNoiseLevel() {
-    if (Ember.testing) {
+    if (isTesting()) {
       return 0;
     }
     return this.currentExercise?.noiseLevel ?? 0;
@@ -145,15 +172,19 @@ export default class AudioService extends Service {
   }
 
   get filesToPlay() {
-    return isArray(this.audioFileUrl) ? this.audioFileUrl : [this.audioFileUrl];
+    return Array.isArray(this.audioFileUrl) ? this.audioFileUrl : [this.audioFileUrl];
   }
 
   @tracked audioElements: (string | ToneObject)[] = [];
 
   async setAudioElements(filesToPlay: Array<string | ToneObject>) {
     this.audioElements = filesToPlay;
-    this.context = createAudioContext();
-    if (Ember.testing) {
+    if (!this.context || this.context.state === 'closed') {
+      this.context = createAudioContext();
+    } else if (this.context.state === 'suspended' && !isTesting()) {
+      await this.context.resume();
+    }
+    if (isTesting()) {
       this.buffers = [];
       return;
     }
@@ -179,7 +210,7 @@ export default class AudioService extends Service {
       if (this.noiseNode) {
         this.noiseNode.source.stop();
       }
-    } catch (e) {
+    } catch (_e) {
       // EOL
     }
     if (this.noiseTaskInstance) {
@@ -189,20 +220,21 @@ export default class AudioService extends Service {
 
   @action
   async playAudio() {
+    this.studyingTimer.resetIdle();
     try {
-      if (!Ember.testing) {
+      if (!isTesting()) {
         await this.playTask.perform();
       } else {
         await this.fakePlayTask.perform();
       }
-    } catch (e) {
+    } catch (_e) {
       // EOL
     }
   }
 
   @action
   async stop() {
-    if (!Ember.testing) {
+    if (!isTesting()) {
       await this.playTask.cancelAll();
     } else {
       await this.fakePlayTask.cancelAll();
@@ -219,9 +251,13 @@ export default class AudioService extends Service {
 
   async getNoise(duration: number, level: number, url: null | string = null) {
     if (url !== null) {
-      const noiseContext = createAudioContext();
+      // Reuse this.context instead of creating a separate AudioContext
+      // to avoid leaking an unclosed context.
+      if (!this.context || this.context.state === 'closed') {
+        this.context = createAudioContext();
+      }
       const noiseBuffers = await loadAudioFiles(
-        noiseContext,
+        this.context,
         [url],
         () => this.network.token ?? '',
       );
@@ -229,7 +265,7 @@ export default class AudioService extends Service {
         throw new Error('Unable to resolve noise');
       }
       const source = await createSource(
-        noiseContext,
+        this.context,
         noiseBuffers[0] as AudioBuffer,
       );
       source.source.loop = true;
@@ -317,8 +353,9 @@ export default class AudioService extends Service {
     }, 0);
   }
 
-  @task(function* playNoise(this: AudioService) {
+  startNoiseTask = task(async () => {
     let noise = null;
+    let started = false;
     const timeInSeconds = 10;
     try {
       const [level, url] = [
@@ -328,22 +365,34 @@ export default class AudioService extends Service {
       if (!level) {
         return;
       }
-      noise = yield this.getNoise(timeInSeconds, level, url);
+      noise = await this.getNoise(timeInSeconds, level, url);
+      // Mirror the word-playback path: a fresh AudioContext (e.g. right after a
+      // page refresh) starts suspended under the browser autoplay policy, and
+      // source.start(0) on a suspended context queues silently. Resume before
+      // starting so background noise plays on first load — not only after a
+      // lesson restart, which happened to reuse an already-resumed context.
+      if (this.context && this.context.state === 'suspended' && !isTesting()) {
+        await this.context.resume();
+      }
       noise.source.start(0);
+      started = true;
       this.noiseNode = noise;
       if (url) {
-        yield timeout(toMilliseconds(6000));
+        await timeout(toMilliseconds(6000));
       } else {
-        yield timeout(toMilliseconds(timeInSeconds) - 3);
+        await timeout(toMilliseconds(timeInSeconds) - 3);
         this.startNoise();
       }
     } finally {
-      if (noise) {
+      // Only stop a source that actually started. The context.resume() above
+      // adds an await between creating and starting the source, so a cancel
+      // (e.g. stopNoise) or a resume rejection in that window would otherwise
+      // call stop() on a never-started node and throw InvalidStateError.
+      if (noise && started) {
         noise.source.stop();
       }
     }
-  })
-  startNoiseTask!: TaskGenerator<any, any>;
+  });
 
   nativePlayText(txt: string) {
     const lang = this.userData.activeLocale;
@@ -363,37 +412,68 @@ export default class AudioService extends Service {
     return p;
   }
 
-  @(task(function* playAudio(this: AudioService, noizeSeconds = 0) {
+  playTask = keepLatestTask({ maxConcurrency: 1 }, async (noizeSeconds = 0) => {
     const startedSources = [];
     const hasNoize = false;
     if (hasNoize) {
       noizeSeconds = 0.3;
     }
     try {
-      this.sources = yield this.createSources(this.context, this.buffers || []);
+      this.sources = await this.createSources(this.context, this.buffers || []);
       this.totalDuration =
         this.calcDurationForSources(this.sources) +
         toMilliseconds(noizeSeconds);
       this.isPlaying = true;
       this.trackProgress.perform();
       if (hasNoize) {
-        const noize: any = yield this.getNoise(
+        const noize = await this.getNoise(
           noizeSeconds ? toSeconds(this.totalDuration) : 0,
           this.currentExerciseNoiseLevel,
         );
         noize.source.start(0);
         startedSources.push(noize);
-        yield timeout(toMilliseconds(noizeSeconds / 2));
+        await timeout(toMilliseconds(noizeSeconds / 2));
       }
       let index = -1;
       for (const item of this.sources) {
         index++;
         if (item) {
           if (item.source.buffer) {
+            // Browsers (Safari, and Chrome under throttling) suspend idle
+            // AudioContexts. source.start(0) on a suspended context queues
+            // playback instead of playing it — without this resume, later
+            // words fall silent until a user gesture wakes the context.
+            if (this.context.state === 'suspended' && !isTesting()) {
+              await this.context.resume();
+            }
             const duration = toMilliseconds(item.source.buffer.duration);
-            item.source.start(0);
-            startedSources.push(item);
-            yield timeout(duration);
+            // Prefer onended over wall-clock timeout: setTimeout keeps
+            // ticking when the context suspends mid-clip, so a timer-only
+            // loop would advance over silent words instead of waiting
+            // for real playback to finish.
+            const rawSource = item.source as unknown;
+            const ended = rawSource instanceof AudioBufferSourceNode
+              ? new Promise<void>((resolve) => {
+                  rawSource.onended = () => resolve();
+                })
+              : null;
+            let startFailed = false;
+            try {
+              item.source.start(0);
+              startedSources.push(item);
+            } catch (e) {
+              // A sync throw (closed context, source already started, etc.)
+              // would otherwise strand the loop in the safety-net timeout.
+              startFailed = true;
+              console.error('source.start failed', e);
+            }
+            if (startFailed) {
+              // nothing playing — move on immediately
+            } else if (ended) {
+              await Promise.race([ended, timeout(duration + 1000)]);
+            } else {
+              await timeout(duration);
+            }
           } else {
             console.error('there is no buffer for source');
           }
@@ -405,7 +485,7 @@ export default class AudioService extends Service {
               this.audioElements[index] as string,
             ).searchParams.get('text');
             if (text) {
-              yield this.nativePlayText(text);
+              await this.nativePlayText(text);
             } else {
               // wrong url;
             }
@@ -415,9 +495,9 @@ export default class AudioService extends Service {
         }
       }
       if (hasNoize) {
-        yield timeout(toMilliseconds(noizeSeconds / 2));
+        await timeout(toMilliseconds(noizeSeconds / 2));
       }
-      yield timeout(10);
+      await timeout(10);
       this.isPlaying = false;
     } catch (e) {
       console.error(e);
@@ -431,24 +511,20 @@ export default class AudioService extends Service {
         this.totalDuration = 0;
       }
     }
-  })
-    .keepLatest()
-    .maxConcurrency(1))
-  playTask!: TaskGenerator<any, any>;
+  });
 
-  @(task(function* fakePlayAudio(this: AudioService) {
+  fakePlayTask = enqueueTask(async () => {
     this.totalDuration = TIMINGS.FAKE_AUDIO;
     this.isPlaying = true;
     this.trackProgress.perform();
-    yield timeout(TIMINGS.FAKE_AUDIO);
+    await timeout(TIMINGS.FAKE_AUDIO);
     this.isPlaying = false;
     this.totalDuration = 0;
-  }).enqueue())
-  fakePlayTask!: TaskGenerator<any, any>;
+  });
 
   setProgress(progress: number) {
     this.audioPlayingProgress = progress;
-    if (progress !== 100 && (progress >= 99 || Ember.testing)) {
+    if (progress !== 100 && (progress >= 99 || isTesting())) {
       this.setProgress(100);
       return;
     }

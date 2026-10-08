@@ -2,21 +2,21 @@ package com.epam.brn.service.impl
 
 import com.epam.brn.dto.AudioFileMetaData
 import com.epam.brn.dto.response.UserWithAnalyticsResponse
-import com.epam.brn.dto.statistics.DayStudyStatistics
 import com.epam.brn.enums.ExerciseType
 import com.epam.brn.enums.Voice
+import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.repo.UserAccountRepository
-import com.epam.brn.service.ExerciseService
+import com.epam.brn.service.ExerciseSuccessCalculator
 import com.epam.brn.service.TextToSpeechService
 import com.epam.brn.service.TimeService
 import com.epam.brn.service.UserAccountService
 import com.epam.brn.service.UserAnalyticsService
 import com.epam.brn.service.WordsService
-import com.epam.brn.service.statistics.UserPeriodStatisticsService
+import com.epam.brn.service.statistics.impl.UserDayStatisticsService
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import java.io.InputStream
@@ -32,11 +32,11 @@ class UserAnalyticsServiceImpl(
     private val userAccountRepository: UserAccountRepository,
     private val studyHistoryRepository: StudyHistoryRepository,
     private val exerciseRepository: ExerciseRepository,
-    private val userDayStatisticsService: UserPeriodStatisticsService<DayStudyStatistics>,
+    private val userDayStatisticsService: UserDayStatisticsService,
     private val timeService: TimeService,
     private val textToSpeechService: TextToSpeechService,
     private val userAccountService: UserAccountService,
-    private val exerciseService: ExerciseService,
+    private val exerciseSuccessCalculator: ExerciseSuccessCalculator,
     private val wordsService: WordsService,
 ) : UserAnalyticsService {
     private val listTextExercises = listOf(ExerciseType.SENTENCE, ExerciseType.PHRASES)
@@ -46,6 +46,8 @@ class UserAnalyticsServiceImpl(
         role: String,
     ): List<UserWithAnalyticsResponse> {
         val users = userAccountRepository.findUsersAccountsByRole(role).map { it.toAnalyticsDto() }
+        if (users.isEmpty()) return users
+        val userIds = users.mapNotNull { it.id }
 
         val now = timeService.now()
         val firstWeekDay = WeekFields.of(Locale.getDefault()).dayOfWeek()
@@ -54,19 +56,29 @@ class UserAnalyticsServiceImpl(
         val to = startDay.plusDays(7L).with(LocalTime.MAX)
         val startOfCurrentMonth = now.withDayOfMonth(1).with(LocalTime.MIN)
 
-        users.onEach { user ->
-            user.lastWeek = userDayStatisticsService.getStatisticsForPeriod(from, to, user.id).toMutableList()
-            user.studyDaysInCurrentMonth =
-                countWorkDaysForMonth(
-                    userDayStatisticsService.getStatisticsForPeriod(startOfCurrentMonth, now, user.id),
-                )
+        // Fetch analytics for every user in a few aggregate queries instead of 3 queries per user.
+        val weekHistoriesByUser =
+            studyHistoryRepository
+                .getHistoriesForUsers(userIds, from, to)
+                .groupBy { it.userAccount.id }
+        val studyDaysByUser =
+            studyHistoryRepository
+                .countStudyDaysForUsers(userIds, startOfCurrentMonth, now)
+                .associate { it.userId to it.studyDays }
+        val statisticsByUser =
+            studyHistoryRepository
+                .getStatisticsByUserAccountIds(userIds)
+                .associateBy { it.userId }
 
-            val userStatistics = studyHistoryRepository.getStatisticsByUserAccountId(user.id)
-            user.apply {
-                this.firstDone = userStatistics.firstStudy
-                this.lastDone = userStatistics.lastStudy
-                this.spentTime = userStatistics.spentTime.toDuration(DurationUnit.SECONDS)
-                this.doneExercises = userStatistics.doneExercises
+        users.onEach { user ->
+            user.lastWeek = userDayStatisticsService.buildDayStatistics(weekHistoriesByUser[user.id].orEmpty())
+            user.studyDaysInCurrentMonth = studyDaysByUser[user.id] ?: 0
+
+            statisticsByUser[user.id]?.let { userStatistic ->
+                user.firstDone = userStatistic.firstStudy
+                user.lastDone = userStatistic.lastStudy
+                user.spentTime = userStatistic.spentTime.toDuration(DurationUnit.SECONDS)
+                user.doneExercises = userStatistic.doneExercises
             }
         }
         return users
@@ -83,7 +95,11 @@ class UserAnalyticsServiceImpl(
         exerciseId: Long,
         audioFileMetaData: AudioFileMetaData,
     ): AudioFileMetaData {
-        val seriesType = ExerciseType.valueOf(exerciseRepository.findTypeByExerciseId(exerciseId))
+        val seriesType =
+            ExerciseType.valueOf(
+                exerciseRepository.findTypeByExerciseId(exerciseId)
+                    ?: throw EntityNotFoundException("No exercise found for id=$exerciseId"),
+            )
         val text = audioFileMetaData.text
         if (!listTextExercises.contains(seriesType))
             audioFileMetaData.text = text.replace(" ", ", ")
@@ -120,15 +136,10 @@ class UserAnalyticsServiceImpl(
             Voice.LERA.name
     }
 
-    fun isDoneBad(lastHistory: StudyHistory?): Boolean = lastHistory != null && !exerciseService.isDoneWell(lastHistory)
+    fun isDoneBad(lastHistory: StudyHistory?): Boolean = lastHistory != null && !exerciseSuccessCalculator.isSuccessful(lastHistory)
 
-    fun isDoneWell(lastHistory: StudyHistory?): Boolean = lastHistory != null && exerciseService.isDoneWell(lastHistory)
+    fun isDoneWell(lastHistory: StudyHistory?): Boolean = lastHistory != null && exerciseSuccessCalculator.isSuccessful(lastHistory)
 
     fun isMultiWords(seriesType: ExerciseType): Boolean =
         seriesType == ExerciseType.PHRASES || seriesType == ExerciseType.SENTENCE || seriesType == ExerciseType.WORDS_SEQUENCES
-
-    fun countWorkDaysForMonth(dayStudyStatistics: List<DayStudyStatistics>): Int = dayStudyStatistics
-        .map { it.date }
-        .groupBy { it.dayOfMonth }
-        .keys.size
 }

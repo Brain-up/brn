@@ -90,4 +90,19 @@ class GoogleCloudService(
     override fun getPicturesNamesFromMainFolder(): List<String> {
         TODO("Not yet implemented")
     }
+
+    override fun isPictureExistInFolder(
+        filePath: String,
+        fileName: String,
+    ): Pair<Boolean, String> {
+        TODO("Not yet implemented")
+    }
+
+    override fun isPictureExistInMainFolder(fileName: String): Pair<Boolean, String> {
+        TODO("Not yet implemented")
+    }
+
+    override fun isPictureExistInUnverifiedFolder(fileName: String): Pair<Boolean, String> {
+        TODO("Not yet implemented")
+    }
 }

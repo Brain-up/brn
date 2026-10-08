@@ -1,34 +1,73 @@
 import Route from '@ember/routing/route';
-// eslint-disable-next-line ember/no-mixins
-import AuthenticatedRouteMixin from 'ember-simple-auth/mixins/authenticated-route-mixin';
-import GroupModel from 'brn/models/group';
-import type Transition from '@ember/routing/-private/transition';
-import { inject as service } from '@ember/service';
-import NetworkService from 'brn/services/network';
-import type Store from '@ember-data/store';
-// @ts-expect-error mixin
-export default class GroupRoute extends Route.extend(AuthenticatedRouteMixin) {
-  @service('network') network!: NetworkService;
+import type { Group as GroupModel } from 'brn/schemas/group';
+import type { Series as SeriesModel } from 'brn/schemas/series';
+import type Transition from '@ember/routing/transition';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { service } from '@ember/service';
+import type Store from 'brn/services/store';
+import type Router from '@ember/routing/router-service';
+import type Session from 'ember-simple-auth/services/session';
+import { sortByKey } from 'brn/utils/sort-by-key';
+import type GroupController from 'brn/controllers/group';
+
+export interface GroupRouteModel {
+  group: GroupModel;
+  series: SeriesModel[];
+}
+
+export default class GroupRoute extends Route {
   @service('store') store!: Store;
+  @service('router') declare router: Router;
+  @service('session') declare session: Session;
 
-  async model({ group_id }: { group_id: string }) {
-    await this.network.loadCurrentUser();
-    return await this.store.findRecord('group', group_id);
+  beforeModel(transition: Transition) {
+    this.session.requireAuthentication(transition, 'login');
   }
 
-  async afterModel(group: GroupModel) {
-    await this.store.query('series', { groupId: group.id });
+  async model({ group_id }: { group_id: string }): Promise<GroupRouteModel> {
+    const [group, series] = await Promise.all([
+      this.store.findRecord<GroupModel>('group', group_id),
+      this.store.query<SeriesModel>('series', { groupId: group_id }),
+    ]);
+    // Sort by id (matching the group extension's sortChildrenBy: 'id')
+    const sortedSeries = sortByKey(Array.from(series || []), 'id');
+    return { group, series: sortedSeries };
   }
 
-  redirect(group: GroupModel, { to }: Transition) {
-    if (!group.sortedSeries?.length) {
-      this.transitionTo('groups');
+  async redirect(model: GroupRouteModel | GroupModel, { to }: Transition) {
+    // When navigating via <LinkTo @route="group" @model={{record}}>, Ember
+    // passes the raw group record directly (bypassing model()), so we need
+    // to handle both the composite { group, series } and a bare GroupModel.
+    let group: GroupModel;
+    let series: SeriesModel[];
+    if ('group' in model && 'series' in model) {
+      group = (model as GroupRouteModel).group;
+      series = (model as GroupRouteModel).series;
+    } else {
+      group = model as GroupModel;
+      const queriedSeries = await this.store.query<SeriesModel>('series', { groupId: group.id! });
+      series = sortByKey(Array.from(queriedSeries || []), 'id');
+
+      // When Ember skips the model() hook (e.g. <LinkTo @model={{record}}>),
+      // the controller still holds the bare GroupModel. Update it to the
+      // composite format so the controller's series getter works correctly
+      // and GroupNavigation receives the series data for its tabs.
+      // eslint-disable-next-line ember/no-controller-access-in-routes
+      const controller = this.controllerFor('group') as GroupController;
+      controller.model = { group, series };
     }
-    if (to.name === 'group.index' && group.sortedSeries?.length) {
-      this.transitionTo(
+
+    if (!series.length) {
+      this.router.transitionTo('groups');
+      return;
+    }
+    if (to?.name === 'group.index') {
+      this.router.transitionTo(
         'group.series.index',
-        group.id,
-        group.sortedSeries[0].id,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        group.id!,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        series[0]!.id!,
       );
     }
   }

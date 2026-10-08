@@ -1,5 +1,7 @@
 package com.epam.brn.service.impl
 
+import com.github.benmanes.caffeine.cache.Cache
+import com.github.benmanes.caffeine.cache.Caffeine
 import com.epam.brn.dto.HeadphonesDto
 import com.epam.brn.dto.UserAccountDto
 import com.epam.brn.dto.request.UserAccountChangeRequest
@@ -14,6 +16,8 @@ import com.epam.brn.service.RoleService
 import com.epam.brn.service.TimeService
 import com.epam.brn.service.UserAccountService
 import com.google.firebase.auth.UserRecord
+import org.apache.logging.log4j.kotlin.logger
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.domain.Pageable
 import org.springframework.security.core.Authentication
@@ -21,6 +25,9 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Service
 import java.security.Principal
+import java.time.Duration
+import java.time.LocalDateTime
+import java.util.concurrent.Executor
 
 @Service
 class UserAccountServiceImpl(
@@ -28,9 +35,19 @@ class UserAccountServiceImpl(
     private val roleService: RoleService,
     private val headphonesService: HeadphonesService,
     private val timeService: TimeService,
+    @Qualifier("lastVisitUpdateExecutor")
+    private val lastVisitUpdateExecutor: Executor,
 ) : UserAccountService {
+    private val log = logger()
+
+    @Volatile
+    private var recentLastVisitUpdatesCache: Cache<String, LocalDateTime>? = null
+
     @Value("\${autotest.users.deletion.prefix}")
     private lateinit var prefix: String
+
+    @Value("\${brn.user.last-visit.update-min-interval:PT15M}")
+    private var lastVisitUpdateMinInterval: Duration = DEFAULT_LAST_VISIT_UPDATE_MIN_INTERVAL
 
     override fun findUserByEmail(email: String): UserAccountDto = userAccountRepository
         .findUserAccountByEmail(email)
@@ -78,7 +95,25 @@ class UserAccountServiceImpl(
     override fun markVisitForCurrentUser() {
         val email = getCurrentUserEmail()
         val lastVisit = timeService.now()
-        return userAccountRepository.updateLastVisitByEmail(email, lastVisit)
+        if (!shouldScheduleLastVisitUpdate(email, lastVisit)) return
+
+        try {
+            lastVisitUpdateExecutor.execute {
+                try {
+                    userAccountRepository.updateLastVisitByEmailIfOlderThan(
+                        email = email,
+                        lastVisit = lastVisit,
+                        staleBefore = lastVisit.minus(lastVisitUpdateMinInterval),
+                    )
+                } catch (e: Exception) {
+                    invalidateScheduledLastVisitUpdate(email)
+                    log.error("Error while updating lastVisit for email=$email: ${e.message}", e)
+                }
+            }
+        } catch (e: Exception) {
+            invalidateScheduledLastVisitUpdate(email)
+            log.error("Error while scheduling lastVisit update for email=$email: ${e.message}", e)
+        }
     }
 
     override fun getCurrentUserDto(): UserAccountDto = getCurrentUser().toDto()
@@ -175,6 +210,38 @@ class UserAccountServiceImpl(
         throw EntityNotFoundException("There is no user in the session")
     }
 
+    private fun shouldScheduleLastVisitUpdate(
+        email: String,
+        now: LocalDateTime,
+    ): Boolean {
+        val recentLastVisitUpdates = recentLastVisitUpdatesCache().asMap()
+        val staleBefore = now.minus(lastVisitUpdateMinInterval)
+        while (true) {
+            val lastScheduledAt = recentLastVisitUpdates[email]
+            if (lastScheduledAt != null && !lastScheduledAt.isBefore(staleBefore)) return false
+            if (lastScheduledAt == null) {
+                if (recentLastVisitUpdates.putIfAbsent(email, now) == null) return true
+                continue
+            }
+            if (recentLastVisitUpdates.replace(email, lastScheduledAt, now)) return true
+        }
+    }
+
+    private fun recentLastVisitUpdatesCache(): Cache<String, LocalDateTime> = recentLastVisitUpdatesCache
+        ?: synchronized(this) {
+            recentLastVisitUpdatesCache
+                ?: Caffeine
+                    .newBuilder()
+                    .expireAfterWrite(lastVisitUpdateMinInterval)
+                    .maximumSize(10_000)
+                    .build<String, LocalDateTime>()
+                    .also { recentLastVisitUpdatesCache = it }
+        }
+
+    private fun invalidateScheduledLastVisitUpdate(email: String) {
+        recentLastVisitUpdatesCache?.invalidate(email)
+    }
+
     private fun getDefaultRoleSet(): MutableSet<Role> = setOf(BrnRole.USER).mapTo(mutableSetOf()) { roleService.findByName(it) }
 
     override fun deleteAutoTestUsers(): Long = userAccountRepository.deleteUserAccountsByEmailStartsWith(prefix)
@@ -182,4 +249,8 @@ class UserAccountServiceImpl(
         userAccountRepository.deleteUserAccountByEmailIs(email)
     else
         throw IllegalArgumentException("email = [$email] must start with prefix = [$prefix]")
+
+    companion object {
+        private val DEFAULT_LAST_VISIT_UPDATE_MIN_INTERVAL: Duration = Duration.ofMinutes(15)
+    }
 }

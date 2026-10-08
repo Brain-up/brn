@@ -1,6 +1,7 @@
 package com.epam.brn.service
 
 import com.epam.brn.service.cloud.CloudService
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -10,7 +11,6 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.test.util.ReflectionTestUtils
-import kotlin.test.assertEquals
 
 @ExtendWith(MockKExtension::class)
 @DisplayName("UrlConversionService test using MockK")
@@ -32,7 +32,7 @@ internal class UrlConversionServiceTest {
         val makeUrlForNoise = urlConversionService.makeUrlForSubGroupPicture(subGroupCode)
 
         // THEN
-        assertEquals("baseFileUrl/folderForThemePictures/subGroupCode.svg", makeUrlForNoise)
+        makeUrlForNoise shouldBe "baseFileUrl/folderForThemePictures/subGroupCode.svg"
         verify(exactly = 1) { cloudService.baseFileUrl() }
     }
 
@@ -47,7 +47,7 @@ internal class UrlConversionServiceTest {
         val makeUrlForNoise = urlConversionService.makeUrlForNoise(noiseUrl)
 
         // THEN
-        assertEquals(baseFileUrl + noiseUrl, makeUrlForNoise)
+        makeUrlForNoise shouldBe baseFileUrl + noiseUrl
         verify(exactly = 1) { cloudService.baseFileUrl() }
     }
 
@@ -62,7 +62,7 @@ internal class UrlConversionServiceTest {
         val makeUrlForNoise = urlConversionService.makeUrlForNoise(noiseUrl)
 
         // THEN
-        assertEquals("", makeUrlForNoise)
+        makeUrlForNoise shouldBe ""
         verify(exactly = 0) { cloudService.baseFileUrl() }
     }
 
@@ -77,7 +77,7 @@ internal class UrlConversionServiceTest {
         val makeUrlForNoise = urlConversionService.makeUrlForNoise(noiseUrl)
 
         // THEN
-        assertEquals("", makeUrlForNoise)
+        makeUrlForNoise shouldBe ""
         verify(exactly = 0) { cloudService.baseFileUrl() }
     }
 }

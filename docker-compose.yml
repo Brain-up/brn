@@ -11,7 +11,15 @@ services:
       POSTGRES_PASSWORD: admin
   brn:
     container_name: brn_be
-    command: java -jar epam-brn.jar
+    command: >
+      java -Xms128m -Xmx256m -XX:MaxMetaspaceSize=192m
+      -XX:+UseSerialGC -XX:MaxRAM=400m
+      -XX:+TieredCompilation -XX:TieredStopAtLevel=1
+      -Djava.security.egd=file:/dev/./urandom -jar epam-brn.jar
+    deploy:
+      resources:
+        limits:
+          memory: 512M
     build:
       context: .
       dockerfile: Dockerfile

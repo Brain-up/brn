@@ -5,14 +5,14 @@ import com.google.api.gax.paging.Page
 import com.google.cloud.storage.Blob
 import com.google.cloud.storage.Bucket
 import com.google.cloud.storage.Storage
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.mock.web.MockMultipartFile
 
@@ -54,12 +54,12 @@ class GoogleCloudServiceTest {
         val bucketContent = googleCloudService.getStorageFolders()
         val expected = listOf("folder0/", "folder2/", "folder2/folder3/", "folder7/")
         // THEN
-        Assertions.assertEquals(expected, bucketContent)
+        bucketContent shouldBe expected
     }
 
     @Test
     fun `should throw TODO when call uploadFile with MultipartFile`() {
-        assertThrows<NotImplementedError> {
+        shouldThrow<NotImplementedError> {
             googleCloudService.uploadFile(
                 "picture/",
                 "file.jpg",
@@ -70,7 +70,7 @@ class GoogleCloudServiceTest {
 
     @Test
     fun `should throw TODO when call uploadFile on GoogleCloudService`() {
-        assertThrows<NotImplementedError> {
+        shouldThrow<NotImplementedError> {
             googleCloudService.uploadFile(
                 "picture/",
                 "file.jpg",
@@ -81,7 +81,7 @@ class GoogleCloudServiceTest {
 
     @Test
     fun `should throw TODO when call createFolder`() {
-        assertThrows<NotImplementedError> {
+        shouldThrow<NotImplementedError> {
             googleCloudService.createFolder("folder/")
         }
     }

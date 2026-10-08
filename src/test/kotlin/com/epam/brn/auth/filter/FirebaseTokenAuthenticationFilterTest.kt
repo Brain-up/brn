@@ -5,6 +5,7 @@ import com.epam.brn.dto.UserAccountDto
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.model.Role
 import com.epam.brn.model.UserAccount
+import com.epam.brn.service.BrainUpUserDetailsService
 import com.epam.brn.service.FirebaseUserService
 import com.epam.brn.service.TokenHelperUtils
 import com.epam.brn.service.UserAccountService
@@ -14,9 +15,14 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.FirebaseToken
 import com.google.firebase.auth.UserRecord
+import io.kotest.matchers.nulls.shouldBeNull
+import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.shouldBe
+import io.mockk.Runs
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
+import io.mockk.just
 import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import io.mockk.verify
@@ -29,12 +35,9 @@ import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
-import javax.servlet.FilterChain
-import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
-import kotlin.test.assertNull
+import java.time.Instant
+import jakarta.servlet.FilterChain
 
 @ExtendWith(MockKExtension::class)
 @DisplayName("FirebaseTokenAuthenticationFilter test using MockK")
@@ -43,7 +46,7 @@ internal class FirebaseTokenAuthenticationFilterTest {
     lateinit var firebaseTokenAuthenticationFilter: FirebaseTokenAuthenticationFilter
 
     @MockK
-    lateinit var brainUpUserDetailsService: UserDetailsService
+    lateinit var brainUpUserDetailsService: BrainUpUserDetailsService
 
     @MockK
     lateinit var firebaseUserService: FirebaseUserService
@@ -67,6 +70,8 @@ internal class FirebaseTokenAuthenticationFilterTest {
     @BeforeEach
     fun init() {
         SecurityContextHolder.clearContext()
+        every { firebaseTokenMock.claims } returns mapOf("exp" to Instant.now().plusSeconds(600).epochSecond)
+        every { brainUpUserDetailsService.evictCachedUser(any()) } just Runs
     }
 
     /*
@@ -77,7 +82,7 @@ internal class FirebaseTokenAuthenticationFilterTest {
     @Test
     fun `should set authentication when user exist in local DB`() {
         // GIVEN
-        val request = MockHttpServletRequest(HttpMethod.GET.name, "/test")
+        val request = MockHttpServletRequest(HttpMethod.GET.name(), "/test")
         val token = "firebaseTokenMock"
         request.addHeader("Authorization", "Bearer $token")
         val response = MockHttpServletResponse()
@@ -94,16 +99,59 @@ internal class FirebaseTokenAuthenticationFilterTest {
 
         // THEN
         val authentication = SecurityContextHolder.getContext().authentication
-        assertNotNull(authentication)
+        authentication.shouldNotBeNull()
         authentication is UsernamePasswordAuthenticationToken
-        assertEquals(email, authentication.name)
-        assertEquals(1, authentication.authorities.size)
+        authentication.name shouldBe email
+        authentication.authorities.size shouldBe 1
 
         verify(exactly = 1) { tokenHelperUtils.getBearerToken(request) }
         verify(exactly = 1) { firebaseAuth.verifyIdToken(token, true) }
+        verify(exactly = 1) { brainUpUserDetailsService.evictCachedUser(email) }
         verify(exactly = 1) { brainUpUserDetailsService.loadUserByUsername(email) }
         verify(exactly = 0) { firebaseUserService.getUserByUuid(any()) }
         verify(exactly = 0) { userAccountService.createUser(any()) }
+    }
+
+    @Test
+    fun `should skip token verification when bearer token is missing`() {
+        // GIVEN
+        val request = MockHttpServletRequest(HttpMethod.GET.name(), "/test")
+        val response = MockHttpServletResponse()
+        val filterChain = FilterChain { _, _ -> }
+
+        every { tokenHelperUtils.getBearerToken(request) } returns null
+
+        // WHEN
+        firebaseTokenAuthenticationFilter.doFilter(request, response, filterChain)
+
+        // THEN
+        SecurityContextHolder.getContext().authentication.shouldBeNull()
+
+        verify(exactly = 1) { tokenHelperUtils.getBearerToken(request) }
+        verify(exactly = 0) { firebaseAuth.verifyIdToken(any(), any()) }
+        verify(exactly = 0) { brainUpUserDetailsService.evictCachedUser(any()) }
+        verify(exactly = 0) { brainUpUserDetailsService.loadUserByUsername(any()) }
+    }
+
+    @Test
+    fun `should skip token verification when authentication already exists`() {
+        // GIVEN
+        val request = MockHttpServletRequest(HttpMethod.GET.name(), "/test")
+        val response = MockHttpServletResponse()
+        val filterChain = FilterChain { _, _ -> }
+        SecurityContextHolder.getContext().authentication =
+            UsernamePasswordAuthenticationToken("existing-user", null, emptyList())
+
+        // WHEN
+        firebaseTokenAuthenticationFilter.doFilter(request, response, filterChain)
+
+        // THEN
+        SecurityContextHolder.getContext().authentication.shouldNotBeNull()
+
+        verify(exactly = 0) { tokenHelperUtils.getBearerToken(any()) }
+        verify(exactly = 0) { firebaseAuth.verifyIdToken(any(), any()) }
+        verify(exactly = 0) { brainUpUserDetailsService.evictCachedUser(any()) }
+        verify(exactly = 0) { brainUpUserDetailsService.loadUserByUsername(any()) }
     }
 
     /*
@@ -114,7 +162,7 @@ internal class FirebaseTokenAuthenticationFilterTest {
     @Test
     fun `should set authentication when user not exist in local DB`() {
         // GIVEN
-        val requestMock = MockHttpServletRequest(HttpMethod.GET.name, "/test")
+        val requestMock = MockHttpServletRequest(HttpMethod.GET.name(), "/test")
         val tokenMock = "firebaseTokenMock"
         requestMock.addHeader("Authorization", "Bearer $tokenMock")
         val responseMock = MockHttpServletResponse()
@@ -142,13 +190,14 @@ internal class FirebaseTokenAuthenticationFilterTest {
 
         // THEN
         val authentication = SecurityContextHolder.getContext().authentication
-        assertNotNull(authentication)
+        authentication.shouldNotBeNull()
         authentication is UsernamePasswordAuthenticationToken
-        assertEquals(email, authentication.name)
-        assertEquals(1, authentication.authorities.size)
+        authentication.name shouldBe email
+        authentication.authorities.size shouldBe 1
 
         verify(exactly = 1) { tokenHelperUtils.getBearerToken(requestMock) }
         verify(exactly = 1) { firebaseAuth.verifyIdToken(tokenMock, true) }
+        verify(exactly = 1) { brainUpUserDetailsService.evictCachedUser(email) }
         verify(exactly = 2) { brainUpUserDetailsService.loadUserByUsername(email) }
         verify(exactly = 1) { firebaseUserService.getUserByUuid(uuid) }
         verify(exactly = 1) { userAccountService.createUser(any()) }
@@ -157,7 +206,7 @@ internal class FirebaseTokenAuthenticationFilterTest {
     @Test
     fun `should set authentication by NULL when token invalid`() {
         // GIVEN
-        val requestMock = MockHttpServletRequest(HttpMethod.GET.name, "/test")
+        val requestMock = MockHttpServletRequest(HttpMethod.GET.name(), "/test")
         val tokenMock = "firebaseTokenMock"
         requestMock.addHeader("Authorization", "Bearer $tokenMock")
         val responseMock = MockHttpServletResponse()
@@ -176,10 +225,11 @@ internal class FirebaseTokenAuthenticationFilterTest {
 
         // THEN
         val authentication = SecurityContextHolder.getContext().authentication
-        assertNull(authentication)
+        authentication.shouldBeNull()
 
         verify(exactly = 1) { tokenHelperUtils.getBearerToken(requestMock) }
         verify(exactly = 1) { firebaseAuth.verifyIdToken(tokenMock, true) }
+        verify(exactly = 0) { brainUpUserDetailsService.evictCachedUser(any()) }
         verify(exactly = 0) { brainUpUserDetailsService.loadUserByUsername(any()) }
         verify(exactly = 0) { firebaseUserService.getUserByUuid(any()) }
         verify(exactly = 0) { userAccountService.createUser(any()) }
@@ -188,7 +238,7 @@ internal class FirebaseTokenAuthenticationFilterTest {
     @Test
     fun `should set authentication by NULL when error occurred`() {
         // GIVEN
-        val requestMock = MockHttpServletRequest(HttpMethod.GET.name, "/test")
+        val requestMock = MockHttpServletRequest(HttpMethod.GET.name(), "/test")
         val tokenMock = "firebaseTokenMock"
         requestMock.addHeader("Authorization", "Bearer $tokenMock")
         val responseMock = MockHttpServletResponse()
@@ -202,10 +252,11 @@ internal class FirebaseTokenAuthenticationFilterTest {
 
         // THEN
         val authentication = SecurityContextHolder.getContext().authentication
-        assertNull(authentication)
+        authentication.shouldBeNull()
 
         verify(exactly = 1) { tokenHelperUtils.getBearerToken(requestMock) }
         verify(exactly = 1) { firebaseAuth.verifyIdToken(tokenMock, true) }
+        verify(exactly = 0) { brainUpUserDetailsService.evictCachedUser(any()) }
         verify(exactly = 0) { brainUpUserDetailsService.loadUserByUsername(any()) }
         verify(exactly = 0) { firebaseUserService.getUserByUuid(any()) }
         verify(exactly = 0) { userAccountService.createUser(any()) }
@@ -214,19 +265,17 @@ internal class FirebaseTokenAuthenticationFilterTest {
     @Test
     fun `should set authentication by NULL when user not exist in local DB and not returning from firebase DB`() {
         // GIVEN
-        val requestMock = MockHttpServletRequest(HttpMethod.GET.name, "/test")
+        val requestMock = MockHttpServletRequest(HttpMethod.GET.name(), "/test")
         val tokenMock = "firebaseTokenMock"
         requestMock.addHeader("Authorization", "Bearer $tokenMock")
         val responseMock = MockHttpServletResponse()
         val filterChain = FilterChain { _, _ -> }
-        val customUserDetailsMock = CustomUserDetails(createUserAccountMock())
 
         every { tokenHelperUtils.getBearerToken(requestMock) } returns tokenMock
         every { firebaseAuth.verifyIdToken(tokenMock, true) } returns firebaseTokenMock
         every { firebaseTokenMock.email } returns email
         every { firebaseTokenMock.uid } returns uuid
-        every { brainUpUserDetailsService.loadUserByUsername(email) } throws (UsernameNotFoundException("USER_NOT_FOUND")) andThen
-            customUserDetailsMock
+        every { brainUpUserDetailsService.loadUserByUsername(email) } throws UsernameNotFoundException("USER_NOT_FOUND")
         every { firebaseUserService.getUserByUuid(uuid) } returns null
 
         // WHEN
@@ -234,13 +283,43 @@ internal class FirebaseTokenAuthenticationFilterTest {
 
         // THEN
         val authentication = SecurityContextHolder.getContext().authentication
-        assertNull(authentication)
+        authentication.shouldBeNull()
 
         verify(exactly = 1) { tokenHelperUtils.getBearerToken(requestMock) }
         verify(exactly = 1) { firebaseAuth.verifyIdToken(tokenMock, true) }
+        verify(exactly = 1) { brainUpUserDetailsService.evictCachedUser(email) }
         verify(exactly = 1) { brainUpUserDetailsService.loadUserByUsername(email) }
         verify(exactly = 1) { firebaseUserService.getUserByUuid(uuid) }
         verify(exactly = 0) { userAccountService.createUser(any()) }
+    }
+
+    @Test
+    fun `should reuse cached verified token for repeated bearer token`() {
+        // GIVEN
+        val token = "firebaseTokenMock"
+        val firstRequest = MockHttpServletRequest(HttpMethod.GET.name(), "/test")
+        firstRequest.addHeader("Authorization", "Bearer $token")
+        val secondRequest = MockHttpServletRequest(HttpMethod.GET.name(), "/test")
+        secondRequest.addHeader("Authorization", "Bearer $token")
+        val response = MockHttpServletResponse()
+        val filterChain = FilterChain { _, _ -> }
+        val customUserDetailsMock = CustomUserDetails(createUserAccountMock())
+
+        every { tokenHelperUtils.getBearerToken(any()) } returns token
+        every { firebaseAuth.verifyIdToken(token, true) } returns firebaseTokenMock
+        every { firebaseTokenMock.email } returns email
+        every { brainUpUserDetailsService.loadUserByUsername(email) } returns customUserDetailsMock
+
+        // WHEN
+        firebaseTokenAuthenticationFilter.doFilter(firstRequest, response, filterChain)
+        SecurityContextHolder.clearContext()
+        firebaseTokenAuthenticationFilter.doFilter(secondRequest, response, filterChain)
+
+        // THEN
+        verify(exactly = 2) { tokenHelperUtils.getBearerToken(any()) }
+        verify(exactly = 1) { firebaseAuth.verifyIdToken(token, true) }
+        verify(exactly = 1) { brainUpUserDetailsService.evictCachedUser(email) }
+        verify(exactly = 2) { brainUpUserDetailsService.loadUserByUsername(email) }
     }
 
     private fun createUserAccountMock(): UserAccount {

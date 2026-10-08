@@ -69,6 +69,27 @@ interface CloudService {
     ): Boolean
 
     /**
+     * Check that picture is exist in folder cloud storage
+     * @fileName should be with extension
+     */
+    fun isPictureExistInFolder(
+        filePath: String,
+        fileName: String,
+    ): Pair<Boolean, String>
+
+    /**
+     * Check that picture is exist in main folder cloud storage
+     * @fileName should be with extension
+     */
+    fun isPictureExistInMainFolder(fileName: String): Pair<Boolean, String>
+
+    /**
+     * Check that picture is exist in unverified folder cloud storage
+     * @fileName should be with extension
+     */
+    fun isPictureExistInUnverifiedFolder(fileName: String): Pair<Boolean, String>
+
+    /**
      * Create full name of file
      */
     fun createFullFileName(

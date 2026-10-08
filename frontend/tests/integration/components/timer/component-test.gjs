@@ -1,0 +1,67 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
+import { module, test } from 'qunit';
+import { setupIntl } from 'ember-intl/test-support';
+import { setupRenderingTest } from 'ember-qunit';
+import { render } from '@ember/test-helpers';
+import mockService from '../../../test-support/mock-service';
+import Timer from 'brn/components/timer';
+
+module('Integration | Component | timer', function (hooks) {
+  setupRenderingTest(hooks);
+  setupIntl(hooks, 'en-us');
+
+  test('supports mm:ss format', async function (assert) {
+    mockService(this.owner, 'studying-timer', {
+      countedSeconds: 67,
+      pause() {},
+      register() {},
+      unregister() {},
+      togglePause() {},
+    });
+    await render(<template><Timer /></template>);
+
+    assert.dom('[data-test-timer-display-value]').hasText('01:07');
+  });
+
+  test('supports hh:mm:ss format', async function (assert) {
+    mockService(this.owner, 'studying-timer', {
+      countedSeconds: 3705,
+      pause() {},
+      register() {},
+      unregister() {},
+      togglePause() {},
+    });
+    await render(<template><Timer /></template>);
+
+    assert.dom('[data-test-timer-display-value]').hasText('01:01:45');
+  });
+
+  test('continues with time from studying-timer', async function (assert) {
+    mockService(this.owner, 'studying-timer', {
+      countedSeconds: 94,
+      pause() {},
+      register() {},
+      unregister() {},
+      togglePause() {},
+    });
+    await render(<template><Timer @paused={{true}}/></template>);
+
+    assert.dom('[data-test-timer-display-value]').hasText('01:34');
+  });
+
+  test('pauses on idle', async function (assert) {
+    mockService(this.owner, 'studying-timer', {
+      countedSeconds: 3705,
+      pause() {},
+      isPaused: true,
+      register() {},
+      unregister() {},
+      togglePause() {},
+    });
+    await render(<template><Timer /></template>);
+
+    assert
+      .dom('[data-test-timer-wrapper]')
+      .hasAttribute('data-test-timer-is-paused');
+  });
+});

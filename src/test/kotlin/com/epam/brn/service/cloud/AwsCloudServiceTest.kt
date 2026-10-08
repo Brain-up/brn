@@ -1,6 +1,7 @@
 package com.epam.brn.service.cloud
 
 import com.epam.brn.config.AwsConfig
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -8,9 +9,6 @@ import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import io.mockk.slot
 import org.apache.commons.io.IOUtils
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.test.util.ReflectionTestUtils
@@ -32,7 +30,6 @@ import software.amazon.awssdk.services.s3.model.S3Object
 import software.amazon.awssdk.services.s3.waiters.S3Waiter
 import java.io.File
 import java.util.Arrays
-import kotlin.test.assertFalse
 
 @ExtendWith(MockKExtension::class)
 class AwsCloudServiceTest {
@@ -127,7 +124,7 @@ class AwsCloudServiceTest {
                         mapOf(X_AMZ_DATE to TEST_AMZ_DATE),
                     ),
             )
-        assertThat(actual).isEqualTo(expected)
+        actual shouldBe expected
     }
 
     @Test
@@ -155,7 +152,7 @@ class AwsCloudServiceTest {
         val base64 = awsCloudService.toJsonBase64(conditions)
 
         // THEN
-        assertEquals(expected, base64)
+        base64 shouldBe expected
     }
 
     @Test
@@ -204,7 +201,7 @@ class AwsCloudServiceTest {
                 FOLDER_2,
                 FOLDER_3,
             )
-        assertEquals(expected, listBucket)
+        listBucket shouldBe expected
     }
 
     @Test
@@ -240,12 +237,12 @@ class AwsCloudServiceTest {
 
         // THEN
         assert(requestBodySlot.captured.optionalContentLength().isPresent)
-        assertEquals(0, requestBodySlot.captured.optionalContentLength().get())
-        assertEquals(0, putObjectRequestSlot.captured.contentLength())
-        assertEquals(folderPath, putObjectRequestSlot.captured.key())
-        assertEquals(BUCKET, putObjectRequestSlot.captured.bucket())
-        assertEquals(folderPath, waitObjectRequestSlot.captured.key())
-        assertEquals(BUCKET, waitObjectRequestSlot.captured.bucket())
+        requestBodySlot.captured.optionalContentLength().get() shouldBe 0L
+        putObjectRequestSlot.captured.contentLength() shouldBe 0L
+        putObjectRequestSlot.captured.key() shouldBe folderPath
+        putObjectRequestSlot.captured.bucket() shouldBe BUCKET
+        waitObjectRequestSlot.captured.key() shouldBe folderPath
+        waitObjectRequestSlot.captured.bucket() shouldBe BUCKET
     }
 
     @Test
@@ -281,12 +278,12 @@ class AwsCloudServiceTest {
 
         // THEN
         assert(requestBodySlot.captured.optionalContentLength().isPresent)
-        assertEquals(0, requestBodySlot.captured.optionalContentLength().get())
-        assertEquals(0, putObjectRequestSlot.captured.contentLength())
-        assertEquals("$folderPath/", putObjectRequestSlot.captured.key())
-        assertEquals(BUCKET, putObjectRequestSlot.captured.bucket())
-        assertEquals("$folderPath/", waitObjectRequestSlot.captured.key())
-        assertEquals(BUCKET, waitObjectRequestSlot.captured.bucket())
+        requestBodySlot.captured.optionalContentLength().get() shouldBe 0L
+        putObjectRequestSlot.captured.contentLength() shouldBe 0L
+        putObjectRequestSlot.captured.key() shouldBe "$folderPath/"
+        putObjectRequestSlot.captured.bucket() shouldBe BUCKET
+        waitObjectRequestSlot.captured.key() shouldBe "$folderPath/"
+        waitObjectRequestSlot.captured.bucket() shouldBe BUCKET
     }
 
     @Test
@@ -299,7 +296,7 @@ class AwsCloudServiceTest {
         val bucketUrlActual = awsCloudService.bucketUrl()
 
         // THEN
-        assertEquals(bucketUrl, bucketUrlActual)
+        bucketUrlActual shouldBe bucketUrl
     }
 
     @Test
@@ -312,13 +309,14 @@ class AwsCloudServiceTest {
         val baseFileUrlActual = awsCloudService.baseFileUrl()
 
         // THEN
-        assertEquals(baseFileUrl, baseFileUrlActual)
+        baseFileUrlActual shouldBe baseFileUrl
     }
 
     @Test
     fun `should upload file to folder`() {
         // GIVEN
-        val fileName = "file.name"
+        ReflectionTestUtils.setField(awsCloudService, "pictureExtension", "png")
+        val fileName = "file"
         val filePath = "some/path/"
         val file =
             File(
@@ -354,10 +352,10 @@ class AwsCloudServiceTest {
         awsCloudService.uploadFile(filePath, fileName, file.inputStream())
 
         // THEN
-        assertEquals(BUCKET, putObjectRequestSlot.captured.bucket())
-        assertEquals("$filePath$fileName", putObjectRequestSlot.captured.key())
-        assertEquals(BUCKET, waitObjectRequestSlot.captured.bucket())
-        assertEquals("$filePath$fileName", waitObjectRequestSlot.captured.key())
+        putObjectRequestSlot.captured.bucket() shouldBe BUCKET
+        putObjectRequestSlot.captured.key() shouldBe "$filePath$fileName.png"
+        waitObjectRequestSlot.captured.bucket() shouldBe BUCKET
+        waitObjectRequestSlot.captured.key() shouldBe "$filePath$fileName.png"
         val newStream = requestBodySlot.captured.contentStreamProvider().newStream()
         val expectedBody = IOUtils.toByteArray(file.inputStream())
         val actualBody = IOUtils.toByteArray(newStream)
@@ -379,7 +377,7 @@ class AwsCloudServiceTest {
         val actual = awsCloudService.getFileNames(folderPath)
 
         // THEN
-        assertEquals(listOf("/file1.png", "/file2.png"), actual)
+        actual shouldBe listOf("/file1.png", "/file2.png")
     }
 
     @Test
@@ -397,7 +395,7 @@ class AwsCloudServiceTest {
         val actual = awsCloudService.getPicturesNamesFromMainFolder()
 
         // THEN
-        assertEquals(listOf("/file1.png", "/file2.png"), actual)
+        actual shouldBe listOf("/file1.png", "/file2.png")
     }
 
     @Test
@@ -405,17 +403,19 @@ class AwsCloudServiceTest {
         // GIVEN
         every { awsConfig.bucketName } returns BUCKET
         every { s3Client.headObject(any<HeadObjectRequest>()) } returns null
+        ReflectionTestUtils.setField(awsCloudService, "pictureExtension", ".png")
 
         // WHEN
         val actual = awsCloudService.isFileExist("testPath", "testName")
 
         // THEN
-        assertTrue(actual)
+        actual shouldBe true
     }
 
     @Test
     fun `should check file is not exist`() {
         // GIVEN
+        ReflectionTestUtils.setField(awsCloudService, "pictureExtension", ".png")
         every { awsConfig.bucketName } returns BUCKET
         every { s3Client.headObject(any<HeadObjectRequest>()) } throws (NoSuchKeyException.builder().build())
 
@@ -423,7 +423,7 @@ class AwsCloudServiceTest {
         val actual = awsCloudService.isFileExist("testPath", "testName")
 
         // THEN
-        assertFalse(actual)
+        actual shouldBe false
     }
 
     @Test
@@ -443,7 +443,7 @@ class AwsCloudServiceTest {
         awsCloudService.deleteFiles(filesToDelete)
 
         // THEN
-        assertEquals(deleteRequestSlot.captured.delete().objects(), expectedObjectIdentifiers)
+        deleteRequestSlot.captured.delete().objects() shouldBe expectedObjectIdentifiers
     }
 
     private fun listObjectsV2Result(keys: List<String>): ListObjectsV2Response {

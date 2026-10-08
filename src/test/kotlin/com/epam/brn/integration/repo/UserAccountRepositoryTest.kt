@@ -2,8 +2,9 @@ package com.epam.brn.integration.repo
 
 import com.epam.brn.model.UserAccount
 import com.epam.brn.repo.UserAccountRepository
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.assertDoesNotThrow
+import io.kotest.assertions.throwables.shouldNotThrowAny
+import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -48,9 +49,9 @@ class UserAccountRepositoryTest {
 
         // THEN
         val retrievedUser = testEntityManager.find(UserAccount::class.java, savedUser.id)
-        assertThat(retrievedUser).isNotNull
+        retrievedUser.shouldNotBeNull()
         val actualLastVisit = retrievedUser.lastVisit?.truncatedTo(ChronoUnit.MILLIS)
-        assertThat(actualLastVisit).isEqualTo(today)
+        actualLastVisit shouldBe today
     }
 
     @Test
@@ -60,8 +61,39 @@ class UserAccountRepositoryTest {
         val email = "404.test@email.com"
 
         // WHEN & THEN
-        assertDoesNotThrow {
+        shouldNotThrowAny {
             repository.updateLastVisitByEmail(email, today)
         }
+    }
+
+    @Test
+    fun `should not update lastVisit when user was seen recently`() {
+        // GIVEN
+        val recentVisit = LocalDateTime.now().minusMinutes(5).truncatedTo(ChronoUnit.MILLIS)
+        val requestedVisit = LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS)
+        val email = "recent@email.com"
+        val user =
+            UserAccount(
+                email = email,
+                fullName = "John Doe",
+                lastVisit = recentVisit,
+            )
+        val savedUser = testEntityManager.persistAndFlush(user)
+
+        // WHEN
+        repository.updateLastVisitByEmailIfOlderThan(
+            email = email,
+            lastVisit = requestedVisit,
+            staleBefore = requestedVisit.minusMinutes(15),
+        )
+
+        testEntityManager.flush()
+        testEntityManager.clear()
+
+        // THEN
+        val retrievedUser = testEntityManager.find(UserAccount::class.java, savedUser.id)
+        retrievedUser.shouldNotBeNull()
+        val actualLastVisit = retrievedUser.lastVisit?.truncatedTo(ChronoUnit.MILLIS)
+        actualLastVisit shouldBe recentVisit
     }
 }

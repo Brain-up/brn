@@ -1,4 +1,4 @@
-import type { ToneObject } from 'brn/components/audio-player/component';
+import type { ToneObject } from 'brn/components/audio-player';
 import { urlForImage, urlForAudio } from 'brn/utils/file-url';
 export default class AnswerOption {
   audioFileUrl: string | null | ToneObject = null;

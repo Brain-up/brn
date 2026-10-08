@@ -1,15 +1,17 @@
 import Service from '@ember/service';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { tracked } from '@glimmer/tracking';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { action } from '@ember/object';
 import { getOwner } from '@ember/application';
-import Task from 'brn/models/task';
+import type { TaskBase as Task } from 'brn/schemas/task';
 
 export default class StudyConfigService extends Service {
     @tracked
     _showImages = true;
 
     get task(): Task | undefined {
-      return getOwner(this).lookup('controller:group.series.subgroup.exercise.task').model;
+      return (getOwner(this)!.lookup('controller:group.series.subgroup.exercise.task') as { model?: Task } | undefined)?.model;
     }
 
     get allowImagesInTask() {

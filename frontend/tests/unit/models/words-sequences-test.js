@@ -7,7 +7,7 @@ const TASK_DATA = {
   answerOptions: {
     OBJECT_ACTION: [
       {
-        id: 345,
+        id: '345',
         audioFileUrl: '',
         word: 'линь',
         wordType: 'OBJECT_ACTION',
@@ -15,7 +15,7 @@ const TASK_DATA = {
         soundsCount: 0,
       },
       {
-        id: 346,
+        id: '346',
         audioFileUrl: '',
         word: 'бал',
         wordType: 'OBJECT_ACTION',
@@ -25,7 +25,7 @@ const TASK_DATA = {
     ],
     OBJECT: [
       {
-        id: 344,
+        id: '344',
         audioFileUrl: '',
         word: 'вить',
         wordType: 'OBJECT',
@@ -33,7 +33,7 @@ const TASK_DATA = {
         soundsCount: 0,
       },
       {
-        id: 343,
+        id: '343',
         audioFileUrl: '',
         word: 'быль',
         wordType: 'OBJECT',
@@ -74,5 +74,23 @@ module('Unit | Model | task/words-sequences', function (hooks) {
       },
     ]);
     assert.ok(this.model.tasksToSolve.length === 9);
+  });
+
+  test('tasksToSolve is cached and stable across accesses', function (assert) {
+    const first = this.model.tasksToSolve;
+    const second = this.model.tasksToSolve;
+    assert.strictEqual(first, second, 'tasksToSolve returns the same cached array on repeated access');
+
+    // Mutating wrongAnswers after first access does not change the cached result,
+    // preventing progress bar regressions when updateLocalTasks() re-reads tasksToSolve.
+    this.model.wrongAnswers.push({
+      answer: {
+        OBJECT: TASK_DATA.answerOptions.OBJECT[0],
+        OBJECT_ACTION: TASK_DATA.answerOptions.OBJECT_ACTION[0],
+      },
+    });
+
+    const third = this.model.tasksToSolve;
+    assert.strictEqual(first, third, 'tasksToSolve remains stable after wrongAnswers mutation');
   });
 });

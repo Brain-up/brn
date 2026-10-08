@@ -4,6 +4,7 @@ import com.epam.brn.dto.response.ResourceResponse
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.Resource
 import com.epam.brn.repo.ResourceRepository
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -11,10 +12,8 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.verify
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.data.repository.findByIdOrNull
-import java.util.Optional
 
 @ExtendWith(MockKExtension::class)
 internal class ResourceServiceTest {
@@ -54,37 +53,6 @@ internal class ResourceServiceTest {
 
         // THEN
         foundFirstResource shouldBe null
-    }
-
-    @Test
-    fun `should return resource by word and audio file url`() {
-        // GIVEN
-        val word = "word"
-        val audioFileName = "audioFileName"
-        every { resourceRepositoryMock.findFirstByWordAndAudioFileUrlLike(word, audioFileName) } returns
-            Optional.of(
-                resourceMock,
-            )
-
-        // WHEN
-        val foundResource = resourceService.findFirstByWordAndAudioFileUrlLike(word, audioFileName)
-
-        // THEN
-        foundResource shouldBe resourceMock
-    }
-
-    @Test
-    fun `should return null if word and audio file url is not found`() {
-        // GIVEN
-        val word = "word"
-        val audioFileName = "audioFileName"
-        every { resourceRepositoryMock.findFirstByWordAndAudioFileUrlLike(word, audioFileName) } returns Optional.empty()
-
-        // WHEN
-        val foundResource = resourceService.findFirstByWordAndAudioFileUrlLike(word, audioFileName)
-
-        // THEN
-        foundResource shouldBe null
     }
 
     @Test
@@ -132,7 +100,7 @@ internal class ResourceServiceTest {
 
         // WHEN
         val exception =
-            assertThrows<EntityNotFoundException> {
+            shouldThrow<EntityNotFoundException> {
                 resourceService.updateDescription(id, description)
             }
 

@@ -1,10 +1,12 @@
 package com.epam.brn.integration.repo
 
-import com.epam.brn.model.Task
 import com.epam.brn.repo.TaskRepository
+import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
+import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.shouldBe
 import org.apache.commons.lang3.math.NumberUtils.INTEGER_ONE
 import org.apache.commons.lang3.math.NumberUtils.INTEGER_TWO
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Tag
@@ -32,10 +34,9 @@ class TaskRepositoryTest : BaseTest() {
                 exerciseId?.let { taskRepository.findTasksByExerciseIdWithJoinedAnswers(it) }
 
             // THEN
-            assertThat(findAllTasksWithAnswers)
-                .hasSize(INTEGER_ONE)
-                .usingElementComparatorOnFields("name")
-                .containsExactly(Task(name = nameOfTaskWithAnswers))
+            findAllTasksWithAnswers.shouldNotBeNull()
+            findAllTasksWithAnswers shouldHaveSize INTEGER_ONE
+            findAllTasksWithAnswers.single().name shouldBe nameOfTaskWithAnswers
         }
 
         @Test
@@ -45,11 +46,12 @@ class TaskRepositoryTest : BaseTest() {
                 savedTasked?.id?.let { taskRepository.findById(it) }
 
             // THEN
-            assertThat(resultedTask)
-                .hasValueSatisfying {
-                    assertThat(it)
-                        .isEqualToComparingOnlyGivenFields(savedTasked, "id", "name", "serialNumber")
-                }
+            resultedTask.shouldNotBeNull()
+            resultedTask.isPresent shouldBe true
+            val actualTask = resultedTask.get()
+            actualTask.id shouldBe savedTasked?.id
+            actualTask.name shouldBe savedTasked?.name
+            actualTask.serialNumber shouldBe savedTasked?.serialNumber
         }
 
         @Test
@@ -58,8 +60,7 @@ class TaskRepositoryTest : BaseTest() {
             val findAllTasksWithAnswers = taskRepository.findAllTasksWithJoinedAnswers()
 
             // THEN
-            assertThat(findAllTasksWithAnswers)
-                .hasSize(INTEGER_TWO)
+            findAllTasksWithAnswers shouldHaveSize INTEGER_TWO
         }
 
         @Test
@@ -74,8 +75,7 @@ class TaskRepositoryTest : BaseTest() {
                     .map { resource -> resource.word }
 
             // THEN
-            assertThat(actualListOfWords)
-                .containsExactlyInAnyOrderElementsOf(listOfWords)
+            actualListOfWords shouldContainExactlyInAnyOrder listOfWords
         }
     }
 }

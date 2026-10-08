@@ -10,8 +10,8 @@ import com.epam.brn.repo.ExerciseGroupRepository
 import com.epam.brn.repo.SeriesRepository
 import com.fasterxml.jackson.core.type.TypeReference
 import com.google.gson.Gson
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
@@ -69,9 +69,36 @@ class SeriesControllerIT : BaseIT() {
         val seriesJson = gson.toJson(baseResponseDto.data)
         val resultSeries: List<SeriesDto> =
             objectMapper.readValue(seriesJson, object : TypeReference<List<SeriesDto>>() {})
-        Assertions.assertEquals(2, resultSeries.size)
-        Assertions.assertEquals(series1.toDto(), resultSeries[0])
-        Assertions.assertEquals(series2.toDto(), resultSeries[1])
+        resultSeries.size shouldBe 2
+        resultSeries[0] shouldBe series1.toDto()
+        resultSeries[1] shouldBe series2.toDto()
+    }
+
+    @Test
+    fun `test get inactive series for group`() {
+        // GIVEN
+        val group = insertGroup()
+        insertInactiveSeries(group, series1Name)
+        val series2 = insertSeries(group, series2Name)
+        // WHEN
+        val resultAction =
+            mockMvc.perform(
+                MockMvcRequestBuilders
+                    .get(baseUrl)
+                    .param("groupId", group.id.toString())
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+        // THEN
+        resultAction
+            .andExpect(status().isOk)
+            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        val responseJson = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
+        val baseResponseDto = objectMapper.readValue(responseJson, BrnResponse::class.java)
+        val seriesJson = gson.toJson(baseResponseDto.data)
+        val resultSeries: List<SeriesDto> =
+            objectMapper.readValue(seriesJson, object : TypeReference<List<SeriesDto>>() {})
+        resultSeries.size shouldBe 1
+        resultSeries[0] shouldBe series2.toDto()
     }
 
     @Test
@@ -93,7 +120,32 @@ class SeriesControllerIT : BaseIT() {
         val responseJson = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
         val baseResponseDto = objectMapper.readValue(responseJson, BrnResponse::class.java)
         val resultSeries: SeriesDto = objectMapper.readValue(gson.toJson(baseResponseDto.data), SeriesDto::class.java)
-        Assertions.assertEquals(series.toDto(), resultSeries)
+        resultSeries shouldBe series.toDto()
+    }
+
+    @Test
+    fun `test get inactive series for seriesId`() {
+        // GIVEN
+        val group = insertGroup()
+        val series = insertInactiveSeries(group, "series")
+        // WHEN
+        val resultAction =
+            mockMvc.perform(
+                MockMvcRequestBuilders
+                    .get("/series/${series.id}")
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+        // THEN
+        resultAction
+            .andExpect(status().isNotFound)
+            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(
+                MockMvcResultMatchers
+                    .jsonPath("$.errors[0]")
+                    .value(
+                        "no active series was found for id=${series.id}",
+                    ),
+            )
     }
 
     @Test
@@ -114,8 +166,8 @@ class SeriesControllerIT : BaseIT() {
         val response = resultAction.andReturn().response.getContentAsString(StandardCharsets.UTF_8)
         val expectedResponse =
             """{"data":"level,code,exerciseName,words,noiseLevel,noiseUrl\n1,family,Семья,(сын ребёнок мама),0,\n2,family,Семья,(отец брат дедушка),0,\n3,family,Семья,(бабушка муж внучка),0,\n4,family,Семья,(сын ребёнок родители дочь мама папа),0,","errors":[],"meta":[]}"""
-        Assertions.assertTrue(response.contains("1,family,Семья,(сын ребёнок мама),0,"))
-        Assertions.assertEquals(expectedResponse, response)
+        response.contains("1,family,Семья,(сын ребёнок мама),0,") shouldBe true
+        response shouldBe expectedResponse
     }
 
     fun insertSeries(
@@ -127,6 +179,22 @@ class SeriesControllerIT : BaseIT() {
                 name = name,
                 description = "description",
                 exerciseGroup = group,
+                level = 1,
+                type = ExerciseType.SINGLE_SIMPLE_WORDS.name,
+            )
+        return seriesRepository.save(series)
+    }
+
+    private fun insertInactiveSeries(
+        group: ExerciseGroup,
+        name: String,
+    ): Series {
+        val series =
+            Series(
+                name = name,
+                description = "description",
+                exerciseGroup = group,
+                active = false,
                 level = 1,
                 type = ExerciseType.SINGLE_SIMPLE_WORDS.name,
             )

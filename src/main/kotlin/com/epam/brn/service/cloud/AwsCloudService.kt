@@ -6,6 +6,11 @@ import com.fasterxml.jackson.core.util.DefaultPrettyPrinter
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.ObjectWriter
 import com.fasterxml.jackson.databind.SerializationFeature
+import java.io.File
+import java.io.InputStream
+import java.io.Serializable
+import javax.crypto.Mac
+import javax.crypto.spec.SecretKeySpec
 import org.apache.commons.io.IOUtils
 import org.apache.commons.lang3.StringUtils
 import org.apache.logging.log4j.kotlin.logger
@@ -22,12 +27,8 @@ import software.amazon.awssdk.services.s3.model.ListObjectsV2Request
 import software.amazon.awssdk.services.s3.model.NoSuchKeyException
 import software.amazon.awssdk.services.s3.model.ObjectIdentifier
 import software.amazon.awssdk.services.s3.model.PutObjectRequest
+import software.amazon.awssdk.services.s3.model.S3Object
 import software.amazon.awssdk.utils.BinaryUtils
-import java.io.File
-import java.io.InputStream
-import java.io.Serializable
-import javax.crypto.Mac
-import javax.crypto.spec.SecretKeySpec
 
 @ConditionalOnProperty(name = ["cloud.provider"], havingValue = "aws")
 @Service
@@ -37,6 +38,12 @@ class AwsCloudService(
 ) : CloudService {
     @Value("\${brn.resources.default-pictures.path}")
     lateinit var defaultPicturesPath: String
+
+    @Value("\${brn.resources.unverified-pictures.path}")
+    lateinit var unverifiedPicturesPath: String
+
+    @Value("\${brn.resources.pictures.ext:}")
+    lateinit var pictureExtension: String
 
     companion object {
         private const val FOLDER_DELIMITER = "/"
@@ -86,15 +93,29 @@ class AwsCloudService(
     override fun getPicturesNamesFromMainFolder(): List<String> = getFileNames(defaultPicturesPath)
 
     override fun getFilePathMap(folderPath: String): Map<String, String> {
-        val request =
-            ListObjectsV2Request
-                .builder()
-                .bucket(awsConfig.bucketName)
-                .prefix(folderPath)
-                .build()
-        return s3Client
-            .listObjectsV2(request)
-            .contents()
+        val allObjects = mutableListOf<S3Object>()
+        var continuationToken: String? = null
+
+        do {
+            val requestBuilder =
+                ListObjectsV2Request
+                    .builder()
+                    .bucket(awsConfig.bucketName)
+                    .prefix(folderPath)
+
+            // Добавляем токен для следующих страниц (если есть)
+            if (continuationToken != null) {
+                requestBuilder.continuationToken(continuationToken)
+            }
+
+            val result = s3Client.listObjectsV2(requestBuilder.build())
+            allObjects.addAll(result.contents())
+
+            // Получаем токен для следующей страницы
+            continuationToken = result.nextContinuationToken()
+        } while (result.isTruncated) // Пока есть ещё объекты
+
+        return allObjects
             .filter { !it.key().endsWith(FOLDER_DELIMITER) }
             .associate { (File(it.key()).nameWithoutExtension to it.key()) }
     }
@@ -150,22 +171,46 @@ class AwsCloudService(
                     .bucket(awsConfig.bucketName)
                     .key(fullFileName)
                     .build()
+            log.info("Request to aws s3 for file: $request")
             s3Client.headObject(request)
+            log.info("Picture fileName=$fileName fullFileName=`$fullFileName` exist in $filePath")
             true
         } catch (e: NoSuchKeyException) {
+            log.error("Picture fileName=$fileName fullFileName=`$fullFileName` not exist in $filePath, mes=${e.message}")
+            false
+        } catch (e: Exception) {
+            log.error("Error checking aws s3 file existence: ${e.message}", e)
             false
         }
     }
 
+    override fun isPictureExistInFolder(
+        filePath: String,
+        fileName: String,
+    ): Pair<Boolean, String> {
+        val isFileExist = isFileExist(filePath, fileName)
+        var pictureUrl = baseFileUrl() + FOLDER_DELIMITER + filePath + fileName
+        if (!fileName.endsWith(pictureExtension))
+            pictureUrl += ".$pictureExtension"
+        return Pair(isFileExist, pictureUrl)
+    }
+
+    override fun isPictureExistInMainFolder(fileName: String): Pair<Boolean, String> = isPictureExistInFolder(defaultPicturesPath, fileName)
+
+    override fun isPictureExistInUnverifiedFolder(fileName: String): Pair<Boolean, String> =
+        isPictureExistInFolder(unverifiedPicturesPath, fileName)
+
     override fun createFullFileName(
         path: String,
-        filename: String,
+        fileName: String,
     ): String {
         var fullFileName = path
         if (!StringUtils.endsWith(fullFileName, FOLDER_DELIMITER)) {
             fullFileName += FOLDER_DELIMITER
         }
-        fullFileName += filename
+        fullFileName += fileName
+        if (!fileName.endsWith(pictureExtension))
+            fullFileName += ".$pictureExtension"
         return fullFileName
     }
 

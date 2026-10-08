@@ -1,0 +1,40 @@
+/*! purgecss start ignore */
+
+.c-progress-bar-circle {
+  .circular-chart {
+    height: 66px;
+    width: 66px;
+  }
+
+  .circle-bg {
+    fill: none;
+    stroke: #f06292;
+    stroke-width: 6.8;
+  }
+
+  .circle {
+    fill: none;
+    stroke-width: 6.8;
+    /* stroke-linecap: round; */
+    animation: progress 1s ease-out forwards;
+  }
+
+  .circular-chart.blue .circle {
+    stroke: #12a8d8;
+  }
+
+  .percentage {
+    fill: #0d47a1;
+    font-size: 8px;
+    font-weight: bold;
+    text-anchor: middle;
+  }
+}
+
+@keyframes progress {
+  0% {
+    stroke-dasharray: 0 100;
+  }
+}
+
+/*! purgecss end ignore */

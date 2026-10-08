@@ -15,12 +15,13 @@ import com.epam.brn.repo.ResourceRepository
 import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.repo.SubGroupRepository
 import com.epam.brn.service.WordsService
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.verify
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -130,7 +131,7 @@ internal class SeriesWordsRecordProcessorTest {
                     ),
                 ).first()
 
-        assertThat(actual).isEqualTo(expected)
+        actual shouldBe expected
         verify { exerciseRepositoryMock.save(expected) }
     }
 
@@ -155,7 +156,7 @@ internal class SeriesWordsRecordProcessorTest {
                 .tasks
                 .first()
 
-        assertThat(actual).isEqualTo(expected)
+        actual shouldBe expected
     }
 
     @Test
@@ -234,7 +235,7 @@ internal class SeriesWordsRecordProcessorTest {
                 .tasks
 
         tasks.forEach {
-            assertThat(it.answerOptions).containsExactlyElementsOf(expected)
+            it.answerOptions shouldContainExactly expected
         }
         verify { resourceRepositoryMock.saveAll(expected) }
     }
@@ -287,36 +288,30 @@ internal class SeriesWordsRecordProcessorTest {
     private fun resource_бал(): Resource = Resource(
         word = "бал",
         wordType = WordType.OBJECT.toString(),
-        audioFileUrl = "/test/бал.ogg",
     )
 
     private fun resource_бум(): Resource = Resource(
         word = "бум",
         wordType = WordType.OBJECT.toString(),
-        audioFileUrl = "/test/бум.ogg",
     )
 
     private fun resource_быль(): Resource = Resource(
         word = "быль",
         wordType = WordType.OBJECT.toString(),
-        audioFileUrl = "/test/быль.ogg",
     )
 
     private fun resource_вить(): Resource = Resource(
         word = "вить",
         wordType = WordType.OBJECT.toString(),
-        audioFileUrl = "/test/вить.ogg",
     )
 
     private fun resource_гад(): Resource = Resource(
         word = "гад",
         wordType = WordType.OBJECT.toString(),
-        audioFileUrl = "/test/гад.ogg",
     )
 
     private fun resource_дуб(): Resource = Resource(
         word = "дуб",
         wordType = WordType.OBJECT.toString(),
-        audioFileUrl = "/test/дуб.ogg",
     )
 }

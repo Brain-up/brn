@@ -61,7 +61,6 @@ class AwsConfig(
     val baseFileUrl: String = ""
 
     fun instant(): OffsetDateTime = Instant.now().atOffset(ZoneOffset.UTC)
-
     fun uuid(): String = UUID.randomUUID().toString()
 
     private lateinit var accessKeyId: String

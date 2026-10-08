@@ -1,0 +1,44 @@
+.audiogram-container {
+  max-width: 600px;
+  margin: 0 auto 1.5rem;
+}
+
+.audiogram-chart {
+  min-height: 320px;
+}
+
+/* Billboard.js region overrides for hearing level bands */
+:global(.audiogram-region-normal) rect {
+  fill: #dcfce7 !important;
+  opacity: 0.5;
+}
+
+:global(.audiogram-region-mild) rect {
+  fill: #fef9c3 !important;
+  opacity: 0.5;
+}
+
+:global(.audiogram-region-moderate) rect {
+  fill: #fed7aa !important;
+  opacity: 0.5;
+}
+
+:global(.audiogram-region-mod-severe) rect {
+  fill: #fecaca !important;
+  opacity: 0.5;
+}
+
+:global(.audiogram-region-severe) rect {
+  fill: #fca5a5 !important;
+  opacity: 0.5;
+}
+
+:global(.audiogram-threshold-line) line {
+  stroke: #059669;
+  stroke-dasharray: 4;
+}
+
+:global(.audiogram-threshold-line) text {
+  fill: #059669;
+  font-size: 11px;
+}

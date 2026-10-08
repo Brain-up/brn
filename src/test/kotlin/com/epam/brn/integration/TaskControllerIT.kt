@@ -12,9 +12,9 @@ import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.repo.SubGroupRepository
 import com.epam.brn.repo.TaskRepository
+import io.kotest.matchers.shouldBe
 import org.json.JSONObject
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -80,8 +80,8 @@ class TaskControllerIT : BaseIT() {
             JSONObject(resultAction.andReturn().response.contentAsString)
                 .getJSONObject("data")
 
-        Assertions.assertEquals(task.name, actual.get("name"))
-        Assertions.assertEquals(task.id, actual.getLong("id"))
+        actual.get("name") shouldBe task.name
+        actual.getLong("id") shouldBe task.id
     }
 
     @Test
@@ -104,12 +104,12 @@ class TaskControllerIT : BaseIT() {
         val data =
             JSONObject(resultAction.andReturn().response.contentAsString)
                 .getJSONArray("data")
-        Assertions.assertEquals(1, data.length())
+        data.length() shouldBe 1
 
         val actual = data.getJSONObject(0)
 
-        Assertions.assertEquals(task.name, actual.get("name"))
-        Assertions.assertEquals(task.id, actual.getLong("id"))
+        actual.get("name") shouldBe task.name
+        actual.getLong("id") shouldBe task.id
     }
 
     private fun insertExerciseGroup(): ExerciseGroup = exerciseGroupRepository.save(
@@ -122,7 +122,6 @@ class TaskControllerIT : BaseIT() {
 
     private fun insertSeries(exerciseGroup: ExerciseGroup): Series = seriesRepository.save(
         Series(
-            id = 1,
             description = "desc",
             name = "series",
             exerciseGroup = exerciseGroup,
@@ -137,7 +136,6 @@ class TaskControllerIT : BaseIT() {
 
     private fun insertExercise(subGroup: SubGroup): Exercise = exerciseRepository.save(
         Exercise(
-            id = 1,
             subGroup = subGroup,
             level = 0,
             name = "exercise",
@@ -146,7 +144,6 @@ class TaskControllerIT : BaseIT() {
 
     private fun insertTask(exercise: Exercise): Task = taskRepository.save(
         Task(
-            id = 1,
             name = "${exercise.name} Task",
             serialNumber = 1,
             exercise = exercise,

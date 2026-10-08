@@ -13,8 +13,8 @@ import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.SeriesRepository
 import com.epam.brn.repo.SubGroupRepository
 import com.epam.brn.repo.TaskRepository
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
@@ -22,7 +22,6 @@ import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import kotlin.test.assertFalse
 
 @WithMockUser(username = "test@test.test", roles = [BrnRole.USER])
 class GroupControllerIT : BaseIT() {
@@ -74,8 +73,8 @@ class GroupControllerIT : BaseIT() {
             .andExpect(status().isOk)
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
         val response = resultAction.andReturn().response.contentAsString
-        assertTrue(response.contains(groupRu.name))
-        assertFalse(response.contains(groupEn.name))
+        response.contains(groupRu.name) shouldBe true
+        response.contains(groupEn.name) shouldBe false
     }
 
     @Test
@@ -95,7 +94,36 @@ class GroupControllerIT : BaseIT() {
             .andExpect(status().isOk)
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
         val response = resultAction.andReturn().response.contentAsString
-        assertTrue(response.contains(existingExerciseGroup.name))
+        response.contains(existingExerciseGroup.name) shouldBe true
+    }
+
+    @Test
+    fun `test get group by Id with filtered series`() {
+        // GIVEN
+        val exerciseGroupName = "GroupName"
+        val existingExerciseGroup = insertExerciseGroupWithSeries(exerciseGroupName)
+        // WHEN
+        val resultAction =
+            mockMvc.perform(
+                MockMvcRequestBuilders
+                    .get(baseUrl + "/" + existingExerciseGroup.id)
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+        // THEN
+        resultAction
+            .andExpect(status().isOk)
+            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(
+                MockMvcResultMatchers
+                    .jsonPath("$.data.series.length()")
+                    .value(1),
+            ).andExpect(
+                MockMvcResultMatchers
+                    .jsonPath("$.data.series[0]")
+                    .value(existingExerciseGroup.series[1].id),
+            )
+        val response = resultAction.andReturn().response.contentAsString
+        response.contains(existingExerciseGroup.name) shouldBe true
     }
 
     fun insertExerciseGroup(
@@ -109,6 +137,24 @@ class GroupControllerIT : BaseIT() {
             locale = locale,
         ),
     )
+
+    fun insertExerciseGroupWithSeries(exerciseGroupName: String): ExerciseGroup {
+        val group = ExerciseGroup(code = "CODE", name = exerciseGroupName, description = "description")
+        val seriesList =
+            listOf(Pair("series one", false), Pair("series two", true))
+                .map {
+                    Series(
+                        name = it.first,
+                        description = it.first,
+                        exerciseGroup = group,
+                        level = 1,
+                        type = "type",
+                        active = it.second,
+                    )
+                } as MutableList<Series>
+        group.series.addAll(seriesList)
+        return exerciseGroupRepository.save(group)
+    }
 
     fun insertSeries(
         group: ExerciseGroup,
@@ -152,7 +198,6 @@ class GroupControllerIT : BaseIT() {
 
     fun insertTask(exercise: Exercise): Task = taskRepository.save(
         Task(
-            id = 1,
             name = "${exercise.name} Task",
             serialNumber = 1,
             exercise = exercise,

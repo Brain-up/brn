@@ -8,6 +8,8 @@ import com.epam.brn.model.AudiometryTask
 import com.epam.brn.repo.AudiometryHistoryRepository
 import com.epam.brn.repo.AudiometryRepository
 import com.epam.brn.repo.AudiometryTaskRepository
+import io.kotest.matchers.collections.shouldContain
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -17,8 +19,6 @@ import io.mockk.verify
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.util.Optional
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 
 @ExtendWith(MockKExtension::class)
 internal class AudiometryServiceTest {
@@ -51,8 +51,8 @@ internal class AudiometryServiceTest {
         // THEN
         verify(exactly = 1) { audiometryRepository.findByLocale(BrnLocale.RU.locale) }
         verify(exactly = 1) { audiometryMock.toDtoWithoutTasks() }
-        assertEquals(1, audiometrics.size)
-        assertTrue(audiometrics.contains(audiometryResponseMock))
+        audiometrics.size shouldBe 1
+        audiometrics shouldContain audiometryResponseMock
     }
 
     @Test
@@ -69,7 +69,7 @@ internal class AudiometryServiceTest {
         // THEN
         verify(exactly = 1) { audiometryRepository.findById(1L) }
         verify(exactly = 1) { audiometryTaskRepository.findByAudiometry(audiometry) }
-        assertEquals(1, audiometryDto.id)
-        assertEquals(1, (audiometryDto.audiometryTasks as List<*>).size)
+        audiometryDto.id shouldBe 1L
+        (audiometryDto.audiometryTasks as List<*>).size shouldBe 1
     }
 }

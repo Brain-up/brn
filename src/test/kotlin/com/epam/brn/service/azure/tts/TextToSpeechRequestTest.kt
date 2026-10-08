@@ -10,7 +10,7 @@ import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule
 import com.fasterxml.jackson.dataformat.xml.XmlMapper
-import org.junit.jupiter.api.Assertions.assertNotNull
+import io.kotest.matchers.nulls.shouldNotBeNull
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.json.JsonTest
 
@@ -44,6 +44,6 @@ class TextToSpeechRequestTest {
                 lang = "en-US",
             )
         val xml = xmlMapper.writeValueAsString(textToSpeechRequest)
-        assertNotNull(xml)
+        xml.shouldNotBeNull()
     }
 }

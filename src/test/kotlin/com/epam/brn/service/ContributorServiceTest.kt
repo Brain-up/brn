@@ -9,6 +9,9 @@ import com.epam.brn.model.Contact
 import com.epam.brn.model.Contributor
 import com.epam.brn.model.GitHubUser
 import com.epam.brn.repo.ContributorRepository
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -16,12 +19,9 @@ import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.util.Optional
-import kotlin.test.assertNotNull
 
 @ExtendWith(MockKExtension::class)
 internal class ContributorServiceTest {
@@ -38,17 +38,31 @@ internal class ContributorServiceTest {
         // GIVEN
         val contributor = createContributor(id = 1, name = "Contributor", contribution = 5)
         val contributorList = listOf(contributor)
-        every { contributorRepository.findAll() } returns contributorList
+        every { contributorRepository.findAllWithAssociations() } returns contributorList
 
         // WHEN
         val actualResult = contributorService.getAllContributors()
 
         // THEN
-        assertEquals(1, actualResult.size)
+        actualResult.size shouldBe 1
         val actualContributor = actualResult[0]
-        assertEquals(contributor.name, actualContributor.name)
-        assertEquals(contributor.contribution, actualContributor.contribution)
-        assertEquals(contributor.type, actualContributor.type)
+        actualContributor.name shouldBe contributor.name
+        actualContributor.contribution shouldBe contributor.contribution
+        actualContributor.type shouldBe contributor.type
+        verify(exactly = 1) { contributorRepository.findAllWithAssociations() }
+    }
+
+    @Test
+    fun `should get all contributors with empty list`() {
+        // GIVEN
+        every { contributorRepository.findAllWithAssociations() } returns emptyList()
+
+        // WHEN
+        val actualResult = contributorService.getAllContributors()
+
+        // THEN
+        actualResult.size shouldBe 0
+        verify(exactly = 1) { contributorRepository.findAllWithAssociations() }
     }
 
     @Test
@@ -62,11 +76,11 @@ internal class ContributorServiceTest {
         val actualResult = contributorService.getContributors("ru-ru", contributor.type)
 
         // THEN
-        assertEquals(1, actualResult.size)
+        actualResult.size shouldBe 1
         val actualContributor = actualResult[0]
-        assertEquals(contributor.name, actualContributor.name)
-        assertEquals(contributor.contribution, actualContributor.contribution)
-        assertEquals(contributor.type, actualContributor.type)
+        actualContributor.name shouldBe contributor.name
+        actualContributor.contribution shouldBe contributor.contribution
+        actualContributor.type shouldBe contributor.type
     }
 
     @Test
@@ -81,9 +95,9 @@ internal class ContributorServiceTest {
         val actualResult = contributorService.createContributor(contributorRequest)
 
         // THEN
-        assertEquals(contributor.name, actualResult.name)
-        assertEquals(contributor.contribution, actualResult.contribution)
-        assertEquals(contributor.type, actualResult.type)
+        actualResult.name shouldBe contributor.name
+        actualResult.contribution shouldBe contributor.contribution
+        actualResult.type shouldBe contributor.type
     }
 
     @Test
@@ -109,11 +123,11 @@ internal class ContributorServiceTest {
         val actualResult = contributorService.updateContributor(contributorId, contributorRequest)
 
         // THEN
-        assertEquals(contributorRequest.name, actualResult.name)
-        assertEquals(contributorRequest.contribution, actualResult.contribution)
+        actualResult.name shouldBe contributorRequest.name
+        actualResult.contribution shouldBe contributorRequest.contribution
         val updatedContacts = actualResult.contacts
-        assertEquals(1, updatedContacts.size)
-        assertEquals(updatedContact.value, updatedContacts.elementAt(0).value)
+        updatedContacts.size shouldBe 1
+        updatedContacts.elementAt(0).value shouldBe updatedContact.value
     }
 
     @Test
@@ -124,7 +138,7 @@ internal class ContributorServiceTest {
         every { contributorRepository.findById(contributorId) } returns Optional.empty()
 
         // WHEN & THEN
-        assertThrows(EntityNotFoundException::class.java) {
+        shouldThrow<EntityNotFoundException> {
             contributorService.updateContributor(contributorId, contributorRequest)
         }
     }
@@ -149,10 +163,55 @@ internal class ContributorServiceTest {
         // WHEN
         val resultContributor = contributorService.createOrUpdateByGitHubUser(gitHubUserMockK, githubRepositoryName)
         // THEN
-        assertEquals(resultContributor, contributorMockK)
-        assertEquals(githubRepositoryName, resultContributor.repositoryName)
+        resultContributor shouldBe contributorMockK
+        resultContributor.repositoryName shouldBe githubRepositoryName
         verify(exactly = 1) { contributorRepository.findByGitHubUser(gitHubUserMockK) }
         verify(exactly = 1) { contributorRepository.save(any()) }
+    }
+
+    @Test
+    fun `should classify new github contributor from auto-tests-python repository as autotester`() {
+        // GIVEN
+        val autoTestsRepositoryName = "auto-tests-python"
+        val gitHubUserMockK = mockk<GitHubUser>()
+        val capturedContributor = slot<Contributor>()
+        every { contributorRepository.findByGitHubUser(gitHubUserMockK) } returns null
+        every { contributorRepository.save(capture(capturedContributor)) } answers { capturedContributor.captured }
+        every { gitHubUserMockK.name } returns "name"
+        every { gitHubUserMockK.company } returns "company"
+        every { gitHubUserMockK.avatarUrl } returns "avatarUrl"
+        every { gitHubUserMockK.bio } returns "bio"
+        every { gitHubUserMockK.email } returns null
+        every { gitHubUserMockK.contributions } returns 1
+
+        // WHEN
+        contributorService.createOrUpdateByGitHubUser(gitHubUserMockK, autoTestsRepositoryName)
+
+        // THEN
+        capturedContributor.captured.type shouldBe ContributorType.AUTOTESTER
+        capturedContributor.captured.repositoryName shouldBe autoTestsRepositoryName
+    }
+
+    @Test
+    fun `should classify new github contributor from a regular repository as developer`() {
+        // GIVEN
+        val gitHubUserMockK = mockk<GitHubUser>()
+        val capturedContributor = slot<Contributor>()
+        every { contributorRepository.findByGitHubUser(gitHubUserMockK) } returns null
+        every { contributorRepository.save(capture(capturedContributor)) } answers { capturedContributor.captured }
+        every { gitHubUserMockK.name } returns "name"
+        every { gitHubUserMockK.company } returns "company"
+        every { gitHubUserMockK.avatarUrl } returns "avatarUrl"
+        every { gitHubUserMockK.bio } returns "bio"
+        every { gitHubUserMockK.email } returns null
+        every { gitHubUserMockK.contributions } returns 1
+
+        // WHEN
+        contributorService.createOrUpdateByGitHubUser(gitHubUserMockK, githubRepositoryName)
+
+        // THEN
+        capturedContributor.captured.type shouldBe ContributorType.DEVELOPER
+        capturedContributor.captured.repositoryName shouldBe githubRepositoryName
     }
 
     @Test
@@ -175,9 +234,9 @@ internal class ContributorServiceTest {
         // WHEN
         val resultContributor = contributorService.createOrUpdateByGitHubUser(gitHubUserMockK, githubRepositoryName)
         // THEN
-        assertEquals(updatedContributor, resultContributor)
-        assertEquals(githubRepositoryName, resultContributor.repositoryName)
-        assertEquals(0, capturedContributor.captured.contacts.size)
+        resultContributor shouldBe updatedContributor
+        resultContributor.repositoryName shouldBe githubRepositoryName
+        capturedContributor.captured.contacts.size shouldBe 0
         verify(exactly = 1) { contributorRepository.findByGitHubUser(gitHubUserMockK) }
         verify(exactly = 1) { contributorRepository.save(existContributor) }
     }
@@ -199,9 +258,9 @@ internal class ContributorServiceTest {
         // WHEN
         val resultContributor = contributorService.createOrUpdateByGitHubUser(gitHubUserMockK, githubRepositoryName)
         // THEN
-        assertNotNull(resultContributor)
-        assertEquals(existContributor, resultContributor)
-        assertEquals(githubRepositoryName, resultContributor.repositoryName)
+        resultContributor.shouldNotBeNull()
+        resultContributor shouldBe existContributor
+        resultContributor.repositoryName shouldBe githubRepositoryName
         verify(exactly = 1) { contributorRepository.findByGitHubUser(gitHubUserMockK) }
         verify(exactly = 1) { contributorRepository.save(existContributor) }
     }
@@ -232,10 +291,10 @@ internal class ContributorServiceTest {
         // WHEN
         val resultContributor = contributorService.createOrUpdateByGitHubUser(gitHunUserMockK, githubRepositoryName)
         // THEN
-        assertEquals(updatedContributor, resultContributor)
-        assertEquals(githubRepositoryName, resultContributor.repositoryName)
-        assertEquals(existContributor, capturedContributor.captured)
-        assertEquals(1, capturedContributor.captured.contacts.size)
+        resultContributor shouldBe updatedContributor
+        resultContributor.repositoryName shouldBe githubRepositoryName
+        capturedContributor.captured shouldBe existContributor
+        capturedContributor.captured.contacts.size shouldBe 1
         verify(exactly = 1) { contributorRepository.findByGitHubUser(gitHunUserMockK) }
         verify(exactly = 1) { contributorRepository.save(existContributor) }
     }

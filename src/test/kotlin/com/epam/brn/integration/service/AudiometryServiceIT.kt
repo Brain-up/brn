@@ -16,6 +16,7 @@ import com.epam.brn.repo.AudiometryTaskRepository
 import com.epam.brn.repo.HeadphonesRepository
 import com.epam.brn.repo.UserAccountRepository
 import com.epam.brn.service.AudiometryService
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
@@ -24,8 +25,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 import java.time.LocalDateTime
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -75,8 +74,8 @@ internal class AudiometryServiceIT {
         // WHEN
         val resultTasks = audiometryService.findSecondSpeechAudiometryTasks(user, audiometryWithTasks)
         // THEN
-        assertEquals(4, resultTasks.size)
-        assertTrue(resultTasks.containsAll(listOf(tasks[2], tasks[4], tasks[5], tasks[7])))
+        resultTasks.size shouldBe 4
+        resultTasks.containsAll(listOf(tasks[2], tasks[4], tasks[5], tasks[7])) shouldBe true
     }
 
     private fun insetHeadphones() =
