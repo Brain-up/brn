@@ -17,6 +17,7 @@ jobs:
           java-version: 17
       - name: Build, Unit and Integration Tests
         run: ./gradlew build test integrationTest jacocoTestReport sonarqube
+#        run: ./gradlew build test integrationTest jacocoTestReport
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
