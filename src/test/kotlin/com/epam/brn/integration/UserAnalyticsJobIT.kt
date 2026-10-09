@@ -29,7 +29,7 @@ class UserAnalyticsJobIT : BaseIT() {
     @AfterEach
     fun deleteAfterTest() {
         userAnalyticsRepository.deleteAll()
-        userAccountRepository.deleteAll()
+        deleteInsertedTestData()
     }
 
     @Test
