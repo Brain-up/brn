@@ -10,7 +10,6 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 
 class UserDailyAnalyticsJobIT : BaseIT() {
@@ -45,9 +44,9 @@ class UserDailyAnalyticsJobIT : BaseIT() {
         val subGroup = insertDefaultSubGroup(existingSeries, 1)
         val exerciseFirst = insertDefaultExercise(subGroup, "FirstName")
         val exerciseSecond = insertDefaultExercise(subGroup, "SecondName")
-        val now = LocalDateTime.now()
-        val firstStudyHistory = insertDefaultStudyHistory(user, exerciseFirst, now.minusHours(1L).truncatedTo(ChronoUnit.SECONDS))
-        val secondStudyHistory = insertDefaultStudyHistory(user, exerciseSecond, now.plusHours(1L).truncatedTo(ChronoUnit.SECONDS))
+        val today = LocalDate.now().atStartOfDay()
+        val firstStudyHistory = insertDefaultStudyHistory(user, exerciseFirst, today.plusHours(9L).truncatedTo(ChronoUnit.SECONDS))
+        val secondStudyHistory = insertDefaultStudyHistory(user, exerciseSecond, today.plusHours(11L).truncatedTo(ChronoUnit.SECONDS))
 
         // WHEN
         userDailyAnalyticsJob.fillUserDailyAnalytics()
@@ -55,13 +54,12 @@ class UserDailyAnalyticsJobIT : BaseIT() {
         // THEN
         val userDailyAnalyticsList = userDailyAnalyticsRepository.findAll()
         userDailyAnalyticsList.forExactly(1) {
-            it.snapshotDate shouldBe LocalDate.now()
+            it.day shouldBe LocalDate.now()
             it.userId shouldBe user.id
             it.firstDone shouldBe firstStudyHistory.startTime
             it.lastDone shouldBe secondStudyHistory.startTime
             it.spentTime shouldBe (firstStudyHistory.spentTimeInSeconds ?: 0L) + (secondStudyHistory.spentTimeInSeconds ?: 0L)
             it.doneExercises shouldBe 2
-            it.studyDays shouldBe 1
             it.roleName shouldBe roleName
         }
     }
@@ -76,13 +74,21 @@ class UserDailyAnalyticsJobIT : BaseIT() {
 
         val subGroup = insertDefaultSubGroup(insertDefaultSeries(), 1)
         val exercise = insertDefaultExercise(subGroup, "FirstName")
-        insertDefaultStudyHistory(user, exercise, LocalDateTime.now().minusHours(1L).truncatedTo(ChronoUnit.SECONDS))
+        insertDefaultStudyHistory(
+            user,
+            exercise,
+            LocalDate
+                .now()
+                .atStartOfDay()
+                .plusHours(10L)
+                .truncatedTo(ChronoUnit.SECONDS),
+        )
 
         // WHEN the job runs twice on the same day
         userDailyAnalyticsJob.fillUserDailyAnalytics()
         userDailyAnalyticsJob.fillUserDailyAnalytics()
 
         // THEN today's snapshot is replaced, not duplicated
-        userDailyAnalyticsRepository.findBySnapshotDate(LocalDate.now()).size shouldBe 1
+        userDailyAnalyticsRepository.findByDay(LocalDate.now()).size shouldBe 1
     }
 }

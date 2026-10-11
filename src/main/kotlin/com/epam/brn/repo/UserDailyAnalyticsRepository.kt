@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 import java.time.LocalDate
 
 interface UserDailyAnalyticsRepository : JpaRepository<UserDailyAnalytics, Long> {
-    fun findBySnapshotDate(snapshotDate: LocalDate): List<UserDailyAnalytics>
+    fun findByDay(day: LocalDate): List<UserDailyAnalytics>
 
-    fun findByUserIdOrderBySnapshotDate(userId: Long): List<UserDailyAnalytics>
+    fun findByUserIdOrderByDay(userId: Long): List<UserDailyAnalytics>
 }
