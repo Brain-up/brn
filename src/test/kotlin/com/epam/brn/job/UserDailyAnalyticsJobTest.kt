@@ -10,9 +10,9 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.jdbc.core.JdbcTemplate
 
 @ExtendWith(MockKExtension::class)
-class UserAnalyticsJobTest {
+class UserDailyAnalyticsJobTest {
     @InjectMockKs
-    lateinit var userAnalyticsJob: UserAnalyticsJob
+    lateinit var userDailyAnalyticsJob: UserDailyAnalyticsJob
 
     @MockK(relaxed = true, relaxUnitFun = true)
     lateinit var jdbcTemplate: JdbcTemplate
@@ -23,7 +23,7 @@ class UserAnalyticsJobTest {
         every { jdbcTemplate.update(any<String>()) } returns 1
 
         // WHEN
-        userAnalyticsJob.fillUserAnalytics()
+        userDailyAnalyticsJob.fillUserDailyAnalytics()
 
         // THEN: one delete of today's rows + one insert of the new snapshot
         verify(exactly = 2) { jdbcTemplate.update(any<String>()) }
@@ -35,6 +35,6 @@ class UserAnalyticsJobTest {
         every { jdbcTemplate.update(any<String>()) } throws RuntimeException("db down")
 
         // WHEN / THEN: no exception propagates out of the job
-        userAnalyticsJob.fillUserAnalytics()
+        userDailyAnalyticsJob.fillUserDailyAnalytics()
     }
 }

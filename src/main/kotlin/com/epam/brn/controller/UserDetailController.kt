@@ -7,7 +7,7 @@ import com.epam.brn.dto.response.BrnResponse
 import com.epam.brn.enums.BrnRole
 import com.epam.brn.service.DoctorService
 import com.epam.brn.service.UserAccountService
-import com.epam.brn.service.UserAnalyticsService
+import com.epam.brn.service.UserDailyAnalyticsService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.data.domain.Pageable
@@ -35,7 +35,7 @@ import jakarta.annotation.security.RolesAllowed
 class UserDetailController(
     private val userAccountService: UserAccountService,
     private val doctorService: DoctorService,
-    private val userAnalyticsService: UserAnalyticsService,
+    private val userDailyAnalyticsService: UserDailyAnalyticsService,
 ) {
     @GetMapping
     @Operation(summary = "Get all users with/without analytic data")
@@ -47,7 +47,7 @@ class UserDetailController(
     ): ResponseEntity<Any> {
         val users =
             if (withAnalytics)
-                userAnalyticsService.getUsersWithAnalytics(pageable, role)
+                userDailyAnalyticsService.getUsersWithAnalytics(pageable, role)
             else
                 userAccountService.getUsers(pageable, role)
         return ResponseEntity.ok().body(BrnResponse(data = users))

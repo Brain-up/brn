@@ -1,9 +1,9 @@
 package com.epam.brn.integration
 
-import com.epam.brn.job.UserAnalyticsJob
+import com.epam.brn.job.UserDailyAnalyticsJob
 import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.repo.UserAccountRepository
-import com.epam.brn.repo.UserAnalyticsRepository
+import com.epam.brn.repo.UserDailyAnalyticsRepository
 import io.kotest.inspectors.forExactly
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.AfterEach
@@ -13,12 +13,12 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 
-class UserAnalyticsJobIT : BaseIT() {
+class UserDailyAnalyticsJobIT : BaseIT() {
     @Autowired
-    lateinit var userAnalyticsJob: UserAnalyticsJob
+    lateinit var userDailyAnalyticsJob: UserDailyAnalyticsJob
 
     @Autowired
-    lateinit var userAnalyticsRepository: UserAnalyticsRepository
+    lateinit var userDailyAnalyticsRepository: UserDailyAnalyticsRepository
 
     @Autowired
     private lateinit var userAccountRepository: UserAccountRepository
@@ -28,7 +28,7 @@ class UserAnalyticsJobIT : BaseIT() {
 
     @AfterEach
     fun deleteAfterTest() {
-        userAnalyticsRepository.deleteAll()
+        userDailyAnalyticsRepository.deleteAll()
         deleteInsertedTestData()
     }
 
@@ -50,11 +50,11 @@ class UserAnalyticsJobIT : BaseIT() {
         val secondStudyHistory = insertDefaultStudyHistory(user, exerciseSecond, now.plusHours(1L).truncatedTo(ChronoUnit.SECONDS))
 
         // WHEN
-        userAnalyticsJob.fillUserAnalytics()
+        userDailyAnalyticsJob.fillUserDailyAnalytics()
 
         // THEN
-        val userAnalyticsList = userAnalyticsRepository.findAll()
-        userAnalyticsList.forExactly(1) {
+        val userDailyAnalyticsList = userDailyAnalyticsRepository.findAll()
+        userDailyAnalyticsList.forExactly(1) {
             it.snapshotDate shouldBe LocalDate.now()
             it.userId shouldBe user.id
             it.firstDone shouldBe firstStudyHistory.startTime
@@ -79,10 +79,10 @@ class UserAnalyticsJobIT : BaseIT() {
         insertDefaultStudyHistory(user, exercise, LocalDateTime.now().minusHours(1L).truncatedTo(ChronoUnit.SECONDS))
 
         // WHEN the job runs twice on the same day
-        userAnalyticsJob.fillUserAnalytics()
-        userAnalyticsJob.fillUserAnalytics()
+        userDailyAnalyticsJob.fillUserDailyAnalytics()
+        userDailyAnalyticsJob.fillUserDailyAnalytics()
 
         // THEN today's snapshot is replaced, not duplicated
-        userAnalyticsRepository.findBySnapshotDate(LocalDate.now()).size shouldBe 1
+        userDailyAnalyticsRepository.findBySnapshotDate(LocalDate.now()).size shouldBe 1
     }
 }

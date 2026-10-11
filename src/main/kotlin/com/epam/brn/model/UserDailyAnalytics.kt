@@ -11,17 +11,17 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 
 /**
- * A precomputed daily snapshot of a user's study analytics (filled by [com.epam.brn.job.UserAnalyticsJob]).
+ * A precomputed daily snapshot of a user's study analytics (filled by [com.epam.brn.job.UserDailyAnalyticsJob]).
  * One row per user/role/[snapshotDate]; history accumulates day by day for trend reporting.
  */
 @Entity
 @Table(
     indexes = [
-        Index(name = "user_analytics_ix_snapshot_date", columnList = "snapshot_date"),
-        Index(name = "user_analytics_ix_role_name", columnList = "role_name"),
+        Index(name = "user_daily_analytics_ix_snapshot_date", columnList = "snapshot_date"),
+        Index(name = "user_daily_analytics_ix_role_name", columnList = "role_name"),
     ],
 )
-class UserAnalytics(
+class UserDailyAnalytics(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
@@ -36,14 +36,14 @@ class UserAnalytics(
     val doneExercises: Int?,
     val studyDays: Int?,
 ) {
-    override fun toString(): String = "UserAnalytics(id=$id, snapshotDate=$snapshotDate, userId=$userId, roleName='$roleName', " +
+    override fun toString(): String = "UserDailyAnalytics(id=$id, snapshotDate=$snapshotDate, userId=$userId, roleName='$roleName', " +
         "firstDone=$firstDone, lastDone=$lastDone, spentTime=$spentTime, doneExercises=$doneExercises, studyDays=$studyDays)"
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as UserAnalytics
+        other as UserDailyAnalytics
 
         if (id != other.id) return false
         if (userId != other.userId) return false

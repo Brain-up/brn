@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 
 /**
- * Appends a daily snapshot of per-user study analytics into the user_analytics table.
+ * Appends a daily snapshot of per-user study analytics into the user_daily_analytics table.
  *
  * Runs only when `brn.user.analytics.job.enabled=true` (off by default). It does NOT back the
  * live /admin/users endpoint (that stays realtime, see #2971) — it builds a day-by-day history
@@ -17,14 +17,14 @@ import org.springframework.transaction.annotation.Transactional
  */
 @Component
 @ConditionalOnProperty(name = ["brn.user.analytics.job.enabled"], havingValue = "true")
-class UserAnalyticsJob(
+class UserDailyAnalyticsJob(
     private val jdbcTemplate: JdbcTemplate,
 ) {
     private val log = logger()
 
     @Scheduled(cron = "@midnight")
     @Transactional
-    fun fillUserAnalytics() {
+    fun fillUserDailyAnalytics() {
         try {
             log.info("start filling user analytics snapshot...")
             jdbcTemplate.update(DELETE_TODAY_SNAPSHOT_SQL)
@@ -36,10 +36,10 @@ class UserAnalyticsJob(
     }
 }
 
-private const val DELETE_TODAY_SNAPSHOT_SQL = "DELETE FROM user_analytics WHERE snapshot_date = current_date;"
+private const val DELETE_TODAY_SNAPSHOT_SQL = "DELETE FROM user_daily_analytics WHERE snapshot_date = current_date;"
 
 private const val INSERT_TODAY_SNAPSHOT_SQL = """
-    INSERT INTO user_analytics (snapshot_date, user_id, role_name, first_done, last_done,
+    INSERT INTO user_daily_analytics (snapshot_date, user_id, role_name, first_done, last_done,
                                 spent_time, done_exercises, study_days)
     SELECT current_date,
            s.user_id,

@@ -6,10 +6,10 @@
 
 ## 2. Extract the shared quality judgement
 
-> Realized as a dedicated `ExerciseSuccessCalculator` bean (`isSuccessful(tasksCount, wrongAnswers, replaysCount)` plus `StudyHistory` / `ExerciseLastAttemptView` overloads) rather than a private method on `ExerciseService`. This keeps the formula a single source of truth shared by `ExerciseService`, `StudyHistoryService`, and `UserAnalyticsServiceImpl` (the latter now depends on the calculator directly instead of on `ExerciseService`). See design.md Decision 3.
+> Realized as a dedicated `ExerciseSuccessCalculator` bean (`isSuccessful(tasksCount, wrongAnswers, replaysCount)` plus `StudyHistory` / `ExerciseLastAttemptView` overloads) rather than a private method on `ExerciseService`. This keeps the formula a single source of truth shared by `ExerciseService`, `StudyHistoryService`, and `UserDailyAnalyticsServiceImpl` (the latter now depends on the calculator directly instead of on `ExerciseService`). See design.md Decision 3.
 
 - [x] 2.1 Add the single quality-threshold formula from the `exercise-availability` spec as `ExerciseSuccessCalculator.isSuccessful(tasksCount, wrongAnswers, replaysCount)`. Verify with `gradlew test --tests "com.epam.brn.service.ExerciseServiceTest"`.
-- [x] 2.2 Make the public `isDoneWell(studyHistory: StudyHistory)` a thin delegator to the calculator, preserving its signature and result. Verify `UserAnalyticsServiceTest` stays green (`gradlew test --tests "com.epam.brn.service.UserAnalyticsServiceTest"`).
+- [x] 2.2 Make the public `isDoneWell(studyHistory: StudyHistory)` a thin delegator to the calculator, preserving its signature and result. Verify `UserDailyAnalyticsServiceTest` stays green (`gradlew test --tests "com.epam.brn.service.UserDailyAnalyticsServiceTest"`).
 - [x] 2.3 Judge the projection last attempt (`ExerciseLastAttemptView`) via the calculator and remove the duplicated formula. Verify no other quality-threshold formula remains via `Grep` and that the availability tests from group 1 still pass.
 
 ## 3. Extract the shared availability core
