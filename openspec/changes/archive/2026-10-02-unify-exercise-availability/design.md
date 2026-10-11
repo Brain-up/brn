@@ -58,13 +58,13 @@ Judge the last attempt from its counters only, via a single
 The threshold formula and the `minRepetitionIndex` / `minRightAnswersIndex`
 properties move onto this dedicated bean (rather than a private method on
 `ExerciseService`) so the single source of truth is shared cleanly by
-`ExerciseService`, `StudyHistoryService`, and `UserDailyAnalyticsServiceImpl` — the
+`ExerciseService`, `StudyHistoryService`, and `UserAnalyticsServiceImpl` — the
 latter now depends on the calculator directly instead of reaching through
 `ExerciseService`. The calculator also exposes `StudyHistory` and
 `ExerciseLastAttemptView` convenience overloads, so each availability path passes
 its own last-attempt representation. The public
 `ExerciseService.isDoneWell(StudyHistory)` method MUST stay — it is called
-outside this service by `UserDailyAnalyticsServiceImpl` — so it becomes a thin
+outside this service by `UserAnalyticsServiceImpl` — so it becomes a thin
 delegator to the calculator; the former private
 `isDoneWell(ExerciseLastAttemptView)` overload is removed and the availability
 core calls the calculator directly, eliminating the duplicated formula.
@@ -86,9 +86,9 @@ invariant. This makes the refactor observably behavior-preserving.
   tests over both paths surface any divergence before the merge; where they
   disagree, the `exercise-availability` spec is the arbiter and the resolution is
   called out in the change.
-- **The shared core must satisfy the external caller `UserDailyAnalyticsServiceImpl`
+- **The shared core must satisfy the external caller `UserAnalyticsServiceImpl`
   unchanged** → the public `isDoneWell(StudyHistory)` signature and result are
-  preserved; its existing tests (`UserDailyAnalyticsServiceTest`) stay green as a
+  preserved; its existing tests (`UserAnalyticsServiceTest`) stay green as a
   guard.
 - **Reworking the private algorithm could subtly shift results** → both paths keep
   their current repository queries and are covered by the existing

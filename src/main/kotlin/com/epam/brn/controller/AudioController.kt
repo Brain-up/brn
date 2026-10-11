@@ -2,7 +2,7 @@ package com.epam.brn.controller
 
 import com.epam.brn.dto.AudioFileMetaData
 import com.epam.brn.enums.BrnRole
-import com.epam.brn.service.UserDailyAnalyticsService
+import com.epam.brn.service.UserAnalyticsService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.apache.commons.io.IOUtils.toByteArray
@@ -21,7 +21,7 @@ import jakarta.annotation.security.RolesAllowed
 @ConditionalOnProperty(name = ["default.tts.provider"])
 @RolesAllowed(BrnRole.USER)
 class AudioController(
-    private val userDailyAnalyticsService: UserDailyAnalyticsService,
+    private val userAnalyticsService: UserAnalyticsService,
 ) {
     @GetMapping(produces = [MediaType.APPLICATION_OCTET_STREAM_VALUE])
     @Operation(summary = "Get audio resource for text and exerciseId")
@@ -39,7 +39,7 @@ class AudioController(
         .contentType(MediaType.APPLICATION_OCTET_STREAM)
         .body(
             toByteArray(
-                userDailyAnalyticsService.prepareAudioStreamForUser(
+                userAnalyticsService.prepareAudioStreamForUser(
                     exerciseId,
                     AudioFileMetaData(
                         text = text,

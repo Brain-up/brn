@@ -22,7 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import java.time.LocalDateTime
 import kotlin.random.Random
 
-class UserDailyAnalyticServiceIT : BaseIT() {
+class UserAnalyticServiceIT : BaseIT() {
     @Autowired
     lateinit var userAccountRepository: UserAccountRepository
 

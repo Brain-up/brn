@@ -2,7 +2,7 @@ package com.epam.brn.controller
 
 import com.epam.brn.dto.AudioFileMetaData
 import com.epam.brn.dto.azure.tts.AzureRates
-import com.epam.brn.service.UserDailyAnalyticsService
+import com.epam.brn.service.UserAnalyticsService
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -21,7 +21,7 @@ internal class AudioControllerTest {
     lateinit var controller: AudioController
 
     @MockK
-    private lateinit var userDailyAnalyticsService: UserDailyAnalyticsService
+    private lateinit var userAnalyticsService: UserAnalyticsService
 
     @Test
     fun `should get audio byte array by request with exerciseId `() {
@@ -30,13 +30,13 @@ internal class AudioControllerTest {
         val locale = "locale"
         val stream: InputStream = ByteArrayInputStream(byteArrayOf(10, 20, 30, 40, 50))
         val audioFileMetaData = AudioFileMetaData(text, locale, "", "1", AzureRates.DEFAULT, null, null, null)
-        every { userDailyAnalyticsService.prepareAudioStreamForUser(1, audioFileMetaData) } returns stream
+        every { userAnalyticsService.prepareAudioStreamForUser(1, audioFileMetaData) } returns stream
 
         // WHEN
         val audioByteArray = controller.getAudioByteArray(text, 1, locale, "", "1")
 
         // THEN
         audioByteArray.statusCode.value() shouldBe HttpStatus.SC_OK
-        verify(exactly = 1) { userDailyAnalyticsService.prepareAudioStreamForUser(1, audioFileMetaData) }
+        verify(exactly = 1) { userAnalyticsService.prepareAudioStreamForUser(1, audioFileMetaData) }
     }
 }

@@ -5,7 +5,7 @@ import com.epam.brn.dto.response.UserWithAnalyticsResponse
 import org.springframework.data.domain.Pageable
 import java.io.InputStream
 
-interface UserDailyAnalyticsService {
+interface UserAnalyticsService {
     fun getUsersWithAnalytics(
         pageable: Pageable,
         role: String,

@@ -14,7 +14,7 @@ import com.epam.brn.service.ExerciseSuccessCalculator
 import com.epam.brn.service.TextToSpeechService
 import com.epam.brn.service.TimeService
 import com.epam.brn.service.UserAccountService
-import com.epam.brn.service.UserDailyAnalyticsService
+import com.epam.brn.service.UserAnalyticsService
 import com.epam.brn.service.WordsService
 import com.epam.brn.service.statistics.impl.UserDayStatisticsService
 import org.springframework.data.domain.Pageable
@@ -28,7 +28,7 @@ import kotlin.time.DurationUnit
 import kotlin.time.toDuration
 
 @Service
-class UserDailyAnalyticsServiceImpl(
+class UserAnalyticsServiceImpl(
     private val userAccountRepository: UserAccountRepository,
     private val studyHistoryRepository: StudyHistoryRepository,
     private val exerciseRepository: ExerciseRepository,
@@ -38,7 +38,7 @@ class UserDailyAnalyticsServiceImpl(
     private val userAccountService: UserAccountService,
     private val exerciseSuccessCalculator: ExerciseSuccessCalculator,
     private val wordsService: WordsService,
-) : UserDailyAnalyticsService {
+) : UserAnalyticsService {
     private val listTextExercises = listOf(ExerciseType.SENTENCE, ExerciseType.PHRASES)
 
     override fun getUsersWithAnalytics(

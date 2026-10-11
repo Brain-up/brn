@@ -11,7 +11,7 @@ import com.epam.brn.enums.BrnRole
 import com.epam.brn.enums.HeadphonesType
 import com.epam.brn.service.DoctorService
 import com.epam.brn.service.UserAccountService
-import com.epam.brn.service.UserDailyAnalyticsService
+import com.epam.brn.service.UserAnalyticsService
 import com.google.firebase.auth.FirebaseAuth
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldHaveSize
@@ -48,7 +48,7 @@ internal class UserDetailControllerTest {
     private lateinit var doctorService: DoctorService
 
     @MockK
-    private lateinit var userDailyAnalyticsService: UserDailyAnalyticsService
+    private lateinit var userAnalyticsService: UserAnalyticsService
 
     lateinit var userAccountDto: UserAccountDto
 
@@ -296,13 +296,13 @@ internal class UserDetailControllerTest {
         val role = BrnRole.USER
         val pageable = mockk<Pageable>()
         val userWithAnalyticsResponse = mockk<UserWithAnalyticsResponse>()
-        every { userDailyAnalyticsService.getUsersWithAnalytics(pageable, role) } returns listOf(userWithAnalyticsResponse)
+        every { userAnalyticsService.getUsersWithAnalytics(pageable, role) } returns listOf(userWithAnalyticsResponse)
 
         // WHEN
         val users = userDetailController.getUsers(withAnalytics, role, pageable)
 
         // THEN
-        verify(exactly = 1) { userDailyAnalyticsService.getUsersWithAnalytics(pageable, role) }
+        verify(exactly = 1) { userAnalyticsService.getUsersWithAnalytics(pageable, role) }
         users.statusCodeValue shouldBe HttpStatus.SC_OK
         (users.body as BrnResponse<*>).data shouldBe listOf(userWithAnalyticsResponse)
     }

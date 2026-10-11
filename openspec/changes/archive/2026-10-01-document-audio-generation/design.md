@@ -3,7 +3,7 @@
 See proposal.md — Why. This change documents the existing request-time
 audio-generation behaviour; no code changes. The behaviour is realized by
 `AudioController` (`GET /audio`, gated by `@ConditionalOnProperty(default.tts.provider)`
-and `@RolesAllowed(USER)`), `UserDailyAnalyticsServiceImpl.prepareAudioStreamForUser` /
+and `@RolesAllowed(USER)`), `UserAnalyticsServiceImpl.prepareAudioStreamForUser` /
 `prepareAudioFileMetaData` / `setSpeedForUser` (exercise resolution, text shaping,
 voice selection, speed adaptation), the `TextToSpeechService` strategy interface,
 and its two implementations `YandexSpeechKitService` (`@Primary`, provider=yandex)

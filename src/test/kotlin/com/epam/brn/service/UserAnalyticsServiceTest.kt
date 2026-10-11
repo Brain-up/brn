@@ -13,7 +13,7 @@ import com.epam.brn.model.projection.UserStatisticByIdView
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.StudyHistoryRepository
 import com.epam.brn.repo.UserAccountRepository
-import com.epam.brn.service.impl.UserDailyAnalyticsServiceImpl
+import com.epam.brn.service.impl.UserAnalyticsServiceImpl
 import com.epam.brn.service.statistics.impl.UserDayStatisticsService
 import com.epam.brn.exception.EntityNotFoundException
 import io.kotest.assertions.throwables.shouldThrow
@@ -31,10 +31,10 @@ import java.io.InputStream
 import java.time.LocalDateTime
 
 @ExtendWith(MockKExtension::class)
-@DisplayName("UserDailyAnalyticsService test")
-internal class UserDailyAnalyticsServiceTest {
+@DisplayName("UserAnalyticsService test")
+internal class UserAnalyticsServiceTest {
     @InjectMockKs
-    lateinit var userDailyAnalyticsService: UserDailyAnalyticsServiceImpl
+    lateinit var userAnalyticsService: UserAnalyticsServiceImpl
 
     @MockK
     lateinit var userAccountRepository: UserAccountRepository
@@ -92,9 +92,9 @@ internal class UserDailyAnalyticsServiceTest {
         every { studyHistoryRepository.countStudyDaysForUsers(any(), any(), any()) } returns emptyList()
         every { studyHistoryRepository.getStatisticsByUserAccountIds(any()) } returns listOf(userStatisticView)
 
-        val userDailyAnalyticsDtos = userDailyAnalyticsService.getUsersWithAnalytics(pageable, BrnRole.ADMIN)
+        val userAnalyticsDtos = userAnalyticsService.getUsersWithAnalytics(pageable, BrnRole.ADMIN)
 
-        userDailyAnalyticsDtos.size shouldBe 2
+        userAnalyticsDtos.size shouldBe 2
     }
 
     @Test
@@ -108,10 +108,10 @@ internal class UserDailyAnalyticsServiceTest {
         every { studyHistoryRepository.countStudyDaysForUsers(any(), any(), any()) } returns emptyList()
         every { studyHistoryRepository.getStatisticsByUserAccountIds(any()) } returns emptyList()
 
-        val userDailyAnalyticsDtos = userDailyAnalyticsService.getUsersWithAnalytics(pageable, BrnRole.ADMIN)
+        val userAnalyticsDtos = userAnalyticsService.getUsersWithAnalytics(pageable, BrnRole.ADMIN)
 
-        userDailyAnalyticsDtos.size shouldBe 1
-        userDailyAnalyticsDtos[0].lastWeek.size shouldBe 0
+        userAnalyticsDtos.size shouldBe 1
+        userAnalyticsDtos[0].lastWeek.size shouldBe 0
     }
 
     private val currentUserId = 1L
@@ -134,7 +134,7 @@ internal class UserDailyAnalyticsServiceTest {
         val audioFileMetaData =
             AudioFileMetaData("мама папа", BrnLocale.RU.locale, Voice.FILIPP.name, "1", AzureRates.DEFAULT)
         // WHEN
-        val metaDataResult = userDailyAnalyticsService.prepareAudioFileMetaData(exerciseId, audioFileMetaData)
+        val metaDataResult = userAnalyticsService.prepareAudioFileMetaData(exerciseId, audioFileMetaData)
 
         // THEN
         metaDataResult.speedFloat shouldBe "1.2"
@@ -159,7 +159,7 @@ internal class UserDailyAnalyticsServiceTest {
         val audioFileMetaData =
             AudioFileMetaData("мама папа", BrnLocale.RU.locale, Voice.FILIPP.name, "1", AzureRates.DEFAULT)
         // WHEN
-        val metaDataResult = userDailyAnalyticsService.prepareAudioFileMetaData(exerciseId, audioFileMetaData)
+        val metaDataResult = userAnalyticsService.prepareAudioFileMetaData(exerciseId, audioFileMetaData)
 
         // THEN
         metaDataResult.speedFloat shouldBe "1.2"
@@ -185,7 +185,7 @@ internal class UserDailyAnalyticsServiceTest {
             AudioFileMetaData("мама папа", BrnLocale.RU.locale, Voice.FILIPP.name, "1", AzureRates.DEFAULT)
 
         // WHEN
-        val metaDataResult = userDailyAnalyticsService.prepareAudioFileMetaData(exerciseId, audioFileMetaData)
+        val metaDataResult = userAnalyticsService.prepareAudioFileMetaData(exerciseId, audioFileMetaData)
 
         // THEN
         metaDataResult.speedFloat shouldBe "0.8"
@@ -211,7 +211,7 @@ internal class UserDailyAnalyticsServiceTest {
             AudioFileMetaData("мама папа", BrnLocale.RU.locale, "", "1", AzureRates.DEFAULT)
         every { wordsService.getDefaultWomanVoiceForLocale(any()) } returns Voice.FILIPP.name
         // WHEN
-        val metaDataResult = userDailyAnalyticsService.prepareAudioFileMetaData(exerciseId, audioFileMetaData)
+        val metaDataResult = userAnalyticsService.prepareAudioFileMetaData(exerciseId, audioFileMetaData)
         // THEN
         metaDataResult.voice shouldBe Voice.FILIPP.name
     }
@@ -234,7 +234,7 @@ internal class UserDailyAnalyticsServiceTest {
             AudioFileMetaData("мама папа", BrnLocale.RU.locale, Voice.FILIPP.name, "1", AzureRates.DEFAULT)
 
         // WHEN
-        val metaDataResult = userDailyAnalyticsService.prepareAudioFileMetaData(exerciseId, audioFileMetaData)
+        val metaDataResult = userAnalyticsService.prepareAudioFileMetaData(exerciseId, audioFileMetaData)
 
         // THEN
         metaDataResult.speedFloat shouldBe "0.8"
@@ -260,7 +260,7 @@ internal class UserDailyAnalyticsServiceTest {
             AudioFileMetaData("мама", BrnLocale.RU.locale, Voice.FILIPP.name, "1", AzureRates.DEFAULT)
 
         // WHEN
-        val metaDataResult = userDailyAnalyticsService.prepareAudioFileMetaData(exerciseId, audioFileMetaData)
+        val metaDataResult = userAnalyticsService.prepareAudioFileMetaData(exerciseId, audioFileMetaData)
 
         // THEN
         metaDataResult.speedFloat shouldBe "1.2"
@@ -286,7 +286,7 @@ internal class UserDailyAnalyticsServiceTest {
             AudioFileMetaData("text", BrnLocale.RU.locale, Voice.FILIPP.name, "1", AzureRates.DEFAULT)
 
         // WHEN
-        val metaDataResult = userDailyAnalyticsService.prepareAudioFileMetaData(exerciseId, audioFileMetaData)
+        val metaDataResult = userAnalyticsService.prepareAudioFileMetaData(exerciseId, audioFileMetaData)
 
         // THEN
         metaDataResult.speedFloat shouldBe "0.8"
@@ -308,7 +308,7 @@ internal class UserDailyAnalyticsServiceTest {
         val audioFileMetaData =
             AudioFileMetaData("text", BrnLocale.RU.locale, Voice.FILIPP.name, "1", AzureRates.DEFAULT)
         // WHEN
-        val metaDataResult = userDailyAnalyticsService.prepareAudioFileMetaData(exerciseId, audioFileMetaData)
+        val metaDataResult = userAnalyticsService.prepareAudioFileMetaData(exerciseId, audioFileMetaData)
         // THEN
         metaDataResult.speedFloat shouldBe "1"
         metaDataResult.speedCode shouldBe AzureRates.DEFAULT
@@ -324,7 +324,7 @@ internal class UserDailyAnalyticsServiceTest {
         // WHEN & THEN
         val exception =
             shouldThrow<EntityNotFoundException> {
-                userDailyAnalyticsService.prepareAudioFileMetaData(exerciseId, audioFileMetaData)
+                userAnalyticsService.prepareAudioFileMetaData(exerciseId, audioFileMetaData)
             }
         exception.message shouldBe "No exercise found for id=$exerciseId"
     }
@@ -348,7 +348,7 @@ internal class UserDailyAnalyticsServiceTest {
         every { textToSpeechService.generateAudioOggStreamWithValidation(audioFileMetaData) } returns audioStreamMock
         every { wordsService.getDefaultWomanVoiceForLocale(any()) } returns Voice.FILIPP.name
         // WHEN
-        val audioStreamResult = userDailyAnalyticsService.prepareAudioStreamForUser(exerciseId, audioFileMetaData)
+        val audioStreamResult = userAnalyticsService.prepareAudioStreamForUser(exerciseId, audioFileMetaData)
 
         // THEN
         audioStreamResult.toString().isNotEmpty()
