@@ -1,5 +1,6 @@
 package com.epam.brn.job
 
+import io.kotest.assertions.throwables.shouldThrow
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -18,23 +19,25 @@ class UserDailyAnalyticsJobTest {
     lateinit var jdbcTemplate: JdbcTemplate
 
     @Test
-    fun `should replace today's snapshot and insert fresh rows`() {
+    fun `should replace today's rows and insert fresh deltas`() {
         // GIVEN
         every { jdbcTemplate.update(any<String>()) } returns 1
 
         // WHEN
         userDailyAnalyticsJob.fillUserDailyAnalytics()
 
-        // THEN: one delete of today's rows + one insert of the new snapshot
+        // THEN: one delete of today's rows + one insert of the fresh delta
         verify(exactly = 2) { jdbcTemplate.update(any<String>()) }
     }
 
     @Test
-    fun `should swallow exceptions so the scheduler keeps running`() {
+    fun `should propagate exceptions so the transaction rolls back and the failure is logged`() {
         // GIVEN
         every { jdbcTemplate.update(any<String>()) } throws RuntimeException("db down")
 
-        // WHEN / THEN: no exception propagates out of the job
-        userDailyAnalyticsJob.fillUserDailyAnalytics()
+        // WHEN / THEN: the failure is not swallowed
+        shouldThrow<RuntimeException> {
+            userDailyAnalyticsJob.fillUserDailyAnalytics()
+        }
     }
 }

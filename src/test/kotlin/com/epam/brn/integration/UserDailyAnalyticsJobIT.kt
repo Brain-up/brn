@@ -32,7 +32,7 @@ class UserDailyAnalyticsJobIT : BaseIT() {
     }
 
     @Test
-    fun `should fill a daily analytics snapshot for a user`() {
+    fun `should fill a daily analytics delta for a user`() {
         // GIVEN
         val roleName = "USER"
         val role = createRole(roleName)
@@ -44,9 +44,9 @@ class UserDailyAnalyticsJobIT : BaseIT() {
         val subGroup = insertDefaultSubGroup(existingSeries, 1)
         val exerciseFirst = insertDefaultExercise(subGroup, "FirstName")
         val exerciseSecond = insertDefaultExercise(subGroup, "SecondName")
-        val today = LocalDate.now().atStartOfDay()
-        val firstStudyHistory = insertDefaultStudyHistory(user, exerciseFirst, today.plusHours(9L).truncatedTo(ChronoUnit.SECONDS))
-        val secondStudyHistory = insertDefaultStudyHistory(user, exerciseSecond, today.plusHours(11L).truncatedTo(ChronoUnit.SECONDS))
+        val yesterday = LocalDate.now().minusDays(1).atStartOfDay()
+        val firstStudyHistory = insertDefaultStudyHistory(user, exerciseFirst, yesterday.plusHours(9L).truncatedTo(ChronoUnit.SECONDS))
+        val secondStudyHistory = insertDefaultStudyHistory(user, exerciseSecond, yesterday.plusHours(11L).truncatedTo(ChronoUnit.SECONDS))
 
         // WHEN
         userDailyAnalyticsJob.fillUserDailyAnalytics()
@@ -54,7 +54,7 @@ class UserDailyAnalyticsJobIT : BaseIT() {
         // THEN
         val userDailyAnalyticsList = userDailyAnalyticsRepository.findAll()
         userDailyAnalyticsList.forExactly(1) {
-            it.day shouldBe LocalDate.now()
+            it.day shouldBe LocalDate.now().minusDays(1)
             it.userId shouldBe user.id
             it.firstDone shouldBe firstStudyHistory.startTime
             it.lastDone shouldBe secondStudyHistory.startTime
@@ -79,16 +79,17 @@ class UserDailyAnalyticsJobIT : BaseIT() {
             exercise,
             LocalDate
                 .now()
+                .minusDays(1)
                 .atStartOfDay()
                 .plusHours(10L)
                 .truncatedTo(ChronoUnit.SECONDS),
         )
 
-        // WHEN the job runs twice on the same day
+        // WHEN the job runs twice for the same day
         userDailyAnalyticsJob.fillUserDailyAnalytics()
         userDailyAnalyticsJob.fillUserDailyAnalytics()
 
-        // THEN today's snapshot is replaced, not duplicated
-        userDailyAnalyticsRepository.findByDay(LocalDate.now()).size shouldBe 1
+        // THEN that day's rows are replaced, not duplicated
+        userDailyAnalyticsRepository.findByDay(LocalDate.now().minusDays(1)).size shouldBe 1
     }
 }
