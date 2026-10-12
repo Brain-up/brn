@@ -36,6 +36,10 @@ services:
       YANDEX_API_KEY: _YANDEX_API_KEY_
       YANDEX_FOLDER_ID: _YANDEX_FOLDER_ID_
       API_GITHUB_TOKEN: _API_GITHUB_TOKEN_
+      ALERT_TELEGRAM_ENABLED: "true"
+      ALERT_TELEGRAM_BOT_TOKEN: _ALERT_TELEGRAM_BOT_TOKEN_
+      ALERT_TELEGRAM_CHAT_ID: _ALERT_TELEGRAM_CHAT_ID_
+      TTS_PROBE_ENABLED: "true"
     secrets:
       - aws-key
       - firebase_config_json

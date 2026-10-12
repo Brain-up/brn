@@ -1,16 +1,21 @@
 package com.epam.brn.service
 
 import com.epam.brn.dto.AudioFileMetaData
+import com.epam.brn.exception.YandexServiceException
+import com.epam.brn.service.monitoring.AlertService
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
+import io.mockk.Runs
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
+import io.mockk.just
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.slot
 import io.mockk.unmockkStatic
+import io.mockk.verify
 import io.kotest.assertions.throwables.shouldThrow
 import org.apache.http.HttpEntity
 import org.apache.http.client.methods.CloseableHttpResponse
@@ -30,6 +35,9 @@ internal class YandexSpeechKitServiceTest {
 
     @MockK
     lateinit var wordsService: WordsService
+
+    @MockK
+    lateinit var alertService: AlertService
 
     @ParameterizedTest
     @ValueSource(strings = ["ru-ru", "en-us", "tr-tr"])
@@ -95,6 +103,41 @@ internal class YandexSpeechKitServiceTest {
         result shouldBe inputStream
         requestSlot.captured.getFirstHeader("Authorization").value shouldBe "Api-Key apiKeyValue"
         requestSlot.captured.uri.toString() shouldContain "http://yandex/tts"
+
+        unmockkStatic(HttpClientBuilder::class)
+    }
+
+    @Test
+    fun `should send an alert and throw when yandex returns a non-200 status`() {
+        // GIVEN
+        yandexSpeechKitService.apiKey = "apiKeyValue"
+        yandexSpeechKitService.uriGenerationAudioFile = "http://yandex/tts"
+        yandexSpeechKitService.folderId = "folderId"
+        yandexSpeechKitService.format = "oggopus"
+        yandexSpeechKitService.emotions = listOf("friendly")
+
+        val httpClientBuilder = mockk<HttpClientBuilder>()
+        val httpClient = mockk<CloseableHttpClient>()
+        val httpResponse = mockk<CloseableHttpResponse>()
+        val httpEntity = mockk<HttpEntity>()
+        val inputStream = mockk<InputStream>()
+
+        mockkStatic(HttpClientBuilder::class)
+        every { HttpClientBuilder.create() } returns httpClientBuilder
+        every { httpClientBuilder.build() } returns httpClient
+        every { httpClient.execute(any<HttpPost>()) } returns httpResponse
+        every { httpResponse.statusLine.statusCode } returns 401
+        every { httpResponse.entity } returns httpEntity
+        every { httpEntity.content } returns inputStream
+        every { alertService.sendAlert(any(), any()) } just Runs
+
+        // WHEN
+        shouldThrow<YandexServiceException> {
+            yandexSpeechKitService.generateAudioStream(AudioFileMetaData("text", "ru-ru", "oksana", "1"))
+        }
+
+        // THEN
+        verify { alertService.sendAlert("yandex-tts", any()) }
 
         unmockkStatic(HttpClientBuilder::class)
     }
