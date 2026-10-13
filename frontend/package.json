@@ -147,10 +147,10 @@
     "billboard.js": "^3.1.0",
     "ember-inflector": "^6.0.0",
     "ember-scoped-css": "^2.1.0",
-    "firebase": "^8.10.0",
+    "firebase": "^10.2.0",
     "idle-js": "^1.2.0",
     "luxon": "^1.28.1",
-    "patch-package": "6.4.7",
+    "patch-package": "8.0.1",
     "tailwindcss": "^4.2.1",
     "tone": "^14.7.60"
   },
