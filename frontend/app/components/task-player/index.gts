@@ -3,7 +3,7 @@ import Component from '@glimmer/component';
 import { service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
-import { timeout, keepLatestTask, TaskInstance } from 'ember-concurrency';
+import { timeout, keepLatestTask, restartableTask, TaskInstance } from 'ember-concurrency';
 import { MODES, type Mode } from 'brn/utils/task-modes';
 import { isTesting } from '@embroider/macros';
 import StatsService, { StatEvents } from 'brn/services/stats';
@@ -115,13 +115,25 @@ export default class TaskPlayerComponent extends Component<TaskPlayerSignature> 
     }
   }
 
-  exerciseSequenceTask = keepLatestTask(async () => {
+  // Restartable on purpose: the interact loop below runs until the mode
+  // changes, so this task stays pending the whole time the user is on the
+  // repeat step. A task change (onTaskChanged) must CANCEL the in-flight
+  // instance — keepLatest would enqueue the new perform behind the pending
+  // one and replay it (setMode(LISTEN)) whenever the user later leaves the
+  // repeat step, yanking them out of Solve.
+  exerciseSequenceTask = restartableTask(async () => {
     try {
       await this.setMode(MODES.LISTEN);
     } catch (_e) {
       return;
     }
     try {
+      // The interact loop no longer exits on its own once every word is heard
+      // (so words stay replayable). This await therefore stays pending until
+      // the user leaves the step — at which point setMode cancels the interact
+      // task and the catch below runs. That is intentional; nothing depends on
+      // this task resolving, and it is itself cancelled by the next perform
+      // (restartable) and on component teardown.
       await this.setMode(MODES.INTERACT);
     } catch (_e) {
       // Interact was interrupted
@@ -272,6 +284,13 @@ export default class TaskPlayerComponent extends Component<TaskPlayerSignature> 
   interactModeTask = keepLatestTask(async () => {
     try {
       this.mode = MODES.INTERACT;
+      // Re-entering the repeat step after every word was already heard starts
+      // a fresh pass: clear the green "all heard" state so the user can go
+      // through the words again. Previously the only way to replay was to
+      // switch to the Listen tab and back.
+      if (this.allOptionsHeard) {
+        this.heardWords = new Set();
+      }
       while (this.mode === MODES.INTERACT) {
         if (this.studyingTimer.isPaused) {
           await timeout(200);
@@ -302,10 +321,9 @@ export default class TaskPlayerComponent extends Component<TaskPlayerSignature> 
             await this.audio.playAudio();
           }
           this.heardWords = new Set([...this.heardWords, playText]);
-          if (this.allOptionsHeard) {
-            await timeout(500);
-            return;
-          }
+          // Intentionally keep looping once every word has been heard: the
+          // repeat step stays interactive so the user can replay any word as
+          // many times as they like. Moving on to "Solve" is done manually.
         }
         await timeout(250);
         this.activeWord = null;
@@ -377,7 +395,12 @@ export default class TaskPlayerComponent extends Component<TaskPlayerSignature> 
     if (isTesting()) {
       await this.setMode(MODES.TASK);
     } else {
-      await this.exerciseSequenceTask.perform();
+      // The sequence task is restartable: a task change cancels this instance,
+      // which rejects the awaited promise — a normal lifecycle event, not an
+      // error worth surfacing.
+      await this.exerciseSequenceTask.perform().catch(() => {
+        // cancelled by a task change / teardown
+      });
     }
   }
 

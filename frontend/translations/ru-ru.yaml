@@ -29,6 +29,9 @@ audio_player:
   listen: Прослушать ещё раз
   selected_words_of: Выбрано {selected} слов из {total}
 
+study_config:
+  speech_rate: Скорость речи
+
 login_form:
   login: Логин
   error_bad_credentials: Неправильный логин или пароль.
