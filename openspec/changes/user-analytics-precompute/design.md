@@ -90,13 +90,21 @@ Why a single flag rather than splitting the job and the listener: one switch kee
 The store mirrors the metrics the product already exposes, so a reader can be switched onto it without changing what users see:
 
 - `done_exercises` = **all** completions that day (repeats included). The product measures "how much the user trained" — 10 completions of one exercise count as 10, matching the user-facing daily table's `allDoneExercises`.
-- `unique_done_exercises` = **distinct** exercises that day (matches `uniqueDoneExercises` / `/admin/users`' `COUNT(DISTINCT exercise)`).
+- `unique_done_exercises` = **distinct** exercises *that day* (matches the user-facing daily table's `uniqueDoneExercises`). Note this is per-day distinct; it does **not** sum to a lifetime distinct count (see D7).
 - `spent_time` = `SUM(spent_time_in_seconds)` (wall-clock `end-start`) — what the user-facing daily detail table and `/admin/users` sum.
 - `execution_time` = `SUM(execution_seconds)` (active execution time) — what the week/month/year statistics graphs (`UserDay`/`UserMonthStatisticsService`) sum. Stored separately because the two time fields differ and different read paths use different ones.
 
 Why both counts and both times are stored rather than derived: they come from different `study_history` columns / different aggregations, so neither can be computed from the other on read. The nightly reconcile (D4) is the source of truth for all four (`count(*)`, `count(distinct)`, `sum(spent_time_in_seconds)`, `sum(execution_seconds)`); the incremental path keeps `done_exercises`/`spent_time`/`execution_time` exactly fresh intraday and `unique_done_exercises` best-effort-fresh (first-today check), with the night settling any drift.
 
 **Corrective recompute of history:** the earlier backfill (`V220261011_2609.sql`) ran with `count(distinct)` for `done_exercises` and without the two new columns; those migrations are immutable (Flyway checksums). A new migration (`V220261013_2609.sql`) documents the time units, adds the columns, and recomputes every finalized day (`day < current_date`) with the corrected formula, so historical rows match the new semantics.
+
+### D7. Which read paths a per-day delta store can serve (phase-3 targeting)
+
+Not every existing read path is reconstructable from per-day deltas. A metric composes across days only if it is additive (`SUM`) or an extremum (`MIN`/`MAX`); a **lifetime distinct count does not** — distinctness doesn't survive day bucketing. This decides where the store is a drop-in replacement and where it is not:
+
+- **Period statistics graphs** (`UserDayStatisticsService`, `UserMonthStatisticsService`, year) — **fully derivable**. Each point is `SUM(execution_seconds)` per day/month (→ `execution_time` / `SUM(execution_time)`), `exercisingDays` = `COUNT(*)` of day rows, dated at the earliest start (→ `MIN(first_done)`). Their `progress` is a pure function of the per-day execution sums and the active-day set (threshold bucketing in `Day`/`WeekExercisingStatusRetriever`), so equal drivers imply equal `progress`. Verified by `UserDailyAnalyticsPeriodEquivalenceIT`. **This is the clean phase-3 switch target.**
+- **`/admin/users`** (`UserAnalyticsServiceImpl.getUsersWithAnalytics`) — **mostly** derivable: `spentTime` (`SUM(spent_time)`), `firstDone`/`lastDone` (`MIN`/`MAX`), `studyDaysInCurrentMonth` (`COUNT(*)` rows in month), `lastWeek` (per-day execution + progress). **Except** `doneExercises`, which is `COUNT(DISTINCT exercise)` over **all time** — a lifetime distinct count that neither `SUM(done_exercises)` (all completions) nor `SUM(unique_done_exercises)` (per-day distinct summed) reproduces. So `/admin/users` cannot be fully served from the store without either leaving that one field on `study_history` (little win — the query stays) or a product decision to change the metric. **Not a phase-3 target for now.**
+- **User-facing daily detail table** (`StudyHistoryService.calculateUserDailyDetailStatistics`) — out of scope regardless (per-series grain + non-additive "success from first time"; see Non-Goals).
 
 ## Risks / Trade-offs
 
