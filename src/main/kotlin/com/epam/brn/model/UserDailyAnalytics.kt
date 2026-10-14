@@ -12,8 +12,9 @@ import java.time.LocalDateTime
 
 /**
  * A precomputed per-day delta of a user's study analytics (filled by [com.epam.brn.job.UserDailyAnalyticsJob]).
- * One row per user/role/[day] holding that day's activity only; period figures are
- * SUM/COUNT roll-ups over these rows for trend reporting.
+ * One row per user/[day] holding that day's activity only; period figures are SUM/COUNT roll-ups over
+ * these rows for trend reporting. A reader that needs a role cohort filters the user set by role and
+ * aggregates by [userId] (study_history rows carry no role, and role here is just a user property).
  *
  * [spentTime] is in **seconds** (summed from `study_history.spent_time_in_seconds`, i.e. end-start).
  * [executionTime] is also in **seconds** (summed from `study_history.execution_seconds`, the active
@@ -25,7 +26,6 @@ import java.time.LocalDateTime
 @Table(
     indexes = [
         Index(name = "user_daily_analytics_ix_day", columnList = "day"),
-        Index(name = "user_daily_analytics_ix_role_name", columnList = "role_name"),
     ],
 )
 class UserDailyAnalytics(
@@ -35,8 +35,6 @@ class UserDailyAnalytics(
     @Column(name = "day")
     val day: LocalDate,
     val userId: Long,
-    @Column(name = "role_name")
-    val roleName: String,
     val firstDone: LocalDateTime?,
     val lastDone: LocalDateTime?,
     val spentTime: Long?,
@@ -46,7 +44,7 @@ class UserDailyAnalytics(
     @Column(name = "unique_done_exercises")
     val uniqueDoneExercises: Int?,
 ) {
-    override fun toString(): String = "UserDailyAnalytics(id=$id, day=$day, userId=$userId, roleName='$roleName', " +
+    override fun toString(): String = "UserDailyAnalytics(id=$id, day=$day, userId=$userId, " +
         "firstDone=$firstDone, lastDone=$lastDone, spentTime=$spentTime, executionTime=$executionTime, " +
         "doneExercises=$doneExercises, uniqueDoneExercises=$uniqueDoneExercises)"
 

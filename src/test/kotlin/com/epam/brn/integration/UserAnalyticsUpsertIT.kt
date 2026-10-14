@@ -26,11 +26,9 @@ class UserAnalyticsUpsertIT : BaseIT() {
     }
 
     @Test
-    fun `two daily upserts for the same user, role and day accumulate into one row`() {
-        // GIVEN a user with a single role
-        val roleName = "USER"
+    fun `two daily upserts for the same user and day accumulate into one row`() {
+        // GIVEN a user
         val user = insertDefaultUser()
-        user.roleSet.add(createRole(roleName))
         userAccountRepository.save(user)
         val day = LocalDate.now()
         val earlier = day.atTime(9, 0)
@@ -46,7 +44,6 @@ class UserAnalyticsUpsertIT : BaseIT() {
         rows.size shouldBe 1
         val row = rows.first()
         row.userId shouldBe user.id
-        row.roleName shouldBe roleName
         row.doneExercises shouldBe 2
         row.uniqueDoneExercises shouldBe 1
         row.spentTime shouldBe 75L

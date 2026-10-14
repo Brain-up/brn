@@ -25,7 +25,7 @@ See `proposal.md` — Why. The relevant current state:
 
 ### D1. Daily grain is a per-day DELTA, not a dated cumulative snapshot
 
-Each `user_daily_analytics` row = one user/role/calendar-day, holding **only that day's** activity: `done_exercises` (all completions), `unique_done_exercises` (distinct exercises), `spent_time` (seconds, `end-start`), `execution_time` (seconds, active execution), and `first_done`/`last_done` within the day. Unique on `(user_id, role_name, day)`. See D6 for the column semantics.
+Each `user_daily_analytics` row = one user/calendar-day, holding **only that day's** activity: `done_exercises` (all completions), `unique_done_exercises` (distinct exercises), `spent_time` (seconds, `end-start`), `execution_time` (seconds, active execution), and `first_done`/`last_done` within the day. Unique on `(user_id, day)`. See D6 for the column semantics; role is deliberately **not** part of the grain (see Risks).
 
 Why: deltas compose. Period totals = `SUM(spent_time)`, `SUM(done_exercises)`, `COUNT(*)` active days, `MIN(first_done)`/`MAX(last_done)` over the day rows in range — one grain answers week/month/year. A dated cumulative snapshot (the #2609 shape) double-counts when summed and can't be incremented, which is exactly why it's replaced. `study_days` is **not** stored; it is `COUNT(*)` of day rows in the period.
 
@@ -47,10 +47,10 @@ Why not a separate `user_lifetime_analytics` running row: the daily grain alread
 On `study_history` persistence, publish a domain event. An `@TransactionalEventListener(phase = AFTER_COMMIT)` `@Async` handler applies, for the completed exercise's calendar day:
 
 ```
-INSERT INTO user_daily_analytics (user_id, role_name, day, done_exercises, unique_done_exercises,
+INSERT INTO user_daily_analytics (user_id, day, done_exercises, unique_done_exercises,
                                   spent_time, execution_time, first_done, last_done)
-VALUES (:u, :r, :day, 1, :uniqueInc, :spent, :exec, :ts, :ts)
-ON CONFLICT (user_id, role_name, day)
+VALUES (:u, :day, 1, :uniqueInc, :spent, :exec, :ts, :ts)
+ON CONFLICT (user_id, day)
 DO UPDATE SET done_exercises        = user_daily_analytics.done_exercises + 1,
              unique_done_exercises  = user_daily_analytics.unique_done_exercises + EXCLUDED.unique_done_exercises,
              spent_time             = user_daily_analytics.spent_time + EXCLUDED.spent_time,
@@ -73,7 +73,7 @@ Alternatives considered:
 
 ### D4. Nightly job is a RECONCILER, not a filler
 
-Once a night the job recomputes a trailing window of finalized days straight from `study_history` (GROUP BY user/role/day) and overwrites the stored rows. Concretely it deletes then re-inserts every day in `[current_date - reconcileDays, current_date)` (window size `brn.user.analytics.precompute.reconcile-days`, default 7); **today** is deliberately left out and owned by the incremental path (D3). Incremental updates provide freshness; the nightly recompute provides correctness, healing any drift from missed or duplicated events on recent days. The recompute is idempotent — overwrite-from-source yields the same result however many times it runs.
+Once a night the job recomputes a trailing window of finalized days straight from `study_history` (GROUP BY user/day) and overwrites the stored rows. Concretely it deletes then re-inserts every day in `[current_date - reconcileDays, current_date)` (window size `brn.user.analytics.precompute.reconcile-days`, default 7); **today** is deliberately left out and owned by the incremental path (D3). Incremental updates provide freshness; the nightly recompute provides correctness, healing any drift from missed or duplicated events on recent days. The recompute is idempotent — overwrite-from-source yields the same result however many times it runs.
 
 Why a bounded trailing window rather than only "yesterday" or full history: a single-day pass can't heal drift that lands more than a day late (delayed restart, an event dropped two days ago), while a full-history rescan is wasteful once old days are settled. A trailing window heals any day that's still plausibly in flux and leaves settled days untouched; the scan is bounded by the `(user_id, start_time)` index. Days older than the window are treated as final (seeded once by the corrective backfill, D6).
 
@@ -96,7 +96,7 @@ The store mirrors the metrics the product already exposes, so a reader can be sw
 
 Why both counts and both times are stored rather than derived: they come from different `study_history` columns / different aggregations, so neither can be computed from the other on read. The nightly reconcile (D4) is the source of truth for all four (`count(*)`, `count(distinct)`, `sum(spent_time_in_seconds)`, `sum(execution_seconds)`); the incremental path keeps `done_exercises`/`spent_time`/`execution_time` exactly fresh intraday and `unique_done_exercises` best-effort-fresh (first-today check), with the night settling any drift.
 
-**Corrective recompute of history:** the earlier backfill (`V220261011_2609.sql`) ran with `count(distinct)` for `done_exercises` and without the two new columns; those migrations are immutable (Flyway checksums). A new migration (`V220261013_2609.sql`) documents the time units, adds the columns, and recomputes every finalized day (`day < current_date`) with the corrected formula, so historical rows match the new semantics.
+**Corrective recompute of history:** the earlier backfill (`V220261011_2609.sql`) ran with `count(distinct)` for `done_exercises`, without the two new columns, and on the old per-`(user, role, day)` grain; those migrations are immutable (Flyway checksums). A new migration (`V220261013_2609.sql`) documents the time units, adds the columns, drops `role_name` from the grain (dropping the old unique constraint/index and adding `unique (user_id, day)`), and recomputes every finalized day (`day < current_date`) with the corrected formula, so historical rows match the new semantics.
 
 ### D7. Which read paths a per-day delta store can serve (phase-3 targeting)
 
@@ -109,7 +109,7 @@ Not every existing read path is reconstructable from per-day deltas. A metric co
 ## Risks / Trade-offs
 
 - **Async event loss silently drifts the store** → nightly reconcile (D4) overwrites from source; drift is bounded to at most one day and self-heals.
-- **Role changes over time** → a row is keyed by the role at write time; period roll-ups are per `(user, role)`. If a user's role changes, historical day rows keep their original role. Accept for now; the reconciler reflects whatever role the recompute query attributes.
+- **Role is not in the store (grain is `(user_id, day)`)** → a `study_history` row carries no role, and role is a mutable, possibly multi-valued property of the user. Keying by `(user, role, day)` fanned each day's activity out per role (double-counting multi-role users on any cross-role aggregation) and let a role change retroactively split a user's history. No write-time reader needs role, so it is dropped: a reader that wants a role cohort (e.g. `/admin/users`) selects the user set by their **current** role and aggregates the day rows by `user_id`, which matches how the live path already filters (`findUsersAccountsByRole`).
 - **Clock/timezone for "calendar day"** → day bucketing must use one consistent zone (server/DB zone, matching how `study_history.start_time` and the existing day-based stats are interpreted) in both the incremental upsert and the nightly recompute, or the two disagree. Pin the zone in one place and reuse it.
 - **`@Async` executor configuration** → needs a bounded pool with a sane rejection policy; rejections become dropped increments (tolerated via D4, but should be logged).
 - **Backfill of existing history** → enabling the flag does not retro-populate; the first nightly reconcile (or a one-off backfill over the desired range) seeds historical days. Call out at rollout.
@@ -118,7 +118,7 @@ Not every existing read path is reconstructable from per-day deltas. A metric co
 
 Rollout order (each step independently shippable behind the flag):
 
-1. **Schema** — Flyway migration `V2yearmonthday_2609.sql` creating `user_daily_analytics` (unique `(user_id, role_name, day)`).
+1. **Schema** — Flyway migration `V2yearmonthday_2609.sql` creating `user_daily_analytics`; `V220261013_2609.sql` then finalizes the grain to unique `(user_id, day)` (role dropped) and adds the `unique_done_exercises`/`execution_time` columns.
 2. **Incremental listener** — domain event published from `StudyHistoryService.save()`, async AFTER_COMMIT handler doing the atomic daily upsert (D3), gated by the flag.
 3. **Reconciler** — rework the nightly job into a trailing-window recompute/overwrite reconcile over `[current_date - reconcileDays, current_date)` (D4), gated by the flag.
 4. **Read views/queries** for week/month/year and all-time (lifetime) as plain roll-ups over the daily table — added when a consumer needs them (out of scope to expose here).

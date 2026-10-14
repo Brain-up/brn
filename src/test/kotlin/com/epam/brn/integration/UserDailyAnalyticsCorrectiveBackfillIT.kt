@@ -63,7 +63,6 @@ class UserDailyAnalyticsCorrectiveBackfillIT : BaseIT() {
         rows.size shouldBe 1
         val row = rows.first()
         row.userId shouldBe user.id
-        row.roleName shouldBe roleName
         row.doneExercises shouldBe 3
         row.uniqueDoneExercises shouldBe 2
         row.spentTime shouldBe (h1.spentTimeInSeconds ?: 0L) + (h2.spentTimeInSeconds ?: 0L) + (h3.spentTimeInSeconds ?: 0L)

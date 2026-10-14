@@ -15,10 +15,10 @@ interface UserDailyAnalyticsRepository : JpaRepository<UserDailyAnalytics, Long>
     fun findByUserIdOrderByDay(userId: Long): List<UserDailyAnalytics>
 
     /**
-     * Atomically folds a single completed exercise into that user's per-day delta, for every role the
-     * user holds (one row per user/role/day, matching the nightly reconcile grain). Inserts the day row
-     * on first activity, otherwise increments the counts and widens [first_done]/[last_done]. A single
-     * `ON CONFLICT` statement so concurrent completions for the same user/day cannot lose updates.
+     * Atomically folds a single completed exercise into that user's per-day delta (one row per user/day,
+     * matching the nightly reconcile grain). Inserts the day row on first activity, otherwise increments
+     * the counts and widens [first_done]/[last_done]. A single `ON CONFLICT` statement so concurrent
+     * completions for the same user/day cannot lose updates.
      *
      * [doneExercises] always grows by 1 (every completion counts, repeats included). [uniqueDoneExercises]
      * grows by [uniqueIncrement] (1 only when this is the first completion of this exercise that day, else
@@ -29,13 +29,10 @@ interface UserDailyAnalyticsRepository : JpaRepository<UserDailyAnalytics, Long>
     @Transactional
     @Query(
         value = """
-            INSERT INTO user_daily_analytics (user_id, role_name, day, done_exercises, unique_done_exercises,
+            INSERT INTO user_daily_analytics (user_id, day, done_exercises, unique_done_exercises,
                                               spent_time, execution_time, first_done, last_done)
-            SELECT :userId, r.name, :day, 1, :uniqueIncrement, :spentSeconds, :executionSeconds, :activityTime, :activityTime
-            FROM user_roles ur
-            JOIN role r ON ur.role_id = r.id
-            WHERE ur.user_id = :userId
-            ON CONFLICT (user_id, role_name, day)
+            VALUES (:userId, :day, 1, :uniqueIncrement, :spentSeconds, :executionSeconds, :activityTime, :activityTime)
+            ON CONFLICT (user_id, day)
             DO UPDATE SET done_exercises        = COALESCE(user_daily_analytics.done_exercises, 0) + 1,
                           unique_done_exercises = COALESCE(user_daily_analytics.unique_done_exercises, 0) + EXCLUDED.unique_done_exercises,
                           spent_time            = COALESCE(user_daily_analytics.spent_time, 0) + EXCLUDED.spent_time,

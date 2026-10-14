@@ -43,23 +43,18 @@ private const val DELETE_WINDOW_SQL =
     "DELETE FROM user_daily_analytics WHERE day >= current_date - cast(? as integer) AND day < current_date;"
 
 private const val INSERT_WINDOW_DELTA_SQL = """
-    INSERT INTO user_daily_analytics (day, user_id, role_name, first_done, last_done,
+    INSERT INTO user_daily_analytics (day, user_id, first_done, last_done,
                                 spent_time, execution_time, done_exercises, unique_done_exercises)
     SELECT cast(s.start_time as date),
            s.user_id,
-           r.name,
            min(s.start_time),
            max(s.start_time),
            coalesce(sum(s.spent_time_in_seconds), 0),
            coalesce(sum(s.execution_seconds), 0),
            count(*),
            count(distinct s.exercise_id)
-    FROM study_history s,
-         user_roles ur,
-         role r
-    WHERE s.user_id = ur.user_id
-      AND ur.role_id = r.id
-      AND s.start_time >= current_date - cast(? as integer)
+    FROM study_history s
+    WHERE s.start_time >= current_date - cast(? as integer)
       AND s.start_time < current_date
-    GROUP BY cast(s.start_time as date), s.user_id, r.name;
+    GROUP BY cast(s.start_time as date), s.user_id;
 """

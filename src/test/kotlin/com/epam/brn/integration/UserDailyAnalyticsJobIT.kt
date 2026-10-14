@@ -69,7 +69,6 @@ class UserDailyAnalyticsJobIT : BaseIT() {
                 (firstStudyHistory.executionSeconds + secondStudyHistory.executionSeconds + repeatStudyHistory.executionSeconds).toLong()
             it.doneExercises shouldBe 3
             it.uniqueDoneExercises shouldBe 2
-            it.roleName shouldBe roleName
         }
     }
 
@@ -125,7 +124,6 @@ class UserDailyAnalyticsJobIT : BaseIT() {
             UserDailyAnalytics(
                 day = threeDaysAgo,
                 userId = user.id!!,
-                roleName = roleName,
                 firstDone = threeDaysAgo.atTime(1, 0),
                 lastDone = threeDaysAgo.atTime(2, 0),
                 spentTime = 1L,
@@ -138,7 +136,6 @@ class UserDailyAnalyticsJobIT : BaseIT() {
             UserDailyAnalytics(
                 day = tenDaysAgo,
                 userId = user.id!!,
-                roleName = roleName,
                 firstDone = tenDaysAgo.atTime(1, 0),
                 lastDone = tenDaysAgo.atTime(2, 0),
                 spentTime = 42L,

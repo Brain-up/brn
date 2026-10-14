@@ -6,12 +6,12 @@ Maintain a precomputed study-analytics store of per-day activity deltas, kept fr
 
 ### Requirement: Per-Day Activity Deltas
 
-The system SHALL maintain, for each user and role, at most one record per calendar day that captures only that day's study activity: the number of exercises completed that day counting every completion including repeats, the number of distinct exercises completed that day, the wall-clock time spent that day in seconds, the active execution time that day in seconds, and the first and last activity timestamps of that day. A day on which the user has no study activity SHALL have no record. Each day's figures SHALL be independent of other days (a delta, not a running total), so that a day's record reflects activity on that day alone.
+The system SHALL maintain, for each user, at most one record per calendar day that captures only that day's study activity: the number of exercises completed that day counting every completion including repeats, the number of distinct exercises completed that day, the wall-clock time spent that day in seconds, the active execution time that day in seconds, and the first and last activity timestamps of that day. A day on which the user has no study activity SHALL have no record. Each day's figures SHALL be independent of other days (a delta, not a running total), so that a day's record reflects activity on that day alone.
 
 #### Scenario: One record per active day
 
 - **WHEN** a user has study activity on several distinct calendar days
-- **THEN** the store holds exactly one record per active day for that user and role, and days without activity have no record
+- **THEN** the store holds exactly one record per active day for that user, and days without activity have no record
 
 #### Scenario: A day's figures count only that day
 

@@ -63,7 +63,6 @@ class UserAnalyticsIncrementalE2EIT : BaseIT() {
 
         // THEN after the commit the async upsert lands a single current-day delta for the completion
         val row = awaitTodayRow(user.id!!)
-        row.roleName shouldBe roleName
         row.day shouldBe LocalDate.now()
         row.doneExercises shouldBe 1
         row.uniqueDoneExercises shouldBe 1

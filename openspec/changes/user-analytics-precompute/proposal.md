@@ -4,7 +4,7 @@ User analytics (the `/admin/users` list and the per-user statistics pages) are c
 
 ## What Changes
 
-- Introduce a **per-day delta** store (`user_daily_analytics`): one row per user/role/day holding only that day's activity — all completions (`done_exercises`), distinct exercises (`unique_done_exercises`), wall-clock seconds (`spent_time`), active-execution seconds (`execution_time`), and first/last activity that day. Days with no activity produce no row.
+- Introduce a **per-day delta** store (`user_daily_analytics`): one row per user/day holding only that day's activity — all completions (`done_exercises`), distinct exercises (`unique_done_exercises`), wall-clock seconds (`spent_time`), active-execution seconds (`execution_time`), and first/last activity that day. Days with no activity produce no row.
 - Weekly/monthly/yearly **and all-time (lifetime)** figures are **derived roll-ups** over the daily deltas (`SUM` of time/exercises, `COUNT` of active days, `MIN`/`MAX` activity) — no separate per-period or lifetime tables are introduced; they are read as views/queries and only materialized later if measurements justify it.
 - Keep the data fresh **incrementally**: when an exercise is completed (a `study_history` row commits), an asynchronous after-commit listener applies an atomic increment to today's daily-delta row.
 - Repurpose the nightly job from *filler* to **reconciler**: once a night it recomputes each affected day's delta from raw `study_history` and overwrites it, self-healing drift from missed or duplicated events.
