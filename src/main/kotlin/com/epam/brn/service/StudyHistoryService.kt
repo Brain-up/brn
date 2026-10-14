@@ -2,11 +2,14 @@ package com.epam.brn.service
 
 import com.epam.brn.dto.StudyHistoryDto
 import com.epam.brn.dto.statistics.UserDailyDetailStatisticsDto
+import com.epam.brn.event.ExerciseCompletedEvent
 import com.epam.brn.exception.EntityNotFoundException
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.repo.ExerciseRepository
 import com.epam.brn.repo.StudyHistoryRepository
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 import kotlin.time.DurationUnit
@@ -18,12 +21,14 @@ class StudyHistoryService(
     private val exerciseRepository: ExerciseRepository,
     private val userAccountService: UserAccountService,
     private val exerciseSuccessCalculator: ExerciseSuccessCalculator,
+    private val eventPublisher: ApplicationEventPublisher,
 ) {
     fun getTodayTimer(): Int {
         val currentUser = userAccountService.getCurrentUserDto()
         return studyHistoryRepository.getTodayDayTimer(currentUser.id!!)
     }
 
+    @Transactional
     fun save(studyHistoryDto: StudyHistoryDto): StudyHistoryDto {
         val currentUser = userAccountService.getCurrentUser()
         val exercise =
@@ -32,6 +37,16 @@ class StudyHistoryService(
                 .orElseThrow { EntityNotFoundException("Exercise with exerciseId '${studyHistoryDto.exerciseId}' doesn't exist.") }
         val newStudyHistory = studyHistoryDto.toEntity(currentUser, exercise)
         val savedStudyHistory = studyHistoryRepository.save(newStudyHistory)
+
+        eventPublisher.publishEvent(
+            ExerciseCompletedEvent(
+                userId = currentUser.id!!,
+                exerciseId = savedStudyHistory.exercise.id!!,
+                activityTime = savedStudyHistory.startTime,
+                spentSeconds = savedStudyHistory.spentTimeInSeconds ?: 0,
+                executionSeconds = savedStudyHistory.executionSeconds.toLong(),
+            ),
+        )
 
         return savedStudyHistory.toDto()
     }

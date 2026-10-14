@@ -14,6 +14,12 @@ import java.time.LocalDateTime
  * A precomputed per-day delta of a user's study analytics (filled by [com.epam.brn.job.UserDailyAnalyticsJob]).
  * One row per user/role/[day] holding that day's activity only; period figures are
  * SUM/COUNT roll-ups over these rows for trend reporting.
+ *
+ * [spentTime] is in **seconds** (summed from `study_history.spent_time_in_seconds`, i.e. end-start).
+ * [executionTime] is also in **seconds** (summed from `study_history.execution_seconds`, the active
+ * execution time the week/month/year statistics graphs sum).
+ * [doneExercises] counts **all** completions that day (repeats included); [uniqueDoneExercises] counts
+ * the distinct exercises done that day.
  */
 @Entity
 @Table(
@@ -34,10 +40,15 @@ class UserDailyAnalytics(
     val firstDone: LocalDateTime?,
     val lastDone: LocalDateTime?,
     val spentTime: Long?,
+    @Column(name = "execution_time")
+    val executionTime: Long?,
     val doneExercises: Int?,
+    @Column(name = "unique_done_exercises")
+    val uniqueDoneExercises: Int?,
 ) {
     override fun toString(): String = "UserDailyAnalytics(id=$id, day=$day, userId=$userId, roleName='$roleName', " +
-        "firstDone=$firstDone, lastDone=$lastDone, spentTime=$spentTime, doneExercises=$doneExercises)"
+        "firstDone=$firstDone, lastDone=$lastDone, spentTime=$spentTime, executionTime=$executionTime, " +
+        "doneExercises=$doneExercises, uniqueDoneExercises=$uniqueDoneExercises)"
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

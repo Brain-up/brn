@@ -23,6 +23,23 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
         @Param("userId") userId: Long,
     ): List<Exercise>
 
+    /**
+     * Number of times the user completed this exercise within [from, to) (a single calendar day).
+     * Used by the precompute increment to tell a first-today completion (count == 1, just this one)
+     * from a repeat, so unique_done_exercises grows only on the first.
+     */
+    @Query(
+        "SELECT COUNT(s) FROM StudyHistory s " +
+            " WHERE s.userAccount.id = :userId AND s.exercise.id = :exerciseId " +
+            " AND s.startTime >= :from AND s.startTime < :to",
+    )
+    fun countExerciseCompletionsInRange(
+        @Param("userId") userId: Long,
+        @Param("exerciseId") exerciseId: Long,
+        @Param("from") from: LocalDateTime,
+        @Param("to") to: LocalDateTime,
+    ): Long
+
     @Query(
         "SELECT DISTINCT s.exercise.id FROM StudyHistory s " +
             " WHERE s.exercise.subGroup.id = :subGroupId and s.userAccount.id = :userId",
