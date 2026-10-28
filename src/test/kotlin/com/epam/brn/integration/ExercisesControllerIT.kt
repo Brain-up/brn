@@ -145,6 +145,7 @@ class ExercisesControllerIT : BaseIT() {
     }
 
     @Test
+    @WithMockUser(username = "admin", roles = [BrnRole.ADMIN])
     fun `test change active status`() {
         val existingExercise = insertExercise("ExerciseNameTest")
         // WHEN

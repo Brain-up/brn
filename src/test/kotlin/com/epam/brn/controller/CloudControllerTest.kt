@@ -15,10 +15,14 @@ import org.apache.http.HttpStatus
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.http.MediaType
+import org.springframework.mock.web.MockMultipartFile
 import org.springframework.security.test.context.support.WithMockUser
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.web.multipart.MultipartFile
+
+private const val WORD = "fileName"
 
 @ExtendWith(MockKExtension::class)
 @DisplayName("CloudControllerTest test using MockK")
@@ -138,9 +142,20 @@ internal class CloudControllerTest : BaseIT() {
     @Test
     @WithMockUser(username = "user1@default.ru", roles = [BrnRole.USER])
     fun `should deny access for non admin and non specialist`() {
+        val fileName = "$WORD.png"
+        val fileData = "some text"
+        val file =
+            MockMultipartFile(
+                "file",
+                fileName,
+                MediaType.APPLICATION_OCTET_STREAM_VALUE,
+                fileData.toByteArray(),
+            )
         mockMvc
             .perform(
-                post("/cloud/upload/picture"),
+                MockMvcRequestBuilders
+                    .multipart("/cloud/upload/picture")
+                    .file(file),
             ).andExpect(status().isForbidden)
     }
 }
