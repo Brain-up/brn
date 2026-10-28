@@ -1,5 +1,7 @@
 package com.epam.brn.controller
 
+import com.epam.brn.enums.BrnRole
+import com.epam.brn.integration.BaseIT
 import com.epam.brn.service.CloudUploadService
 import com.epam.brn.service.cloud.CloudService
 import io.kotest.matchers.shouldBe
@@ -13,11 +15,14 @@ import org.apache.http.HttpStatus
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.security.test.context.support.WithMockUser
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.web.multipart.MultipartFile
 
 @ExtendWith(MockKExtension::class)
 @DisplayName("CloudControllerTest test using MockK")
-internal class CloudControllerTest {
+internal class CloudControllerTest : BaseIT() {
     @InjectMockKs
     private lateinit var cloudController: CloudController
 
@@ -115,7 +120,12 @@ internal class CloudControllerTest {
         val fileName = "file"
         every { multipartFile.originalFilename } returns fileNameWithExtension
         every { multipartFile.inputStream } returns data
-        every { cloudUploadService.uploadContributorPicture(multipartFile, fileName) } returns "contributor/$fileNameWithExtension"
+        every {
+            cloudUploadService.uploadContributorPicture(
+                multipartFile,
+                fileName,
+            )
+        } returns "contributor/$fileNameWithExtension"
 
         // WHEN
         val response = cloudController.uploadContributorPicture(multipartFile, fileName)
@@ -123,5 +133,14 @@ internal class CloudControllerTest {
         // THEN
         response.statusCode.value() shouldBe HttpStatus.SC_CREATED
         verify(exactly = 1) { cloudUploadService.uploadContributorPicture(multipartFile, any()) }
+    }
+
+    @Test
+    @WithMockUser(username = "user1@default.ru", roles = [BrnRole.USER])
+    fun `should deny access for non admin and non specialist`() {
+        mockMvc
+            .perform(
+                post("/cloud/upload/picture"),
+            ).andExpect(status().isForbidden)
     }
 }

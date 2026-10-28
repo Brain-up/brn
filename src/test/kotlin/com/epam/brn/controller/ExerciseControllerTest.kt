@@ -9,6 +9,8 @@ import com.epam.brn.dto.request.exercise.Phrases
 import com.epam.brn.dto.request.exercise.SetOfWords
 import com.epam.brn.dto.response.ExerciseWithWordsResponse
 import com.epam.brn.enums.BrnLocale
+import com.epam.brn.enums.BrnRole
+import com.epam.brn.integration.BaseIT
 import com.epam.brn.service.ExerciseService
 import com.epam.brn.service.RoleService
 import com.epam.brn.upload.CsvUploadService
@@ -25,10 +27,13 @@ import io.mockk.verify
 import org.apache.http.HttpStatus
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.security.test.context.support.WithMockUser
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.web.multipart.MultipartFile
 
 @ExtendWith(MockKExtension::class)
-internal class ExerciseControllerTest {
+internal class ExerciseControllerTest : BaseIT() {
     @InjectMockKs
     lateinit var exerciseController: ExerciseController
 
@@ -190,5 +195,14 @@ internal class ExerciseControllerTest {
         verify(exactly = 1) { exerciseService.findExercisesByWord(word) }
         exercises.statusCodeValue shouldBe HttpStatus.SC_OK
         exercises.body!!.data shouldBe listOf(exerciseResponse)
+    }
+
+    @Test
+    @WithMockUser(username = "user1@default.ru", roles = [BrnRole.USER])
+    fun `should deny access for non admin and non specialist`() {
+        mockMvc
+            .perform(
+                put("/exercises/1/active/true"),
+            ).andExpect(status().isForbidden)
     }
 }
