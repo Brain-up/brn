@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.nio.charset.StandardCharsets
@@ -244,6 +245,15 @@ class SubGroupControllerIT : BaseIT() {
                     containsString("Can not update subGroup because subGroup is not found by this id."),
                 ),
             )
+    }
+
+    @Test
+    @WithMockUser(username = "user1@default.ru", roles = [BrnRole.USER])
+    fun `should deny access for non admin`() {
+        mockMvc
+            .perform(
+                delete("/subgroups/1"),
+            ).andExpect(status().isForbidden)
     }
 
     private fun insertSeries(): Series {

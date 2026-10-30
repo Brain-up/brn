@@ -3,8 +3,6 @@ package com.epam.brn.controller
 import com.epam.brn.dto.request.SubGroupChangeRequest
 import com.epam.brn.dto.request.SubGroupRequest
 import com.epam.brn.dto.response.SubGroupResponse
-import com.epam.brn.enums.BrnRole
-import com.epam.brn.integration.BaseIT
 import com.epam.brn.service.SubGroupService
 import io.kotest.matchers.shouldBe
 import io.mockk.every
@@ -17,12 +15,9 @@ import io.mockk.verify
 import org.apache.http.HttpStatus
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.springframework.security.test.context.support.WithMockUser
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @ExtendWith(MockKExtension::class)
-internal class SubGroupControllerTest : BaseIT() {
+internal class SubGroupControllerTest {
     @InjectMockKs
     private lateinit var subGroupController: SubGroupController
 
@@ -107,14 +102,5 @@ internal class SubGroupControllerTest : BaseIT() {
         // THEN
         actual.statusCode.value() shouldBe HttpStatus.SC_OK
         actual.body!!.data shouldBe updatedSubGroup
-    }
-
-    @Test
-    @WithMockUser(username = "user1@default.ru", roles = [BrnRole.USER])
-    fun `should deny access for non admin`() {
-        mockMvc
-            .perform(
-                delete("/subgroups/1"),
-            ).andExpect(status().isForbidden)
     }
 }

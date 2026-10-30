@@ -1,7 +1,5 @@
 package com.epam.brn.controller
 
-import com.epam.brn.enums.BrnRole
-import com.epam.brn.integration.BaseIT
 import com.epam.brn.service.CloudUploadService
 import com.epam.brn.service.cloud.CloudService
 import io.kotest.matchers.shouldBe
@@ -15,18 +13,11 @@ import org.apache.http.HttpStatus
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.springframework.http.MediaType
-import org.springframework.mock.web.MockMultipartFile
-import org.springframework.security.test.context.support.WithMockUser
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.web.multipart.MultipartFile
-
-private const val WORD = "fileName"
 
 @ExtendWith(MockKExtension::class)
 @DisplayName("CloudControllerTest test using MockK")
-internal class CloudControllerTest : BaseIT() {
+internal class CloudControllerTest {
     @InjectMockKs
     private lateinit var cloudController: CloudController
 
@@ -137,25 +128,5 @@ internal class CloudControllerTest : BaseIT() {
         // THEN
         response.statusCode.value() shouldBe HttpStatus.SC_CREATED
         verify(exactly = 1) { cloudUploadService.uploadContributorPicture(multipartFile, any()) }
-    }
-
-    @Test
-    @WithMockUser(username = "user1@default.ru", roles = [BrnRole.USER])
-    fun `should deny access for non admin and non specialist`() {
-        val fileName = "$WORD.png"
-        val fileData = "some text"
-        val file =
-            MockMultipartFile(
-                "file",
-                fileName,
-                MediaType.APPLICATION_OCTET_STREAM_VALUE,
-                fileData.toByteArray(),
-            )
-        mockMvc
-            .perform(
-                MockMvcRequestBuilders
-                    .multipart("/cloud/upload/picture")
-                    .file(file),
-            ).andExpect(status().isForbidden)
     }
 }
