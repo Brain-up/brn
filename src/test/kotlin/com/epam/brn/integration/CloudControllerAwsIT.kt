@@ -17,6 +17,7 @@ import org.springframework.test.context.TestPropertySource
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 private const val WORD = "fileName"
 
@@ -138,5 +139,25 @@ class CloudControllerAwsIT {
         // THEN
         resultAction
             .andExpect(MockMvcResultMatchers.status().is4xxClientError)
+    }
+
+    @Test
+    @WithMockUser(username = "user1@default.ru", roles = [BrnRole.USER])
+    fun `should deny access for non admin and non specialist`() {
+        val fileName = "$WORD.png"
+        val fileData = "some text"
+        val file =
+            MockMultipartFile(
+                "file",
+                fileName,
+                MediaType.APPLICATION_OCTET_STREAM_VALUE,
+                fileData.toByteArray(),
+            )
+        mockMvc
+            .perform(
+                MockMvcRequestBuilders
+                    .multipart("/cloud/upload/picture")
+                    .file(file),
+            ).andExpect(status().isForbidden)
     }
 }
