@@ -11,16 +11,9 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 
 /**
- * A precomputed per-day delta of a user's study analytics (filled by [com.epam.brn.job.UserDailyAnalyticsJob]).
- * One row per user/[day] holding that day's activity only; period figures are SUM/COUNT roll-ups over
- * these rows for trend reporting. A reader that needs a role cohort filters the user set by role and
- * aggregates by [userId] (study_history rows carry no role, and role here is just a user property).
- *
- * [spentTime] is in **seconds** (summed from `study_history.spent_time_in_seconds`, i.e. end-start).
- * [executionTime] is also in **seconds** (summed from `study_history.execution_seconds`, the active
- * execution time the week/month/year statistics graphs sum).
- * [doneExercises] counts **all** completions that day (repeats included); [uniqueDoneExercises] counts
- * the distinct exercises done that day.
+ * Precomputed per-day study analytics, one row per user/[day]; periods are SUM/COUNT roll-ups.
+ * [spentTime] and [executionTime] are in seconds. [doneExercises] counts all completions,
+ * [uniqueDoneExercises] distinct exercises.
  */
 @Entity
 @Table(

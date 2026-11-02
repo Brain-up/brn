@@ -13,11 +13,8 @@ import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 
 /**
- * Exercises the authoritative historical backfill (V220261013_2609.sql, which supersedes the
- * original V220261011 by recomputing every finalized day with the corrected shape) against seeded
- * multi-day study_history. The migration itself runs (idempotently) at startup via Flyway, so here
- * we load its SQL from the classpath and run it after seeding, asserting the per-day grouping and
- * the `start_time < current_date` boundary (today is excluded).
+ * Re-runs the backfill migration (V220261013_2609.sql) after seeding study_history and checks
+ * per-day grouping and that today is excluded.
  */
 class UserDailyAnalyticsBackfillIT : BaseIT() {
     @Autowired

@@ -7,13 +7,8 @@ import org.springframework.transaction.event.TransactionPhase
 import org.springframework.transaction.event.TransactionalEventListener
 
 /**
- * Keeps the precomputed-analytics store fresh on the completion path: on [ExerciseCompletedEvent] it
- * hands the completion to [UserAnalyticsUpdater] to be applied asynchronously.
- *
- * Runs only when `brn.user.analytics.precompute.enabled=true`. Fires AFTER_COMMIT so only durably
- * committed history is counted. The actual upserts run `@Async` in [UserAnalyticsUpdater] so exercise
- * completion is never delayed; a dropped increment (restart, executor rejection) is tolerated — the
- * nightly reconcile recomputes each affected day from `study_history` and overwrites any drift.
+ * After commit, passes [ExerciseCompletedEvent] to the async [UserAnalyticsUpdater].
+ * Dropped increments are healed by the nightly reconcile.
  */
 @Component
 @ConditionalOnProperty(name = ["brn.user.analytics.precompute.enabled"], havingValue = "true")

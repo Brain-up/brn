@@ -26,7 +26,7 @@ class UserDailyAnalyticsJobTest {
         // WHEN
         userDailyAnalyticsJob.fillUserDailyAnalytics()
 
-        // THEN: one delete of the window + one insert of the recomputed deltas, both parameterised by the window size
+        // THEN: delete + insert, both parameterised by the window size
         verify(exactly = 2) { jdbcTemplate.update(any<String>(), reconcileDays) }
     }
 

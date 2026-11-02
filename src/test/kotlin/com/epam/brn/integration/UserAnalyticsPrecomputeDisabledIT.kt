@@ -15,11 +15,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 
-/**
- * Regression guard for the flag off: with `brn.user.analytics.precompute.enabled=false` the whole
- * precompute path is gated out (no listener/updater/job beans), so completing an exercise behaves
- * exactly as before — the completion succeeds and nothing is written to user_daily_analytics.
- */
+/** With precompute disabled, completing an exercise works and writes nothing to user_daily_analytics. */
 @WithMockUser(username = "flagoff@test.test", roles = [BrnRole.USER])
 @TestPropertySource(properties = ["brn.user.analytics.precompute.enabled=false"])
 class UserAnalyticsPrecomputeDisabledIT : BaseIT() {

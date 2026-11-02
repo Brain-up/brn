@@ -15,12 +15,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 
-/**
- * End-to-end check of the incremental freshness path with the flag on (default in test props):
- * completing an exercise publishes an event that, after commit and off the request thread, folds the
- * completion into the current day's delta. Asserts the async upsert actually lands (polled, since it
- * runs on a separate thread) with the completion's spent/execution time and counts.
- */
+/** E2E: completing an exercise asynchronously upserts the current-day analytics row. */
 @WithMockUser(username = "e2e@test.test", roles = [BrnRole.USER])
 class UserAnalyticsIncrementalE2EIT : BaseIT() {
     @Autowired

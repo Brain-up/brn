@@ -17,17 +17,8 @@ import java.time.YearMonth
 import java.time.temporal.ChronoUnit
 
 /**
- * Validation gate for serving the period statistics graphs from the precompute store (phase 2 of
- * #2609). Proves that `user_daily_analytics` carries exactly what `UserDayStatisticsService` and
- * `UserMonthStatisticsService` derive from raw `study_history`, so a later change can switch those
- * read paths onto the store without altering the output:
- *   - day point  = SUM(execution_seconds) per day, dated at the day's earliest start  -> execution_time / first_done
- *   - month point = SUM(execution_seconds), COUNT(distinct day), earliest start        -> SUM(execution_time) / COUNT(*) / MIN(first_done)
- * `progress` is a pure function of those drivers (a threshold over the per-day execution sums and the
- * active-day set), so equal drivers imply equal progress; we assert the drivers the store holds.
- *
- * The reconcile window is widened so the nightly reconciler populates the whole seeded range (it
- * normally only heals the trailing week and never today — all seeded days are strictly before today).
+ * Proves user_daily_analytics reproduces the day/month statistics drivers computed from study_history,
+ * so those graphs can later be served from the store. Reconcile window is widened to cover all seeded days.
  */
 @TestPropertySource(properties = ["brn.user.analytics.precompute.reconcile-days=400"])
 class UserDailyAnalyticsPeriodEquivalenceIT : BaseIT() {

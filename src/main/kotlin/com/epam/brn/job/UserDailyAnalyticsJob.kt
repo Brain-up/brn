@@ -9,17 +9,9 @@ import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 
 /**
- * Reconciles per-user per-day study-analytics deltas in the user_daily_analytics table against the
- * raw study_history.
- *
- * Runs at midnight over a trailing window of recently-finalized days — `[current_date - reconcileDays,
- * current_date)` — recomputing each day's delta from study_history and overwriting the stored rows, so
- * any drift from missed or duplicated incremental updates self-heals (not just yesterday's). The current
- * day is left untouched; it is kept fresh incrementally and finalized by the next night's run. Each row
- * holds a single day's activity (a delta), so weekly/monthly/yearly figures are plain SUM/COUNT roll-ups.
- * Runs only when `brn.user.analytics.precompute.enabled=true`. It does NOT back the live /admin/users
- * endpoint (that stays realtime, see #2971). Re-running is idempotent: the window's rows are deleted and
- * recomputed from study_history, so any number of runs yields the same result.
+ * Nightly, idempotent reconcile of user_daily_analytics: recomputes the last `reconcileDays` days
+ * (excluding today) from study_history, healing any drift from incremental updates.
+ * Not used by /admin/users (stays realtime, see #2971).
  */
 @Component
 @ConditionalOnProperty(name = ["brn.user.analytics.precompute.enabled"], havingValue = "true")

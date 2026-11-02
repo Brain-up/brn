@@ -2,12 +2,7 @@ package com.epam.brn.event
 
 import java.time.LocalDateTime
 
-/**
- * Published after a [com.epam.brn.model.StudyHistory] row is persisted (an exercise is completed).
- * Carries just what the precomputed-analytics store needs to fold the completion into the user's
- * current-day delta. Consumed off the request thread, after commit, by
- * [com.epam.brn.service.analytics.UserAnalyticsUpdateListener].
- */
+/** Published when an exercise is completed; consumed after commit by the analytics listener. */
 data class ExerciseCompletedEvent(
     val userId: Long,
     val exerciseId: Long,

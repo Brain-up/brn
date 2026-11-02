@@ -8,10 +8,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import java.time.LocalDate
 
-/**
- * Covers the incremental after-commit upsert (the `ON CONFLICT` increment) that keeps the
- * precompute store fresh, independent of the event/async plumbing.
- */
+/** Covers the `ON CONFLICT` daily upsert, independent of the event/async plumbing. */
 class UserAnalyticsUpsertIT : BaseIT() {
     @Autowired
     lateinit var userDailyAnalyticsRepository: UserDailyAnalyticsRepository

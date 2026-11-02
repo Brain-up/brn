@@ -24,9 +24,7 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
     ): List<Exercise>
 
     /**
-     * Number of times the user completed this exercise within [from, to) (a single calendar day).
-     * Used by the precompute increment to tell a first-today completion (count == 1, just this one)
-     * from a repeat, so unique_done_exercises grows only on the first.
+     * Completions of this exercise by the user within [from, to); used to detect a first-today completion.
      */
     @Query(
         "SELECT COUNT(s) FROM StudyHistory s " +

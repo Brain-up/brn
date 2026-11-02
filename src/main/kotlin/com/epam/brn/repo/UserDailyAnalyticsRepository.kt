@@ -15,15 +15,8 @@ interface UserDailyAnalyticsRepository : JpaRepository<UserDailyAnalytics, Long>
     fun findByUserIdOrderByDay(userId: Long): List<UserDailyAnalytics>
 
     /**
-     * Atomically folds a single completed exercise into that user's per-day delta (one row per user/day,
-     * matching the nightly reconcile grain). Inserts the day row on first activity, otherwise increments
-     * the counts and widens [first_done]/[last_done]. A single `ON CONFLICT` statement so concurrent
-     * completions for the same user/day cannot lose updates.
-     *
-     * [doneExercises] always grows by 1 (every completion counts, repeats included). [uniqueDoneExercises]
-     * grows by [uniqueIncrement] (1 only when this is the first completion of this exercise that day, else
-     * 0) — the caller decides, since distinctness can't be derived from the upsert alone; the nightly
-     * reconcile recomputes it from raw history regardless.
+     * Atomic upsert (`ON CONFLICT`) of one completion into the user's day row.
+     * done_exercises grows by 1; unique_done_exercises by [uniqueIncrement] (decided by the caller).
      */
     @Modifying
     @Transactional

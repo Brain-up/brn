@@ -13,10 +13,8 @@ import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 
 /**
- * Exercises the corrective backfill migration (V220261013_2609.sql): it recomputes every finalized
- * day with the corrected semantics — done_exercises = ALL completions (repeats included),
- * unique_done_exercises = distinct exercises, execution_time = sum(execution_seconds). The migration
- * ran (idempotently) at startup via Flyway; here we seed study_history and run its SQL afterwards.
+ * Re-runs the backfill migration (V220261013_2609.sql) and checks its semantics: done = all completions,
+ * unique = distinct exercises, execution_time = sum(execution_seconds).
  */
 class UserDailyAnalyticsCorrectiveBackfillIT : BaseIT() {
     @Autowired

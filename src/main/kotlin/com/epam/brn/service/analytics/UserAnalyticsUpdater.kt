@@ -10,17 +10,8 @@ import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 
 /**
- * Applies a single completed exercise to the precompute store: folds it into that user's current-day
- * delta via an atomic upsert. Runs `@Async` (off the request thread) so exercise completion is never
- * delayed; invoked by [UserAnalyticsUpdateListener] after the study-history commit.
- *
- * All-time ("lifetime") figures are intentionally not stored here — they derive from the daily deltas
- * (`SUM`/`MIN`/`MAX` over a user's rows) the same way period roll-ups do, materialized only if a reader
- * ever measures a need.
- *
- * Kept separate from the event listener on purpose: `@Async` must not sit on a
- * `@TransactionalEventListener` method (Spring's `RestrictedTransactionalEventListenerFactory`
- * forbids it), so the listener delegates here.
+ * Asynchronously folds a completed exercise into the user's current-day row.
+ * Separate from the listener because Spring forbids `@Async` on `@TransactionalEventListener`.
  */
 @Component
 @ConditionalOnProperty(name = ["brn.user.analytics.precompute.enabled"], havingValue = "true")
@@ -34,8 +25,7 @@ class UserAnalyticsUpdater(
     @Transactional
     fun apply(event: ExerciseCompletedEvent) {
         val day = event.activityTime.toLocalDate()
-        // This completion is already committed, so a count of 1 means it is the first (and only) time
-        // the user did this exercise today -> it adds a distinct exercise; >1 means it is a repeat.
+        // Already committed, so count == 1 means first completion today (a new distinct exercise).
         val completionsToday =
             studyHistoryRepository.countExerciseCompletionsInRange(
                 event.userId,

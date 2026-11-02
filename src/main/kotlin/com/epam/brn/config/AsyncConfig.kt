@@ -9,10 +9,8 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor
 import java.util.concurrent.Executor
 
 /**
- * Enables `@Async` execution for the precomputed-analytics listener with a bounded pool.
- * Loaded only when the precompute feature is enabled, so no executor exists while the feature is off.
- * The rejection handler logs dropped increments rather than failing or blocking the caller — the
- * nightly reconcile heals any resulting drift.
+ * Bounded `@Async` pool for analytics increments (only when precompute is enabled).
+ * Rejected tasks are logged and dropped; the nightly reconcile heals the drift.
  */
 @Configuration
 @EnableAsync
