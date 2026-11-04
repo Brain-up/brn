@@ -23,21 +23,6 @@ interface StudyHistoryRepository : CrudRepository<StudyHistory, Long> {
         @Param("userId") userId: Long,
     ): List<Exercise>
 
-    /**
-     * Completions of this exercise by the user within [from, to); used to detect a first-today completion.
-     */
-    @Query(
-        "SELECT COUNT(s) FROM StudyHistory s " +
-            " WHERE s.userAccount.id = :userId AND s.exercise.id = :exerciseId " +
-            " AND s.startTime >= :from AND s.startTime < :to",
-    )
-    fun countExerciseCompletionsInRange(
-        @Param("userId") userId: Long,
-        @Param("exerciseId") exerciseId: Long,
-        @Param("from") from: LocalDateTime,
-        @Param("to") to: LocalDateTime,
-    ): Long
-
     @Query(
         "SELECT DISTINCT s.exercise.id FROM StudyHistory s " +
             " WHERE s.exercise.subGroup.id = :subGroupId and s.userAccount.id = :userId",
