@@ -4,6 +4,7 @@ import com.epam.brn.dto.StudyHistoryDto
 import com.epam.brn.dto.UserAccountDto
 import com.epam.brn.dto.statistics.UserDailyDetailStatisticsDto
 import com.epam.brn.enums.BrnGender
+import com.epam.brn.event.ExerciseCompletedEvent
 import com.epam.brn.model.Exercise
 import com.epam.brn.model.StudyHistory
 import com.epam.brn.model.UserAccount
@@ -15,8 +16,12 @@ import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.impl.annotations.SpyK
 import io.mockk.junit5.MockKExtension
+import io.mockk.just
 import io.mockk.mockk
+import io.mockk.runs
+import io.mockk.slot
 import io.mockk.verify
+import org.springframework.context.ApplicationEventPublisher
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.time.LocalDateTime
@@ -57,6 +62,9 @@ internal class StudyHistoryServiceTest {
 
     @MockK
     lateinit var exerciseSuccessCalculator: ExerciseSuccessCalculator
+
+    @MockK
+    lateinit var eventPublisher: ApplicationEventPublisher
 
     @Test
     fun `should return today timer`() {
@@ -115,6 +123,7 @@ internal class StudyHistoryServiceTest {
 
         every { exerciseRepositoryMock.findById(2L) } returns Optional.of(exercise)
         every { studyHistoryRepositoryMock.save(studyHistoryNew) } returns studyHistorySaved
+        every { eventPublisher.publishEvent(ofType(ExerciseCompletedEvent::class)) } just runs
 
         // WHEN
         val result = studyHistoryService.save(studyHistoryDtoMock)
@@ -122,6 +131,65 @@ internal class StudyHistoryServiceTest {
         // THEN
         verify(exactly = 1) { studyHistoryRepositoryMock.save(ofType(StudyHistory::class)) }
         result shouldBe studyHistorySaved.toDto()
+    }
+
+    @Test
+    fun `should publish ExerciseCompletedEvent with the saved history values on save`() {
+        // GIVEN
+        val now = LocalDateTime.now()
+        val userAccount =
+            UserAccount(
+                id = 7L,
+                fullName = "testUserFirstName",
+                gender = BrnGender.MALE.toString(),
+                bornYear = 2000,
+                email = "test@gmail.com",
+                active = true,
+            )
+        val exercise = Exercise(id = 1L)
+        val studyHistoryNew =
+            StudyHistory(
+                userAccount = userAccount,
+                exercise = exercise,
+                startTime = now,
+                executionSeconds = 122,
+                tasksCount = 12,
+                wrongAnswers = 3,
+                replaysCount = 3,
+            )
+        val studyHistorySaved =
+            StudyHistory(
+                id = 1L,
+                userAccount = userAccount,
+                exercise = exercise,
+                startTime = now,
+                spentTimeInSeconds = 99L,
+                executionSeconds = 122,
+                tasksCount = 12,
+                wrongAnswers = 3,
+                replaysCount = 3,
+            )
+        every { userAccountServiceMock.getCurrentUser() } returns userAccount
+        every { studyHistoryDtoMock.toEntity(userAccount, exercise) } returns studyHistoryNew
+        every { studyHistoryDtoMock.exerciseId } returns 2L
+        every { exerciseRepositoryMock.findById(2L) } returns Optional.of(exercise)
+        every { studyHistoryRepositoryMock.save(studyHistoryNew) } returns studyHistorySaved
+        val eventSlot = slot<ExerciseCompletedEvent>()
+        every { eventPublisher.publishEvent(capture(eventSlot)) } just runs
+
+        // WHEN
+        studyHistoryService.save(studyHistoryDtoMock)
+
+        // THEN
+        verify(exactly = 1) { eventPublisher.publishEvent(ofType(ExerciseCompletedEvent::class)) }
+        eventSlot.captured shouldBe
+            ExerciseCompletedEvent(
+                userId = 7L,
+                exerciseId = 1L,
+                activityTime = now,
+                spentSeconds = 99L,
+                executionSeconds = 122L,
+            )
     }
 
     @Test
