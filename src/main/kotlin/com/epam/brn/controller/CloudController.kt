@@ -63,6 +63,7 @@ class CloudController(
 
     @PostMapping(value = ["/upload/picture"], consumes = [ MediaType.MULTIPART_FORM_DATA_VALUE ])
     @Operation(summary = "Load unverified picture file to cloud storage")
+    @RolesAllowed(BrnRole.ADMIN, BrnRole.SPECIALIST)
     fun loadUnverifiedPicture(
         @RequestParam(value = "file") multipartFile: MultipartFile,
     ): ResponseEntity<BrnResponse<Any>> {

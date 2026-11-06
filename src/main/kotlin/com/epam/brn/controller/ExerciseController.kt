@@ -94,6 +94,7 @@ class ExerciseController(
 
     @PutMapping(value = ["/{exerciseId}/active/{active}"])
     @Operation(summary = "Update active status of the exercise")
+    @RolesAllowed(BrnRole.ADMIN, BrnRole.SPECIALIST)
     fun updateExerciseStatus(
         @PathVariable("exerciseId") exerciseId: Long,
         @PathVariable("active") active: Boolean,

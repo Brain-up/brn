@@ -115,7 +115,12 @@ internal class CloudControllerTest {
         val fileName = "file"
         every { multipartFile.originalFilename } returns fileNameWithExtension
         every { multipartFile.inputStream } returns data
-        every { cloudUploadService.uploadContributorPicture(multipartFile, fileName) } returns "contributor/$fileNameWithExtension"
+        every {
+            cloudUploadService.uploadContributorPicture(
+                multipartFile,
+                fileName,
+            )
+        } returns "contributor/$fileNameWithExtension"
 
         // WHEN
         val response = cloudController.uploadContributorPicture(multipartFile, fileName)

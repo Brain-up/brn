@@ -29,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
@@ -145,6 +146,7 @@ class ExercisesControllerIT : BaseIT() {
     }
 
     @Test
+    @WithMockUser(username = "admin", roles = [BrnRole.ADMIN])
     fun `test change active status`() {
         val existingExercise = insertExercise("ExerciseNameTest")
         // WHEN
@@ -313,6 +315,15 @@ class ExercisesControllerIT : BaseIT() {
             noiseUrl = "/testNoiseUrl",
         ),
     )
+
+    @Test
+    @WithMockUser(username = "user1@default.ru", roles = [BrnRole.USER])
+    fun `should deny access for non admin and non specialist`() {
+        mockMvc
+            .perform(
+                put("/exercises/1/active/true"),
+            ).andExpect(status().isForbidden)
+    }
 
     fun insertExercise(exerciseName: String): Exercise = exerciseRepository.save(Exercise(name = exerciseName))
 }

@@ -50,6 +50,7 @@ class SubGroupController(
 
     @DeleteMapping("{subGroupId}")
     @Operation(summary = "Delete subgroup by id without exercises")
+    @RolesAllowed(BrnRole.ADMIN)
     fun deleteSubGroupById(
         @PathVariable(value = "subGroupId") subGroupId: Long,
     ): ResponseEntity<BrnResponse<Unit>> {
