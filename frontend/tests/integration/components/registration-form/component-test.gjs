@@ -11,8 +11,8 @@ function getDate(num) {
   return date.getFullYear() + num;
 }
 
-async function fillAndSubmit() {
-  await fillIn('[name="firstName"]', 'b');
+async function fillAndSubmit(name = 'b c') {
+  await fillIn('[name="firstName"]', name);
   await fillIn('[name="email"]', 'c@name.com');
   await fillIn('[name="password"]', 'Test1234');
   await fillIn('[name="repeatPassword"]', 'Test1234');
@@ -80,6 +80,25 @@ module('Integration | Component | registration-form', function (hooks) {
       'patchUserInfo',
       'loadCurrentUser',
     ]);
+  });
+
+  test('does not register when the last name is missing', async function (assert) {
+    // eslint-disable-next-line ember/no-classic-classes
+    const MockFirebaseAuthenticator = EmberObject.extend({
+      registerUser() {
+        assert.step('registerUser');
+        return Promise.resolve();
+      },
+    });
+
+    this.owner.register('authenticator:firebase', MockFirebaseAuthenticator);
+
+    await render(<template><RegistrationForm /></template>);
+    await fillAndSubmit('b');
+
+    assert.verifySteps([]);
+    assert.dom('[data-test-warning-message="firstName"]').exists();
+    assert.dom('[data-test-submit-form]').exists('user stays on the form');
   });
 
   test('redirects to index only after the profile is patched and reloaded', async function (assert) {

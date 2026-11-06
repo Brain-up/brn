@@ -265,7 +265,7 @@ export default class RegistrationFormComponent extends Component {
       return;
     }
 
-    if (this.errorMessage) {
+    if (this.errorMessage || this.warningName) {
       return;
     }
 
