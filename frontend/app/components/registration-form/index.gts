@@ -179,7 +179,7 @@ export default class RegistrationFormComponent extends Component {
     if (this.firstName === undefined) {
       return false;
     }
-    if (this.firstName.trim().split(' ').length === 1) {
+    if (this.firstName.trim().split(/\s+/).length === 1) {
       return this.intl.t('registration_form.empty_lastname');
     }
     return false;
@@ -265,7 +265,7 @@ export default class RegistrationFormComponent extends Component {
       return;
     }
 
-    if (this.errorMessage) {
+    if (this.errorMessage || this.warningName) {
       return;
     }
 

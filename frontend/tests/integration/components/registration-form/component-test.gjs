@@ -11,8 +11,8 @@ function getDate(num) {
   return date.getFullYear() + num;
 }
 
-async function fillAndSubmit() {
-  await fillIn('[name="firstName"]', 'b');
+async function fillAndSubmit(name = 'b c') {
+  await fillIn('[name="firstName"]', name);
   await fillIn('[name="email"]', 'c@name.com');
   await fillIn('[name="password"]', 'Test1234');
   await fillIn('[name="repeatPassword"]', 'Test1234');
@@ -80,6 +80,74 @@ module('Integration | Component | registration-form', function (hooks) {
       'patchUserInfo',
       'loadCurrentUser',
     ]);
+  });
+
+  test('does not register when the last name is missing', async function (assert) {
+    // eslint-disable-next-line ember/no-classic-classes
+    const MockFirebaseAuthenticator = EmberObject.extend({
+      registerUser() {
+        assert.step('registerUser');
+        return Promise.resolve();
+      },
+    });
+
+    this.owner.register('authenticator:firebase', MockFirebaseAuthenticator);
+
+    await render(<template><RegistrationForm /></template>);
+    await fillAndSubmit('b');
+
+    assert.verifySteps([]);
+    assert.dom('[data-test-warning-message="firstName"]').exists();
+    assert.dom('[data-test-submit-form]').exists('user stays on the form');
+  });
+
+  // Records the registerUser call, then fails it so the flow stops there; the
+  // rest of the flow after registerUser is covered by the tests above.
+  function stubRegisterUser(owner, assert) {
+    // eslint-disable-next-line ember/no-classic-classes
+    const MockFirebaseAuthenticator = EmberObject.extend({
+      registerUser() {
+        assert.step('registerUser');
+        return Promise.reject(new Error('stop after registerUser'));
+      },
+    });
+    owner.register('authenticator:firebase', MockFirebaseAuthenticator);
+  }
+
+  test('does not register when the name only has a trailing space', async function (assert) {
+    stubRegisterUser(this.owner, assert);
+
+    await render(<template><RegistrationForm /></template>);
+    await fillAndSubmit('b ');
+
+    assert.verifySteps([]);
+    assert.dom('[data-test-warning-message="firstName"]').exists();
+  });
+
+  test('registers when first and last name are split by a non-breaking space or tab', async function (assert) {
+    stubRegisterUser(this.owner, assert);
+
+    await render(<template><RegistrationForm /></template>);
+    await fillAndSubmit('b\u00a0c');
+    await fillIn('[name="firstName"]', 'b\tc');
+    await click('[data-test-submit-form]');
+
+    assert.verifySteps(['registerUser', 'registerUser']);
+    assert.dom('[data-test-warning-message="firstName"]').doesNotExist();
+  });
+
+  test('registers after the last name is added to a blocked submit', async function (assert) {
+    stubRegisterUser(this.owner, assert);
+
+    await render(<template><RegistrationForm /></template>);
+    await fillAndSubmit('b');
+    assert.verifySteps([]);
+
+    await fillIn('[name="firstName"]', 'b c');
+    await click('[data-test-submit-form]');
+
+    assert.verifySteps(['registerUser']);
+    assert.dom('[data-test-warning-message="firstName"]').doesNotExist();
   });
 
   test('redirects to index only after the profile is patched and reloaded', async function (assert) {
