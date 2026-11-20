@@ -3,7 +3,6 @@ import Component from '@glimmer/component';
 import type { Exercise } from 'brn/schemas/exercise';
 import { LinkTo } from '@ember/routing';
 
-import { concat } from '@ember/helper';
 import { t } from 'ember-intl';
 import UiIconCheck from 'brn/components/ui/icon/check';
 
@@ -56,6 +55,12 @@ export default class UiExerciseButtonComponent extends Component<UiExerciseButto
     return !this.args.isAvailable;
   }
 
+  get tooltipKey(): string {
+    return this.args.isAvailable
+      ? 'exercise_button.tooltip_available'
+      : 'exercise_button.tooltip_locked';
+  }
+
   get titleClasses() {
     if (this.mode === 'locked') {
       return 'c-exercise-button__title c-exercise-button__title-locked';
@@ -73,7 +78,7 @@ export default class UiExerciseButtonComponent extends Component<UiExerciseButto
       aria-disabled={{unless @isAvailable "true"}}
       @route="group.series.subgroup.exercise"
       @model={{@exercise.id}}
-      title={{concat (t "task_link.exercise") " " @exercise.level}}
+      title={{t this.tooltipKey}}
       ...attributes
     >
       <div class={{this.titleClasses}}>

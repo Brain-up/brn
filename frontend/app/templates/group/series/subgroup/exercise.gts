@@ -15,6 +15,8 @@ import { LinkTo } from '@ember/routing';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import ModalDialog from 'ember-modal-dialog/components/modal-dialog';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
+import ExercisePlaybackHelp from 'brn/components/exercise-playback-help';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import AnswerCorrectnessWidget from 'brn/components/answer-correctness-widget';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import ExerciseStats from 'brn/components/exercise-stats';
@@ -40,6 +42,7 @@ const tpl: TOC<Signature> = <template>
         {{didInsert @controller.startStatsTracking @model}}
         {{willDestroy @controller.stopStatsTracking @model}}
       >
+        <ExercisePlaybackHelp @triggerClass="fixed top-2 right-2 z-10" />
         <div class="fixed" id="modal-close-button">
           <LinkTo @route="group.series.subgroup" title={{t "navigation.come_back"}}>
             <svg

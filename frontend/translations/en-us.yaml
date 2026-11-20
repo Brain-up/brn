@@ -19,6 +19,31 @@ ui:
     confirm: Confirm
     cancel: Cancel
 
+instructions:
+  trigger_label: How to practise
+  trigger_aria: Open instructions — how to practise on the site
+  title: How to practise on the site
+  intro: "Here is a short overview of how a lesson works. It only takes a minute — and then everything will make sense."
+  step_1:
+    heading: 1. Pick a topic and a task
+    body: "Open a section and choose a topic. Inside you will see a list of tasks. Some of them are already open and can be clicked, others are still locked: they unlock once you complete the task before them.<br><br>When you finish a task successfully, a green check appears next to it and the next task becomes available. If the result is still low, come back and try again — your brain learns the sounds faster with a few repeats."
+  step_2:
+    heading: 2. Open a task
+    body: "Click an available task. You will see a screen with pictures and words or phrases, and at the bottom three steps of the lesson: <strong>Listen</strong>, <strong>Interact</strong> and <strong>Solve</strong>. You go through them one after another."
+  step_3:
+    heading: 3. Go through the three steps
+    body: "The <strong>Listen</strong> step starts by itself. The speaker will say every word or phrase in the task — just listen carefully.<br><br>The <strong>Interact</strong> step begins automatically after the first one. Tap the pictures to hear the words again, as many times as you need. Once you have listened to all of them, the step ends on its own.<br><br>The <strong>Solve</strong> step you start yourself — with the <strong>Solve</strong> button at the bottom. Press it when you feel ready."
+  step_4:
+    heading: 4. Listen and answer
+    body: "On the <strong>Solve</strong> step the speaker repeats the words and phrases in random order. As soon as you recognise one, tap the matching picture — if the answer is right, a green check appears in its corner and the speaker moves on.<br><br>If you did not catch it, press <strong>Listen one more time</strong> at the bottom of the screen. That is not a mistake — you are meant to use it.<br><br>When the task is finished, a results window appears. Press <strong>Continue</strong> — and the next task will open."
+  playback_title: How the three steps work
+  playback_body: "The <strong>Listen</strong> step starts by itself. <strong>Interact</strong> begins right after — tap the pictures to hear the words again. Start <strong>Solve</strong> yourself with the <strong>Solve</strong> button at the bottom, when you feel ready. Then listen to the speaker and tap the matching picture. If you did not catch a word, press <strong>Listen one more time</strong>."
+  close: Got it
+
+exercise_button:
+  tooltip_available: Click to start this task
+  tooltip_locked: This task is not available yet. It will open once you finish the previous one.
+
 login:
   title: Login
 
