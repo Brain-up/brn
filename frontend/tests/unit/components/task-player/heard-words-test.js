@@ -1,5 +1,12 @@
 import { module, test } from 'qunit';
 
+// NOTE: behavioral coverage for the repeat-step replay fix (loop stays alive
+// after every word is heard; fresh-pass reset on re-entry) lives in
+// tests/integration/components/task-player/interact-replay-test.gjs, which
+// drives the REAL TaskPlayerComponent — Glimmer components cannot be
+// constructed manually in unit tests (the constructor asserts on the
+// manager-created args proxy).
+
 module('Unit | Component | task-player | heardWords tracking', function () {
   // Test the heardWords and allOptionsHeard logic by replicating the
   // relevant getters and actions from TaskPlayerComponent.
@@ -178,33 +185,5 @@ module('Unit | Component | task-player | interactModeTask heardWords accumulatio
 
     assert.strictEqual(result.newHeardWords.size, 1, 'heardWords size unchanged after duplicate');
     assert.false(result.allOptionsHeard, 'allOptionsHeard still false after duplicate');
-  });
-});
-
-module('Unit | Component | task-player | allOptionsHeard break condition', function () {
-  test('allOptionsHeard check causes loop exit after all options played (simulated logic)', async function (assert) {
-    // Simulate the interactModeTask loop logic (sync) to verify the break condition
-    let heardWords = new Set();
-    const normalizedAnswerOptions = [{ word: 'cat' }, { word: 'dog' }];
-    const wordsToPlay = ['cat', 'dog'];
-    let iterationCount = 0;
-
-    // Simulate the interact mode loop
-    for (const word of wordsToPlay) {
-      iterationCount++;
-      heardWords = new Set([...heardWords, word]);
-      const allOptionsHeard =
-        normalizedAnswerOptions.length > 0 &&
-        normalizedAnswerOptions.every((o) => heardWords.has(o.word));
-      if (allOptionsHeard) {
-        break;
-      }
-    }
-
-    assert.strictEqual(iterationCount, 2, 'loop ran for both words before exiting');
-    assert.true(
-      normalizedAnswerOptions.every((o) => heardWords.has(o.word)),
-      'all options were heard',
-    );
   });
 });
