@@ -42,6 +42,8 @@ jobs:
           mv docker-compose-run.yml docker-compose.yml
           sed -i -e "s/_YANDEX_API_KEY_/\\$YANDEX_API_KEY/" docker-compose.yml
           sed -i -e "s/_YANDEX_FOLDER_ID_/\\$YANDEX_FOLDER_ID/" docker-compose.yml
+          sed -i -e "s/_ALERT_TELEGRAM_BOT_TOKEN_/\\$ALERT_TELEGRAM_BOT_TOKEN/" docker-compose.yml
+          sed -i -e "s/_ALERT_TELEGRAM_CHAT_ID_/\\$ALERT_TELEGRAM_CHAT_ID/" docker-compose.yml
           sed -i -e "s/_POSTGRES_PASSWORD_/\\$POSTGRES_PASSWORD/" docker-compose.yml
           sed -i -e "s/_API_GITHUB_TOKEN_/\\$API_GITHUB_TOKEN/" docker-compose.yml
         env:
@@ -49,6 +51,8 @@ jobs:
           FIREBASE_CONFIG: ${{ secrets.FIREBASE_CONFIG }}
           YANDEX_API_KEY: ${{ secrets.YANDEX_API_KEY }}
           YANDEX_FOLDER_ID: ${{ secrets.YANDEX_FOLDER_ID }}
+          ALERT_TELEGRAM_BOT_TOKEN: ${{ secrets.ALERT_TELEGRAM_BOT_TOKEN }}
+          ALERT_TELEGRAM_CHAT_ID: ${{ secrets.ALERT_TELEGRAM_CHAT_ID }}
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
           API_GITHUB_TOKEN: ${{ secrets.API_GITHUB_TOKEN }}
 # It is unclear how to use IF, so option from the first link is used. In case of crash we can rewrite to if: ${{matrix.runners == 'vscale'}}
